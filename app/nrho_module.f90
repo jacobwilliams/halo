@@ -5,7 +5,7 @@
     module nrho_module
 
     use parameters_module
-    use fortran_astrodynamics_toolkit, fat_wp =>wp ! have to rename to avoid conflict [fix this]
+    use fortran_astrodynamics_toolkit 
     use ddeabm_module
     use nlesolver_module
     use numerical_differentiation_module
