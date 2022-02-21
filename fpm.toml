@@ -1,0 +1,21 @@
+name = "halo"
+author = "Jacob Williams"
+copyright  = "Copyright (c) 2022, Jacob Williams"
+license = "BSD-3"
+description = "Halo orbit solver"
+homepage = "https://github.com/jacobwilliams/halo"
+keywords = ["orbital mechanics", "nrho"]
+
+[build]
+auto-executables = false
+auto-examples = false
+auto-tests = true
+
+[dev-dependencies]
+pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
+
+[library]
+source-dir = "src"
+
+[install]
+library = true
