@@ -1612,32 +1612,19 @@
     call json%load_file(filename=filename)
     if (json%failed()) error stop 'error loading config file'
 
-    call json%get('rp',            rp,            found)
-    if (.not. found) error stop 'rp variable not found in config file'
-    call json%get('N_or_S',        N_or_S,        found)
-    if (.not. found) error stop 'N_or_S variable not found in config file'
-    call json%get('L1_or_L2',      L1_or_L2,      found)
-    if (.not. found) error stop 'L1_or_L2 variable not found in config file'
-    call json%get('year',          year,          found)
-    if (.not. found) error stop 'year variable not found in config file'
-    call json%get('month',         month,         found)
-    if (.not. found) error stop 'month variable not found in config file'
-    call json%get('day',           day,           found)
-    if (.not. found) error stop 'day variable not found in config file'
-    call json%get('hour',          hour,          found)
-    if (.not. found) error stop 'hour variable not found in config file'
-    call json%get('minute',        minute,        found)
-    if (.not. found) error stop 'minute variable not found in config file'
-    call json%get('sec',           sec,           found)
-    if (.not. found) error stop 'sec variable not found in config file'
-    call json%get('n_revs',        n_revs,        found)
-    if (.not. found) error stop 'n_revs variable not found in config file'
-    call json%get('ephemeris_file',ephemeris_file,found)
-    if (.not. found) error stop 'ephemeris_file variable not found in config file'
-    call json%get('gravfile',gravfile,found)
-    if (.not. found) error stop 'gravfile variable not found in config file'
-    call json%get('patch_point_file',patch_point_file,found)
-    if (.not. found) error stop 'patch_point_file variable not found in config file'
+    call json%get('rp',              rp,              found); call error_check('rp')
+    call json%get('N_or_S',          N_or_S,          found); call error_check('N_or_S')
+    call json%get('L1_or_L2',        L1_or_L2,        found); call error_check('L1_or_L2')
+    call json%get('year',            year,            found); call error_check('year')
+    call json%get('month',           month,           found); call error_check('month')
+    call json%get('day',             day,             found); call error_check('day')
+    call json%get('hour',            hour,            found); call error_check('hour')
+    call json%get('minute',          minute,          found); call error_check('minute')
+    call json%get('sec',             sec,             found); call error_check('sec')
+    call json%get('n_revs',          n_revs,          found); call error_check('n_revs')
+    call json%get('ephemeris_file',  ephemeris_file,  found); call error_check('ephemeris_file')
+    call json%get('gravfile',        gravfile,        found); call error_check('gravfile')
+    call json%get('patch_point_file',patch_point_file,found); call error_check('patch_point_file')
 
     ! optional ones:
     ! [if not present, then the defaults are used]
@@ -1688,6 +1675,16 @@
 
     contains
 !*****************************************************************************************
+
+    !**********************************************
+    !>
+    !  Stops program with error if variable not found.
+        subroutine error_check(varname)
+        implicit none
+        character(len=*),intent(in) :: varname 
+        if (.not. found) error stop trim(varname)//' variable not found in config file'
+        end subroutine error_check
+    !**********************************************
 
     !**********************************************
     !>
