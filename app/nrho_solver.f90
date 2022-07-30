@@ -38,6 +38,8 @@
 
     implicit none
 
+    logical,parameter :: debug = .false.
+
     character(len=:),allocatable :: config_file_name  !! the config file to read
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
@@ -67,15 +69,17 @@
     allocate(f(m))
     call solver%mission%constraint_violations(x,f)
 
-    write(*,*) ''
-    write(*,*) '----------------------'
-    write(*,*) 'Initial Guess...'
-    write(*,*) '----------------------'
-    write(*,*) ''
-    write(*,'(A/,*(F30.16/))') 'x:      ', x * solver%mission%xscale    ! unscaled values
-    write(*,*) ''
-    write(*,'(A/,*(F30.16/))') 'f:      ', f    ! scaled values
-    write(*,*) ''
+    if (debug) then
+        write(*,*) ''
+        write(*,*) '----------------------'
+        write(*,*) 'Initial Guess...'
+        write(*,*) '----------------------'
+        write(*,*) ''
+        write(*,'(A/,*(F30.16/))') 'x:      ', x * solver%mission%xscale    ! unscaled values
+        write(*,*) ''
+        write(*,'(A/,*(F30.16/))') 'f:      ', f    ! scaled values
+        write(*,*) ''
+    end if
 
     write(*,*) ''
     write(*,*) '----------------------'

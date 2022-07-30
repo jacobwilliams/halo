@@ -39,3 +39,8 @@ bin/
 doc/
 build/
 lib/
+.vscode
+
+# data products:
+/guess_*.*
+/solution_*.*

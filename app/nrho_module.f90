@@ -5,7 +5,7 @@
     module nrho_module
 
     use parameters_module
-    use fortran_astrodynamics_toolkit 
+    use fortran_astrodynamics_toolkit
     use ddeabm_module
     use nlesolver_module
     use numerical_differentiation_module
@@ -246,12 +246,9 @@
     character(len=*),intent(in) :: config_file_name !! the config file to read
     real(wp),dimension(:),allocatable,intent(out) :: x !! initial guess
 
-    integer :: i          !! counter for index in `x`
-    integer :: irev       !! counter for number of revs
     integer :: n          !! number of opt vars for the solver
     integer :: m          !! number of equality constraints for the solver
     logical :: status_ok  !! status flag for solver initialization
-    integer :: iseg       !! segment number counter
     integer :: istat      !! status code from solver
 
     ! note: we don't know the problem size
@@ -576,7 +573,7 @@
     ! integer,dimension(:),allocatable,intent(out) :: irow
     ! integer,dimension(:),allocatable,intent(out) :: icol
 
-    integer :: i,j,k,ii,jj,icol_start,irow_start
+    integer :: k,ii,jj,icol_start,irow_start
     integer :: n_nonzero    !! number of nonzero elements in the jacobian
     integer :: iblock
 
@@ -678,7 +675,7 @@
     allocate(me%grav)
 
     ! set up the ephemeris:
-    write(*,*) 'loading ephemeris file: '//trim(ephemeris_file)
+    !write(*,*) 'loading ephemeris file: '//trim(ephemeris_file)
     call me%eph%initialize(filename=ephemeris_file,status_ok=status_ok)
     if (.not. status_ok) error stop 'error initializing ephemeris'
 
@@ -1162,7 +1159,7 @@
     real(wp),dimension(:),intent(out) :: f     !! constraint violation vector for the mission [m]
     integer,dimension(:),intent(in),optional :: funcs_to_compute !! the indices of f to compute
 
-    integer :: i,j  !! counters
+    integer :: i  !! counters
     integer,dimension(:),allocatable :: isegs
 
     if (.not. allocated(me%segs)) error stop 'error: segs is not allocated'
@@ -1594,25 +1591,32 @@
 
     type(json_file) :: json !! the config file structure
     type(csv_file) :: csv   !! the patch point file
-    logical :: found
+    logical :: found, found1, found2
     logical :: status_ok
     real(wp),dimension(:),allocatable :: rp_vec
     real(wp),dimension(:),allocatable :: t_vec
-    real(wp),dimension(:),allocatable :: x_vec
-    real(wp),dimension(:),allocatable :: y_vec
-    real(wp),dimension(:),allocatable :: z_vec
-    real(wp),dimension(:),allocatable :: vx_vec
-    real(wp),dimension(:),allocatable :: vy_vec
-    real(wp),dimension(:),allocatable :: vz_vec
+    real(wp),dimension(:),allocatable :: x_vec,y_vec,z_vec
+    real(wp),dimension(:),allocatable :: vx_vec,vy_vec,vz_vec
     integer :: i, irow
     logical :: tmp  !! for optional logical inputs
+    real(wp) :: jc !! jacobii constant from the file
+    type(patch_point),dimension(3) :: pp !! patch points
+    logical :: use_json_file  !! if true, use the JSON file.
+                              !! if false, use the CSV file.
 
     call json%initialize()
-    write(*,*) 'Loading config file: '//trim(filename)
+    write(*,*) '* Loading config file: '//trim(filename)
     call json%load_file(filename=filename)
     if (json%failed()) error stop 'error loading config file'
 
-    call json%get('rp',              rp,              found); call error_check('rp')
+    write(*,*) '* Reading config file'
+
+    ! rp will be used for the csv file, jc for the JSON file
+    call json%get('rp', rp, found1)
+    call json%get('jc', jc, found2)
+    if (found1 .eqv. found2) error stop 'error: must either specify rp or jc in the config file'
+    use_json_file = found2
+
     call json%get('N_or_S',          N_or_S,          found); call error_check('N_or_S')
     call json%get('L1_or_L2',        L1_or_L2,        found); call error_check('L1_or_L2')
     call json%get('year',            year,            found); call error_check('year')
@@ -1641,37 +1645,101 @@
 
     ! read the patch point file and load it:
     ! [TODO we can also add the L1 file]
-    if (L1_or_L2/='L2') error stop 'only L2 is currently supported'
+    !if (L1_or_L2/='L2') error stop 'only L2 is currently supported'
 
-    ! read the CSV file:
-    call csv%read(patch_point_file,skip_rows=[1,2],status_ok=status_ok)
-    if (.not. status_ok) error stop 'error reading csv file'
+    if (use_json_file) then
 
-    ! get the data from the CSV file:
-    call csv%get(1,rp_vec,status_ok)  ! rp values
-    if (.not. status_ok) error stop 'error reading rp column from csv file'
+        block
 
-    ! find the correct row with the specified rp value:
-    irow = 0
-    do i=1,size(rp_vec) ! skip the first two header rows
-        if (rp_vec(i)==rp) then
-            irow = i
-            exit
-        end if
-    end do
-    if (irow==0) error stop 'Rp value not found in file'
+            type(json_file) :: jsonf
+            real(wp) :: lstar, tstar
+            real(wp),dimension(:),allocatable :: jcvec, normalized_period, x0, z0, ydot0
 
-    ! populate all the patch point structures:
-    call get_patch_point(periapsis,4)
-    call get_patch_point(quarter, 20)
-    call get_patch_point(apoapsis,36)
+            write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
+
+            ! read the JSON file:
+            call jsonf%load(filename=patch_point_file)
+            if (jsonf%failed()) error stop 'error reading json file '//trim(patch_point_file)
+            write(*,*) '* getting data... '
+
+            call jsonf%get('lstar', lstar, found=found)
+                if (.not. found) error stop 'error reading lstar from json file '//trim(patch_point_file)
+            call jsonf%get('tstar', tstar, found=found)
+                if (.not. found) error stop 'error reading tstar from json file '//trim(patch_point_file)
+            call jsonf%get('jc',    jcvec,    found=found)
+                if (.not. found) error stop 'error reading jc from json file '//trim(patch_point_file)
+            call jsonf%get('period',normalized_period,found=found)
+                if (.not. found) error stop 'error reading period from json file '//trim(patch_point_file)
+            call jsonf%get('x0',    x0,    found=found)
+                if (.not. found) error stop 'error reading x0 from json file '//trim(patch_point_file)
+            call jsonf%get('z0',    z0,    found=found)
+                if (.not. found) error stop 'error reading z0 from json file '//trim(patch_point_file)
+            call jsonf%get('ydot0', ydot0, found=found)
+                if (.not. found) error stop 'error reading ydot0 from json file '//trim(patch_point_file)
+            call jsonf%destroy()
+
+            ! find the correct row with the specified jc value:
+            irow = 0
+            do i=1,size(jcvec) ! skip the first two header rows
+                if (jcvec(i)==jc) then
+                    irow = i
+                    exit
+                end if
+            end do
+            if (irow==0) error stop 'jc value not found in json file '//trim(patch_point_file)
+
+            !TODO
+            !... interpolate if necessary .... use bspline_module
+            ! ... note: will mean we have to have an increasing indep var. (is JC always like this?)
+            ! ... could made a routine that extracts only an increasing or decreasing range around the input variable...
+            write(*,*) '* generate patch points... '
+
+            call generate_patch_points(lstar, tstar, normalized_period(irow), x0(irow), z0(irow), ydot0(irow), pp)
+            periapsis = pp(1)
+            quarter   = pp(2)
+            apoapsis  = pp(3)
+
+            write(*,*) 'periapsis t: ' , periapsis%t
+            write(*,*) 'quarter t:   ' , quarter%t
+            write(*,*) 'apoapsis t:  ' , apoapsis%t
+
+        end block
+
+    else
+
+        ! read the CSV file:
+        call csv%read(patch_point_file,skip_rows=[1,2],status_ok=status_ok)
+        if (.not. status_ok) error stop 'error reading csv file'
+
+        ! get the data from the CSV file:
+        call csv%get(1,rp_vec,status_ok)  ! rp values
+        if (.not. status_ok) error stop 'error reading rp column from csv file'
+
+        ! find the correct row with the specified rp value:
+        irow = 0
+        do i=1,size(rp_vec) ! skip the first two header rows
+            if (rp_vec(i)==rp) then
+                irow = i
+                exit
+            end if
+        end do
+        if (irow==0) error stop 'Rp value not found in file'
+
+        ! populate all the patch point structures:
+        call get_patch_point(periapsis,4)
+        call get_patch_point(quarter, 20)
+        call get_patch_point(apoapsis,36)
+
+        ! cleanup:
+        call csv%destroy()
+
+    end if
 
     ! compute some time variables:
     period  = apoapsis%t * 2.0_wp  ! NRHO period [days]
     period8 = period / 8.0_wp      ! 1/8 of NRHO period [days]
 
-    ! cleanup:
-    call csv%destroy()
+    write(*,*) 'period: ' , period
 
     contains
 !*****************************************************************************************
@@ -1681,7 +1749,7 @@
     !  Stops program with error if variable not found.
         subroutine error_check(varname)
         implicit none
-        character(len=*),intent(in) :: varname 
+        character(len=*),intent(in) :: varname
         if (.not. found) error stop trim(varname)//' variable not found in config file'
         end subroutine error_check
     !**********************************************
@@ -1737,6 +1805,141 @@
     !**********************************************
 
     end subroutine read_config_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Generates the patch points (unnormalized, moon-centered) from the CR3BP normalized guess.
+
+    subroutine generate_patch_points(lstar, tstar, period, x0, z0, ydot0, pp)
+
+    implicit none
+
+    real(wp),intent(in) :: lstar
+    real(wp),intent(in) :: tstar
+    real(wp),intent(in) :: period
+    real(wp),intent(in) :: x0
+    real(wp),intent(in) :: z0
+    real(wp),intent(in) :: ydot0
+    type(patch_point),dimension(3), intent(out) :: pp !! periapsis, quarter, apoapsis patch points
+
+    real(wp),dimension(6) :: x_wrt_moon_normalized       ! normalized state wrt to moon
+    real(wp),dimension(6) :: x_wrt_moon_unnormalized       ! unnormalized state wrt to moon
+    real(wp) :: t_unnormalized ! unnormalized time
+    type(ddeabm_class) :: prop  !! integrator
+    real(wp) :: mu    !! CRTPB parameter
+    real(wp),dimension(:),allocatable :: t_crtbp, x_crtbp,y_crtbp,z_crtbp,vx_crtbp,vy_crtbp,vz_crtbp
+    real(wp) :: t    !! normalized time for integration
+    real(wp) :: tf   !! final time (normalized) for integration
+    real(wp) :: dt   !! time step (normalized) for integration
+    real(wp),dimension(6) :: x  !! unnormalized state wrt barycenter, for integration
+    integer :: idid  !! ddeabm output flag
+    integer :: i !! counter
+
+    integer,parameter  :: n  = 6 !! number of state variables
+
+    ! first generate the patch points in the normalized system wrt the barycenter.
+    ! do this with a numerical integration of the CR3BP equations of motion.
+
+    mu = compute_crtpb_parameter(mu_earth,mu_moon)
+    t  = zero          ! start at periapsis
+    tf = period / two  ! propagate to apoapsis
+    dt = period / four ! time step of 1/4 period
+    x = [x0, zero, z0, zero, ydot0, zero] ! initial state: normalized wrt barycenter
+
+    ! integrate and report the points at dt steps (periapsis, 1/4, and apoapsis)
+    call prop%initialize(n,maxnum=10000,df=func,&
+                         rtol=[1.0e-12_wp],atol=[1.0e-12_wp],&
+                         report=report)
+    call prop%first_call()
+    call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)
+
+    ! normalized patch points are now in x_crtbp,y_crtbp,z_crtbp,vx_crtbp,vy_crtbp,vz_crtbp
+    write(*,*) ''
+    write(*,*) 'generate_patch_points'
+    write(*,*) '  t_crtbp  = ', t_crtbp
+    write(*,*) '  x_crtbp  = ', x_crtbp
+    write(*,*) '  y_crtbp  = ', y_crtbp
+    write(*,*) '  z_crtbp  = ', z_crtbp
+    write(*,*) '  vx_crtbp = ', vx_crtbp
+    write(*,*) '  vy_crtbp = ', vy_crtbp
+    write(*,*) '  vz_crtbp = ', vz_crtbp
+    write(*,*) ''
+
+    ! transform state to moon-centered and unnormalize
+    do i = 1, 3 ! periapsis, quarter, apoapsis
+
+        ! transform state to moon-centered rotating frame
+
+        !            y
+        !            ^
+        !            |
+        !  (M1)------+----------------(M2)  --> x
+        !       -mu           1-mu
+        !
+
+        x_wrt_moon_normalized = [x_crtbp(i) - (1.0_wp - mu), y_crtbp(i), z_crtbp(i), &
+                                 vx_crtbp(i), vy_crtbp(i), vz_crtbp(i)]
+
+        ! convert to km, km/s, days (see also unnormalize_variables)
+        x_wrt_moon_unnormalized(1:3) = x_wrt_moon_normalized(1:3) * lstar         ! unscale distance
+        x_wrt_moon_unnormalized(4:6) = x_wrt_moon_normalized(4:6) * (lstar/tstar) ! unscale velocity
+        t_unnormalized = t_crtbp(i) * tstar ! unscale time
+
+        ! results:
+        if (N_or_S=='S') then
+            ! the data in the file is for the South family
+            pp(i) = patch_point(t = t_unnormalized*sec2day,&
+                                rv = x_wrt_moon_unnormalized)
+        elseif (N_or_S=='N') then
+            pp(i) = patch_point(t = t_unnormalized*sec2day,&
+                                rv = x_wrt_moon_unnormalized)
+        else
+            error stop 'invalid value for N_or_S'
+        end if
+
+    end do
+
+    contains
+
+    subroutine func(me,t,x,xdot)  !! CRTBP derivative function
+        implicit none
+        class(ddeabm_class),intent(inout) :: me
+        real(wp),intent(in)               :: t
+        real(wp),dimension(:),intent(in)  :: x
+        real(wp),dimension(:),intent(out) :: xdot
+
+        call crtbp_derivs(mu,x,xdot)
+
+    end subroutine func
+
+    subroutine report(me,t,x)  !! report function
+        implicit none
+        class(ddeabm_class),intent(inout)    :: me
+        real(wp),intent(in)                  :: t
+        real(wp),dimension(:),intent(in)     :: x
+
+        if (allocated(x_crtbp)) then
+            t_crtbp   = [t_crtbp,  t]
+            x_crtbp   = [x_crtbp,  x(1)]
+            y_crtbp   = [y_crtbp,  x(2)]
+            z_crtbp   = [z_crtbp,  x(3)]
+            vx_crtbp  = [vx_crtbp, x(4)]
+            vy_crtbp  = [vy_crtbp, x(5)]
+            vz_crtbp  = [vz_crtbp, x(6)]
+       else
+            t_crtbp   = [t]
+            x_crtbp   = [x(1)]
+            y_crtbp   = [x(2)]
+            z_crtbp   = [x(3)]
+            vx_crtbp  = [x(4)]
+            vy_crtbp  = [x(5)]
+            vz_crtbp  = [x(6)]
+       end if
+
+    end subroutine report
+
+    end subroutine generate_patch_points
 !*****************************************************************************************
 
 !*****************************************************************************************

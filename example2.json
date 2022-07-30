@@ -1,0 +1,16 @@
+// example case using the JSON input file
+{
+    "jc": 3.0411,
+    "N_or_S": "S",
+    "L1_or_L2": "L2",
+    "year": 2000,
+    "month": 1,
+    "day": 1,
+    "hour": 12,
+    "minute": 0,
+    "sec": 0,
+    "n_revs": 5,
+    "ephemeris_file": "data/eph/JPLEPH.421",
+    "gravfile": "data/grav/gggrx_0020pm_sha.tab",
+    "patch_point_file": "data/L2_halos.json"
+}
