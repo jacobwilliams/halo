@@ -1597,8 +1597,8 @@
     real(wp),dimension(:),allocatable :: vx_vec,vy_vec,vz_vec
     integer :: i, irow
     logical :: tmp  !! for optional logical inputs
-    real(wp),target :: jc !! jacobii constant from the file
-    real(wp),target :: period !! period from file (normalized)
+    real(wp):: jc !! jacobii constant from the file
+    real(wp):: p !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
     logical :: use_json_file  !! if true, use the JSON file.
                               !! if false, use the CSV file.
@@ -1613,7 +1613,7 @@
     ! rp will be used for the csv file, jc for the JSON file
     call json%get('rp', rp, found_rp)
     call json%get('jc', jc, found_jc)
-    call json%get('period', period, found_period)
+    call json%get('period', p, found_period)
 
     call json%get('N_or_S',          N_or_S,          found); call error_check('N_or_S')
     call json%get('L1_or_L2',        L1_or_L2,        found); call error_check('L1_or_L2')
@@ -1657,10 +1657,8 @@
 
             type(json_file) :: jsonf
             real(wp) :: lstar, tstar
-            real(wp),dimension(:),allocatable,target :: jcvec, normalized_period
+            real(wp),dimension(:),allocatable :: jcvec, normalized_period
             real(wp),dimension(:),allocatable :: x0, z0, ydot0
-            real(wp),dimension(:),pointer :: xvec
-            real(wp),pointer :: x
             real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
 
             write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
@@ -1688,19 +1686,18 @@
 
             ! which is the independant variable:
             if (found_jc) then
-                xvec => jcvec
-                x => jc
+                pp_period = interpolate_point(jcvec, normalized_period, jc)
+                pp_x0     = interpolate_point(jcvec, x0, jc)
+                pp_z0     = interpolate_point(jcvec, z0, jc)
+                pp_ydot0  = interpolate_point(jcvec, ydot0, jc)
             else
-                xvec => normalized_period
-                x => period
+                pp_period = p
+                pp_x0     = interpolate_point(normalized_period, x0, p)
+                pp_z0     = interpolate_point(normalized_period, z0, p)
+                pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
             end if
 
-            pp_period = interpolate_point(xvec, normalized_period, x)
-            pp_x0     = interpolate_point(xvec, x0, x)
-            pp_z0     = interpolate_point(xvec, z0, x)
-            pp_ydot0  = interpolate_point(xvec, ydot0, x)
-
-            write(*,*) '* generate patch points... '
+            ! write(*,*) '* generate patch points... '
             call generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
             periapsis = pp(1)
             quarter   = pp(2)
@@ -1760,43 +1757,44 @@
 
         function interpolate_point(xvec, fvec, x) result(y)
 
-            implicit none
-            real(wp),dimension(:),intent(in) :: xvec
-            real(wp),dimension(:),intent(in) :: fvec
-            real(wp),intent(in) :: x
-            real(wp) :: y !! fvec(x)
+        implicit none
 
-            type(bspline_1d) :: spline
-            integer :: i, iflag, irow
+        real(wp),dimension(:),intent(in) :: xvec
+        real(wp),dimension(:),intent(in) :: fvec
+        real(wp),intent(in) :: x
+        real(wp) :: y !! fvec(x)
 
-            integer,parameter :: kx = 4  !! spline order (cubic bspline)
-            integer,parameter :: idx = 0 !! interpolate value only
+        type(bspline_1d) :: spline
+        integer :: i, iflag, irow
 
-            ! so, first just look for the exact point:
-            irow = 0
-            do i=1,size(xvec)
-                if (xvec(i)==x) then
-                    irow = i
-                    exit
-                end if
-            end do
+        integer,parameter :: kx = 4  !! spline order (cubic bspline)
+        integer,parameter :: idx = 0 !! interpolate value only
 
-            if (irow/=0) then
-                ! if found, then use it:
-                y = fvec(irow)
-            else
-                call spline%initialize(xvec,fvec,kx,iflag, extrap=.true.)
-                if (iflag/=0) then
-                    select case (iflag)
-                    case(2); error stop 'bspline error: iknot out of range.'
-                    case(3); error stop 'bspline error: nx out of range.'
-                    case(4); error stop 'bspline error: kx out of range.'
-                    case(5); error stop 'bspline error: x not strictly increasing.'
-                    end select
-                end if
-                call spline%evaluate(x,idx,y,iflag)
-                if (iflag/=0) error stop 'error evaluating bspline.'
+        ! so, first just look for the exact point:
+        irow = 0
+        do i=1,size(xvec)
+            if (xvec(i)==x) then
+                irow = i
+                exit
             end if
+        end do
+
+        if (irow/=0) then
+            ! if found, then use it:
+            y = fvec(irow)
+        else
+            call spline%initialize(xvec,fvec,kx,iflag, extrap=.true.)
+            if (iflag/=0) then
+                select case (iflag)
+                case(2); error stop 'bspline error: iknot out of range.'
+                case(3); error stop 'bspline error: nx out of range.'
+                case(4); error stop 'bspline error: kx out of range.'
+                case(5); error stop 'bspline error: x not strictly increasing.'
+                end select
+            end if
+            call spline%evaluate(x,idx,y,iflag)
+            if (iflag/=0) error stop 'error evaluating bspline.'
+        end if
 
         end function interpolate_point
     !**********************************************
