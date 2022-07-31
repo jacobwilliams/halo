@@ -1172,21 +1172,10 @@
 
     !====================================
     ! now propagate the segments:
+    !
+    !TODO: parallelize this loop. Maybe have to replicate the ephemeris in each segment?
     do i = 1, size(isegs)
-
         call me%segs(isegs(i))%propagate()
-
-        ! ... is this sort of how the coarray part would work ??
-        !
-        ! call co_segs[...]%data = me%segs(isegs(i))%data   ! copy data to coarray [or use put_data_in_segment]
-        ! call co_segs[...]%propagate()                     ! propagate in the coarray
-        ! call co_segs[...]%get_segment_outputs(xf)         ! get the results form coarray
-        ! call me%segs(isegs(i))%set_segment_outputs(xf) ! copy results back to real segment
-
-        ! ... but, this is deep inside the solver, we don't want all the images
-        !     to be running the solver, we just want all the images to be
-        !     available so we can propagate the segments ...
-
     end do
     !====================================
 
