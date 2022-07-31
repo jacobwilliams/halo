@@ -2,7 +2,7 @@
 !>
 !  Main module with all the stuff to solve the NRHO problem.
 
-    module nrho_module
+    module halo_module
 
     use parameters_module
     use fortran_astrodynamics_toolkit
@@ -2066,5 +2066,5 @@
 !*****************************************************************************************
 
 !*****************************************************************************************
-    end module nrho_module
+    end module halo_module
 !*****************************************************************************************

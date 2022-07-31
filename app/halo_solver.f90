@@ -5,7 +5,7 @@
 !### Usage
 !
 !```
-!    > nrhosolver config.json
+!    > halo-solver config.json
 !```
 !
 !### Example config file
@@ -28,11 +28,11 @@
 !### Author
 !  * Jacob Williams : Sept. 2017
 
-    program nrho_solver
+    program halo_solver
 
     use parameters_module
     use argv_module,       only: argv
-    use nrho_module,       only: my_solver_type,nrho_func,&
+    use halo_module,       only: my_solver_type,nrho_func,&
                                  nrho_grad,nrho_export,&
                                  define_problem_size
 
@@ -110,5 +110,5 @@
         call solver%mission%plot('solution',export_trajectory=.true.) ! plot solution
 
 !*****************************************************************************************
-    end program nrho_solver
+    end program halo_solver
 !*****************************************************************************************
