@@ -1684,6 +1684,8 @@
                 if (.not. found) error stop 'error reading ydot0 from json file '//trim(patch_point_file)
             call jsonf%destroy()
 
+            write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', normalized_period * tstar * sec2day
+
             ! which is the independant variable:
             if (found_jc) then
                 pp_period = interpolate_point(jcvec, normalized_period, jc)
