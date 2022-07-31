@@ -1,6 +1,6 @@
 // example case using the JSON input file
 {
-    "period": 1.4748399512,
+    "period": 1.5872714606,  // normalized period
     "N_or_S": "S",
     "L1_or_L2": "L2",
     "year": 2000,
@@ -9,7 +9,7 @@
     "hour": 12,
     "minute": 0,
     "sec": 0,
-    "n_revs": 5,
+    "n_revs": 50,
     "ephemeris_file": "data/eph/JPLEPH.421",
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
     "patch_point_file": "data/L2_halos.json"
