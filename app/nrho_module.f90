@@ -12,6 +12,7 @@
     use json_module
     use pyplot_module
     use csv_module
+    use bspline_module
 
     implicit none
 
@@ -339,7 +340,6 @@
     integer :: i          !! counter for index in `x`
     integer :: irev       !! counter for number of revs
     integer :: iseg       !! segment number counter
-    integer :: j          !! counter
 
     if (present(x)) then
 
@@ -1213,8 +1213,6 @@
     real(wp),dimension(:),intent(in)     :: x
     real(wp),dimension(:),intent(out)    :: f
 
-    integer :: i
-
     select type (me)
     class is (my_solver_type)
         call me%mission%constraint_violations(x,f)
@@ -1591,7 +1589,7 @@
 
     type(json_file) :: json !! the config file structure
     type(csv_file) :: csv   !! the patch point file
-    logical :: found, found1, found2
+    logical :: found, found_rp, found_jc, found_period
     logical :: status_ok
     real(wp),dimension(:),allocatable :: rp_vec
     real(wp),dimension(:),allocatable :: t_vec
@@ -1599,7 +1597,8 @@
     real(wp),dimension(:),allocatable :: vx_vec,vy_vec,vz_vec
     integer :: i, irow
     logical :: tmp  !! for optional logical inputs
-    real(wp) :: jc !! jacobii constant from the file
+    real(wp),target :: jc !! jacobii constant from the file
+    real(wp),target :: period !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
     logical :: use_json_file  !! if true, use the JSON file.
                               !! if false, use the CSV file.
@@ -1612,10 +1611,9 @@
     write(*,*) '* Reading config file'
 
     ! rp will be used for the csv file, jc for the JSON file
-    call json%get('rp', rp, found1)
-    call json%get('jc', jc, found2)
-    if (found1 .eqv. found2) error stop 'error: must either specify rp or jc in the config file'
-    use_json_file = found2
+    call json%get('rp', rp, found_rp)
+    call json%get('jc', jc, found_jc)
+    call json%get('period', period, found_period)
 
     call json%get('N_or_S',          N_or_S,          found); call error_check('N_or_S')
     call json%get('L1_or_L2',        L1_or_L2,        found); call error_check('L1_or_L2')
@@ -1629,6 +1627,12 @@
     call json%get('ephemeris_file',  ephemeris_file,  found); call error_check('ephemeris_file')
     call json%get('gravfile',        gravfile,        found); call error_check('gravfile')
     call json%get('patch_point_file',patch_point_file,found); call error_check('patch_point_file')
+
+    use_json_file = index(patch_point_file, '.json') > 0
+    if (.not. use_json_file .and. .not. found_rp) &
+        error stop 'error: must specify rp for CSV patch point file.'
+    if (use_json_file .and. (found_jc .eqv. found_period)) &
+        error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
 
     ! optional ones:
     ! [if not present, then the defaults are used]
@@ -1653,7 +1657,11 @@
 
             type(json_file) :: jsonf
             real(wp) :: lstar, tstar
-            real(wp),dimension(:),allocatable :: jcvec, normalized_period, x0, z0, ydot0
+            real(wp),dimension(:),allocatable,target :: jcvec, normalized_period
+            real(wp),dimension(:),allocatable :: x0, z0, ydot0
+            real(wp),dimension(:),pointer :: xvec
+            real(wp),pointer :: x
+            real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
 
             write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
 
@@ -1678,30 +1686,25 @@
                 if (.not. found) error stop 'error reading ydot0 from json file '//trim(patch_point_file)
             call jsonf%destroy()
 
-            ! find the correct row with the specified jc value:
-            irow = 0
-            do i=1,size(jcvec) ! skip the first two header rows
-                if (jcvec(i)==jc) then
-                    irow = i
-                    exit
-                end if
-            end do
-            if (irow==0) error stop 'jc value not found in json file '//trim(patch_point_file)
+            ! which is the independant variable:
+            if (found_jc) then
+                xvec => jcvec
+                x => jc
+            else
+                xvec => normalized_period
+                x => period
+            end if
 
-            !TODO
-            !... interpolate if necessary .... use bspline_module
-            ! ... note: will mean we have to have an increasing indep var. (is JC always like this?)
-            ! ... could made a routine that extracts only an increasing or decreasing range around the input variable...
+            pp_period = interpolate_point(xvec, normalized_period, x)
+            pp_x0     = interpolate_point(xvec, x0, x)
+            pp_z0     = interpolate_point(xvec, z0, x)
+            pp_ydot0  = interpolate_point(xvec, ydot0, x)
+
             write(*,*) '* generate patch points... '
-
-            call generate_patch_points(lstar, tstar, normalized_period(irow), x0(irow), z0(irow), ydot0(irow), pp)
+            call generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
             periapsis = pp(1)
             quarter   = pp(2)
             apoapsis  = pp(3)
-
-            write(*,*) 'periapsis t: ' , periapsis%t
-            write(*,*) 'quarter t:   ' , quarter%t
-            write(*,*) 'apoapsis t:  ' , apoapsis%t
 
         end block
 
@@ -1735,6 +1738,10 @@
 
     end if
 
+    write(*,*) 'periapsis t: ' , periapsis%t, 'days'
+    write(*,*) 'quarter t:   ' , quarter%t,   'days'
+    write(*,*) 'apoapsis t:  ' , apoapsis%t,  'days'
+
     ! compute some time variables:
     period  = apoapsis%t * 2.0_wp  ! NRHO period [days]
     period8 = period / 8.0_wp      ! 1/8 of NRHO period [days]
@@ -1743,6 +1750,56 @@
 
     contains
 !*****************************************************************************************
+
+    !**********************************************
+    !>
+    !  Iterpolate if necessary to compute fvec(x)
+    !  We will allow data sets that are not strictly increasing/decreasing (JC isn't, but period is for L2 file),
+    !  so, first the input `x` is checked to see if that is a point in `xvec`.
+    !  If not, the bspline interpolation is used.
+
+        function interpolate_point(xvec, fvec, x) result(y)
+
+            implicit none
+            real(wp),dimension(:),intent(in) :: xvec
+            real(wp),dimension(:),intent(in) :: fvec
+            real(wp),intent(in) :: x
+            real(wp) :: y !! fvec(x)
+
+            type(bspline_1d) :: spline
+            integer :: i, iflag, irow
+
+            integer,parameter :: kx = 4  !! spline order (cubic bspline)
+            integer,parameter :: idx = 0 !! interpolate value only
+
+            ! so, first just look for the exact point:
+            irow = 0
+            do i=1,size(xvec)
+                if (xvec(i)==x) then
+                    irow = i
+                    exit
+                end if
+            end do
+
+            if (irow/=0) then
+                ! if found, then use it:
+                y = fvec(irow)
+            else
+                call spline%initialize(xvec,fvec,kx,iflag, extrap=.true.)
+                if (iflag/=0) then
+                    select case (iflag)
+                    case(2); error stop 'bspline error: iknot out of range.'
+                    case(3); error stop 'bspline error: nx out of range.'
+                    case(4); error stop 'bspline error: kx out of range.'
+                    case(5); error stop 'bspline error: x not strictly increasing.'
+                    end select
+                end if
+                call spline%evaluate(x,idx,y,iflag)
+                if (iflag/=0) error stop 'error evaluating bspline.'
+            end if
+
+        end function interpolate_point
+    !**********************************************
 
     !**********************************************
     !>
@@ -1954,8 +2011,6 @@
     implicit none
 
     character(len=:),allocatable :: case_name
-
-    character(len=10) :: istr
 
     case_name = int_to_string(year,4)//int_to_string(month,2)//&
                 int_to_string(day,2)//int_to_string(hour,2)//&

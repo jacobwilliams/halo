@@ -1,6 +1,6 @@
 // example case using the JSON input file
 {
-    "jc": 3.0411,
+    "period": 1.48,
     "N_or_S": "S",
     "L1_or_L2": "L2",
     "year": 2000,
