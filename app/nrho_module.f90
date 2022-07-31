@@ -271,6 +271,7 @@
                             step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                             n_intervals      = 2,            & ! number of intervals for step_mode=4
                             use_broyden      = .false.,      & ! broyden update
+                            !use_broyden=.true.,broyden_update_n=2, &
                             export_iteration = nrho_export   )
 
     call me%status(istat=istat)
@@ -568,10 +569,6 @@
                                                                           !! elements of the Jacobian)
     integer,intent(out),optional                           :: maxgrp      !! DSM sparsity partition
     integer,dimension(:),allocatable,intent(out),optional  :: ngrp        !! DSM sparsity partition
-
-    ! class(mission_type),intent(inout) :: me
-    ! integer,dimension(:),allocatable,intent(out) :: irow
-    ! integer,dimension(:),allocatable,intent(out) :: icol
 
     integer :: k,ii,jj,icol_start,irow_start
     integer :: n_nonzero    !! number of nonzero elements in the jacobian
