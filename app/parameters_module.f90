@@ -34,22 +34,22 @@
                                !! this is computed from the year,month,day,hour,minute,sec values
                                !! [sec]
 
-    integer :: n_revs = 10  !! Number of revs in the NRHO.
+    integer :: n_revs = 10  !! Number of revs in the Halo.
 
     character(len=:),allocatable :: ephemeris_file !! the JPL ephemeris file to load
     ! [note: these are build using the get_third_party script in FAT.
     !  the files are platform (and maybe compiler specific)
-    !  '../data/eph/JPLEPH.421'               !! JPL DE421 ephemeris file [mac,gfortran]
-    !  '../data/eph/JPLEPH_intel_mac.421'     !! [mac,ifort]
-    !  '../data/eph/JPLEPH_windows_ifort.421' !! [windows,ifort]
+    !  'data/eph/JPLEPH.421'               !! JPL DE421 ephemeris file [mac,gfortran]
+    !  'data/eph/JPLEPH_intel_mac.421'     !! [mac,ifort]
+    !  'data/eph/JPLEPH_windows_ifort.421' !! [windows,ifort]
 
     ! environment and integrator parameters:
 
     character(len=:),allocatable :: gravfile  !! spherical harmonic gravity coeff file (Moon)
-    !! example: '../data/grav/gggrx_0020pm_sha.tab'
+    !! example: 'data/grav/gggrx_0020pm_sha.tab'
 
-    character(len=:),allocatable :: patch_point_file   !! NRHO CR3BP patch point solution file
-    !! example: '../data/CR3BP NRO Patch Pts - L2 South, E-M Rotating, Moon Centered.CSV'
+    character(len=:),allocatable :: patch_point_file   !! Halo CR3BP patch point solution file
+    !! example: 'data/L2_halos.json'
 
     integer,parameter  :: n_eoms = 6            !! size of EOM derivative vector [x,y,z,vx,vy,vz]
     real(wp),parameter :: rtol = 1.0e-10_wp     !! integrator tols
@@ -59,7 +59,7 @@
     integer,parameter  :: grav_m = 8            !! max grav order
 
     type,public :: patch_point
-        !! a CR3BP NRHO state, to be used as
+        !! a CR3BP Halo state, to be used as
         !! an initial guess for the full force model.
         real(wp) :: t = zero                !! Time from Periapse (days from periapsis)
         real(wp),dimension(6) :: rv = zero  !! Rx (km)
@@ -70,7 +70,7 @@
                                             !! Vz (km/s) [moon-centered earth-moon rotating frame]
     end type patch_point
 
-    ! the initial guess for the NRHO:
+    ! the initial guess for the Halo:
     ! (4500 L2 S case)
     !
     ! Note: this should be read from the patch point file... for now, just hard code it
@@ -80,8 +80,8 @@
     type(patch_point),public :: quarter      !! Patchpoint 1/4 Rev State
     type(patch_point),public :: apoapsis     !! Patchpoint 1/2 Rev State
 
-    real(wp)        :: period  = 0.0_wp !! NRHO period [days]
-    real(wp),public :: period8 = 0.0_wp !! 1/8 of NRHO period [days]
+    real(wp)        :: period  = 0.0_wp !! Halo period [days]
+    real(wp),public :: period8 = 0.0_wp !! 1/8 of Halo period [days]
 
     ! fix these for now (good values for the 4500 Rp case)
     ! TODO ... set the xscale based on the actual values ...

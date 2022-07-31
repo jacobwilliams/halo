@@ -1,6 +1,6 @@
 !*****************************************************************************************
 !>
-!  Main module with all the stuff to solve the NRHO problem.
+!  Main module with all the stuff to solve the Halo problem.
 
     module halo_module
 
@@ -123,7 +123,7 @@
         !! the solver class, which contains
         !! an instance of the mission
 
-        type(mission_type) :: mission  !! the NRHO mission
+        type(mission_type) :: mission  !! the Halo mission
 
     contains
 
@@ -265,14 +265,14 @@
     call me%initialize(     n                = n,            &
                             m                = m,            &
                             max_iter         = 100,          & ! maximum number of iteration
-                            func             = nrho_func,    &
-                            grad             = nrho_grad,    &
+                            func             = halo_func,    &
+                            grad             = halo_grad,    &
                             tol              = 1.0e-6_wp,    & ! tolerance
                             step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                             n_intervals      = 2,            & ! number of intervals for step_mode=4
                             use_broyden      = .false.,      & ! broyden update
                             !use_broyden=.true.,broyden_update_n=2, &
-                            export_iteration = nrho_export   )
+                            export_iteration = halo_export   )
 
     call me%status(istat=istat)
     status_ok = istat == 0
@@ -550,7 +550,7 @@
 
 !*****************************************************************************************
 !>
-!  Returns the sparsity pattern for the "forward-backward" NRHO problem.
+!  Returns the sparsity pattern for the "forward-backward" Halo problem.
 
     subroutine get_sparsity_pattern(me,irow,icol,&
                                     linear_irow,linear_icol,linear_vals,&
@@ -656,7 +656,7 @@
                         xhigh                      = xhigh,&
                         dpert                      = dpert,&
                         problem_func               = my_func,&
-                        info                       = nrho_grad_info,&
+                        info                       = halo_grad_info,&
                         sparsity_mode              = 3,&        ! specified below
                         jacobian_method            = 3,&        ! standard central diff
                         perturb_mode               = 1,&        ! absolute mode
@@ -1188,7 +1188,7 @@
 !>
 !  Compute the solver function (all the constraint violations)
 
-    subroutine nrho_func(me,x,f)
+    subroutine halo_func(me,x,f)
 
     implicit none
 
@@ -1200,17 +1200,17 @@
     class is (my_solver_type)
         call me%mission%constraint_violations(x,f)
     class default
-        error stop 'invalid class in nrho_func'
+        error stop 'invalid class in halo_func'
     end select
 
-    end subroutine nrho_func
+    end subroutine halo_func
 !*****************************************************************************************
 
 !*****************************************************************************************
 !>
 !  Compute the gradient of the solver function (Jacobian matrix)
 
-    subroutine nrho_grad(me,x,g)
+    subroutine halo_grad(me,x,g)
 
     implicit none
 
@@ -1242,10 +1242,10 @@
         end do
 
     class default
-        error stop 'invalid class in nrho_grad'
+        error stop 'invalid class in halo_grad'
     end select
 
-    end subroutine nrho_grad
+    end subroutine halo_grad
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1258,7 +1258,7 @@
 !@note This may not be strictly necessary for this particular problem...
 !      ... need to think about this some more ...
 
-    subroutine nrho_grad_info(me,column,i,x)
+    subroutine halo_grad_info(me,column,i,x)
 
     implicit none
 
@@ -1280,10 +1280,10 @@
         end do
 
     class default
-        error stop 'invalid class in nrho_grad_info'
+        error stop 'invalid class in halo_grad_info'
     end select
 
-    end subroutine nrho_grad_info
+    end subroutine halo_grad_info
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1304,7 +1304,7 @@
     class is (mission_type)
         call me%constraint_violations(x,f,funcs_to_compute)
     class default
-        error stop 'invalid class in nrho_grad'
+        error stop 'invalid class in halo_grad'
     end select
 
     end subroutine my_func
@@ -1314,7 +1314,7 @@
 !>
 !  export an iteration from the solver
 
-    subroutine nrho_export(me,x,f,iter)
+    subroutine halo_export(me,x,f,iter)
 
     implicit none
 
@@ -1330,7 +1330,7 @@
     write(*,'(I4,1X,*(F30.16,1X))') iter, norm2(x), norm2(f)
     !write(*,'(I4,1X,*(F30.16,1X))') iter, x
 
-    end subroutine nrho_export
+    end subroutine halo_export
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1379,7 +1379,7 @@
                         xtick_labelsize = 20,&
                         ytick_labelsize = 20,&
                         ztick_labelsize = 20,&
-                        title='NRHO Trajectory: '//trim(filename),&
+                        title='Halo Trajectory: '//trim(filename),&
                         legend=.false.,&
                         axis_equal=.true.,&
                         mplot3d=.true.)
@@ -1725,8 +1725,8 @@
     write(*,*) 'apoapsis t:  ' , apoapsis%t,  'days'
 
     ! compute some time variables:
-    period  = apoapsis%t * 2.0_wp  ! NRHO period [days]
-    period8 = period / 8.0_wp      ! 1/8 of NRHO period [days]
+    period  = apoapsis%t * 2.0_wp  ! Halo period [days]
+    period8 = period / 8.0_wp      ! 1/8 of Halo period [days]
 
     write(*,*) 'period: ' , period
 

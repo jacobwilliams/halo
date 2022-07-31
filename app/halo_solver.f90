@@ -1,6 +1,6 @@
 !*****************************************************************************************
 !>
-!  Main program to solve the NRHO targeting problem.
+!  Main program to solve the Halo targeting problem.
 !
 !### Usage
 !
@@ -32,8 +32,8 @@
 
     use parameters_module
     use argv_module,       only: argv
-    use halo_module,       only: my_solver_type,nrho_func,&
-                                 nrho_grad,nrho_export,&
+    use halo_module,       only: my_solver_type,halo_func,&
+                                 halo_grad,halo_export,&
                                  define_problem_size
 
     implicit none
