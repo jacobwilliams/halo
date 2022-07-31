@@ -1944,16 +1944,19 @@
         t_unnormalized = t_crtbp(i) * tstar ! unscale time
 
         ! results:
-        if (N_or_S=='S') then
+        select case (N_or_S)
+        case ('S')
             ! the data in the file is for the South family
             pp(i) = patch_point(t = t_unnormalized*sec2day,&
                                 rv = x_wrt_moon_unnormalized)
-        elseif (N_or_S=='N') then
+        case ('N')
+            x_wrt_moon_unnormalized(3) = -x_wrt_moon_unnormalized(3)
+            x_wrt_moon_unnormalized(6) = -x_wrt_moon_unnormalized(6)
             pp(i) = patch_point(t = t_unnormalized*sec2day,&
                                 rv = x_wrt_moon_unnormalized)
-        else
+        case default
             error stop 'invalid value for N_or_S'
-        end if
+        end select
 
     end do
 
