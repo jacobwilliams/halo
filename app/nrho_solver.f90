@@ -12,7 +12,7 @@
 !
 !```json
 ! {
-!     "rp": 4500,
+!     "period": 1.5872714606,  // normalized period ("jc" is also allowed)
 !     "N_or_S": "S",
 !     "L1_or_L2": "L2",
 !     "year": 2000,

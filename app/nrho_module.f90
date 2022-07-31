@@ -750,13 +750,10 @@
 
             ! also set the scales:
             ! the t0 gradually grows larger so use the initial value for each segment.
-            ! for the states, just use the constant values
-
             me%segs(iseg+j)%data%t0_scale = abs(mag(2.0_wp*me%segs(iseg+j)%data%t0))    ! magic number
 
             ! do the same for the states, but just in case, specify the min values:
-            !me%segs(iseg+j)%data%x0_rotating_scale = xscale_x0   ! original
-            me%segs(iseg+j)%data%x0_rotating_scale = abs(mag(2.0_wp*me%segs(iseg+j)%data%x0_rotating, xscale_x0)) ! new
+            me%segs(iseg+j)%data%x0_rotating_scale = abs(mag(2.0_wp*me%segs(iseg+j)%data%x0_rotating, xscale_x0))
 
             me%segs(iseg+j)%data%xf_rotating_scale = fscale_xf  ! these are all the same for the constraints
 
