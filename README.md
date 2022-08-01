@@ -14,6 +14,12 @@ To run an example:
 fpm run --profile release -- example2.json
 ```
 
+Another example, using the Intel Fortran Compiler with OpenMP:
+
+```
+fpm run --profile release --compiler ifort --flag -qopenmp -- example2.json
+```
+
 ### See also
 
  * J. Williams, [Near Rectilinear Halo Orbits](https://degenerateconic.com/near-rectilinear-halo-orbits.html) (degenerateconic.com)

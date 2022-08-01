@@ -35,6 +35,7 @@
     use halo_module,       only: my_solver_type,halo_func,&
                                  halo_grad,halo_export,&
                                  define_problem_size
+!$  use omp_lib
 
     implicit none
 
@@ -45,9 +46,24 @@
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
     integer :: m  !! number of functions
     real(wp),dimension(:),allocatable :: f  !! function vector (constraint violations)
-    real :: tstart, tend  !! for timing
+    real(wp) :: tstart, tend  !! for timing
+    real(wp) :: tstart_cpu, tend_cpu  !! for timing
     integer :: istat
     character(len=:),allocatable :: message  !! Text status message from solver
+!$  integer :: tid, nthreads
+
+!$OMP PARALLEL PRIVATE(NTHREADS, TID)
+!$
+!$  tid = omp_get_thread_num()
+!$
+!$  if (tid == 0) then
+!$      nthreads = omp_get_num_threads()
+!$      write(*,*) '----------------------'
+!$      write(*,'(A,1X,I5)') 'number of OMP threads: ', OMP_get_num_threads()
+!$       write(*,*) '----------------------'
+!$  end if
+!$
+!$OMP END PARALLEL
 
     write(*,*) ''
     write(*,*) '----------------------'
@@ -87,10 +103,12 @@
     write(*,*) '----------------------'
     write(*,*) ''
 
-    call cpu_time(tstart)
+    call cpu_time(tstart_cpu)
+!$  tstart = omp_get_wtime()
     call solver%solve(x)  ! call the solver
     call solver%status(istat=istat, message=message)
-    call cpu_time(tend)
+    call cpu_time(tend_cpu)
+!$  tend = omp_get_wtime()
 
     call solver%mission%put_x_in_segments(x) ! populate segs with solution
 
@@ -100,8 +118,9 @@
     write(*,*) '----------------------'
     write(*,*) ''
 
-    write(*,'(A)')             'status: '//message
-    write(*,*) 'elapsed time: ', (tend-tstart), 'sec'
+    write(*,'(A)') 'status: '//message
+    write(*,*) 'elapsed cpu_time: ', (tend_cpu-tstart_cpu), 'sec'
+!$  write(*,*) 'OMP wall time   : ', (tend-tstart), 'sec'
     write(*,*) ''
 
     if (generate_trajectory_files) &

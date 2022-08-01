@@ -626,6 +626,10 @@
     character(len=10) :: seg_name               !! segment name
     integer,dimension(:),allocatable :: irow    !! sparsity pattern nonzero elements row indices
     integer,dimension(:),allocatable :: icol    !! sparsity pattern nonzero elements column indices
+    logical :: use_openmp !! if OpenMP is being used
+
+    use_openmp = .false.
+!$  use_openmp = .true.
 
     write(*,*) 'initialize_the_mission'
 
@@ -691,10 +695,15 @@
                                    [rtol],[atol],&
                                    report=trajectory_export_func)
 
-        ! for now, each seg points to the global ones for the whole mission
-        ! .... reconsider this ....
-        me%segs(i)%grav => me%grav
-        me%segs(i)%eph  => me%eph
+        if (use_openmp) then
+            ! make a copy for each segment, so they can run in parallel
+            allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
+            allocate(me%segs(i)%eph,  source = me%eph)
+        else
+            ! for serial use, each seg just points to the global ones for the whole mission
+            me%segs(i)%grav => me%grav
+            me%segs(i)%eph  => me%eph
+        end if
 
         ! name all the segments:
         write(seg_name,'(I10)') i
@@ -1169,11 +1178,11 @@
 
     !====================================
     ! now propagate the segments:
-    !
-    !TODO: parallelize this loop. Maybe have to replicate the ephemeris in each segment?
+!$OMP PARALLEL DO
     do i = 1, size(isegs)
         call me%segs(isegs(i))%propagate()
     end do
+!$OMP END PARALLEL DO
     !====================================
 
     ! now that all the segments are propagated, we
@@ -1897,13 +1906,13 @@
     ! normalized patch points are now in x_crtbp,y_crtbp,z_crtbp,vx_crtbp,vy_crtbp,vz_crtbp
     write(*,*) ''
     write(*,*) 'generate_patch_points'
-    write(*,*) '  t_crtbp  = ', t_crtbp
-    write(*,*) '  x_crtbp  = ', x_crtbp
-    write(*,*) '  y_crtbp  = ', y_crtbp
-    write(*,*) '  z_crtbp  = ', z_crtbp
-    write(*,*) '  vx_crtbp = ', vx_crtbp
-    write(*,*) '  vy_crtbp = ', vy_crtbp
-    write(*,*) '  vz_crtbp = ', vz_crtbp
+    write(*,'(A,*(F10.6,1X))') '  t_crtbp  = ', t_crtbp
+    write(*,'(A,*(F10.6,1X))') '  x_crtbp  = ', x_crtbp
+    write(*,'(A,*(F10.6,1X))') '  y_crtbp  = ', y_crtbp
+    write(*,'(A,*(F10.6,1X))') '  z_crtbp  = ', z_crtbp
+    write(*,'(A,*(F10.6,1X))') '  vx_crtbp = ', vx_crtbp
+    write(*,'(A,*(F10.6,1X))') '  vy_crtbp = ', vy_crtbp
+    write(*,'(A,*(F10.6,1X))') '  vz_crtbp = ', vz_crtbp
     write(*,*) ''
 
     ! transform state to moon-centered and unnormalize
