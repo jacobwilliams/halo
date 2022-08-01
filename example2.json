@@ -9,7 +9,8 @@
     "hour": 12,
     "minute": 0,
     "sec": 0,
-    "n_revs": 50,
+    "fix_initial_time": true,  // do not allow the initial epoch to vary
+    "n_revs": 10,
     "ephemeris_file": "data/eph/JPLEPH.421",
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
     "patch_point_file": "data/L2_halos.json"

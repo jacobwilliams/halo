@@ -81,7 +81,7 @@
         call solver%mission%plot('guess')  ! plot the initial guess
     if (generate_trajectory_files) &
         call solver%mission%write_optvars_to_file('guess',x) ! write guess to a file
-    call define_problem_size(m=m)
+    call solver%mission%define_problem_size(m=m)
     allocate(f(m))
     call solver%mission%constraint_violations(x,f)
 

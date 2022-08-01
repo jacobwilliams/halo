@@ -103,6 +103,9 @@
         real(wp),dimension(:),allocatable :: fscale  !! function scale factors
         character(len=20),dimension(:),allocatable :: xname !! opt var names
 
+        !FIXME - really should move mission specific data here,
+        !        but there is a problem doing that with how the classes are initialized.
+
     contains
 
         procedure,public :: init => initialize_the_mission
@@ -115,6 +118,7 @@
         procedure :: get_scales_from_segs
         procedure :: segs_to_propagate
         procedure :: get_sparsity_pattern
+        procedure :: define_problem_size
 
     end type mission_type
 
@@ -129,10 +133,17 @@
 
         procedure,public :: init => initialize_the_solver
 
+        procedure :: read_config_file
+
     end type my_solver_type
 
-    ! test
-    public :: define_problem_size
+    interface fill_vector
+        module procedure :: fill_vector_with_vector, fill_vector_with_scalar
+    end interface
+
+    interface extract_vector
+        module procedure :: extract_vector_from_vector, extract_scalar_from_vector
+    end interface
 
     contains
 !*****************************************************************************************
@@ -164,11 +175,15 @@
 !
 !@note All the outputs are functions of `n_revs`,
 !      the number of orbits we want to solve.
+!
+!### History
+!  * JW : 8/1/2022 : added option to fix initial time
 
-    pure subroutine define_problem_size(n,m,n_segs,n_nonzero)
+    pure subroutine define_problem_size(me,n,m,n_segs,n_nonzero)
 
     implicit none
 
+    class(mission_type),intent(in) :: me
     integer,intent(out),optional :: n          !! number of opt vars for the solver
     integer,intent(out),optional :: m          !! number of equality constraints for the solver
     integer,intent(out),optional :: n_segs     !! number of segments
@@ -181,6 +196,11 @@
     ! there are 4 blocks of nonzeros per rev
     ! (each block contains 84 elements)
     if (present(n_nonzero)) n_nonzero = n_revs * (84*4)
+
+    if (fix_initial_time) then
+        if (present(n)) n = n - 1  ! remove the t0 optimization variable
+        if (present(n_nonzero)) n_nonzero = n_nonzero - 6 ! remove the first column of the jacobian
+    end if
 
     end subroutine define_problem_size
 !*****************************************************************************************
@@ -237,7 +257,6 @@
 !  Initialize the mission.
 !
 !  This is the "forward-backward" formulation.
-!  It is assumed that the mission has already been initialized.
 
     subroutine initialize_the_solver(me,config_file_name,x)
 
@@ -257,9 +276,9 @@
 
     ! first we have to read the config file:
     ! this will populate the global variables
-    call read_config_file(config_file_name)
+    call me%read_config_file(config_file_name)
 
-    call define_problem_size(n,m)
+    call me%mission%define_problem_size(n,m)
 
     ! initialize the solver:
     call me%initialize(     n                = n,            &
@@ -271,8 +290,12 @@
                             step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                             n_intervals      = 2,            & ! number of intervals for step_mode=4
                             use_broyden      = .false.,      & ! broyden update
-                            !use_broyden=.true.,broyden_update_n=2, &
+                            !use_broyden=.true.,broyden_update_n=2, & ! ... test ...
                             export_iteration = halo_export   )
+
+    ! note: the above has `me` as an intent(out), so anything added before that is destroyed.
+    ! that is why we have to initialize the mission after this call, and have to use
+    ! global variables for the mission variables in some cases. -FIXME
 
     call me%status(istat=istat)
     status_ok = istat == 0
@@ -344,9 +367,9 @@
 
     if (present(x)) then
 
-        ! x = [t01,x01,t02,x02,...,t0n,x0n] - scaled
+        x = -huge(1.0_wp) ! just in case we miss one
 
-        i = 0
+        i = 0 ! initialize the index. will be updated by fill_vector
         iseg = 0
         do irev = 1, n_revs
 
@@ -354,41 +377,41 @@
 
                 ! the first one has an extra opt point at the initial periapsis passage
 
-                x(i+1)       = me%segs(iseg+1)%data%t0
-                x(i+2:i+7)   = me%segs(iseg+1)%data%x0_rotating
+                if (.not. fix_initial_time) &
+                call fill_vector(x, me%segs(iseg+1)%data%t0, i)
 
-                x(i+8)       = me%segs(iseg+2)%data%t0
-                x(i+9:i+14)  = me%segs(iseg+2)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+1)%data%x0_rotating, i)
 
-                x(i+15)      = me%segs(iseg+4)%data%t0
-                x(i+16:i+21) = me%segs(iseg+4)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+2)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+2)%data%x0_rotating, i)
 
-                x(i+22)      = me%segs(iseg+6)%data%t0
-                x(i+23:i+28) = me%segs(iseg+6)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+4)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+4)%data%x0_rotating, i)
 
-                x(i+29)      = me%segs(iseg+8)%data%t0
-                x(i+30:i+35) = me%segs(iseg+8)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+6)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+6)%data%x0_rotating, i)
+
+                call fill_vector(x, me%segs(iseg+8)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+8)%data%x0_rotating, i)
 
                 ! for next rev:
-                i = i + 35
                 iseg = iseg + 8
 
             else
 
-                x(i+1)       = me%segs(iseg+2)%data%t0
-                x(i+2:i+7)   = me%segs(iseg+2)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+2)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+2)%data%x0_rotating, i)
 
-                x(i+8)       = me%segs(iseg+4)%data%t0
-                x(i+9:i+14)  = me%segs(iseg+4)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+4)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+4)%data%x0_rotating, i)
 
-                x(i+15)      = me%segs(iseg+6)%data%t0
-                x(i+16:i+21) = me%segs(iseg+6)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+6)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+6)%data%x0_rotating, i)
 
-                x(i+22)      = me%segs(iseg+8)%data%t0
-                x(i+23:i+28) = me%segs(iseg+8)%data%x0_rotating
+                call fill_vector(x, me%segs(iseg+8)%data%t0, i)
+                call fill_vector(x, me%segs(iseg+8)%data%x0_rotating, i)
 
                 ! for next rev:
-                i = i + 28
                 iseg = iseg + 8
 
             end if
@@ -408,12 +431,11 @@
         iseg = 0
         do irev = 1, n_revs
 
-            f(i+1:i+6)   = -(me%segs(iseg+1)%data%xf_rotating - me%segs(iseg+2)%data%xf_rotating)
-            f(i+7:i+12)  = -(me%segs(iseg+3)%data%xf_rotating - me%segs(iseg+4)%data%xf_rotating)
-            f(i+13:i+18) = -(me%segs(iseg+5)%data%xf_rotating - me%segs(iseg+6)%data%xf_rotating)
-            f(i+19:i+24) = -(me%segs(iseg+7)%data%xf_rotating - me%segs(iseg+8)%data%xf_rotating)
+            call fill_vector(f, -(me%segs(iseg+1)%data%xf_rotating - me%segs(iseg+2)%data%xf_rotating), i)
+            call fill_vector(f, -(me%segs(iseg+3)%data%xf_rotating - me%segs(iseg+4)%data%xf_rotating), i)
+            call fill_vector(f, -(me%segs(iseg+5)%data%xf_rotating - me%segs(iseg+6)%data%xf_rotating), i)
+            call fill_vector(f, -(me%segs(iseg+7)%data%xf_rotating - me%segs(iseg+8)%data%xf_rotating), i)
 
-            i = i + 24
             iseg = iseg + 8
 
         end do
@@ -424,6 +446,84 @@
     end if
 
     end subroutine get_problem_arrays
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Put the vector in the vector and update the index
+
+    subroutine fill_vector_with_vector(x, vals, i)
+
+    implicit none
+
+    real(wp),dimension(:),intent(inout) :: x
+    real(wp),dimension(:),intent(in) :: vals
+    integer,intent(inout) :: i
+
+    integer :: j !! counter
+
+    do j = 1, size(vals)
+        call fill_vector(x,vals(j),i)
+    end do
+
+    end subroutine fill_vector_with_vector
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Put the value in the vector and update the index
+
+    subroutine fill_vector_with_scalar(x, val, i)
+
+    implicit none
+
+    real(wp),dimension(:),intent(inout) :: x
+    real(wp),intent(in) :: val
+    integer,intent(inout) :: i
+
+    i = i + 1
+    x(i) = val
+
+    end subroutine fill_vector_with_scalar
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Extract a vector from the vector and update the index
+
+    subroutine extract_vector_from_vector(vals, x, i)
+
+    implicit none
+
+    real(wp),dimension(:),intent(out) :: vals
+    real(wp),dimension(:),intent(in) :: x
+    integer,intent(inout) :: i
+
+    integer :: j !! counter
+
+    do j = 1, size(vals)
+        call extract_vector(vals(j),x,i)
+    end do
+
+    end subroutine extract_vector_from_vector
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Extract the value from the vector and update the index
+
+    subroutine extract_scalar_from_vector(val, x, i)
+
+    implicit none
+
+    real(wp),intent(out) :: val
+    real(wp),dimension(:),intent(in) :: x
+    integer,intent(inout) :: i
+
+    i = i + 1
+    val = x(i)
+
+    end subroutine extract_scalar_from_vector
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -447,7 +547,7 @@
     x = x_scaled * me%xscale
 
     ! first extract data from the opt var vector and put it into the segments:
-    i = 0
+    i = 0  ! initialize index, will be updated by extract_vector
     iseg = 0
     do irev = 1, n_revs
 
@@ -457,16 +557,21 @@
 
             ! the first one has an extra opt point at the initial periapsis passage
 
-            t0(1)               = x(i+1)
-            x0_rotating(:,1)    = x(i+2:i+7)
+            if (fix_initial_time) then
+                ! not in x, just keep the current value
+                t0(1) = me%segs(1)%data%t0
+            else
+                call extract_vector(t0(1), x, i)   ! x(i+1)
+            end if
+            call extract_vector(x0_rotating(:,1), x, i)   ! x(i+2:i+7)
             tf(1)               = t0(1) + period8
 
-            t0(2)               = x(i+8)
-            x0_rotating(:,2)    = x(i+9:i+14)
+            call extract_vector(t0(2)               , x, i)   ! = x(i+8)
+            call extract_vector(x0_rotating(:,2)    , x, i)   ! = x(i+9:i+14)
             tf(2)               = tf(1)
 
-            t0(4)               = x(i+15)
-            x0_rotating(:,4)    = x(i+16:i+21)
+            call extract_vector(t0(4)               , x, i)   ! = x(i+15)
+            call extract_vector(x0_rotating(:,4)    , x, i)   ! = x(i+16:i+21)
             tf(4)               = t0(4) - period8
 
             t0(3)               = t0(2)
@@ -477,12 +582,12 @@
             x0_rotating(:,5)    = x0_rotating(:,4)
             tf(5)               = t0(5) + period8
 
-            t0(6)               = x(i+22)
-            x0_rotating(:,6)    = x(i+23:i+28)
+            call extract_vector(t0(6)               , x, i)   ! = x(i+22)
+            call extract_vector(x0_rotating(:,6)    , x, i)   ! = x(i+23:i+28)
             tf(6)               = tf(5)
 
-            t0(8)               = x(i+29)
-            x0_rotating(:,8)    = x(i+30:i+35)
+            call extract_vector(t0(8)               , x, i)   ! = x(i+29)
+            call extract_vector(x0_rotating(:,8)    , x, i)   ! = x(i+30:i+35)
             tf(8)               = t0(8) - period8
 
             t0(7)               = t0(6)
@@ -495,7 +600,6 @@
             end do
 
             ! for next rev:
-            i = i + 35
             iseg = iseg + 8
 
         else
@@ -504,12 +608,12 @@
             x0_rotating(:,1)    =  x0_rotating(:,8)
             tf(1)               =  t0(1) + period8
 
-            t0(2)               =  x(i+1)
-            x0_rotating(:,2)    =  x(i+2:i+7)
+            call extract_vector(t0(2)               , x, i)   !=  x(i+1)
+            call extract_vector(x0_rotating(:,2)    , x, i)   !=  x(i+2:i+7)
             tf(2)               =  tf(1)
 
-            t0(4)               =  x(i+8)
-            x0_rotating(:,4)    =  x(i+9:i+14)
+            call extract_vector(t0(4)               , x, i)   !=  x(i+8)
+            call extract_vector(x0_rotating(:,4)    , x, i)   !=  x(i+9:i+14)
             tf(4)               =  t0(4) - period8
 
             t0(3)               =  t0(2)
@@ -520,12 +624,12 @@
             x0_rotating(:,5)    =  x0_rotating(:,4)
             tf(5)               =  t0(5) + period8
 
-            t0(6)               =  x(i+15)
-            x0_rotating(:,6)    =  x(i+16:i+21)
+            call extract_vector(t0(6)               , x, i)   !=  x(i+15)
+            call extract_vector(x0_rotating(:,6)    , x, i)   !=  x(i+16:i+21)
             tf(6)               =  tf(5)
 
-            t0(8)               =  x(i+22)
-            x0_rotating(:,8)    =  x(i+23:i+28)
+            call extract_vector(t0(8)               , x, i)   !=  x(i+22)
+            call extract_vector(x0_rotating(:,8)    , x, i)   !=  x(i+23:i+28)
             tf(8)               =  t0(8) - period8
 
             t0(7)               =  t0(6)
@@ -538,7 +642,6 @@
             end do
 
             ! for next rev:
-            i = i + 28
             iseg = iseg + 8
 
         end if
@@ -574,7 +677,7 @@
     integer :: n_nonzero    !! number of nonzero elements in the jacobian
     integer :: iblock
 
-    call define_problem_size(n_nonzero=n_nonzero)
+    call me%define_problem_size(n_nonzero=n_nonzero)
 
     allocate(irow(n_nonzero))
     allocate(icol(n_nonzero))
@@ -586,10 +689,15 @@
         irow_start = (iblock-1)*6 + 1       ! [1-6,  7-12, 13-18, ...]
 
         do ii = icol_start,icol_start+13
+            if (fix_initial_time .and. ii==1) cycle ! exclude the first column (t0)
             do jj = irow_start,irow_start+5
                 k = k + 1
                 irow(k) = jj
-                icol(k) = ii
+                if (fix_initial_time) then
+                    icol(k) = ii - 1  ! since the first one was skipped
+                else
+                    icol(k) = ii
+                end if
             end do
         end do
 
@@ -631,10 +739,8 @@
     use_openmp = .false.
 !$  use_openmp = .true.
 
-    write(*,*) 'initialize_the_mission'
-
     ! problem size:
-    call define_problem_size(n=n,m=m,n_segs=n_segs)
+    call me%define_problem_size(n=n,m=m,n_segs=n_segs)
 
     write(*,*) ''
     write(*,*) 'n:                 ',n
@@ -817,16 +923,21 @@
     ! iseg loop: x: [1,2,4,...n_segs]
     !            f: [  2,4,...n_segs]
 
-    call define_problem_size(n_segs=n_segs)
+    call me%define_problem_size(n_segs=n_segs)
 
     ! x scales - segment 1:
-    me%xscale(1)   = me%segs(1)%data%t0_scale
-    me%xscale(2:7) = me%segs(1)%data%x0_rotating_scale
-    me%xname(1) = 'SEG1 '//t0_label
-    do j=2,7
-        me%xname(j) = 'SEG1 '//x0_label(j-1)
+    i = 0
+    if (.not. fix_initial_time) then
+        i = i + 1
+        me%xscale(i) = me%segs(1)%data%t0_scale
+        me%xname(i) = 'SEG1 '//t0_label
+    end if
+    i = i + 1
+    me%xscale(i:i+5) = me%segs(1)%data%x0_rotating_scale
+    do j=1, 6
+        me%xname(j+i-1) = 'SEG1 '//x0_label(j)
     end do
-    i = 8
+    i = i + 6
 
     ! x scales - the rest:
     do iseg = 2, n_segs, 2
@@ -1366,9 +1477,10 @@
     integer :: iunit !! file unit for the txt file
     integer :: i !! counter for txt file write
     integer :: istart,iend,istep,iendprev  !! index counters
+    integer,dimension(2),parameter :: figsize = [20,20] !! figure size for plotting
 
-    logical :: plot_rotating = .true.    !! if true, the rotating state is plotted.
-                                         !! if false, the inertial state is plotted.
+    logical,parameter :: plot_rotating = .true.  !! if true, the rotating state is plotted.
+                                                 !! if false, the inertial state is plotted.
 
     ! optional arguments:
     if (present(export_trajectory)) then
@@ -1382,7 +1494,7 @@
                         xlabel='\n\n\nx (km)',&
                         ylabel='\n\n\ny (km)',&
                         zlabel='\n\n\nz (km)',&
-                        figsize=[20,20],&
+                        figsize         =figsize,&
                         font_size       = 20,&
                         axes_labelsize  = 25,&
                         xtick_labelsize = 20,&
@@ -1573,15 +1685,17 @@
 !@todo Add patch point interpolation based on \( r_p \)
 !      if the specified value is not in the file.
 
-    subroutine read_config_file(filename)
+    subroutine read_config_file(me, filename)
 
     implicit none
 
+    class(my_solver_type),intent(inout) :: me
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
     type(json_file) :: json !! the config file structure
     type(csv_file) :: csv   !! the patch point file
     logical :: found, found_rp, found_jc, found_period
+    logical :: fix_initial_epoch, fix_initial_epoch_found
     logical :: status_ok
     real(wp),dimension(:),allocatable :: rp_vec
     real(wp),dimension(:),allocatable :: t_vec
@@ -1619,6 +1733,10 @@
     call json%get('ephemeris_file',  ephemeris_file,  found); call error_check('ephemeris_file')
     call json%get('gravfile',        gravfile,        found); call error_check('gravfile')
     call json%get('patch_point_file',patch_point_file,found); call error_check('patch_point_file')
+
+    ! optional inputs:
+    call json%get('fix_initial_time', fix_initial_epoch, fix_initial_epoch_found)
+    if (fix_initial_epoch_found) fix_initial_time = fix_initial_epoch ! save the global variable
 
     use_json_file = index(patch_point_file, '.json') > 0
     if (.not. use_json_file .and. .not. found_rp) &

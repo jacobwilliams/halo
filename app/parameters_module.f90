@@ -90,4 +90,6 @@
     real(wp),dimension(6),parameter,public :: fscale_xf = &
         [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0e+02_wp,1.0e+02_wp,1.0e+02_wp]
 
+    logical,public  :: fix_initial_time = .false. !! to fix the initial epoch in the mission
+
     end module parameters_module
