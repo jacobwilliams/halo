@@ -13,6 +13,7 @@
     use pyplot_module
     use csv_module
     use bspline_module
+    use config_file_module
 
     implicit none
 
@@ -136,14 +137,6 @@
         procedure :: read_config_file
 
     end type my_solver_type
-
-    interface fill_vector
-        module procedure :: fill_vector_with_vector, fill_vector_with_scalar
-    end interface
-
-    interface extract_vector
-        module procedure :: extract_vector_from_vector, extract_scalar_from_vector
-    end interface
 
     contains
 !*****************************************************************************************
@@ -278,6 +271,8 @@
     ! this will populate the global variables
     call me%read_config_file(config_file_name)
 
+    ! initialize the mission
+    call me%mission%init(x)
     call me%mission%define_problem_size(n,m)
 
     ! initialize the solver:
@@ -290,63 +285,14 @@
                             step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                             n_intervals      = 2,            & ! number of intervals for step_mode=4
                             use_broyden      = .false.,      & ! broyden update
-                            !use_broyden=.true.,broyden_update_n=2, & ! ... test ...
+                            !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
                             export_iteration = halo_export   )
-
-    ! note: the above has `me` as an intent(out), so anything added before that is destroyed.
-    ! that is why we have to initialize the mission after this call, and have to use
-    ! global variables for the mission variables in some cases. -FIXME
 
     call me%status(istat=istat)
     status_ok = istat == 0
-
-    ! initialize the mission
-    call me%mission%init(x)
-
     if (.not. status_ok) error stop 'error in initialize_the_solver'
 
     end subroutine initialize_the_solver
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Returns a positive number the same magnitude as the input,
-!  with only one significant digit.
-!
-!  If `mina` is present, then `max(mina,mag(a))` is returned
-!
-!  Examples:
-!```
-!     mag(1234.56)  -> 1000.0
-!     mag(-999.99)  -> 900.0
-!     mag(1.456e-4) -> 0.0001
-!```
-
-    pure elemental function mag(a,mina) result(m)
-
-    implicit none
-
-    real(wp),intent(in) :: a
-    real(wp),intent(in),optional :: mina
-    real(wp) :: m
-
-    real(wp) :: x,tmp
-
-    x = abs(a)
-
-    if (x==0.0_wp) then
-        if (.not. present(mina)) then
-            m = 1.0_wp
-        else
-            m = mina
-        end if
-    else
-        tmp = 10.0_wp ** floor(log10(x))
-        m = tmp * floor(x/tmp)
-        if (present(mina)) m = max(mina,m)
-    end if
-
-    end function mag
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -446,84 +392,6 @@
     end if
 
     end subroutine get_problem_arrays
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Put the vector in the vector and update the index
-
-    subroutine fill_vector_with_vector(x, vals, i)
-
-    implicit none
-
-    real(wp),dimension(:),intent(inout) :: x
-    real(wp),dimension(:),intent(in) :: vals
-    integer,intent(inout) :: i
-
-    integer :: j !! counter
-
-    do j = 1, size(vals)
-        call fill_vector(x,vals(j),i)
-    end do
-
-    end subroutine fill_vector_with_vector
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Put the value in the vector and update the index
-
-    subroutine fill_vector_with_scalar(x, val, i)
-
-    implicit none
-
-    real(wp),dimension(:),intent(inout) :: x
-    real(wp),intent(in) :: val
-    integer,intent(inout) :: i
-
-    i = i + 1
-    x(i) = val
-
-    end subroutine fill_vector_with_scalar
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Extract a vector from the vector and update the index
-
-    subroutine extract_vector_from_vector(vals, x, i)
-
-    implicit none
-
-    real(wp),dimension(:),intent(out) :: vals
-    real(wp),dimension(:),intent(in) :: x
-    integer,intent(inout) :: i
-
-    integer :: j !! counter
-
-    do j = 1, size(vals)
-        call extract_vector(vals(j),x,i)
-    end do
-
-    end subroutine extract_vector_from_vector
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Extract the value from the vector and update the index
-
-    subroutine extract_scalar_from_vector(val, x, i)
-
-    implicit none
-
-    real(wp),intent(out) :: val
-    real(wp),dimension(:),intent(in) :: x
-    integer,intent(inout) :: i
-
-    i = i + 1
-    val = x(i)
-
-    end subroutine extract_scalar_from_vector
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -865,10 +733,10 @@
 
             ! also set the scales:
             ! the t0 gradually grows larger so use the initial value for each segment.
-            me%segs(iseg+j)%data%t0_scale = abs(mag(2.0_wp*me%segs(iseg+j)%data%t0))    ! magic number
+            me%segs(iseg+j)%data%t0_scale = abs(magnitude(2.0_wp*me%segs(iseg+j)%data%t0))    ! magic number
 
             ! do the same for the states, but just in case, specify the min values:
-            me%segs(iseg+j)%data%x0_rotating_scale = abs(mag(2.0_wp*me%segs(iseg+j)%data%x0_rotating, xscale_x0))
+            me%segs(iseg+j)%data%x0_rotating_scale = abs(magnitude(2.0_wp*me%segs(iseg+j)%data%x0_rotating, xscale_x0))
 
             me%segs(iseg+j)%data%xf_rotating_scale = fscale_xf  ! these are all the same for the constraints
 
@@ -1692,10 +1560,9 @@
     class(my_solver_type),intent(inout) :: me
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
-    type(json_file) :: json !! the config file structure
+    type(config_file) :: f
     type(csv_file) :: csv   !! the patch point file
     logical :: found, found_rp, found_jc, found_period
-    logical :: fix_initial_epoch, fix_initial_epoch_found
     logical :: status_ok
     real(wp),dimension(:),allocatable :: rp_vec
     real(wp),dimension(:),allocatable :: t_vec
@@ -1709,34 +1576,32 @@
     logical :: use_json_file  !! if true, use the JSON file.
                               !! if false, use the CSV file.
 
-    call json%initialize()
     write(*,*) '* Loading config file: '//trim(filename)
-    call json%load_file(filename=filename)
-    if (json%failed()) error stop 'error loading config file'
+    call f%open(filename)
 
     write(*,*) '* Reading config file'
 
     ! rp will be used for the csv file, jc for the JSON file
-    call json%get('rp', rp, found_rp)
-    call json%get('jc', jc, found_jc)
-    call json%get('period', p, found_period)
+    call f%get('rp',                        rp, found_rp)          ! one of these three must be present
+    call f%get('jc',                        jc, found_jc)          !
+    call f%get('period',                    p, found_period)       !
+    call f%get('fix_initial_time',          fix_initial_time, found)
+    call f%get('generate_plots',            generate_plots, found)
+    call f%get('generate_trajectory_files', generate_trajectory_files, found)
 
-    call json%get('N_or_S',          N_or_S,          found); call error_check('N_or_S')
-    call json%get('L1_or_L2',        L1_or_L2,        found); call error_check('L1_or_L2')
-    call json%get('year',            year,            found); call error_check('year')
-    call json%get('month',           month,           found); call error_check('month')
-    call json%get('day',             day,             found); call error_check('day')
-    call json%get('hour',            hour,            found); call error_check('hour')
-    call json%get('minute',          minute,          found); call error_check('minute')
-    call json%get('sec',             sec,             found); call error_check('sec')
-    call json%get('n_revs',          n_revs,          found); call error_check('n_revs')
-    call json%get('ephemeris_file',  ephemeris_file,  found); call error_check('ephemeris_file')
-    call json%get('gravfile',        gravfile,        found); call error_check('gravfile')
-    call json%get('patch_point_file',patch_point_file,found); call error_check('patch_point_file')
-
-    ! optional inputs:
-    call json%get('fix_initial_time', fix_initial_epoch, fix_initial_epoch_found)
-    if (fix_initial_epoch_found) fix_initial_time = fix_initial_epoch ! save the global variable
+    ! required inputs:
+    call f%get('N_or_S',          N_or_S           )
+    call f%get('L1_or_L2',        L1_or_L2         )
+    call f%get('year',            year             )
+    call f%get('month',           month            )
+    call f%get('day',             day              )
+    call f%get('hour',            hour             )
+    call f%get('minute',          minute           )
+    call f%get('sec',             sec              )
+    call f%get('n_revs',          n_revs           )
+    call f%get('ephemeris_file',  ephemeris_file   )
+    call f%get('gravfile',        gravfile         )
+    call f%get('patch_point_file',patch_point_file )
 
     use_json_file = index(patch_point_file, '.json') > 0
     if (.not. use_json_file .and. .not. found_rp) &
@@ -1744,15 +1609,7 @@
     if (use_json_file .and. (found_jc .eqv. found_period)) &
         error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
 
-    ! optional ones:
-    ! [if not present, then the defaults are used]
-    call json%get('generate_plots', tmp, found)
-    if (found) generate_plots = tmp
-    call json%get('generate_trajectory_files', tmp, found)
-    if (found) generate_trajectory_files = tmp
-
-    if (json%failed()) error stop 'error loading config file'
-    call json%destroy() ! cleanup
+    call f%close() ! cleanup
 
     ! compute reference epoch from the date (TDB):
     et_ref = jd_to_et(julian_date(year,month,day,hour,minute,sec))
@@ -1765,34 +1622,25 @@
 
         block
 
-            type(json_file) :: jsonf
             real(wp) :: lstar, tstar
             real(wp),dimension(:),allocatable :: jcvec, normalized_period
             real(wp),dimension(:),allocatable :: x0, z0, ydot0
             real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
 
-            write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
-
             ! read the JSON file:
-            call jsonf%load(filename=patch_point_file)
-            if (jsonf%failed()) error stop 'error reading json file '//trim(patch_point_file)
-            write(*,*) '* getting data... '
+            write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
+            call f%open(patch_point_file)
 
-            call jsonf%get('lstar', lstar, found=found)
-                if (.not. found) error stop 'error reading lstar from json file '//trim(patch_point_file)
-            call jsonf%get('tstar', tstar, found=found)
-                if (.not. found) error stop 'error reading tstar from json file '//trim(patch_point_file)
-            call jsonf%get('jc',    jcvec,    found=found)
-                if (.not. found) error stop 'error reading jc from json file '//trim(patch_point_file)
-            call jsonf%get('period',normalized_period,found=found)
-                if (.not. found) error stop 'error reading period from json file '//trim(patch_point_file)
-            call jsonf%get('x0',    x0,    found=found)
-                if (.not. found) error stop 'error reading x0 from json file '//trim(patch_point_file)
-            call jsonf%get('z0',    z0,    found=found)
-                if (.not. found) error stop 'error reading z0 from json file '//trim(patch_point_file)
-            call jsonf%get('ydot0', ydot0, found=found)
-                if (.not. found) error stop 'error reading ydot0 from json file '//trim(patch_point_file)
-            call jsonf%destroy()
+            ! all inputs are required:
+            write(*,*) '* getting data... '
+            call f%get('lstar', lstar            )
+            call f%get('tstar', tstar            )
+            call f%get('jc',    jcvec            )
+            call f%get('period',normalized_period)
+            call f%get('x0',    x0               )
+            call f%get('z0',    z0               )
+            call f%get('ydot0', ydot0            )
+            call f%close()
 
             write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', normalized_period * tstar * sec2day
 
@@ -1809,7 +1657,6 @@
                 pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
             end if
 
-            ! write(*,*) '* generate patch points... '
             call generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
             periapsis = pp(1)
             quarter   = pp(2)
@@ -2016,7 +1863,7 @@
 
     ! integrate and report the points at dt steps (periapsis, 1/4, and apoapsis)
     call prop%initialize(n,maxnum=10000,df=func,&
-                         rtol=[1.0e-12_wp],atol=[1.0e-12_wp],&
+                         rtol=[rtol],atol=[atol],&
                          report=report)
     call prop%first_call()
     call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)
