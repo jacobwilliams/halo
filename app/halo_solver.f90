@@ -77,9 +77,9 @@
     config_file_name = argv(1)
 
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
-    if (generate_plots) &
+    if (solver%mission%generate_plots) &
         call solver%mission%plot('guess')  ! plot the initial guess
-    if (generate_trajectory_files) &
+    if (solver%mission%generate_trajectory_files) &
         call solver%mission%write_optvars_to_file('guess',x) ! write guess to a file
     call solver%mission%define_problem_size(m=m)
     allocate(f(m))
@@ -123,9 +123,9 @@
 !$  write(*,*) 'OMP wall time   : ', (tend-tstart), 'sec'
     write(*,*) ''
 
-    if (generate_trajectory_files) &
+    if (solver%mission%generate_trajectory_files) &
         call solver%mission%write_optvars_to_file('solution',x)       ! write solution to a file:
-    if (generate_plots) &
+    if (solver%mission%generate_plots) &
         call solver%mission%plot('solution',export_trajectory=.true.) ! plot solution
 
 !*****************************************************************************************

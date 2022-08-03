@@ -11,7 +11,6 @@
     use numerical_differentiation_module
     use json_module
     use pyplot_module
-    use csv_module
     use bspline_module
     use config_file_module
 
@@ -22,6 +21,9 @@
     type segment_data
 
         !! data for a segment
+
+        real(wp) :: et_ref = zero  !! ephemeris time reference epoch
+                                   !! (all times relative to this)
 
         real(wp)              :: t0 = zero          !! initial time [days]
         real(wp)              :: t0_scale = one     !! opt var scale for `t0`
@@ -104,8 +106,49 @@
         real(wp),dimension(:),allocatable :: fscale  !! function scale factors
         character(len=20),dimension(:),allocatable :: xname !! opt var names
 
-        !FIXME - really should move mission specific data here,
-        !        but there is a problem doing that with how the classes are initialized.
+        character(len=:),allocatable :: N_or_S      !! 'N' or 'S'
+        character(len=:),allocatable :: L1_or_L2    !! 'L1' or 'L2'
+
+        logical :: generate_plots = .true.  !! to generate the python plots
+        logical :: generate_trajectory_files = .true.  !! to export the txt trajectory files.
+
+        integer :: year   = 0 !! epoch of first point (first periapsis crossing)
+        integer :: month  = 0 !! epoch of first point (first periapsis crossing)
+        integer :: day    = 0 !! epoch of first point (first periapsis crossing)
+        integer :: hour   = 0 !! epoch of first point (first periapsis crossing)
+        integer :: minute = 0 !! epoch of first point (first periapsis crossing)
+        real(wp) :: sec   = zero !! epoch of first point (first periapsis crossing)
+        real(wp) :: et_ref = zero  !! ephemeris time reference epoch
+                                   !! (all times relative to this)
+                                   !! this is computed from the year,month,day,hour,minute,sec values
+                                   !! [sec]
+
+        integer :: n_revs = 10  !! Number of revs in the Halo.
+
+        character(len=:),allocatable :: ephemeris_file !! the JPL ephemeris file to load
+        ! [note: these are build using the get_third_party script in FAT.
+        !  the files are platform (and maybe compiler specific)
+        !  'data/eph/JPLEPH.421'               !! JPL DE421 ephemeris file [mac,gfortran]
+        !  'data/eph/JPLEPH_intel_mac.421'     !! [mac,ifort]
+        !  'data/eph/JPLEPH_windows_ifort.421' !! [windows,ifort]
+
+        ! environment and integrator parameters:
+
+        character(len=:),allocatable :: gravfile  !! spherical harmonic gravity coeff file (Moon)
+        !! example: 'data/grav/gggrx_0020pm_sha.tab'
+
+        character(len=:),allocatable :: patch_point_file   !! Halo CR3BP patch point solution file
+        !! example: 'data/L2_halos.json'
+
+        ! the initial guess for the Halo:
+        ! This is for the "three_patch_point_solution_forward" version of the transcription.
+        type(patch_point) :: periapsis    !! Patchpoint Periapse State
+        type(patch_point) :: quarter      !! Patchpoint 1/4 Rev State
+        type(patch_point) :: apoapsis     !! Patchpoint 1/2 Rev State
+        real(wp) :: period  = 0.0_wp !! Halo period [days]
+        real(wp) :: period8 = 0.0_wp !! 1/8 of Halo period [days]
+
+        logical  :: fix_initial_time = .false. !! to fix the initial epoch in the mission
 
     contains
 
@@ -120,6 +163,8 @@
         procedure :: segs_to_propagate
         procedure :: get_sparsity_pattern
         procedure :: define_problem_size
+        procedure :: get_case_name
+        procedure :: generate_patch_points
 
     end type mission_type
 
@@ -128,7 +173,7 @@
         !! the solver class, which contains
         !! an instance of the mission
 
-        type(mission_type) :: mission  !! the Halo mission
+        type(mission_type) :: mission !! the Halo mission
 
     contains
 
@@ -182,15 +227,15 @@
     integer,intent(out),optional :: n_segs     !! number of segments
     integer,intent(out),optional :: n_nonzero  !! number of nonzero elements in the Jacobian
 
-    if (present(n))      n      = 28 * n_revs + 7
-    if (present(m))      m      = 24 * n_revs
-    if (present(n_segs)) n_segs = 8 * n_revs
+    if (present(n))      n      = 28 * me%n_revs + 7
+    if (present(m))      m      = 24 * me%n_revs
+    if (present(n_segs)) n_segs = 8 * me%n_revs
 
     ! there are 4 blocks of nonzeros per rev
     ! (each block contains 84 elements)
-    if (present(n_nonzero)) n_nonzero = n_revs * (84*4)
+    if (present(n_nonzero)) n_nonzero = me%n_revs * (84*4)
 
-    if (fix_initial_time) then
+    if (me%fix_initial_time) then
         if (present(n)) n = n - 1  ! remove the t0 optimization variable
         if (present(n_nonzero)) n_nonzero = n_nonzero - 6 ! remove the first column of the jacobian
     end if
@@ -257,7 +302,7 @@
 
     class(my_solver_type),intent(inout) :: me
     character(len=*),intent(in) :: config_file_name !! the config file to read
-    real(wp),dimension(:),allocatable,intent(out) :: x !! initial guess
+    real(wp),dimension(:),allocatable,intent(out),optional :: x !! initial guess
 
     integer :: n          !! number of opt vars for the solver
     integer :: m          !! number of equality constraints for the solver
@@ -268,7 +313,7 @@
     ! until we read the config file.
 
     ! first we have to read the config file:
-    ! this will populate the global variables
+    ! this will populate some of the mission variables
     call me%read_config_file(config_file_name)
 
     ! initialize the mission
@@ -317,13 +362,13 @@
 
         i = 0 ! initialize the index. will be updated by fill_vector
         iseg = 0
-        do irev = 1, n_revs
+        do irev = 1, me%n_revs
 
             if (irev==1) then
 
                 ! the first one has an extra opt point at the initial periapsis passage
 
-                if (.not. fix_initial_time) &
+                if (.not. me%fix_initial_time) &
                 call fill_vector(x, me%segs(iseg+1)%data%t0, i)
 
                 call fill_vector(x, me%segs(iseg+1)%data%x0_rotating, i)
@@ -375,7 +420,7 @@
 
         i = 0
         iseg = 0
-        do irev = 1, n_revs
+        do irev = 1, me%n_revs
 
             call fill_vector(f, -(me%segs(iseg+1)%data%xf_rotating - me%segs(iseg+2)%data%xf_rotating), i)
             call fill_vector(f, -(me%segs(iseg+3)%data%xf_rotating - me%segs(iseg+4)%data%xf_rotating), i)
@@ -417,7 +462,7 @@
     ! first extract data from the opt var vector and put it into the segments:
     i = 0  ! initialize index, will be updated by extract_vector
     iseg = 0
-    do irev = 1, n_revs
+    do irev = 1, me%n_revs
 
         ! extract the values:
 
@@ -425,14 +470,14 @@
 
             ! the first one has an extra opt point at the initial periapsis passage
 
-            if (fix_initial_time) then
+            if (me%fix_initial_time) then
                 ! not in x, just keep the current value
                 t0(1) = me%segs(1)%data%t0
             else
                 call extract_vector(t0(1), x, i)   ! x(i+1)
             end if
             call extract_vector(x0_rotating(:,1), x, i)   ! x(i+2:i+7)
-            tf(1)               = t0(1) + period8
+            tf(1)               = t0(1) + me%period8
 
             call extract_vector(t0(2)               , x, i)   ! = x(i+8)
             call extract_vector(x0_rotating(:,2)    , x, i)   ! = x(i+9:i+14)
@@ -440,7 +485,7 @@
 
             call extract_vector(t0(4)               , x, i)   ! = x(i+15)
             call extract_vector(x0_rotating(:,4)    , x, i)   ! = x(i+16:i+21)
-            tf(4)               = t0(4) - period8
+            tf(4)               = t0(4) - me%period8
 
             t0(3)               = t0(2)
             x0_rotating(:,3)    = x0_rotating(:,2)
@@ -448,7 +493,7 @@
 
             t0(5)               = t0(4)
             x0_rotating(:,5)    = x0_rotating(:,4)
-            tf(5)               = t0(5) + period8
+            tf(5)               = t0(5) + me%period8
 
             call extract_vector(t0(6)               , x, i)   ! = x(i+22)
             call extract_vector(x0_rotating(:,6)    , x, i)   ! = x(i+23:i+28)
@@ -456,7 +501,7 @@
 
             call extract_vector(t0(8)               , x, i)   ! = x(i+29)
             call extract_vector(x0_rotating(:,8)    , x, i)   ! = x(i+30:i+35)
-            tf(8)               = t0(8) - period8
+            tf(8)               = t0(8) - me%period8
 
             t0(7)               = t0(6)
             x0_rotating(:,7)    = x0_rotating(:,6)
@@ -474,7 +519,7 @@
 
             t0(1)               =  t0(8)                ! inherits from the previous rev
             x0_rotating(:,1)    =  x0_rotating(:,8)
-            tf(1)               =  t0(1) + period8
+            tf(1)               =  t0(1) + me%period8
 
             call extract_vector(t0(2)               , x, i)   !=  x(i+1)
             call extract_vector(x0_rotating(:,2)    , x, i)   !=  x(i+2:i+7)
@@ -482,7 +527,7 @@
 
             call extract_vector(t0(4)               , x, i)   !=  x(i+8)
             call extract_vector(x0_rotating(:,4)    , x, i)   !=  x(i+9:i+14)
-            tf(4)               =  t0(4) - period8
+            tf(4)               =  t0(4) - me%period8
 
             t0(3)               =  t0(2)
             x0_rotating(:,3)    =  x0_rotating(:,2)
@@ -490,7 +535,7 @@
 
             t0(5)               =  t0(4)
             x0_rotating(:,5)    =  x0_rotating(:,4)
-            tf(5)               =  t0(5) + period8
+            tf(5)               =  t0(5) + me%period8
 
             call extract_vector(t0(6)               , x, i)   !=  x(i+15)
             call extract_vector(x0_rotating(:,6)    , x, i)   !=  x(i+16:i+21)
@@ -498,7 +543,7 @@
 
             call extract_vector(t0(8)               , x, i)   !=  x(i+22)
             call extract_vector(x0_rotating(:,8)    , x, i)   !=  x(i+23:i+28)
-            tf(8)               =  t0(8) - period8
+            tf(8)               =  t0(8) - me%period8
 
             t0(7)               =  t0(6)
             x0_rotating(:,7)    =  x0_rotating(:,6)
@@ -551,17 +596,17 @@
     allocate(icol(n_nonzero))
 
     k = 0
-    do iblock = 1, n_revs*4 ! block loop
+    do iblock = 1, me%n_revs*4 ! block loop
 
         icol_start = (iblock-1)*7 + 1       ! [1-14, 8-21, 15-29, ...]
         irow_start = (iblock-1)*6 + 1       ! [1-6,  7-12, 13-18, ...]
 
         do ii = icol_start,icol_start+13
-            if (fix_initial_time .and. ii==1) cycle ! exclude the first column (t0)
+            if (me%fix_initial_time .and. ii==1) cycle ! exclude the first column (t0)
             do jj = irow_start,irow_start+5
                 k = k + 1
                 irow(k) = jj
-                if (fix_initial_time) then
+                if (me%fix_initial_time) then
                     icol(k) = ii - 1  ! since the first one was skipped
                 else
                     icol(k) = ii
@@ -583,7 +628,7 @@
     implicit none
 
     class(mission_type),intent(inout) :: me
-    real(wp),dimension(:),allocatable,intent(out) :: x !! initial guess
+    real(wp),dimension(:),allocatable,intent(out),optional :: x !! initial guess
 
     logical :: status_ok                        !! status flag
     integer :: i,j                              !! counter
@@ -614,7 +659,7 @@
     write(*,*) 'n:                 ',n
     write(*,*) 'm:                 ',m
     write(*,*) 'number of segments:',n_segs
-    write(*,*) 'number of revs:    ',n_revs
+    write(*,*) 'number of revs:    ',me%n_revs
     write(*,*) ''
 
     ! arrays for the gradient computations:
@@ -650,12 +695,12 @@
     allocate(me%grav)
 
     ! set up the ephemeris:
-    !write(*,*) 'loading ephemeris file: '//trim(ephemeris_file)
-    call me%eph%initialize(filename=ephemeris_file,status_ok=status_ok)
+    !write(*,*) 'loading ephemeris file: '//trim(me%ephemeris_file)
+    call me%eph%initialize(filename=me%ephemeris_file,status_ok=status_ok)
     if (.not. status_ok) error stop 'error initializing ephemeris'
 
     ! set up the force model [main body is moon]:
-    call me%grav%initialize(gravfile,grav_n,grav_m,status_ok)
+    call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
     if (.not. status_ok) error stop 'error initializing gravity model'
 
     ! now, we set up the segment structure for the problem we are solving:
@@ -668,6 +713,11 @@
         call me%segs(i)%initialize(n_eoms,maxnum,ballistic_derivs,&
                                    [rtol],[atol],&
                                    report=trajectory_export_func)
+
+        ! make a copy of this global variable in the segment.
+        ! [this was set in read_config_file]
+        ! [figure out a way to avoid this..]
+        me%segs(i)%data%et_ref = me%et_ref
 
         if (use_openmp) then
             ! make a copy for each segment, so they can run in parallel
@@ -690,21 +740,21 @@
     i = 0
     iseg = 0
     t_periapsis = 0.0_wp
-    do irev = 1, n_revs
+    do irev = 1, me%n_revs
 
         ! these are all unscaled values:
 
-        t0(1) = t_periapsis + periapsis%t
-        x0_rotating(:,1) = periapsis%rv
-        tf(1) = t0(1) + period8
+        t0(1) = t_periapsis + me%periapsis%t
+        x0_rotating(:,1) = me%periapsis%rv
+        tf(1) = t0(1) + me%period8
 
-        t0(2) = t_periapsis + quarter%t
-        x0_rotating(:,2) = quarter%rv
+        t0(2) = t_periapsis + me%quarter%t
+        x0_rotating(:,2) = me%quarter%rv
         tf(2) = tf(1)
 
-        t0(4) = t_periapsis + apoapsis%t
-        x0_rotating(:,4) = apoapsis%rv
-        tf(4) = t0(4) - period8
+        t0(4) = t_periapsis + me%apoapsis%t
+        x0_rotating(:,4) = me%apoapsis%rv
+        tf(4) = t0(4) - me%period8
 
         t0(3) = t0(2)
         x0_rotating(:,3) = x0_rotating(:,2)
@@ -712,15 +762,16 @@
 
         t0(5) = t0(4)
         x0_rotating(:,5) = x0_rotating(:,4)
-        tf(5) = t0(5) + period8
+        tf(5) = t0(5) + me%period8
 
-        t0(6) = t_periapsis + apoapsis%t + quarter%t
-        x0_rotating(:,6) = [quarter%rv(1),-quarter%rv(2),quarter%rv(3),-quarter%rv(4),quarter%rv(5),-quarter%rv(6)]
+        t0(6) = t_periapsis + me%apoapsis%t + me%quarter%t
+        x0_rotating(:,6) = [ me%quarter%rv(1),-me%quarter%rv(2),me%quarter%rv(3),&
+                            -me%quarter%rv(4),me%quarter%rv(5),-me%quarter%rv(6)]
         tf(6) = tf(5)
 
-        t0(8) = t_periapsis + period
-        x0_rotating(:,8) = periapsis%rv
-        tf(8) = t0(8) - period8
+        t0(8) = t_periapsis + me%period
+        x0_rotating(:,8) = me%periapsis%rv
+        tf(8) = t0(8) - me%period8
 
         t0(7) = t0(6)
         x0_rotating(:,7) = x0_rotating(:,6)
@@ -745,11 +796,10 @@
         ! for next rev:
         i = i + 35
         iseg = iseg + 8
-        t_periapsis = t_periapsis + period ! add another period
+        t_periapsis = t_periapsis + me%period ! add another period
 
     end do
 
-    allocate(x(n))    ! size the opt var vector
     allocate(me%xscale(n))
     allocate(me%xname(n))
     allocate(me%fscale(m))
@@ -757,8 +807,11 @@
     ! also set the scale factors:
     call me%get_scales_from_segs()
 
-    ! get the initial guess from the mission:
-    call me%get_problem_arrays(x=x)
+    if (present(x)) then
+        ! get the initial guess from the mission:
+        allocate(x(n))    ! size the opt var vector
+        call me%get_problem_arrays(x=x)
+    end if
 
     write(*,*) 'Done with initialize_the_mission.'
 
@@ -795,7 +848,7 @@
 
     ! x scales - segment 1:
     i = 0
-    if (.not. fix_initial_time) then
+    if (.not. me%fix_initial_time) then
         i = i + 1
         me%xscale(i) = me%segs(1)%data%t0_scale
         me%xname(i) = 'SEG1 '//t0_label
@@ -871,7 +924,7 @@
         v = x(4:6)
 
         ! compute ephemeris time [sec]:
-        et = et_ref + t
+        et = me%data%et_ref + t
 
         ! geopotential gravity:
         rotmat = icrf_to_iau_moon(et)   ! rotation matrix from inertial to body-fixed Moon frame
@@ -925,7 +978,7 @@
     ! note that the position vectors are in the rotating frame,
     ! have to transform to inertial to integrate.
     ! create the frames for the transformation:
-    et0 = et_ref + t0 * day2sec  ! convert to ephemeris time [sec]
+    et0 = me%data%et_ref + t0 * day2sec  ! convert to ephemeris time [sec]
     rotating = two_body_rotating_frame(primary_body=body_earth,&
                                         secondary_body=body_moon,&
                                         center=center_at_secondary_body,&
@@ -1038,7 +1091,7 @@
     xf = x  ! final state [inertial frame]
 
     ! also save the rotating frame state at tf (to compute the constraint violations):
-    etf = et_ref + tf  ! convert to ephemeris time [sec]
+    etf = me%data%et_ref + tf  ! convert to ephemeris time [sec]
     inertial = icrf_frame(b=body_moon)
     rotating = two_body_rotating_frame(primary_body=body_earth,&
                                        secondary_body=body_moon,&
@@ -1374,7 +1427,7 @@
                         mplot3d=.true.)
 
     if (export) then
-        open(newunit=iunit,file=trim(filename)//'_'//get_case_name()//'.txt',status='REPLACE',iostat=istat)
+        open(newunit=iunit,file=trim(filename)//'_'//me%get_case_name()//'.txt',status='REPLACE',iostat=istat)
         if (istat/=0) error stop 'error opening trajectory file.'
     end if
 
@@ -1452,8 +1505,8 @@
 
     ! save the plot:
     ! call plt%showfig(pyfile=trim(filename)//'.py',istat=istat)
-    call plt%savefig(trim(filename)//'_'//get_case_name()//'.png',&
-                     pyfile=trim(filename)//'_'//get_case_name()//'.py',dpi='300',&
+    call plt%savefig(trim(filename)//'_'//me%get_case_name()//'.png',&
+                     pyfile=trim(filename)//'_'//me%get_case_name()//'.py',dpi='300',&
                      istat=istat)
 
     ! cleanup:
@@ -1522,7 +1575,7 @@
     select type (me)
     class is (segment)
 
-        et = et_ref + t  ! convert to ephemeris time [sec]
+        et = me%data%et_ref + t  ! convert to ephemeris time [sec]
 
         ! convert state to the moon-centered rotating frame
         inertial = icrf_frame(b=body_moon)
@@ -1549,9 +1602,6 @@
 !>
 !  Read the config file that defines the problem
 !  to be solved and set all the global variables.
-!
-!@todo Add patch point interpolation based on \( r_p \)
-!      if the specified value is not in the file.
 
     subroutine read_config_file(me, filename)
 
@@ -1561,148 +1611,106 @@
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
     type(config_file) :: f
-    type(csv_file) :: csv   !! the patch point file
-    logical :: found, found_rp, found_jc, found_period
-    logical :: status_ok
-    real(wp),dimension(:),allocatable :: rp_vec
-    real(wp),dimension(:),allocatable :: t_vec
-    real(wp),dimension(:),allocatable :: x_vec,y_vec,z_vec
-    real(wp),dimension(:),allocatable :: vx_vec,vy_vec,vz_vec
+    logical :: found, found_jc, found_period
+    !logical :: status_ok
     integer :: i, irow
-    logical :: tmp  !! for optional logical inputs
     real(wp):: jc !! jacobii constant from the file
     real(wp):: p !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
     logical :: use_json_file  !! if true, use the JSON file.
                               !! if false, use the CSV file.
+    real(wp) :: lstar, tstar
+    real(wp),dimension(:),allocatable :: jcvec, normalized_period
+    real(wp),dimension(:),allocatable :: x0, z0, ydot0
+    real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
 
     write(*,*) '* Loading config file: '//trim(filename)
     call f%open(filename)
 
     write(*,*) '* Reading config file'
 
-    ! rp will be used for the csv file, jc for the JSON file
-    call f%get('rp',                        rp, found_rp)          ! one of these three must be present
-    call f%get('jc',                        jc, found_jc)          !
+    call f%get('jc',                        jc, found_jc)          ! one of these three must be present
     call f%get('period',                    p, found_period)       !
-    call f%get('fix_initial_time',          fix_initial_time, found)
-    call f%get('generate_plots',            generate_plots, found)
-    call f%get('generate_trajectory_files', generate_trajectory_files, found)
+    call f%get('fix_initial_time',          me%mission%fix_initial_time, found)
+    call f%get('generate_plots',            me%mission%generate_plots, found)
+    call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
 
     ! required inputs:
-    call f%get('N_or_S',          N_or_S           )
-    call f%get('L1_or_L2',        L1_or_L2         )
-    call f%get('year',            year             )
-    call f%get('month',           month            )
-    call f%get('day',             day              )
-    call f%get('hour',            hour             )
-    call f%get('minute',          minute           )
-    call f%get('sec',             sec              )
-    call f%get('n_revs',          n_revs           )
-    call f%get('ephemeris_file',  ephemeris_file   )
-    call f%get('gravfile',        gravfile         )
-    call f%get('patch_point_file',patch_point_file )
-
-    use_json_file = index(patch_point_file, '.json') > 0
-    if (.not. use_json_file .and. .not. found_rp) &
-        error stop 'error: must specify rp for CSV patch point file.'
-    if (use_json_file .and. (found_jc .eqv. found_period)) &
-        error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
-
+    call f%get('N_or_S',          me%mission%N_or_S           )
+    call f%get('L1_or_L2',        me%mission%L1_or_L2         )
+    call f%get('year',            me%mission%year             )
+    call f%get('month',           me%mission%month            )
+    call f%get('day',             me%mission%day              )
+    call f%get('hour',            me%mission%hour             )
+    call f%get('minute',          me%mission%minute           )
+    call f%get('sec',             me%mission%sec              )
+    call f%get('n_revs',          me%mission%n_revs           )
+    call f%get('ephemeris_file',  me%mission%ephemeris_file   )
+    call f%get('gravfile',        me%mission%gravfile         )
+    call f%get('patch_point_file',me%mission%patch_point_file )
     call f%close() ! cleanup
 
+    use_json_file = index(me%mission%patch_point_file, '.json') > 0
+    if (.not. use_json_file) error stop 'error: patch point file must be a JSON file.'
+    if (use_json_file .and. (found_jc .eqv. found_period)) &
+        error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
+        ! csv file no longer supported
+
     ! compute reference epoch from the date (TDB):
-    et_ref = jd_to_et(julian_date(year,month,day,hour,minute,sec))
+    ! save this in the mission class
+    me%mission%et_ref = jd_to_et(julian_date(me%mission%year,&
+                                             me%mission%month,&
+                                             me%mission%day,&
+                                             me%mission%hour,&
+                                             me%mission%minute,&
+                                             me%mission%sec))
 
     ! read the patch point file and load it:
-    ! [TODO we can also add the L1 file]
-    !if (L1_or_L2/='L2') error stop 'only L2 is currently supported'
 
-    if (use_json_file) then
+    ! read the JSON file:
+    write(*,*) '* Reading JSON patch point file: '//trim(me%mission%patch_point_file)
+    call f%open(me%mission%patch_point_file)
 
-        block
+    ! all inputs are required:
+    write(*,*) '* getting data... '
+    call f%get('lstar', lstar            )
+    call f%get('tstar', tstar            )
+    call f%get('jc',    jcvec            )
+    call f%get('period',normalized_period)
+    call f%get('x0',    x0               )
+    call f%get('z0',    z0               )
+    call f%get('ydot0', ydot0            )
+    call f%close()
 
-            real(wp) :: lstar, tstar
-            real(wp),dimension(:),allocatable :: jcvec, normalized_period
-            real(wp),dimension(:),allocatable :: x0, z0, ydot0
-            real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
+    write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', normalized_period * tstar * sec2day
 
-            ! read the JSON file:
-            write(*,*) '* Reading JSON patch point file: '//trim(patch_point_file)
-            call f%open(patch_point_file)
-
-            ! all inputs are required:
-            write(*,*) '* getting data... '
-            call f%get('lstar', lstar            )
-            call f%get('tstar', tstar            )
-            call f%get('jc',    jcvec            )
-            call f%get('period',normalized_period)
-            call f%get('x0',    x0               )
-            call f%get('z0',    z0               )
-            call f%get('ydot0', ydot0            )
-            call f%close()
-
-            write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', normalized_period * tstar * sec2day
-
-            ! which is the independant variable:
-            if (found_jc) then
-                pp_period = interpolate_point(jcvec, normalized_period, jc)
-                pp_x0     = interpolate_point(jcvec, x0, jc)
-                pp_z0     = interpolate_point(jcvec, z0, jc)
-                pp_ydot0  = interpolate_point(jcvec, ydot0, jc)
-            else
-                pp_period = p
-                pp_x0     = interpolate_point(normalized_period, x0, p)
-                pp_z0     = interpolate_point(normalized_period, z0, p)
-                pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
-            end if
-
-            call generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
-            periapsis = pp(1)
-            quarter   = pp(2)
-            apoapsis  = pp(3)
-
-        end block
-
+    ! which is the independant variable:
+    if (found_jc) then
+        pp_period = interpolate_point(jcvec, normalized_period, jc)
+        pp_x0     = interpolate_point(jcvec, x0, jc)
+        pp_z0     = interpolate_point(jcvec, z0, jc)
+        pp_ydot0  = interpolate_point(jcvec, ydot0, jc)
     else
-
-        ! read the CSV file:
-        call csv%read(patch_point_file,skip_rows=[1,2],status_ok=status_ok)
-        if (.not. status_ok) error stop 'error reading csv file'
-
-        ! get the data from the CSV file:
-        call csv%get(1,rp_vec,status_ok)  ! rp values
-        if (.not. status_ok) error stop 'error reading rp column from csv file'
-
-        ! find the correct row with the specified rp value:
-        irow = 0
-        do i=1,size(rp_vec) ! skip the first two header rows
-            if (rp_vec(i)==rp) then
-                irow = i
-                exit
-            end if
-        end do
-        if (irow==0) error stop 'Rp value not found in file'
-
-        ! populate all the patch point structures:
-        call get_patch_point(periapsis,4)
-        call get_patch_point(quarter, 20)
-        call get_patch_point(apoapsis,36)
-
-        ! cleanup:
-        call csv%destroy()
-
+        pp_period = p
+        pp_x0     = interpolate_point(normalized_period, x0, p)
+        pp_z0     = interpolate_point(normalized_period, z0, p)
+        pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
     end if
 
-    write(*,*) 'periapsis t: ' , periapsis%t, 'days'
-    write(*,*) 'quarter t:   ' , quarter%t,   'days'
-    write(*,*) 'apoapsis t:  ' , apoapsis%t,  'days'
+    call me%mission%generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
+    me%mission%periapsis = pp(1)
+    me%mission%quarter   = pp(2)
+    me%mission%apoapsis  = pp(3)
+
+    write(*,*) 'periapsis t: ' , me%mission%periapsis%t, 'days'
+    write(*,*) 'quarter t:   ' , me%mission%quarter%t,   'days'
+    write(*,*) 'apoapsis t:  ' , me%mission%apoapsis%t,  'days'
 
     ! compute some time variables:
-    period  = apoapsis%t * 2.0_wp  ! Halo period [days]
-    period8 = period / 8.0_wp      ! 1/8 of Halo period [days]
+    me%mission%period  = me%mission%apoapsis%t * 2.0_wp  ! Halo period [days]
+    me%mission%period8 = me%mission%period / 8.0_wp      ! 1/8 of Halo period [days]
 
-    write(*,*) 'period: ' , period
+    write(*,*) 'period: ' , me%mission%period
 
     contains
 !*****************************************************************************************
@@ -1721,7 +1729,7 @@
         real(wp),dimension(:),intent(in) :: xvec
         real(wp),dimension(:),intent(in) :: fvec
         real(wp),intent(in) :: x
-        real(wp) :: y !! fvec(x)
+        real(wp) :: y !! `fvec(x)`
 
         type(bspline_1d) :: spline
         integer :: i, iflag, irow
@@ -1758,66 +1766,6 @@
         end function interpolate_point
     !**********************************************
 
-    !**********************************************
-    !>
-    !  Stops program with error if variable not found.
-        subroutine error_check(varname)
-        implicit none
-        character(len=*),intent(in) :: varname
-        if (.not. found) error stop trim(varname)//' variable not found in config file'
-        end subroutine error_check
-    !**********************************************
-
-    !**********************************************
-    !>
-    !  Populate the patch point structure.
-
-        subroutine get_patch_point(pp,istart)
-
-        implicit none
-
-        type(patch_point),intent(out) :: pp  !! the patch point data to populate
-        integer,intent(in) :: istart !! column index where data starts
-
-        call csv%get(istart  ,t_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading t_vec from csv file'
-        call csv%get(istart+1,x_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading x_vec from csv file'
-        call csv%get(istart+2,y_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading y_vec from csv file'
-        call csv%get(istart+3,z_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading z_vec from csv file'
-        call csv%get(istart+4,vx_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading vx_vec from csv file'
-        call csv%get(istart+5,vy_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading vy_vec from csv file'
-        call csv%get(istart+6,vz_vec,status_ok)
-        if (.not. status_ok) error stop 'error reading vz_vec from csv file'
-
-        if (N_or_S=='S') then
-            ! the data in the file is for the South family
-            pp = patch_point(t = t_vec(irow),&
-                             rv = [ x_vec(irow),&
-                                    y_vec(irow),&
-                                    z_vec(irow),&
-                                    vx_vec(irow),&
-                                    vy_vec(irow),&
-                                    vz_vec(irow)])
-        elseif (N_or_S=='N') then
-            pp = patch_point(t = t_vec(irow),&
-                             rv = [ x_vec(irow),&
-                                    y_vec(irow),&
-                                    -z_vec(irow),&
-                                    vx_vec(irow),&
-                                    vy_vec(irow),&
-                                    -vz_vec(irow)])
-        else
-            error stop 'invalid value for N_or_S'
-        end if
-
-        end subroutine get_patch_point
-    !**********************************************
-
     end subroutine read_config_file
 !*****************************************************************************************
 
@@ -1825,10 +1773,11 @@
 !>
 !  Generates the patch points (unnormalized, moon-centered) from the CR3BP normalized guess.
 
-    subroutine generate_patch_points(lstar, tstar, period, x0, z0, ydot0, pp)
+    subroutine generate_patch_points(me, lstar, tstar, period, x0, z0, ydot0, pp)
 
     implicit none
 
+    class(mission_type),intent(inout) :: me
     real(wp),intent(in) :: lstar
     real(wp),intent(in) :: tstar
     real(wp),intent(in) :: period
@@ -1901,7 +1850,7 @@
         t_unnormalized = t_crtbp(i) * tstar ! unscale time
 
         ! results:
-        select case (N_or_S)
+        select case (me%N_or_S)
         case ('S')
             ! the data in the file is for the South family
             pp(i) = patch_point(t = t_unnormalized*sec2day,&
@@ -1912,7 +1861,7 @@
             pp(i) = patch_point(t = t_unnormalized*sec2day,&
                                 rv = x_wrt_moon_unnormalized)
         case default
-            error stop 'invalid value for N_or_S'
+            error stop 'invalid value for N_or_S: '//trim(me%N_or_S)
         end select
 
     end do
@@ -1964,19 +1913,19 @@
 !  Returns a string that can be used for file names, etc.
 !  (read the values of the global variables).
 !
-!@note We are only saving `rp` and `sec` as an integer.
+!@note We are only saving `sec` as an integer.
 
-    function get_case_name() result(case_name)
+    function get_case_name(me) result(case_name)
 
     implicit none
 
+    class(mission_type),intent(in) :: me
     character(len=:),allocatable :: case_name
 
-    case_name = int_to_string(year,4)//int_to_string(month,2)//&
-                int_to_string(day,2)//int_to_string(hour,2)//&
-                int_to_string(minute,2)//int_to_string(int(sec),2)//&
-                '_RP='//int_to_string(int(rp))//'_'//&
-                L1_or_L2//'_'//N_or_S//'_NREVS='//int_to_string(n_revs)
+    case_name = int_to_string(me%year,4)//int_to_string(me%month,2)//&
+                int_to_string(me%day,2)//int_to_string(me%hour,2)//&
+                int_to_string(me%minute,2)//int_to_string(int(me%sec),2)//&
+                '_'//me%L1_or_L2//'_'//me%N_or_S//'_NREVS='//int_to_string(me%n_revs)
 
     contains
 
@@ -2032,7 +1981,7 @@
         call json%add('xvec('//trim(istr)//').scale',me%xscale(i))
     end do
 
-    call json%print_file(trim(filename)//'_'//get_case_name()//'.json')
+    call json%print_file(trim(filename)//'_'//me%get_case_name()//'.json')
 
     call json%destroy()
 
