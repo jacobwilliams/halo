@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>halo_module &ndash; halo</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">halo </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+            <li><a href="../program/halo_solver.html">Program</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../program/halo_solver.html">Program</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>halo_module 
+    <small>Module</small>
+    </h1>
+    <div class="row">
+  <div class="col-lg-12">
+<div class="well well-sm">
+  <ul class="list-inline" style="margin-bottom:0px;display:inline">
+     <li><i class="fa fa-list-ol"></i>
+       <a data-toggle="tooltip"
+    data-placement="bottom" data-html="true"
+    title="89.8% of total for modules and submodules.">1066 statements</a>
+     </li> 
+    <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
+  </ul>
+  <ol class="breadcrumb in-well text-right">
+     <li><a href='../sourcefile/halo_module.f90.html'>halo_module.f90</a></li>
+     <li class="active">halo_module</li>
+  </ol>
+</div>
+</div>
+</div>
+<script>
+  $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+    <div id="sidebar">
+  <h3>Contents</h3>
+ 
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-0">Derived Types</a></h3></div>
+  <div id="types-0" class="panel-collapse collapse">
+    <div class="list-group">
+      <a class="list-group-item" href="../module/halo_module.html#type-segment_data">segment_data</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-trajectory">trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-segment">segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-mission_type">mission_type</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-my_solver_type">my_solver_type</a>
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-0">Functions</a></h3></div>
+  <div id="funcs-0" class="panel-collapse collapse">
+    <div class="list-group">
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_case_name">get_case_name</a>
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-0">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-0" class="panel-collapse collapse">
+      <a class="list-group-item" href="../module/halo_module.html#proc-destroy_trajectory">destroy_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-define_problem_size">define_problem_size</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-put_data_in_segment">put_data_in_segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-cache">cache</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-uncache">uncache</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-initialize_the_solver">initialize_the_solver</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_problem_arrays">get_problem_arrays</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-put_x_in_segments">put_x_in_segments</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_sparsity_pattern">get_sparsity_pattern</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-initialize_the_mission">initialize_the_mission</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_scales_from_segs">get_scales_from_segs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-ballistic_derivs">ballistic_derivs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-set_segment_inputs">set_segment_inputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_segment_outputs">get_segment_outputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-set_segment_outputs">set_segment_outputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-propagate_segment">propagate_segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-segs_to_propagate">segs_to_propagate</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-constraint_violations">constraint_violations</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_func">halo_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_grad">halo_grad</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_grad_info">halo_grad_info</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-my_func">my_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_export">halo_export</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-plot_trajectory">plot_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-add_point_to_trajectory">add_point_to_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-trajectory_export_func">trajectory_export_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-read_config_file">read_config_file</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-generate_patch_points">generate_patch_points</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-write_optvars_to_file">write_optvars_to_file</a>
+    </div>
+  </div>
+</div>
+
+</div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <p>Main module with all the stuff to solve the Halo problem.</p>
+<br>        <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Uses</h3>
+      </div>
+      <ul class="list-group">
+      <li class="list-group-item">
+  <ul class="list-inline">
+    <li><a href="https://jacobwilliams.github.io/ddeabm/">ddeabm_module</a></li>
+    <li><a href="https://jacobwilliams.github.io/NumDiff/">numerical_differentiation_module</a></li>
+    <li><a href="https://jacobwilliams.github.io/bspline-fortran/">bspline_module</a></li>
+    <li><a href='../module/config_file_module.html'>config_file_module</a></li>
+    <li><a href='../module/parameters_module.html'>parameters_module</a></li>
+    <li><a href="https://jacobwilliams.github.io/pyplot-fortran/">pyplot_module</a></li>
+    <li><a href="https://jacobwilliams.github.io/nlesolver-fortran/">nlesolver_module</a></li>
+    <li><a href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/">fortran_astrodynamics_toolkit</a></li>
+    <li><a href="https://jacobwilliams.github.io/json-fortran/">json_module</a></li>
+  </ul>
+      </li>
+      <li class="list-group-item">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~halo_module~~UsesGraph Pages: 1 -->
+<svg id="modulehalo_moduleUsesGraph" width="641pt" height="305pt"
+ viewBox="0.00 0.00 641.00 305.40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~halo_module~~UsesGraph" class="graph" transform="scale(1.06 1.06) rotate(0) translate(4 320.93)">
+<title>module~~halo_module~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-320.93 678,-320.93 678,4 -4,4"/>
+<!-- module~halo_module -->
+<g id="module~~halo_module~~UsesGraph_node1" class="node">
+<title>module~halo_module</title>
+<polygon fill="none" stroke="black" points="674,-171.73 592,-171.73 592,-147.73 674,-147.73 674,-171.73"/>
+<text text-anchor="middle" x="633" y="-157.33" font-family="Helvetica,sans-Serif" font-size="10.50">halo_module</text>
+</g>
+<!-- module~parameters_module -->
+<g id="module~~halo_module~~UsesGraph_node2" class="node">
+<title>module~parameters_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node2"><a xlink:href=".././module/parameters_module.html" xlink:title="parameters_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="327,-150.73 206,-150.73 206,-126.73 327,-126.73 327,-150.73"/>
+<text text-anchor="middle" x="266.5" y="-136.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parameters_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_module~~UsesGraph_edge1" class="edge">
+<title>module~halo_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M628.96,-171.97C621.64,-198.46 600.27,-260.73 556,-285.73 481.31,-327.9 438.39,-326.65 363,-285.73 313.76,-259 285.96,-194.71 274.22,-160.69"/>
+<polygon fill="#000000" stroke="#000000" points="277.41,-159.2 270.97,-150.79 270.76,-161.39 277.41,-159.2"/>
+</g>
+<!-- numerical_differentiation_module -->
+<g id="module~~halo_module~~UsesGraph_node3" class="node">
+<title>numerical_differentiation_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node3"><a xlink:href="https://jacobwilliams.github.io/NumDiff/" xlink:title="numerical_differentiation_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="556,-276.73 363,-276.73 363,-252.73 556,-252.73 556,-276.73"/>
+<text text-anchor="middle" x="459.5" y="-262.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numerical_differentiation_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;numerical_differentiation_module -->
+<g id="module~~halo_module~~UsesGraph_edge2" class="edge">
+<title>module~halo_module&#45;&gt;numerical_differentiation_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M624.58,-171.92C612.59,-190.5 587.13,-225.66 556,-243.73 552.8,-245.59 549.46,-247.28 546.01,-248.82"/>
+<polygon fill="#000000" stroke="#000000" points="544.67,-245.59 536.7,-252.57 547.28,-252.08 544.67,-245.59"/>
+</g>
+<!-- pyplot_module -->
+<g id="module~~halo_module~~UsesGraph_node4" class="node">
+<title>pyplot_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node4"><a xlink:href="https://jacobwilliams.github.io/pyplot-fortran/" xlink:title="pyplot_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="505,-234.73 414,-234.73 414,-210.73 505,-210.73 505,-234.73"/>
+<text text-anchor="middle" x="459.5" y="-220.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pyplot_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;pyplot_module -->
+<g id="module~~halo_module~~UsesGraph_edge3" class="edge">
+<title>module~halo_module&#45;&gt;pyplot_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M613.68,-171.83C598.72,-181.22 576.73,-193.91 556,-201.73 542.96,-206.65 528.47,-210.57 514.79,-213.63"/>
+<polygon fill="#000000" stroke="#000000" points="514.06,-210.21 505.01,-215.71 515.52,-217.05 514.06,-210.21"/>
+</g>
+<!-- ddeabm_module -->
+<g id="module~~halo_module~~UsesGraph_node5" class="node">
+<title>ddeabm_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node5"><a xlink:href="https://jacobwilliams.github.io/ddeabm/" xlink:title="ddeabm_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="511,-192.73 408,-192.73 408,-168.73 511,-168.73 511,-192.73"/>
+<text text-anchor="middle" x="459.5" y="-178.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;ddeabm_module -->
+<g id="module~~halo_module~~UsesGraph_edge4" class="edge">
+<title>module~halo_module&#45;&gt;ddeabm_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M591.79,-164.65C570.83,-167.22 544.76,-170.41 521.39,-173.27"/>
+<polygon fill="#000000" stroke="#000000" points="520.72,-169.83 511.22,-174.52 521.57,-176.78 520.72,-169.83"/>
+</g>
+<!-- module~config_file_module -->
+<g id="module~~halo_module~~UsesGraph_node6" class="node">
+<title>module~config_file_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node6"><a xlink:href=".././module/config_file_module.html" xlink:title="config_file_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="516,-150.73 403,-150.73 403,-126.73 516,-126.73 516,-150.73"/>
+<text text-anchor="middle" x="459.5" y="-136.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~config_file_module -->
+<g id="module~~halo_module~~UsesGraph_edge5" class="edge">
+<title>module~halo_module&#45;&gt;module~config_file_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M591.79,-154.81C572.22,-152.41 548.18,-149.47 526.05,-146.76"/>
+<polygon fill="#000000" stroke="#000000" points="526.39,-143.27 516.04,-145.53 525.54,-150.22 526.39,-143.27"/>
+</g>
+<!-- bspline_module -->
+<g id="module~~halo_module~~UsesGraph_node7" class="node">
+<title>bspline_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node7"><a xlink:href="https://jacobwilliams.github.io/bspline-fortran/" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="508,-108.73 411,-108.73 411,-84.73 508,-84.73 508,-108.73"/>
+<text text-anchor="middle" x="459.5" y="-94.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;bspline_module -->
+<g id="module~~halo_module~~UsesGraph_edge6" class="edge">
+<title>module~halo_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M613.68,-147.62C598.72,-138.24 576.73,-125.55 556,-117.73 544.09,-113.24 530.97,-109.58 518.37,-106.64"/>
+<polygon fill="#000000" stroke="#000000" points="518.92,-103.18 508.4,-104.45 517.41,-110.02 518.92,-103.18"/>
+</g>
+<!-- nlesolver_module -->
+<g id="module~~halo_module~~UsesGraph_node8" class="node">
+<title>nlesolver_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node8"><a xlink:href="https://jacobwilliams.github.io/nlesolver-fortran/" xlink:title="nlesolver_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="513,-66.73 406,-66.73 406,-42.73 513,-42.73 513,-66.73"/>
+<text text-anchor="middle" x="459.5" y="-52.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">nlesolver_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;nlesolver_module -->
+<g id="module~~halo_module~~UsesGraph_edge7" class="edge">
+<title>module~halo_module&#45;&gt;nlesolver_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M624.58,-147.54C612.59,-128.96 587.13,-93.8 556,-75.73 546.01,-69.93 534.58,-65.73 523.18,-62.69"/>
+<polygon fill="#000000" stroke="#000000" points="523.75,-59.22 513.21,-60.3 522.12,-66.03 523.75,-59.22"/>
+</g>
+<!-- fortran_astrodynamics_toolkit -->
+<g id="module~~halo_module~~UsesGraph_node9" class="node">
+<title>fortran_astrodynamics_toolkit</title>
+<g id="a_module~~halo_module~~UsesGraph_node9"><a xlink:href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/" xlink:title="fortran_astrodynamics_toolkit">
+<polygon fill="#337ab7" stroke="#337ab7" points="170,-67.73 0,-67.73 0,-43.73 170,-43.73 170,-67.73"/>
+<text text-anchor="middle" x="85" y="-53.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fortran_astrodynamics_toolkit</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_module~~UsesGraph_edge8" class="edge">
+<title>module~halo_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M628.31,-147.34C619.99,-121.67 597.19,-62.65 556,-33.73 520.58,-8.86 501.89,-27.37 460.5,-14.73"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M458.5,-14.73C342.56,20.69 198.05,-17.18 127.98,-40.41"/>
+<polygon fill="#000000" stroke="#000000" points="126.55,-37.2 118.2,-43.72 128.79,-43.83 126.55,-37.2"/>
+</g>
+<!-- json_module -->
+<g id="module~~halo_module~~UsesGraph_node10" class="node">
+<title>json_module</title>
+<g id="a_module~~halo_module~~UsesGraph_node10"><a xlink:href="https://jacobwilliams.github.io/json-fortran/" xlink:title="json_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="306.5,-66.73 226.5,-66.73 226.5,-42.73 306.5,-42.73 306.5,-66.73"/>
+<text text-anchor="middle" x="266.5" y="-52.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">json_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;json_module -->
+<g id="module~~halo_module~~UsesGraph_edge9" class="edge">
+<title>module~halo_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M458.5,-14.73C432.03,-6.64 361.55,-25.17 314.02,-39.63"/>
+<polygon fill="#000000" stroke="#000000" points="312.77,-36.36 304.25,-42.65 314.84,-43.05 312.77,-36.36"/>
+</g>
+<!-- module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_module~~UsesGraph_edge10" class="edge">
+<title>module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M239.4,-126.66C208.29,-112.28 156.17,-88.17 121.44,-72.11"/>
+<polygon fill="#000000" stroke="#000000" points="122.68,-68.83 112.13,-67.81 119.74,-75.19 122.68,-68.83"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~halo_module~~UsesGraph_node11" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~halo_module~~UsesGraph_node11"><a xlink:href="https://gcc.gnu.org/onlinedocs/gfortran/ISO_005fFORTRAN_005fENV.html" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="132,-150.73 38,-150.73 38,-126.73 132,-126.73 132,-150.73"/>
+<text text-anchor="middle" x="85" y="-136.33" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~parameters_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_module~~UsesGraph_edge11" class="edge">
+<title>module~parameters_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M205.73,-138.73C185.32,-138.73 162.57,-138.73 142.44,-138.73"/>
+<polygon fill="#000000" stroke="#000000" points="142.17,-135.23 132.17,-138.73 142.17,-142.23 142.17,-135.23"/>
+</g>
+<!-- module~config_file_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_module~~UsesGraph_edge12" class="edge">
+<title>module~config_file_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M403,-138.73C382.46,-138.73 358.91,-138.73 337.26,-138.73"/>
+<polygon fill="#000000" stroke="#000000" points="337.14,-135.23 327.14,-138.73 337.14,-142.23 337.14,-135.23"/>
+</g>
+<!-- module~config_file_module&#45;&gt;json_module -->
+<g id="module~~halo_module~~UsesGraph_edge13" class="edge">
+<title>module~config_file_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M402.89,-130.1C389.53,-127.05 375.51,-123.02 363,-117.73 336.15,-106.38 308.7,-87.34 290.16,-73.16"/>
+<polygon fill="#000000" stroke="#000000" points="292.1,-70.23 282.06,-66.83 287.79,-75.74 292.1,-70.23"/>
+</g>
+</g>
+</svg>
+</div><script>var panmodulehalo_moduleUsesGraph = svgPanZoom('#modulehalo_moduleUsesGraph', {zoomEnabled: true,controlIconsEnabled: true, fit: true, center: true,}); </script><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a submodule to the (sub)module which it is
+    descended from. Dashed arrows point from a module or program unit to 
+    modules which it uses.
+    </p>
+    </div></div></div></div>
+      </li>
+      </ul>
+    </div>
+
+        <div class="panel panel-default">
+      <div class="panel-heading">
+  <h3 class="panel-title">Used by</h3>
+      </div>
+      <ul class="list-group">
+  <li class="list-group-item">
+    <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: module~~halo_module~~UsedByGraph Pages: 1 -->
+<svg id="modulehalo_moduleUsedByGraph" width="199pt" height="32pt"
+ viewBox="0.00 0.00 199.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~halo_module~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>module~~halo_module~~UsedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 195,-28 195,4 -4,4"/>
+<!-- module~halo_module -->
+<g id="module~~halo_module~~UsedByGraph_node1" class="node">
+<title>module~halo_module</title>
+<polygon fill="none" stroke="black" points="82,-24 0,-24 0,0 82,0 82,-24"/>
+<text text-anchor="middle" x="41" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">halo_module</text>
+</g>
+<!-- program~halo_solver -->
+<g id="module~~halo_module~~UsedByGraph_node2" class="node">
+<title>program~halo_solver</title>
+<g id="a_module~~halo_module~~UsedByGraph_node2"><a xlink:href=".././program/halo_solver.html" xlink:title="halo_solver">
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="191,-24 118,-24 118,0 191,0 191,-24"/>
+<text text-anchor="middle" x="154.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver</text>
+</a>
+</g>
+</g>
+<!-- program~halo_solver&#45;&gt;module~halo_module -->
+<g id="module~~halo_module~~UsedByGraph_edge1" class="edge">
+<title>program~halo_solver&#45;&gt;module~halo_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M117.91,-12C109.76,-12 100.94,-12 92.3,-12"/>
+<polygon fill="#000000" stroke="#000000" points="92.28,-8.5 82.28,-12 92.28,-15.5 92.28,-8.5"/>
+</g>
+</g>
+</svg>
+</div><div><a type="button" class="graph-help" data-toggle="modal" href="#graph-help-text">Help</a></div><div class="modal fade" id="graph-help-text" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="-graph-help-label">Graph Key</h4></div><div class="modal-body">
+    <p>Nodes of different colours represent the following: </p>
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+    
+    <p>Solid arrows point from a submodule to the (sub)module which it is
+    descended from. Dashed arrows point from a module or program unit to 
+    modules which it uses.
+    </p>
+    </div></div></div></div>
+  </li>
+      </ul>
+    </div>
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+      <h3>Contents</h3>
+ 
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#types-1">Derived Types</a></h3></div>
+  <div id="types-1" class="panel-collapse collapse">
+    <div class="list-group">
+      <a class="list-group-item" href="../module/halo_module.html#type-segment_data">segment_data</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-trajectory">trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-segment">segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-mission_type">mission_type</a>
+      <a class="list-group-item" href="../module/halo_module.html#type-my_solver_type">my_solver_type</a>
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#funcs-1">Functions</a></h3></div>
+  <div id="funcs-1" class="panel-collapse collapse">
+    <div class="list-group">
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_case_name">get_case_name</a>
+    </div>
+  </div>
+</div>
+<div class="panel panel-primary">
+  <div class="panel-heading text-left"><h3 class="panel-title"><a data-toggle="collapse" href="#subs-1">Subroutines</a></h3></div>
+  <div class="list-group">
+    <div id="subs-1" class="panel-collapse collapse">
+      <a class="list-group-item" href="../module/halo_module.html#proc-destroy_trajectory">destroy_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-define_problem_size">define_problem_size</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-put_data_in_segment">put_data_in_segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-cache">cache</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-uncache">uncache</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-initialize_the_solver">initialize_the_solver</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_problem_arrays">get_problem_arrays</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-put_x_in_segments">put_x_in_segments</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_sparsity_pattern">get_sparsity_pattern</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-initialize_the_mission">initialize_the_mission</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_scales_from_segs">get_scales_from_segs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-ballistic_derivs">ballistic_derivs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-set_segment_inputs">set_segment_inputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-get_segment_outputs">get_segment_outputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-set_segment_outputs">set_segment_outputs</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-propagate_segment">propagate_segment</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-segs_to_propagate">segs_to_propagate</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-constraint_violations">constraint_violations</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_func">halo_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_grad">halo_grad</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_grad_info">halo_grad_info</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-my_func">my_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-halo_export">halo_export</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-plot_trajectory">plot_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-add_point_to_trajectory">add_point_to_trajectory</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-trajectory_export_func">trajectory_export_func</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-read_config_file">read_config_file</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-generate_patch_points">generate_patch_points</a>
+      <a class="list-group-item" href="../module/halo_module.html#proc-write_optvars_to_file">write_optvars_to_file</a>
+    </div>
+  </div>
+</div>
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+
+    
+    
+
+    
+    <section>
+     <h2>Derived Types</h2>
+     <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-segment_data"></span><h3>type, public :: <a href='../type/segment_data.html'>segment_data</a>  </h3></div>
+  <div class="panel-body">
+    <p>data for a segment</p>
+     <h4>Components</h4>
+    <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th><th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" id="variable-et_ref"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>et_ref</strong></td><td> =</td><td>zero</td><td><p>ephemeris time reference epoch
+(all times relative to this)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-t0"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>t0</strong></td><td> =</td><td>zero</td><td><p>initial time [days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-t0_scale"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>t0_scale</strong></td><td> =</td><td>one</td><td><p>opt var scale for <code>t0</code></p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-x0_rotating"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>x0_rotating</strong></td><td> =</td><td>zero</td><td><p>initial state [km, km/s], rotating frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-x0_rotating_scale"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>x0_rotating_scale</strong></td><td> =</td><td>one</td><td><p>opt var scale for <code>x0_rotating</code></p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-x0"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>x0</strong></td><td> =</td><td>zero</td><td><p>initial state [km, km/s], inertial frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-tf"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>tf</strong></td><td> =</td><td>zero</td><td><p>final time [days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-xf"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf</strong></td><td> =</td><td>zero</td><td><p>final state [km, km/s], inertial frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-xf_rotating"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf_rotating</strong></td><td> =</td><td>zero</td><td><p>final state [km, km/s], rotating frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-xf_rotating_scale"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf_rotating_scale</strong></td><td> =</td><td>one</td><td><p>func scale for <code>xf_rotating</code></p></td>
+</tr>
+</tbody>
+</table>
+
+     
+  </div>
+</div>
+
+     <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-trajectory"></span><h3>type, public :: <a href='../type/trajectory.html'>trajectory</a>  </h3></div>
+  <div class="panel-body">
+    <p>a segment trajectory (for plotting or output)</p>
+     <h4>Components</h4>
+    <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th><th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" id="variable-et"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>et</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-x"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>x</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-y"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>y</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-z"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>z</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-vx"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>vx</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-vy"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>vy</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-vz"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>vz</strong></td><td></td><td></td><td></td>
+</tr>
+</tbody>
+</table>
+
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+       <tr><td>procedure, public :: <strong><a href='../type/trajectory.html#boundprocedure-destroy'>destroy</a></strong>  => destroy_trajectory </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/trajectory.html#boundprocedure-add'>add</a></strong>  => add_point_to_trajectory </td>
+       <td></td></tr>
+       </tbody>
+       </table>
+  </div>
+</div>
+
+     <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-segment"></span><h3>type, public, extends(ddeabm_class) :: <a href='../type/segment.html'>segment</a>  </h3></div>
+  <div class="panel-body">
+    <p>a ballistic segment in the mission</p><a href="../type/segment.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+     <h4>Components</h4>
+    <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th><th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" id="variable-name~2"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>name</strong></td><td></td><td></td><td><p>the segment name</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-data"></span>type(<a href='../type/segment_data.html'>segment_data</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>data</strong></td><td></td><td></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-cached_data"></span>type(<a href='../type/segment_data.html'>segment_data</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>cached_data</strong></td><td></td><td></td><td><p>used when computing gradients</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-grav"></span>type(geopotential_model_pines),</td>
+<td>public,</td>  <td>pointer</td><td>::</td>
+  <td><strong>grav</strong></td><td>=> </td><td>null()</td><td><p>central body geopotential model [global]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-eph"></span>type(jpl_ephemeris),</td>
+<td>public,</td>  <td>pointer</td><td>::</td>
+  <td><strong>eph</strong></td><td>=> </td><td>null()</td><td><p>the ephemeris [global]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-traj_inertial"></span>type(<a href='../type/trajectory.html'>trajectory</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>traj_inertial</strong></td><td></td><td></td><td><p>in the inertial frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-traj_rotating"></span>type(<a href='../type/trajectory.html'>trajectory</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>traj_rotating</strong></td><td></td><td></td><td><p>in the rotating frame</p></td>
+</tr>
+</tbody>
+</table>
+
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-set_input'>set_input</a></strong>  => set_segment_inputs </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-get_outputs'>get_outputs</a></strong>  => get_segment_outputs </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-set_outputs'>set_outputs</a></strong>  => set_segment_outputs </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-propagate'>propagate</a></strong>  => propagate_segment </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-cache'>cache</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-uncache'>uncache</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/segment.html#boundprocedure-put_data_in_segment'>put_data_in_segment</a></strong>  </td>
+       <td></td></tr>
+       </tbody>
+       </table>
+  </div>
+</div>
+
+     <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-mission_type"></span><h3>type, public, extends(numdiff_type) :: <a href='../type/mission_type.html'>mission_type</a>  </h3></div>
+  <div class="panel-body">
+    <p>the mission [this is a <code>numdiff_type</code> for
+organizational purposes.... rethink this maybe ...</p>
+     <h4>Components</h4>
+    <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th><th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" id="variable-grav~2"></span>type(geopotential_model_pines),</td>
+<td>public,</td>  <td>pointer</td><td>::</td>
+  <td><strong>grav</strong></td><td>=> </td><td>null()</td><td><p>central body geopotential model [global]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-eph~2"></span>type(jpl_ephemeris),</td>
+<td>public,</td>  <td>pointer</td><td>::</td>
+  <td><strong>eph</strong></td><td>=> </td><td>null()</td><td><p>the ephemeris [global]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-segs"></span>type(<a href='../type/segment.html'>segment</a>),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>segs</strong></td><td></td><td></td><td><p>the list of segments</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-xscale"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>xscale</strong></td><td></td><td></td><td><p>opt var scale factors</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-fscale"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>fscale</strong></td><td></td><td></td><td><p>function scale factors</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-xname"></span>character(len=20),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>xname</strong></td><td></td><td></td><td><p>opt var names</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-n_or_s"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>N_or_S</strong></td><td></td><td></td><td><p>'N' or 'S'</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-l1_or_l2"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>L1_or_L2</strong></td><td></td><td></td><td><p>'L1' or 'L2'</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-generate_plots"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>generate_plots</strong></td><td> =</td><td>.true.</td><td><p>to generate the python plots</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-generate_trajectory_files"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>generate_trajectory_files</strong></td><td> =</td><td>.true.</td><td><p>to export the txt trajectory files.</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-year"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>year</strong></td><td> =</td><td>0</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-month"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>month</strong></td><td> =</td><td>0</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-day"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>day</strong></td><td> =</td><td>0</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-hour"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>hour</strong></td><td> =</td><td>0</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-minute"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>minute</strong></td><td> =</td><td>0</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-sec"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>sec</strong></td><td> =</td><td>zero</td><td><p>epoch of first point (first periapsis crossing)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-et_ref~2"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>et_ref</strong></td><td> =</td><td>zero</td><td><p>ephemeris time reference epoch
+(all times relative to this)
+this is computed from the year,month,day,hour,minute,sec values
+[sec]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-n_revs"></span>integer,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>n_revs</strong></td><td> =</td><td>10</td><td><p>Number of revs in the Halo.</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-ephemeris_file"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>ephemeris_file</strong></td><td></td><td></td><td><p>the JPL ephemeris file to load</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-gravfile"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>gravfile</strong></td><td></td><td></td><td><p>spherical harmonic gravity coeff file (Moon)
+example: 'data/grav/gggrx_0020pm_sha.tab'</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-patch_point_file"></span>character(len=:),</td>
+<td>public,</td>  <td>allocatable</td><td>::</td>
+  <td><strong>patch_point_file</strong></td><td></td><td></td><td><p>Halo CR3BP patch point solution file
+example: 'data/L2_halos.json'</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-periapsis"></span>type(<a href='../type/patch_point.html'>patch_point</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>periapsis</strong></td><td></td><td></td><td><p>Patchpoint Periapse State</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-quarter"></span>type(<a href='../type/patch_point.html'>patch_point</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>quarter</strong></td><td></td><td></td><td><p>Patchpoint 1/4 Rev State</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-apoapsis"></span>type(<a href='../type/patch_point.html'>patch_point</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>apoapsis</strong></td><td></td><td></td><td><p>Patchpoint 1/2 Rev State</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-period"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>period</strong></td><td> =</td><td>0.0_wp</td><td><p>Halo period [days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-period8"></span>real(kind=wp),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>period8</strong></td><td> =</td><td>0.0_wp</td><td><p>1/8 of Halo period [days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-fix_initial_time"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>fix_initial_time</strong></td><td> =</td><td>.false.</td><td><p>to fix the initial epoch in the mission</p></td>
+</tr>
+</tbody>
+</table>
+
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-init'>init</a></strong>  => initialize_the_mission </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-plot'>plot</a></strong>  => plot_trajectory </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-write_optvars_to_file'>write_optvars_to_file</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-constraint_violations'>constraint_violations</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-get_problem_arrays'>get_problem_arrays</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-put_x_in_segments'>put_x_in_segments</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-get_scales_from_segs'>get_scales_from_segs</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-segs_to_propagate'>segs_to_propagate</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-get_sparsity_pattern'>get_sparsity_pattern</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-define_problem_size'>define_problem_size</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-get_case_name'>get_case_name</a></strong>  </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/mission_type.html#boundprocedure-generate_patch_points'>generate_patch_points</a></strong>  </td>
+       <td></td></tr>
+       </tbody>
+       </table>
+  </div>
+</div>
+
+     <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="type-my_solver_type"></span><h3>type, public, extends(nlesolver_type) :: <a href='../type/my_solver_type.html'>my_solver_type</a>  </h3></div>
+  <div class="panel-body">
+    <p>the solver class, which contains
+an instance of the mission</p>
+     <h4>Components</h4>
+    <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Visibility</th><th>Attributes</th><th></th><th>Name</th><th></th><th>Initial</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" id="variable-mission"></span>type(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>mission</strong></td><td></td><td></td><td><p>the Halo mission</p></td>
+</tr>
+</tbody>
+</table>
+
+     
+     <h4>Type-Bound Procedures</h4>
+      <table class="table table-striped varlist">
+      <tbody>
+       <tr><td>procedure, public :: <strong><a href='../type/my_solver_type.html#boundprocedure-init~2'>init</a></strong>  => initialize_the_solver </td>
+       <td></td></tr>
+       <tr><td>procedure, public :: <strong><a href='../type/my_solver_type.html#boundprocedure-read_config_file'>read_config_file</a></strong>  </td>
+       <td></td></tr>
+       </tbody>
+       </table>
+  </div>
+</div>
+
+    </section>
+  <br>
+    
+ 
+    <section>
+    <h2>Functions</h2>
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-get_case_name"></span><h3>public function <a href='../proc/get_case_name.html'>get_case_name</a>(me) result(case_name)</h3></div>
+  <div class="panel-body">
+       
+<p>Returns a string that can be used for file names, etc.
+  (read the values of the global variables).</p><a href="../proc/get_case_name.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+<h4>Return Value <small>character(len=:),allocatable</small></h4>  
+
+  </div>
+  </div>
+
+    </section>
+    <br>
+
+    <section>
+    <h2>Subroutines</h2>
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-destroy_trajectory"></span><h3>public pure subroutine <a href='../proc/destroy_trajectory.html'>destroy_trajectory</a>(me)</h3></div>
+  <div class="panel-body">
+       
+<p>Destroy a trajectory (deallocate the data arrays).</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/trajectory.html'>trajectory</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-define_problem_size"></span><h3>public pure subroutine <a href='../proc/define_problem_size.html'>define_problem_size</a>(me, n, m, n_segs, n_nonzero)</h3></div>
+  <div class="panel-body">
+       
+<p>Returns the size variables for the "forward-backward" formulation of the problem.</p><a href="../proc/define_problem_size.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>n</strong></td><td><p>number of opt vars for the solver</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>m</strong></td><td><p>number of equality constraints for the solver</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>n_segs</strong></td><td><p>number of segments</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>n_nonzero</strong></td><td><p>number of nonzero elements in the Jacobian</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-put_data_in_segment"></span><h3>public subroutine <a href='../proc/put_data_in_segment.html'>put_data_in_segment</a>(me, d)</h3></div>
+  <div class="panel-body">
+       
+<p>Set <em>all</em> the data in a segment.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>type(<a href='../type/segment_data.html'>segment_data</a>),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>d</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-cache"></span><h3>public subroutine <a href='../proc/cache.html'>cache</a>(me)</h3></div>
+  <div class="panel-body">
+       
+<p>Cache all the data in a segment.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-uncache"></span><h3>public subroutine <a href='../proc/uncache.html'>uncache</a>(me)</h3></div>
+  <div class="panel-body">
+       
+<p>Restore all the segment data form the cache.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-initialize_the_solver"></span><h3>public subroutine <a href='../proc/initialize_the_solver.html'>initialize_the_solver</a>(me, config_file_name, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Initialize the mission.</p><a href="../proc/initialize_the_solver.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/my_solver_type.html'>my_solver_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>character(len=*),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>config_file_name</strong></td><td><p>the config file to read</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>x</strong></td><td><p>initial guess</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-get_problem_arrays"></span><h3>public subroutine <a href='../proc/get_problem_arrays.html'>get_problem_arrays</a>(me, x, f)</h3></div>
+  <div class="panel-body">
+       
+<p>Get the arrays for the problem</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>opt var vector [scaled]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>f</strong></td><td><p>constraint violations</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-put_x_in_segments"></span><h3>public subroutine <a href='../proc/put_x_in_segments.html'>put_x_in_segments</a>(me, x_scaled)</h3></div>
+  <div class="panel-body">
+       
+<p>Take the <code>x</code> vector from the solver, and use it to populate all the segments</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x_scaled</strong></td><td><p>opt var vector (scaled)</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-get_sparsity_pattern"></span><h3>public subroutine <a href='../proc/get_sparsity_pattern.html'>get_sparsity_pattern</a>(me, irow, icol, linear_irow, linear_icol, linear_vals, maxgrp, ngrp)</h3></div>
+  <div class="panel-body">
+       
+<p>Returns the sparsity pattern for the "forward-backward" Halo problem.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>irow</strong></td><td><p>sparsity pattern nonzero elements row indices</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>icol</strong></td><td><p>sparsity pattern nonzero elements column indices</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>linear_irow</strong></td><td><p>linear sparsity pattern
+nonzero elements row indices</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>linear_icol</strong></td><td><p>linear sparsity pattern nonzero
+elements column indices</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>linear_vals</strong></td><td><p>linear sparsity values (constant
+elements of the Jacobian)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>maxgrp</strong></td><td><p>DSM sparsity partition</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>ngrp</strong></td><td><p>DSM sparsity partition</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-initialize_the_mission"></span><h3>public subroutine <a href='../proc/initialize_the_mission.html'>initialize_the_mission</a>(me, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Initialize the mission.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td>optional</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>x</strong></td><td><p>initial guess</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-get_scales_from_segs"></span><h3>public subroutine <a href='../proc/get_scales_from_segs.html'>get_scales_from_segs</a>(me)</h3></div>
+  <div class="panel-body">
+       
+<p>Populate the <code>xscale</code> and <code>fscale</code> problem arrays from the segment data.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-ballistic_derivs"></span><h3>public subroutine <a href='../proc/ballistic_derivs.html'>ballistic_derivs</a>(me, t, x, xdot)</h3></div>
+  <div class="panel-body">
+       
+<p>Equations of motion for a ballistic segment.</p><a href="../proc/ballistic_derivs.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(ddeabm_class),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>t</strong></td><td><p>time [sec from epoch]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>state [r,v] in inertial frame (moon-centered)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>xdot</strong></td><td><p>derivative of state (<script type="math/tex"> dx/dt </script>)</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-set_segment_inputs"></span><h3>public subroutine <a href='../proc/set_segment_inputs.html'>set_segment_inputs</a>(me, t0, tf, x0_rotating)</h3></div>
+  <div class="panel-body">
+       
+<p>Sets all the info in a segment for it to be propagated.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>t0</strong></td><td><p>[days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>tf</strong></td><td><p>[days]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>x0_rotating</strong></td><td><p>state in rotating frame</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-get_segment_outputs"></span><h3>public subroutine <a href='../proc/get_segment_outputs.html'>get_segment_outputs</a>(me, xf, xf_rotating)</h3></div>
+  <div class="panel-body">
+       
+<p>After propagating a segment, this gets the outputs.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf</strong></td><td><p>inertial frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf_rotating</strong></td><td><p>rotating frame</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-set_segment_outputs"></span><h3>public subroutine <a href='../proc/set_segment_outputs.html'>set_segment_outputs</a>(me, xf, xf_rotating)</h3></div>
+  <div class="panel-body">
+       
+<p>Set the outputs of a segment, assuming it has been propagated elsewhere (e.g., in a coarray?)</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf</strong></td><td><p>inertial frame</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>xf_rotating</strong></td><td><p>inertial frame</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-propagate_segment"></span><h3>public subroutine <a href='../proc/propagate_segment.html'>propagate_segment</a>(me, mode)</h3></div>
+  <div class="panel-body">
+       
+<p>Propagate a segment (assumes the inputs have already been populated)</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/segment.html'>segment</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>mode</strong></td><td><p>1 - don't report steps, 2 - report steps (for plotting)</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-segs_to_propagate"></span><h3>public subroutine <a href='../proc/segs_to_propagate.html'>segs_to_propagate</a>(me, funcs_to_compute, isegs_to_propagate)</h3></div>
+  <div class="panel-body">
+       
+<p>Given the functions to be computed, returns the segments that need to be propagated.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>funcs_to_compute</strong></td><td><p>the indices of f to compute</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>isegs_to_propagate</strong></td><td><p>segment numbers</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-constraint_violations"></span><h3>public subroutine <a href='../proc/constraint_violations.html'>constraint_violations</a>(me, x, f, funcs_to_compute)</h3></div>
+  <div class="panel-body">
+       
+<p>Computes the constraint violation vector for the mission.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>opt var vector for the mission [n]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>f</strong></td><td><p>constraint violation vector for the mission [m]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>funcs_to_compute</strong></td><td><p>the indices of f to compute</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-halo_func"></span><h3>public subroutine <a href='../proc/halo_func.html'>halo_func</a>(me, x, f)</h3></div>
+  <div class="panel-body">
+       
+<p>Compute the solver function (all the constraint violations)</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(nlesolver_type),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>f</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-halo_grad"></span><h3>public subroutine <a href='../proc/halo_grad.html'>halo_grad</a>(me, x, g)</h3></div>
+  <div class="panel-body">
+       
+<p>Compute the gradient of the solver function (Jacobian matrix)</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(nlesolver_type),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:,:)</td><td>::</td>
+  <td><strong>g</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-halo_grad_info"></span><h3>public subroutine <a href='../proc/halo_grad_info.html'>halo_grad_info</a>(me, column, i, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Info function for the gradients.</p><a href="../proc/halo_grad_info.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(numdiff_type),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>column</strong></td><td><p>the columns being computed.</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>i</strong></td><td><p>perturbing these columns for the <code>i</code>th time (1,2,...)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>the nominal variable vector</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-my_func"></span><h3>public subroutine <a href='../proc/my_func.html'>my_func</a>(me, x, f, funcs_to_compute)</h3></div>
+  <div class="panel-body">
+       
+<p>Wrapper for the constraint violation function (use by NumDiff)</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(numdiff_type),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>f</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>funcs_to_compute</strong></td><td><p>the function indices to
+compute in the full <code>f</code> vector</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-halo_export"></span><h3>public subroutine <a href='../proc/halo_export.html'>halo_export</a>(me, x, f, iter)</h3></div>
+  <div class="panel-body">
+       
+<p>export an iteration from the solver</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(nlesolver_type),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>f</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>integer,</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>iter</strong></td><td><p>iteration number</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-plot_trajectory"></span><h3>public subroutine <a href='../proc/plot_trajectory.html'>plot_trajectory</a>(me, filename, export_trajectory)</h3></div>
+  <div class="panel-body">
+       
+<p>Plot the trajectory using matplotlib.</p><a href="../proc/plot_trajectory.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>character(len=*),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>filename</strong></td><td><p>plot file name [without extension]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>logical,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>export_trajectory</strong></td><td><p>if true, a text trajectory
+file is also produced
+(that can be read by MKSPK)</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-add_point_to_trajectory"></span><h3>public subroutine <a href='../proc/add_point_to_trajectory.html'>add_point_to_trajectory</a>(me, et, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Add a point to a trajectory variable.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/trajectory.html'>trajectory</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td><p>the trajectory</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>et</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(6)</td><td>::</td>
+  <td><strong>x</strong></td><td></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-trajectory_export_func"></span><h3>public subroutine <a href='../proc/trajectory_export_func.html'>trajectory_export_func</a>(me, t, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Export a trajectory point during propagation.</p><a href="../proc/trajectory_export_func.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(ddeabm_class),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>t</strong></td><td><p>time from integrator (sec from sim epoch)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>state [moon-centered inertial frame]</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-read_config_file"></span><h3>public subroutine <a href='../proc/read_config_file.html'>read_config_file</a>(me, filename)</h3></div>
+  <div class="panel-body">
+       
+<p>Read the config file that defines the problem
+to be solved and set all the global variables.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/my_solver_type.html'>my_solver_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>character(len=*),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>filename</strong></td><td><p>the JSON config file to read</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-generate_patch_points"></span><h3>public subroutine <a href='../proc/generate_patch_points.html'>generate_patch_points</a>(me, lstar, tstar, period, x0, z0, ydot0, pp)</h3></div>
+  <div class="panel-body">
+       
+<p>Generates the patch points (unnormalized, moon-centered) from the CR3BP normalized guess.</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>lstar</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>tstar</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>period</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>x0</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>z0</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>ydot0</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>type(<a href='../type/patch_point.html'>patch_point</a>),</td>
+<td>intent(out),</td>
+  <td></td>  <td>dimension(3)</td><td>::</td>
+  <td><strong>pp</strong></td><td><p>periapsis, quarter, apoapsis patch points</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+      <div class="panel panel-default">
+  <div class="panel-heading codesum"><span class="anchor" id="proc-write_optvars_to_file"></span><h3>public subroutine <a href='../proc/write_optvars_to_file.html'>write_optvars_to_file</a>(me, filename, x)</h3></div>
+  <div class="panel-body">
+       
+<p>Write the current <code>x</code> variables to a file (compatible with the Copernicus optvar file).</p>
+    
+<h4>Arguments</h4>      <table class="table table-striped varlist">
+<thead><tr><th>Type</th><th>Intent</th><th>Optional</th><th>Attributes</th><th></th><th>Name</th><th></th></thead>
+<tbody>
+<tr>
+  <td><span class="anchor" ></span>class(<a href='../type/mission_type.html'>mission_type</a>),</td>
+<td>intent(inout)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>me</strong></td><td></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>character(len=*),</td>
+<td>intent(in)</td>
+  <td></td>  <td></td><td>::</td>
+  <td><strong>filename</strong></td><td><p>file name [without extension]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>real(kind=wp),</td>
+<td>intent(in),</td>
+  <td></td>  <td>dimension(:)</td><td>::</td>
+  <td><strong>x</strong></td><td><p>solver opt vars vector</p></td>
+</tr>
+</tbody>
+</table>
+
+
+  </div>
+  </div>
+
+    </section>    
+    <br>
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>halo was developed by Jacob Williams<br>&copy; 2022 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+          </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>
