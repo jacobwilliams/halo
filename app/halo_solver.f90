@@ -12,7 +12,7 @@
 !
 !```json
 ! {
-!     "period": 1.5872714606,  // normalized period ("jc" is also allowed)
+!     "period": 1.5872714606,
 !     "N_or_S": "S",
 !     "L1_or_L2": "L2",
 !     "year": 2000,
@@ -22,8 +22,16 @@
 !     "minute": 0,
 !     "sec": 0,
 !     "n_revs": 10,
-!     "ephemeris_file": "../data/eph/JPLEPH_windows_ifort.421"
+!     "ephemeris_file":   "data/eph/JPLEPH.421",
+!     "gravfile":         "data/grav/gggrx_0020pm_sha.tab",
+!     "patch_point_file": "data/L2_halos.json"
 ! }
+!```
+!
+!  Notes:
+!
+!  * "period" is the normalized period ("jc", the jacobi constant, is also allowed)
+!  * The states in the patch point file are assumed to be "S" family
 !
 !### Author
 !  * Jacob Williams : Sept. 2017

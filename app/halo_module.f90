@@ -95,7 +95,7 @@
 
     type,extends(numdiff_type) :: mission_type
 
-        !! the mission [this is a [[numdiff_type]] for
+        !! the mission [this is a `numdiff_type` for
         !! organizational purposes.... rethink this maybe ...
 
         type(geopotential_model_pines),pointer :: grav => null()  !! central body geopotential model [global]
