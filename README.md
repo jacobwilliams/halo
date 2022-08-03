@@ -20,9 +20,14 @@ Another example, using the Intel Fortran Compiler with OpenMP:
 fpm run --profile release --compiler ifort --flag -qopenmp -- example2.json
 ```
 
+### Documentation
+
+The latest API documentation can be found [here](https://jacobwilliams.github.io/halo/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford).
+
 ### See also
 
- * J. Williams, [Near Rectilinear Halo Orbits](https://degenerateconic.com/near-rectilinear-halo-orbits.html) (degenerateconic.com)
+ * J. Williams, [Near Rectilinear Halo Orbits](https://degenerateconic.com/near-rectilinear-halo-orbits.html), July 31, 2022 [degenerateconic.com]
+
 ### Reference
 
  * J. Williams, D. E. Lee, R. Whitley, C. Berry, "[Targeting Cislunar Near Rectilinear Halo Orbits for Human Space Exploration](https://www.researchgate.net/publication/322526659_Targeting_Cislunar_Near_Rectilinear_Halo_Orbits_for_Human_Space_Exploration)", 27th AAS/AIAA Space Flight Mechanics Meeting, Feb. 2017
