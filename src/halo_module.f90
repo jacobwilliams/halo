@@ -68,11 +68,8 @@
         type(segment_data) :: data
         type(segment_data) :: cached_data  !! used when computing gradients
 
-        ! note: originally I had grav and eph in the segments...
-        !       ... but not sure about how that would work with coarrays...
-        !
-        !  These are pointers that are pointing to the ones in the mission ......
-
+        ! These can be pointers that are pointing to the global ones in the mission,
+        ! Or, when using OpenMP, they are allocated in each segment.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         type(jpl_ephemeris),pointer :: eph=> null()  !! the ephemeris [global]
 
@@ -1026,7 +1023,7 @@
 
 !*****************************************************************************************
 !>
-!  Set the outputs of a segment, assuming it has been propagated elsewhere (e.g., in a coarray?)
+!  Set the outputs of a segment, assuming it has been propagated elsewhere
 
     subroutine set_segment_outputs(me,xf,xf_rotating)
 
