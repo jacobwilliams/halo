@@ -9,7 +9,10 @@
     "hour": 12,
     "minute": 0,
     "sec": 0,
-    "fix_initial_time": false,  // do not allow the initial epoch to vary
+    "fix_initial_time": true,  // do not allow the initial epoch to vary
+    "fix_initial_r": true,
+    "fix_ry_at_end_of_first_rev": true,
+    "fix_final_ry_and_vx": false,   //....doesn't work yet ???
     "n_revs": 5,
     "ephemeris_file": "data/eph/JPLEPH.421",
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
