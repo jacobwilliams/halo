@@ -597,7 +597,7 @@
 
             call extract_vector(t0(8)               , x, i)
 
-            if (me%fix_final_ry_and_vx) then
+            if (irev==me%n_revs .and. me%fix_final_ry_and_vx) then
                 x0_rotating(2,8) = me%segs(n_segs)%data%x0_rotating(2) ! not in x, just keep the current ry value
                 x0_rotating(4,8) = me%segs(n_segs)%data%x0_rotating(4) ! not in x, just keep the current vx value
                 call extract_vector(x0_rotating(1,8)    , x, i)
@@ -696,9 +696,6 @@
             where(icol == cols_to_remove(k)) mask = .false. ! remove these
         end do
 
-        ! write(*,*) 'cols_to_remove = ', cols_to_remove
-        ! write(*,*) 'count(mask)    = ', count(mask)
-
         ! remove the cols:
         irow = pack(irow, mask)
         icol = pack(icol, mask)
@@ -709,10 +706,7 @@
             where (icol_tmp > cols_to_remove(k)) icol = icol - 1
         end do
 
-        ! write(*,*) 'n_nonzero [full problem]    = ', n_nonzero
-        ! write(*,*) 'size(icol)                  = ', size(icol)
         call me%define_problem_size(n_nonzero=n_nonzero)
-        ! write(*,*) 'n_nonzero [current problem] = ', n_nonzero
 
     end if
 
@@ -1095,15 +1089,14 @@
 
     ! from rotating to inertial:
     call rotating%transform(x0_rotating,inertial,et0,me%eph,x0_inertial,status_ok)
-    if (.not. status_ok) error stop 'transformation error in set_segment_inputs'
-
-    ! write(*,*) ''
-    ! write(*,*) 'rotating to inertial'
-    ! write(*,'(A/,*(E30.16/))') 'et0:        ', et0
-    ! write(*,'(A/,*(E30.16/))') 'x0_rotating:', x0_rotating
-    ! write(*,'(A/,*(E30.16/))') 'x0_inertial:', x0_inertial
-    ! write(*,*) ''
-    !PAUSE
+    if (.not. status_ok) then
+        write(*,*) ''
+        write(*,'(A/,*(E30.16/))') 't0:         ', t0
+        write(*,'(A/,*(E30.16/))') 'et0:        ', et0
+        write(*,'(A/,*(E30.16/))') 'x0_rotating:', x0_rotating
+        write(*,*) ''
+        error stop 'transformation error in set_segment_inputs'
+    end if
 
     ! set the inputs (needed by the propagator)
     me%data%t0          = t0
