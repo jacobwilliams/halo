@@ -1954,6 +1954,10 @@
 
     integer,parameter  :: n  = 6 !! number of state variables
 
+    ! preallocate the arrays used in the report function:
+    allocate(t_crtbp(0),x_crtbp(0),y_crtbp(0),z_crtbp(0),&
+             vx_crtbp(0),vy_crtbp(0),vz_crtbp(0))
+
     ! first generate the patch points in the normalized system wrt the barycenter.
     ! do this with a numerical integration of the CR3BP equations of motion.
 
@@ -2038,23 +2042,13 @@
         real(wp),intent(in)                  :: t
         real(wp),dimension(:),intent(in)     :: x
 
-        if (allocated(x_crtbp)) then
-            t_crtbp   = [t_crtbp,  t]
-            x_crtbp   = [x_crtbp,  x(1)]
-            y_crtbp   = [y_crtbp,  x(2)]
-            z_crtbp   = [z_crtbp,  x(3)]
-            vx_crtbp  = [vx_crtbp, x(4)]
-            vy_crtbp  = [vy_crtbp, x(5)]
-            vz_crtbp  = [vz_crtbp, x(6)]
-       else
-            t_crtbp   = [t]
-            x_crtbp   = [x(1)]
-            y_crtbp   = [x(2)]
-            z_crtbp   = [x(3)]
-            vx_crtbp  = [x(4)]
-            vy_crtbp  = [x(5)]
-            vz_crtbp  = [x(6)]
-       end if
+        t_crtbp   = [t_crtbp,  t]
+        x_crtbp   = [x_crtbp,  x(1)]
+        y_crtbp   = [y_crtbp,  x(2)]
+        z_crtbp   = [z_crtbp,  x(3)]
+        vx_crtbp  = [vx_crtbp, x(4)]
+        vy_crtbp  = [vy_crtbp, x(5)]
+        vz_crtbp  = [vz_crtbp, x(6)]
 
     end subroutine report
 
