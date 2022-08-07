@@ -109,16 +109,17 @@
         logical :: generate_plots = .true.  !! to generate the python plots
         logical :: generate_trajectory_files = .true.  !! to export the txt trajectory files.
 
+        integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
         integer :: month  = 0 !! epoch of first point (first periapsis crossing)
         integer :: day    = 0 !! epoch of first point (first periapsis crossing)
         integer :: hour   = 0 !! epoch of first point (first periapsis crossing)
         integer :: minute = 0 !! epoch of first point (first periapsis crossing)
         real(wp) :: sec   = zero !! epoch of first point (first periapsis crossing)
-        real(wp) :: et_ref = zero  !! ephemeris time reference epoch
-                                   !! (all times relative to this)
+        real(wp) :: et_ref = zero  !! ephemeris time reference epoch [sec]
+                                   !! (all times relative to this).
                                    !! this is computed from the year,month,day,hour,minute,sec values
-                                   !! [sec]
+                                   !! if `epoch_mode=1`
 
         integer :: n_revs = 10  !! Number of revs in the Halo.
 
@@ -167,6 +168,7 @@
         procedure :: define_problem_size
         procedure :: get_case_name
         procedure :: generate_patch_points
+        procedure :: update_epoch
 
     end type mission_type
 
@@ -652,13 +654,14 @@
     integer :: k,ii,jj,icol_start,irow_start
     integer :: n_nonzero  !! number of nonzero elements in the jacobian
     integer :: n  !! number of optimization variables
+    integer :: m  !! number of functions
     integer :: iblock
     integer,dimension(:),allocatable :: cols_to_remove !! the columns from the full pattern to remove
     logical,dimension(:),allocatable :: mask
     integer,dimension(:),allocatable :: icol_tmp
 
     ! get the size of the full problem, we will first construct the full pattern:
-    call me%define_problem_size(n=n, n_nonzero=n_nonzero, full_problem=.true.)
+    call me%define_problem_size(n=n, m=m, n_nonzero=n_nonzero, full_problem=.true.)
 
     allocate(irow(n_nonzero))
     allocate(icol(n_nonzero))
@@ -735,6 +738,7 @@
     real(wp),dimension(6,8) :: x0_rotating      !! rotating frame
     integer :: n                                !! number of opt vars
     integer :: m                                !! number of constraints
+    integer :: n_nonzero                        !! number of nonzero elements in the jacobian
     real(wp),dimension(:),allocatable :: dpert  !! perturbation step size array
     real(wp),dimension(:),allocatable :: xlow   !! lower bounds array
     real(wp),dimension(:),allocatable :: xhigh  !! upper bounds
@@ -747,13 +751,15 @@
 !$  use_openmp = .true.
 
     ! problem size:
-    call me%define_problem_size(n=n,m=m,n_segs=n_segs)
+    call me%define_problem_size(n=n,m=m,n_segs=n_segs,n_nonzero=n_nonzero)
 
     write(*,*) ''
-    write(*,*) 'n:                 ',n
-    write(*,*) 'm:                 ',m
-    write(*,*) 'number of segments:',n_segs
-    write(*,*) 'number of revs:    ',me%n_revs
+    write(*,'(A,1X,I10)') 'n:                                     ', n
+    write(*,'(A,1X,I10)') 'm:                                     ', m
+    write(*,'(A,1X,I10)') 'total number of elements in Jacobian:  ', n*m
+    write(*,'(A,1X,I10)') 'number of nonzero elements in Jacobian:', n_nonzero
+    write(*,'(A,1X,I10)') 'number of segments:                    ', n_segs
+    write(*,'(A,1X,I10)') 'number of revs:                        ', me%n_revs
     write(*,*) ''
 
     ! arrays for the gradient computations:
@@ -1714,8 +1720,6 @@
     type(config_file) :: f
     logical :: found, found_jc, found_period, found_et
     logical,dimension(6) :: found_calendar
-    !logical :: status_ok
-    integer :: i, irow
     real(wp):: jc !! jacobii constant from the file
     real(wp):: p !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
@@ -1770,24 +1774,11 @@
     if (found) found = .not. (all(found_calendar) .and. found_et) ! only one
     if (.not. found) error stop 'error: just specify epoch as year,month,day,hour,minute,sec or et_ref'
     if (found_et) then
-        ! then compute calendar from et
-        call julian_date_to_calendar_date(et_to_jd(me%mission%et_ref),&
-                                          me%mission%year,&
-                                          me%mission%month,&
-                                          me%mission%day,&
-                                          me%mission%hour,&
-                                          me%mission%minute,&
-                                          me%mission%sec)
+        me%mission%epoch_mode = 2 !! ephemeris time was specified
     else
-        ! compute reference epoch from the date (TDB):
-        ! save this in the mission class
-        me%mission%et_ref = jd_to_et(julian_date(me%mission%year,&
-                                                 me%mission%month,&
-                                                 me%mission%day,&
-                                                 me%mission%hour,&
-                                                 me%mission%minute,&
-                                                 me%mission%sec))
+        me%mission%epoch_mode = 1 !! calendar date was specified
     end if
+    call me%mission%update_epoch()
 
     ! read the patch point file and load it:
 
@@ -1892,6 +1883,43 @@
     !**********************************************
 
     end subroutine read_config_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Update the variables for the reference epoch in the mission class.
+!  Either computes the et from the calendar state, or vice versa.
+
+    subroutine update_epoch(me)
+
+    implicit none
+
+    class(mission_type),intent(inout) :: me
+
+    select case (me%epoch_mode)
+    case(1)
+        ! compute reference epoch from the date (TDB):
+        ! save this in the mission class
+        me%et_ref = jd_to_et(julian_date(me%year,&
+                                         me%month,&
+                                         me%day,&
+                                         me%hour,&
+                                         me%minute,&
+                                         me%sec))
+    case(2)
+        ! then compute calendar from et
+        call julian_date_to_calendar_date(et_to_jd(me%et_ref),&
+                                          me%year,&
+                                          me%month,&
+                                          me%day,&
+                                          me%hour,&
+                                          me%minute,&
+                                          me%sec)
+    case default
+        error stop 'error: epoch_mode must be 1 or 2.'
+    end select
+
+    end subroutine update_epoch
 !*****************************************************************************************
 
 !*****************************************************************************************
