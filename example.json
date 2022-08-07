@@ -1,19 +1,30 @@
 // example case using the JSON input file
 {
+    // specify halo orbit to compute:
     "period": 1.5872714606,  // normalized period
     "N_or_S": "S",
     "L1_or_L2": "L2",
-    "year": 2000,
-    "month": 1,
-    "day": 1,
-    "hour": 12,
-    "minute": 0,
-    "sec": 0,
+
+    // reference epoch (all times are relative to this epoch)
+    // can specify as calendar date or ET
+    // "year": 2000,
+    // "month": 1,
+    // "day": 1,
+    // "hour": 12,
+    // "minute": 0,
+    // "sec": 0,
+    "et_ref": 710212455.000000,  // 2022-07-04 13:14:15
+
+    // optional inputs:
     "fix_initial_time": false,  // do not allow the initial epoch to vary
     "fix_initial_r": false,
     "fix_ry_at_end_of_first_rev": false,
     "fix_final_ry_and_vx": false,
+
+    // number of revs:
     "n_revs": 5,
+
+    // data files:
     "ephemeris_file": "data/eph/JPLEPH.421",
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
     "patch_point_file": "data/L2_halos.json"

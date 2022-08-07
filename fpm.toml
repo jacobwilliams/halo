@@ -12,7 +12,7 @@ auto-examples = true
 auto-tests = true
 
 [dependencies]
-fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "f8de93d8436b98083a858abc16fb55b6af0634b2" }
+fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "13075141191d78976e84dfa19ffd4342aa7936cc" }
 NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "cf37c94682e1a3871553c4062e1622e662b17060" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
 json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.2.5" }

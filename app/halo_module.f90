@@ -1712,7 +1712,8 @@
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
     type(config_file) :: f
-    logical :: found, found_jc, found_period
+    logical :: found, found_jc, found_period, found_et
+    logical,dimension(6) :: found_calendar
     !logical :: status_ok
     integer :: i, irow
     real(wp):: jc !! jacobii constant from the file
@@ -1742,12 +1743,16 @@
     ! required inputs:
     call f%get('N_or_S',          me%mission%N_or_S           )
     call f%get('L1_or_L2',        me%mission%L1_or_L2         )
-    call f%get('year',            me%mission%year             )
-    call f%get('month',           me%mission%month            )
-    call f%get('day',             me%mission%day              )
-    call f%get('hour',            me%mission%hour             )
-    call f%get('minute',          me%mission%minute           )
-    call f%get('sec',             me%mission%sec              )
+
+    ! can specify either calendar date or et:
+    call f%get('year',            me%mission%year            , found_calendar(1) )
+    call f%get('month',           me%mission%month           , found_calendar(2) )
+    call f%get('day',             me%mission%day             , found_calendar(3) )
+    call f%get('hour',            me%mission%hour            , found_calendar(4) )
+    call f%get('minute',          me%mission%minute          , found_calendar(5) )
+    call f%get('sec',             me%mission%sec             , found_calendar(6) )
+    call f%get('et_ref',          me%mission%et_ref          , found_et )
+
     call f%get('n_revs',          me%mission%n_revs           )
     call f%get('ephemeris_file',  me%mission%ephemeris_file   )
     call f%get('gravfile',        me%mission%gravfile         )
@@ -1760,14 +1765,29 @@
         error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
         ! csv file no longer supported
 
-    ! compute reference epoch from the date (TDB):
-    ! save this in the mission class
-    me%mission%et_ref = jd_to_et(julian_date(me%mission%year,&
-                                             me%mission%month,&
-                                             me%mission%day,&
-                                             me%mission%hour,&
-                                             me%mission%minute,&
-                                             me%mission%sec))
+    ! check epoch:
+    found = all(found_calendar) .or. found_et ! at least one
+    if (found) found = .not. (all(found_calendar) .and. found_et) ! only one
+    if (.not. found) error stop 'error: just specify epoch as year,month,day,hour,minute,sec or et_ref'
+    if (found_et) then
+        ! then compute calendar from et
+        call julian_date_to_calendar_date(et_to_jd(me%mission%et_ref),&
+                                          me%mission%year,&
+                                          me%mission%month,&
+                                          me%mission%day,&
+                                          me%mission%hour,&
+                                          me%mission%minute,&
+                                          me%mission%sec)
+    else
+        ! compute reference epoch from the date (TDB):
+        ! save this in the mission class
+        me%mission%et_ref = jd_to_et(julian_date(me%mission%year,&
+                                                 me%mission%month,&
+                                                 me%mission%day,&
+                                                 me%mission%hour,&
+                                                 me%mission%minute,&
+                                                 me%mission%sec))
+    end if
 
     ! read the patch point file and load it:
 
