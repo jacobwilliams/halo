@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title=" 7.8% of total for procedures.">90 statements</a>
+    title=" 7.0% of total for procedures.">81 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -337,6 +337,10 @@
 
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="c">!! number of state variables</span>
 
+<span class="w">    </span><span class="c">! preallocate the arrays used in the report function:</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">t_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">x_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">y_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">z_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),&amp;</span><span class="w"></span>
+<span class="w">             </span><span class="n">vx_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">vy_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">vz_crtbp</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="w"></span>
+
 <span class="w">    </span><span class="c">! first generate the patch points in the normalized system wrt the barycenter.</span>
 <span class="w">    </span><span class="c">! do this with a numerical integration of the CR3BP equations of motion.</span>
 
@@ -421,25 +425,15 @@
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">                  </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="w"></span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w"></span>
 
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">x_crtbp</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            </span><span class="n">t_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">t_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">t</span><span class="p">]</span><span class="w"></span>
-<span class="w">            </span><span class="n">x_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">y_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">y_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">z_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">z_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vx_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vx_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vy_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vy_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vz_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vz_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span><span class="w"></span>
-<span class="w">       </span><span class="k">else</span>
-<span class="k">            </span><span class="n">t_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="w"></span>
-<span class="w">            </span><span class="n">x_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">y_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">z_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vx_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vy_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span><span class="w"></span>
-<span class="w">            </span><span class="n">vz_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span><span class="w"></span>
-<span class="w">       </span><span class="k">end if</span>
+<span class="w">        </span><span class="n">t_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">t_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">t</span><span class="p">]</span><span class="w"></span>
+<span class="w">        </span><span class="n">x_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span><span class="w"></span>
+<span class="w">        </span><span class="n">y_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">y_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span><span class="w"></span>
+<span class="w">        </span><span class="n">z_crtbp</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">z_crtbp</span><span class="p">,</span><span class="w">  </span><span class="n">x</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span><span class="w"></span>
+<span class="w">        </span><span class="n">vx_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vx_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span><span class="w"></span>
+<span class="w">        </span><span class="n">vy_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vy_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span><span class="w"></span>
+<span class="w">        </span><span class="n">vz_crtbp</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">vz_crtbp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span><span class="w"></span>
 
-<span class="k">    end subroutine </span><span class="n">report</span><span class="w"></span>
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">report</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">end subroutine </span><span class="n">generate_patch_points</span><span class="w"></span>
 </pre></div>
