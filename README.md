@@ -1,6 +1,12 @@
 Halo orbit solver with modern Fortran
 
+## Description
+
+An application that can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.
+
 ## Build
+
+The application is built using the [Fortran Package Manager](https://github.com/fortran-lang/fpm) (FPM). FPM will download all the required dependencies and compile the program, and can also be used to run the tests.
 
 ```
 fpm build --profile release
@@ -9,13 +15,14 @@ fpm build --profile release
 To run an example:
 
 ```
-fpm run --profile release -- example2.json
+fpm run --profile release -- examples/example2.json
 ```
 
+OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:
 
 ```
-fpm run --profile release --compiler ifort --flag -qopenmp -- example2.json
+fpm run --profile release --compiler ifort --flag -qopenmp -- examples/example2.json
 ```
 
 ### Documentation

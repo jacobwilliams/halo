@@ -50,7 +50,7 @@ jobs:
            --slave /usr/bin/gcov gcov /usr/bin/gcov-${{ matrix.gcc_v }}
 
     - name: Test
-      run: fpm run --profile debug --compiler gfortran --flag -fopenmp -- example.json
+      run: fpm run --profile debug --compiler gfortran --flag -fopenmp -- examples/example.json
 
     - name: Build documentation
       run: ford ./halo.md
