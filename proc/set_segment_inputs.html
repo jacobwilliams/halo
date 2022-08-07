@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title=" 2.0% of total for procedures.">21 statements</a>
+    title=" 2.5% of total for procedures.">28 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -324,15 +324,14 @@
 
 <span class="w">    </span><span class="c">! from rotating to inertial:</span>
 <span class="w">    </span><span class="k">call </span><span class="n">rotating</span><span class="p">%</span><span class="n">transform</span><span class="p">(</span><span class="n">x0_rotating</span><span class="p">,</span><span class="n">inertial</span><span class="p">,</span><span class="n">et0</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="n">x0_inertial</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;transformation error in set_segment_inputs&#39;</span><span class="w"></span>
-
-<span class="w">    </span><span class="c">! write(*,*) &#39;&#39;</span>
-<span class="w">    </span><span class="c">! write(*,*) &#39;rotating to inertial&#39;</span>
-<span class="w">    </span><span class="c">! write(*,&#39;(A/,*(E30.16/))&#39;) &#39;et0:        &#39;, et0</span>
-<span class="w">    </span><span class="c">! write(*,&#39;(A/,*(E30.16/))&#39;) &#39;x0_rotating:&#39;, x0_rotating</span>
-<span class="w">    </span><span class="c">! write(*,&#39;(A/,*(E30.16/))&#39;) &#39;x0_inertial:&#39;, x0_inertial</span>
-<span class="w">    </span><span class="c">! write(*,*) &#39;&#39;</span>
-<span class="w">    </span><span class="c">!PAUSE</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A/,*(E30.16/))&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;t0:         &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="w"></span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A/,*(E30.16/))&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;et0:        &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">et0</span><span class="w"></span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A/,*(E30.16/))&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;x0_rotating:&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">x0_rotating</span><span class="w"></span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"></span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;transformation error in set_segment_inputs&#39;</span><span class="w"></span>
+<span class="w">    </span><span class="k">end if</span><span class="w"></span>
 
 <span class="w">    </span><span class="c">! set the inputs (needed by the propagator)</span>
 <span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="w"></span>

@@ -90,16 +90,20 @@
         <div class="col-md-8">
           <h1>halo</h1>
           <p>Halo orbit solver with modern Fortran</p>
+<h2>Description</h2>
+<p>An application that can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.</p>
 <h2>Build</h2>
+<p>The application is built using the <a href="https://github.com/fortran-lang/fpm">Fortran Package Manager</a> (FPM). FPM will download all the required dependencies and compile the program, and can also be used to run the tests.</p>
 <div class="codehilite"><pre><span></span><code>fpm build --profile release
 </code></pre></div>
 
 <p>To run an example:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release -- example2.json
+<div class="codehilite"><pre><span></span><code>fpm run --profile release -- examples/example2.json
 </code></pre></div>
 
-<p>Another example, using the Intel Fortran Compiler with OpenMP:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag -qopenmp -- example2.json
+<p>OpenMP can also be employed to speed up the process.
+Another example, using the Intel Fortran Compiler with OpenMP:</p>
+<div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag -qopenmp -- examples/example2.json
 </code></pre></div>
 
 <h3>Documentation</h3>

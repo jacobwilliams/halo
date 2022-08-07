@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title="<p>40.4% of total for derived types.</p>Including implementation: 612 statements, 56.4% of total for derived types.">42 statements</a>
+    title="<p>42.1% of total for derived types.</p>Including implementation: 695 statements, 58.6% of total for derived types.">45 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -144,6 +144,9 @@
       <a class="list-group-item" href="../type/mission_type.html#variable-period">period</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-period8">period8</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_time">fix_initial_time</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_r">fix_initial_r</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_ry_at_end_of_first_rev">fix_ry_at_end_of_first_rev</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_final_ry_and_vx">fix_final_ry_and_vx</a>
     </div>
   </div>
 </div>
@@ -203,52 +206,23 @@ organizational purposes.... rethink this maybe ...</p>
 <polygon fill="none" stroke="black" points="646,-163 564,-163 564,-139 646,-139 646,-163"/>
 <text text-anchor="middle" x="605" y="-148.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type</text>
 </g>
-<!-- geopotential_model_pines -->
+<!-- jpl_ephemeris -->
 <g id="type~~mission_type~~InheritsGraph_node2" class="node">
-<title>geopotential_model_pines</title>
-<polygon fill="#5cb85c" stroke="#5cb85c" points="153,-297 0,-297 0,-273 153,-273 153,-297"/>
-<text text-anchor="middle" x="76.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">geopotential_model_pines</text>
+<title>jpl_ephemeris</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-297 32.5,-297 32.5,-273 120.5,-273 120.5,-297"/>
+<text text-anchor="middle" x="76.5" y="-282.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jpl_ephemeris</text>
 </g>
-<!-- type~mission_type&#45;&gt;geopotential_model_pines -->
-<g id="type~~mission_type~~InheritsGraph_edge1" class="edge">
-<title>type~mission_type&#45;&gt;geopotential_model_pines</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M590.08,-163.12C578.83,-172.38 562.25,-184.9 546,-193 440.31,-245.67 408.15,-249.68 292,-271 250.13,-278.69 202.98,-282.3 163.58,-283.95"/>
-<polygon fill="#000000" stroke="#000000" points="163.33,-280.46 153.47,-284.34 163.6,-287.45 163.33,-280.46"/>
-<text text-anchor="middle" x="351" y="-269.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
-</g>
-<!-- numdiff_type -->
-<g id="type~~mission_type~~InheritsGraph_node3" class="node">
-<title>numdiff_type</title>
-<polygon fill="#5cb85c" stroke="#5cb85c" points="392,-66 310,-66 310,-42 392,-42 392,-66"/>
-<text text-anchor="middle" x="351" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
-</g>
-<!-- type~mission_type&#45;&gt;numdiff_type -->
-<g id="type~~mission_type~~InheritsGraph_edge5" class="edge">
-<title>type~mission_type&#45;&gt;numdiff_type</title>
-<path fill="none" stroke="#000000" d="M577.69,-138.97C552.74,-127.98 513.97,-111.96 479,-102"/>
-<path fill="none" stroke="#000000" d="M477,-102C446.6,-93.34 413.24,-80.34 388.63,-70.05"/>
-<polygon fill="#000000" stroke="#000000" points="389.89,-66.79 379.32,-66.12 387.17,-73.24 389.89,-66.79"/>
-</g>
-<!-- type~patch_point -->
-<g id="type~~mission_type~~InheritsGraph_node4" class="node">
-<title>type~patch_point</title>
-<g id="a_type~~mission_type~~InheritsGraph_node4"><a xlink:href=".././type/patch_point.html" xlink:title="patch_point">
-<polygon fill="#5cb85c" stroke="#5cb85c" points="388.5,-24 313.5,-24 313.5,0 388.5,0 388.5,-24"/>
-<text text-anchor="middle" x="351" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
-</a>
-</g>
-</g>
-<!-- type~mission_type&#45;&gt;type~patch_point -->
-<g id="type~~mission_type~~InheritsGraph_edge4" class="edge">
-<title>type~mission_type&#45;&gt;type~patch_point</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M597.37,-138.88C587.97,-122.76 569.29,-94.41 546,-78 501.26,-46.49 440.25,-29.02 398.67,-20.09"/>
-<polygon fill="#000000" stroke="#000000" points="399.3,-16.65 388.8,-18.05 397.89,-23.5 399.3,-16.65"/>
-<text text-anchor="middle" x="478" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
+<!-- type~mission_type&#45;&gt;jpl_ephemeris -->
+<g id="type~~mission_type~~InheritsGraph_edge2" class="edge">
+<title>type~mission_type&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M590.08,-163.12C578.83,-172.38 562.25,-184.9 546,-193 440.31,-245.67 408.15,-249.68 292,-271 237.63,-280.98 174.37,-284.1 130.7,-284.95"/>
+<polygon fill="#000000" stroke="#000000" points="130.53,-281.46 120.59,-285.12 130.65,-288.46 130.53,-281.46"/>
+<text text-anchor="middle" x="351" y="-269.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
 </g>
 <!-- type~segment -->
-<g id="type~~mission_type~~InheritsGraph_node5" class="node">
+<g id="type~~mission_type~~InheritsGraph_node3" class="node">
 <title>type~segment</title>
-<g id="a_type~~mission_type~~InheritsGraph_node5"><a xlink:href=".././type/segment.html" xlink:title="segment">
+<g id="a_type~~mission_type~~InheritsGraph_node3"><a xlink:href=".././type/segment.html" xlink:title="segment">
 <polygon fill="#5cb85c" stroke="#5cb85c" points="380.5,-201 321.5,-201 321.5,-177 380.5,-177 380.5,-201"/>
 <text text-anchor="middle" x="351" y="-186.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
 </a>
@@ -261,32 +235,61 @@ organizational purposes.... rethink this maybe ...</p>
 <polygon fill="#000000" stroke="#000000" points="390.07,-179.72 380.7,-184.67 391.11,-186.64 390.07,-179.72"/>
 <text text-anchor="middle" x="478" y="-181.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
 </g>
-<!-- jpl_ephemeris -->
+<!-- geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_node4" class="node">
+<title>geopotential_model_pines</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="153,-121 0,-121 0,-97 153,-97 153,-121"/>
+<text text-anchor="middle" x="76.5" y="-106.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">geopotential_model_pines</text>
+</g>
+<!-- type~mission_type&#45;&gt;geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_edge1" class="edge">
+<title>type~mission_type&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M477,-102C366.16,-70.43 230.92,-82.78 149.64,-95.35"/>
+<polygon fill="#000000" stroke="#000000" points="148.84,-91.93 139.51,-96.96 149.94,-98.84 148.84,-91.93"/>
+<text text-anchor="middle" x="351" y="-87.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- numdiff_type -->
+<g id="type~~mission_type~~InheritsGraph_node5" class="node">
+<title>numdiff_type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="392,-66 310,-66 310,-42 392,-42 392,-66"/>
+<text text-anchor="middle" x="351" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
+</g>
+<!-- type~mission_type&#45;&gt;numdiff_type -->
+<g id="type~~mission_type~~InheritsGraph_edge5" class="edge">
+<title>type~mission_type&#45;&gt;numdiff_type</title>
+<path fill="none" stroke="#000000" d="M577.69,-138.97C552.74,-127.98 513.97,-111.96 479,-102"/>
+<path fill="none" stroke="#000000" d="M477,-102C446.6,-93.34 413.24,-80.34 388.63,-70.05"/>
+<polygon fill="#000000" stroke="#000000" points="389.89,-66.79 379.32,-66.12 387.17,-73.24 389.89,-66.79"/>
+</g>
+<!-- type~patch_point -->
 <g id="type~~mission_type~~InheritsGraph_node6" class="node">
-<title>jpl_ephemeris</title>
-<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-121 32.5,-121 32.5,-97 120.5,-97 120.5,-121"/>
-<text text-anchor="middle" x="76.5" y="-106.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jpl_ephemeris</text>
+<title>type~patch_point</title>
+<g id="a_type~~mission_type~~InheritsGraph_node6"><a xlink:href=".././type/patch_point.html" xlink:title="patch_point">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="388.5,-24 313.5,-24 313.5,0 388.5,0 388.5,-24"/>
+<text text-anchor="middle" x="351" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
+</a>
 </g>
-<!-- type~mission_type&#45;&gt;jpl_ephemeris -->
-<g id="type~~mission_type~~InheritsGraph_edge2" class="edge">
-<title>type~mission_type&#45;&gt;jpl_ephemeris</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M477,-102C356.97,-67.81 208.32,-85.14 130.57,-98.45"/>
-<polygon fill="#000000" stroke="#000000" points="129.78,-95.04 120.54,-100.22 130.99,-101.93 129.78,-95.04"/>
-<text text-anchor="middle" x="351" y="-87.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
 </g>
-<!-- type~segment&#45;&gt;geopotential_model_pines -->
-<g id="type~~mission_type~~InheritsGraph_edge7" class="edge">
-<title>type~segment&#45;&gt;geopotential_model_pines</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M337.74,-201.16C326.69,-211.44 309.53,-225.75 292,-234 242.14,-257.45 224.58,-248.15 171,-261 158.66,-263.96 145.43,-267.27 132.93,-270.46"/>
-<polygon fill="#000000" stroke="#000000" points="131.9,-267.11 123.08,-272.99 133.64,-273.89 131.9,-267.11"/>
-<text text-anchor="middle" x="231.5" y="-263.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+<!-- type~mission_type&#45;&gt;type~patch_point -->
+<g id="type~~mission_type~~InheritsGraph_edge4" class="edge">
+<title>type~mission_type&#45;&gt;type~patch_point</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M597.37,-138.88C587.97,-122.76 569.29,-94.41 546,-78 501.26,-46.49 440.25,-29.02 398.67,-20.09"/>
+<polygon fill="#000000" stroke="#000000" points="399.3,-16.65 388.8,-18.05 397.89,-23.5 399.3,-16.65"/>
+<text text-anchor="middle" x="478" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
 </g>
 <!-- type~segment&#45;&gt;jpl_ephemeris -->
 <g id="type~~mission_type~~InheritsGraph_edge8" class="edge">
 <title>type~segment&#45;&gt;jpl_ephemeris</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M335.69,-176.96C324.49,-168.16 308.16,-156.65 292,-150 239.63,-128.45 175.35,-118.09 130.89,-113.2"/>
-<polygon fill="#000000" stroke="#000000" points="131.18,-109.71 120.87,-112.15 130.46,-116.67 131.18,-109.71"/>
-<text text-anchor="middle" x="231.5" y="-152.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M337.74,-201.16C326.69,-211.44 309.53,-225.75 292,-234 242.14,-257.45 224.58,-248.15 171,-261 157.88,-264.15 143.77,-267.69 130.59,-271.06"/>
+<polygon fill="#000000" stroke="#000000" points="129.53,-267.72 120.72,-273.6 131.28,-274.5 129.53,-267.72"/>
+<text text-anchor="middle" x="231.5" y="-263.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- type~segment&#45;&gt;geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_edge7" class="edge">
+<title>type~segment&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M335.69,-176.96C324.49,-168.16 308.16,-156.65 292,-150 251.27,-133.24 203.35,-123.25 163.14,-117.33"/>
+<polygon fill="#000000" stroke="#000000" points="163.48,-113.85 153.09,-115.92 162.5,-120.78 163.48,-113.85"/>
+<text text-anchor="middle" x="231.5" y="-152.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
 </g>
 <!-- type~segment_data -->
 <g id="type~~mission_type~~InheritsGraph_node7" class="node">
@@ -484,6 +487,9 @@ organizational purposes.... rethink this maybe ...</p>
       <a class="list-group-item" href="../type/mission_type.html#variable-period">period</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-period8">period8</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_time">fix_initial_time</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_r">fix_initial_r</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_ry_at_end_of_first_rev">fix_ry_at_end_of_first_rev</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-fix_final_ry_and_vx">fix_final_ry_and_vx</a>
     </div>
   </div>
 </div>
@@ -660,6 +666,21 @@ example: 'data/L2_halos.json'</p></td>
   <td><span class="anchor" id="variable-fix_initial_time"></span>logical,</td>
 <td>public</td>  <td></td><td>::</td>
   <td><strong>fix_initial_time</strong></td><td> =</td><td>.false.</td><td><p>to fix the initial epoch in the mission</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-fix_initial_r"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>fix_initial_r</strong></td><td> =</td><td>.false.</td><td><p>fix the initial periapsis position vector (x,y,z)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-fix_ry_at_end_of_first_rev"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>fix_ry_at_end_of_first_rev</strong></td><td> =</td><td>.false.</td><td><p>fix ry at the end of the first rev (at periapsis)</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-fix_final_ry_and_vx"></span>logical,</td>
+<td>public</td>  <td></td><td>::</td>
+  <td><strong>fix_final_ry_and_vx</strong></td><td> =</td><td>.false.</td><td><p>fix ry and vx at the end of the last rev (at periapsis)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1017,7 +1038,7 @@ elements of the Jacobian)</p></td>
   <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-define_problem_size"></span><h3>procedure, public :: <strong>define_problem_size</strong>    </h3></div>
   <ul class="list-group">
       <li class="list-group-item">
-          <h3>public pure subroutine <a href='../proc/define_problem_size.html'>define_problem_size</a>(me, n, m, n_segs, n_nonzero)</h3>
+          <h3>public pure subroutine <a href='../proc/define_problem_size.html'>define_problem_size</a>(me, n, m, n_segs, n_nonzero, full_problem)</h3>
 <p>Returns the size variables for the "forward-backward" formulation of the problem.</p><a href="../proc/define_problem_size.html" class="pull-right"><emph>Read more&hellip;</emph></a>
     
 <h4>Arguments</h4>      <table class="table table-striped varlist">
@@ -1052,6 +1073,13 @@ elements of the Jacobian)</p></td>
 <td>intent(out),</td>
   <td>optional</td>  <td></td><td>::</td>
   <td><strong>n_nonzero</strong></td><td><p>number of nonzero elements in the Jacobian</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" ></span>logical,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>full_problem</strong></td><td><p>if true (default) always return the results for the full problem
+(i.e., without fixing any of the variables)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1205,14 +1233,19 @@ elements of the Jacobian)</p></td>
 <span class="w">        </span><span class="c">!! example: &#39;data/L2_halos.json&#39;</span>
 
 <span class="w">        </span><span class="c">! the initial guess for the Halo:</span>
-<span class="w">        </span><span class="c">! This is for the &quot;three_patch_point_solution_forward&quot; version of the transcription.</span>
+<span class="w">        </span><span class="c">! This is for the &quot;forward/backward&quot; version of the transcription from the paper.</span>
 <span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">periapsis</span><span class="w">    </span><span class="c">!! Patchpoint Periapse State</span>
 <span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">quarter</span><span class="w">      </span><span class="c">!! Patchpoint 1/4 Rev State</span>
 <span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">apoapsis</span><span class="w">     </span><span class="c">!! Patchpoint 1/2 Rev State</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">period</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! Halo period [days]</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">period8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! 1/8 of Halo period [days]</span>
 
-<span class="w">        </span><span class="kt">logical</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_initial_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! to fix the initial epoch in the mission</span>
+<span class="w">        </span><span class="c">! optional problem inputs</span>
+<span class="w">        </span><span class="c">! [can remove some of the variables from thte optimization problem]</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_initial_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! to fix the initial epoch in the mission</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_initial_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! fix the initial periapsis position vector (x,y,z)</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_ry_at_end_of_first_rev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! fix ry at the end of the first rev (at periapsis)</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_final_ry_and_vx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! fix ry and vx at the end of the last rev (at periapsis)</span>
 
 <span class="w">    </span><span class="k">contains</span>
 
