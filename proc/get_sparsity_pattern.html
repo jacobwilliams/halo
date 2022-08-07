@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title=" 4.6% of total for procedures.">52 statements</a>
+    title=" 4.6% of total for procedures.">53 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -235,13 +235,14 @@ elements of the Jacobian)</p></td>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="n">ii</span><span class="p">,</span><span class="n">jj</span><span class="p">,</span><span class="n">icol_start</span><span class="p">,</span><span class="n">irow_start</span><span class="w"></span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_nonzero</span><span class="w">  </span><span class="c">!! number of nonzero elements in the jacobian</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">  </span><span class="c">!! number of optimization variables</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="w">  </span><span class="c">!! number of functions</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iblock</span><span class="w"></span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cols_to_remove</span><span class="w"> </span><span class="c">!! the columns from the full pattern to remove</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mask</span><span class="w"></span>
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">icol_tmp</span><span class="w"></span>
 
 <span class="w">    </span><span class="c">! get the size of the full problem, we will first construct the full pattern:</span>
-<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n_nonzero</span><span class="o">=</span><span class="n">n_nonzero</span><span class="p">,</span><span class="w"> </span><span class="n">full_problem</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w"></span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">n_nonzero</span><span class="o">=</span><span class="n">n_nonzero</span><span class="p">,</span><span class="w"> </span><span class="n">full_problem</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">irow</span><span class="p">(</span><span class="n">n_nonzero</span><span class="p">))</span><span class="w"></span>
 <span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">icol</span><span class="p">(</span><span class="n">n_nonzero</span><span class="p">))</span><span class="w"></span>
