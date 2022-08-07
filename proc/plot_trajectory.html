@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title=" 5.7% of total for procedures.">65 statements</a>
+    title=" 7.1% of total for procedures.">83 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -125,10 +125,10 @@
     </div>
     
     <div class="col-md-9" id='text'>
-    <h2>public subroutine plot_trajectory(me, filename, export_trajectory)</h2>
+    <h2>public subroutine plot_trajectory(me, filename, export_trajectory, draw_trajectory, only_first_rev)</h2>
     
 
-    <p>Plot the trajectory using matplotlib.</p>
+    <p>Plot the trajectory using matplotlib and/or generate a text file (for MKSPK)</p>
 <p></p><div class="alert alert-info" role="alert"><h4>Note</h4><p>It is assumed that all the data is present in the segments needed to propagate.</p></div>
 
     <h3>Arguments</h3>
@@ -153,7 +153,21 @@
   <td>optional</td>  <td></td><td>::</td>
   <td><strong>export_trajectory</strong></td><td><p>if true, a text trajectory
 file is also produced
-(that can be read by MKSPK)</p></td>
+(that can be read by MKSPK)
+[default is False]</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-draw_trajectory"></span>logical,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>draw_trajectory</strong></td><td><p>if true [Default], a matplotlib
+plot is generated</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-only_first_rev"></span>logical,</td>
+<td>intent(in),</td>
+  <td>optional</td>  <td></td><td>::</td>
+  <td><strong>only_first_rev</strong></td><td><p>to only do the first rev [Default is False]</p></td>
 </tr>
 </tbody>
 </table>
@@ -184,7 +198,7 @@ file is also produced
     
     <section>
     <h2><span class="anchor" id="src"></span>Source Code</h2>
-    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">plot_trajectory</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">export_trajectory</span><span class="p">)</span><span class="w"></span>
+    <div class="highlight"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">plot_trajectory</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">export_trajectory</span><span class="p">,</span><span class="n">draw_trajectory</span><span class="p">,</span><span class="n">only_first_rev</span><span class="p">)</span><span class="w"></span>
 
 <span class="w">    </span><span class="k">implicit none</span>
 
@@ -193,17 +207,23 @@ file is also produced
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export_trajectory</span><span class="w">    </span><span class="c">!! if true, a text trajectory</span>
 <span class="w">                                                        </span><span class="c">!! file is also produced</span>
 <span class="w">                                                        </span><span class="c">!! (that can be read by MKSPK)</span>
+<span class="w">                                                        </span><span class="c">!! [default is False]</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">draw_trajectory</span><span class="w">      </span><span class="c">!! if true [Default], a matplotlib</span>
+<span class="w">                                                        </span><span class="c">!! plot is generated</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">only_first_rev</span><span class="w">       </span><span class="c">!! to only do the first rev [Default is False]</span>
 
 <span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">pyplot</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plt</span><span class="w">  </span><span class="c">!! for generating the plots</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">  </span><span class="c">!! segment number counter</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istat</span><span class="w"> </span><span class="c">!! pyplot status code</span>
 <span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg_str</span><span class="w"> </span><span class="c">!! string version of segment number</span>
-<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export</span><span class="w">  </span><span class="c">!! if the txt file is to be produced as well.</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export</span><span class="w">  </span><span class="c">!! if the txt file is to be produced</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plot</span><span class="w">    </span><span class="c">!! if the py file is to be produced</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iunit</span><span class="w"> </span><span class="c">!! file unit for the txt file</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="c">!! counter for txt file write</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istart</span><span class="p">,</span><span class="n">iend</span><span class="p">,</span><span class="n">istep</span><span class="p">,</span><span class="n">iendprev</span><span class="w">  </span><span class="c">!! index counters</span>
-<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">figsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="c">!! figure size for plotting</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="c">!! number of segments to plot</span>
 
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">figsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="c">!! figure size for plotting</span>
 <span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plot_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">!! if true, the rotating state is plotted.</span>
 <span class="w">                                                 </span><span class="c">!! if false, the inertial state is plotted.</span>
 
@@ -212,25 +232,38 @@ file is also produced
 <span class="k">        </span><span class="n">export</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">export_trajectory</span><span class="w"></span>
 <span class="w">    </span><span class="k">else</span>
 <span class="k">        </span><span class="n">export</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"></span>
-<span class="w">    </span><span class="k">end if</span><span class="w"></span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">draw_trajectory</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">draw_trajectory</span><span class="w"></span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"></span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span><span class="w"> </span><span class="c">! default export all the segments</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">)</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="c">! only the first rev (8 segments)</span>
+<span class="w">    </span><span class="k">end if</span>
 
-<span class="w">    </span><span class="c">! initialize the plot:</span>
-<span class="w">    </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nx (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;\n\n\ny (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">zlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nz (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">figsize</span><span class="w">         </span><span class="o">=</span><span class="n">figsize</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">font_size</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">axes_labelsize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">xtick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ytick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">ztick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Halo Trajectory: &#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">),&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">legend</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">axis_equal</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span><span class="w"></span>
-<span class="w">                        </span><span class="n">mplot3d</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w"></span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="c">! nothing to do</span>
 
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="w">        </span><span class="c">! initialize the plot:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nx (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;\n\n\ny (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">zlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nz (km)&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">figsize</span><span class="w">         </span><span class="o">=</span><span class="n">figsize</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">font_size</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">axes_labelsize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">xtick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">ytick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">ztick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Halo Trajectory: &#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">),&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">legend</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">axis_equal</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span><span class="w"></span>
+<span class="w">                            </span><span class="n">mplot3d</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w"></span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        open</span><span class="p">(</span><span class="n">newunit</span><span class="o">=</span><span class="n">iunit</span><span class="p">,</span><span class="k">file</span><span class="o">=</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;REPLACE&#39;</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">istat</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error opening trajectory file.&#39;</span><span class="w"></span>
 <span class="w">    </span><span class="k">end if</span>
@@ -241,27 +274,29 @@ file is also produced
 <span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span><span class="w"></span>
 <span class="w">    </span><span class="k">end do</span>
 
-<span class="k">    do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span><span class="w"></span>
+<span class="k">    do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"></span>
 
 <span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">,</span><span class="s1">&#39;(I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">iseg</span><span class="w"></span>
 
 <span class="w">        </span><span class="c">! generate the trajectory for this segment:</span>
 <span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">propagate</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">    </span><span class="c">! [export points]</span>
 
-<span class="w">        </span><span class="c">! export to plot:</span>
-<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot_rotating</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">            call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">else</span>
-<span class="k">            call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span><span class="w"></span>
-<span class="w">                                 </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
-<span class="w">        </span><span class="k">end if</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="w">            </span><span class="c">! export to plot:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot_rotating</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="k">else</span>
+<span class="k">                call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span><span class="w"></span>
+<span class="w">                                    </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">        end if</span>
 
 <span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
 
@@ -291,35 +326,36 @@ file is also produced
 <span class="k">            do </span><span class="n">i</span><span class="o">=</span><span class="n">istart</span><span class="p">,</span><span class="n">iend</span><span class="p">,</span><span class="n">istep</span><span class="w"></span>
 <span class="w">                </span><span class="c">! inertial trajectory for SPK:</span>
 <span class="w">                </span><span class="k">write</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="s1">&#39;(*(E30.16E3,A,1X))&#39;</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                                               </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;&#39;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;&#39;</span><span class="w"></span>
 <span class="w">            </span><span class="k">end do</span>
 <span class="k">            </span><span class="n">iendprev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iend</span><span class="w"></span>
 <span class="w">        </span><span class="k">end if</span>
 
-<span class="k">    end do</span><span class="w"></span>
+<span class="k">    end do</span>
 
-<span class="w">    </span><span class="c">! add the moon as a sphere:</span>
-<span class="w">    </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_sphere</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">r_moon</span><span class="p">,</span><span class="n">xc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">yc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">zc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;Grey&#39;</span><span class="p">)</span><span class="w"></span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="w">        </span><span class="c">! add the moon as a sphere:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_sphere</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">r_moon</span><span class="p">,</span><span class="n">xc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">yc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">zc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;Grey&#39;</span><span class="p">)</span><span class="w"></span>
 
-<span class="w">    </span><span class="c">! save the plot:</span>
-<span class="w">    </span><span class="c">! call plt%showfig(pyfile=trim(filename)//&#39;.py&#39;,istat=istat)</span>
-<span class="w">    </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">savefig</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.png&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                     </span><span class="n">pyfile</span><span class="o">=</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="s1">&#39;300&#39;</span><span class="p">,&amp;</span><span class="w"></span>
-<span class="w">                     </span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="c">! save the plot:</span>
+<span class="w">        </span><span class="c">! call plt%showfig(pyfile=trim(filename)//&#39;.py&#39;,istat=istat)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">savefig</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.png&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">pyfile</span><span class="o">=</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="s1">&#39;300&#39;</span><span class="p">,&amp;</span><span class="w"></span>
+<span class="w">                        </span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
 
-<span class="w">    </span><span class="c">! cleanup:</span>
-<span class="w">    </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span><span class="w"></span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">        close</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="c">! cleanup:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span><span class="w"></span>
 <span class="w">    </span><span class="k">end if</span>
 
-<span class="k">    end subroutine </span><span class="n">plot_trajectory</span><span class="w"></span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">close</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">plot_trajectory</span><span class="w"></span>
 </pre></div>
 
     </section>
