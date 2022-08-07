@@ -22,7 +22,7 @@ OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:
 
 ```
-fpm run --profile release --compiler ifort --flag -qopenmp -- examples/example2.json
+fpm run --profile release --compiler ifort --flag "-O2 -qopenmp" -- examples/example.json
 ```
 
 ### Documentation
