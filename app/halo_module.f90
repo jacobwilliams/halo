@@ -95,9 +95,10 @@
         !! the mission [this is a `numdiff_type` for
         !! organizational purposes.... rethink this maybe ...
 
-        type(geopotential_model_pines),pointer :: grav => null()  !! central body geopotential model [global]
-        type(jpl_ephemeris),pointer :: eph => null()                !! the ephemeris [global]
-        type(segment),dimension(:),allocatable :: segs              !! the list of segments
+        type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
+        type(jpl_ephemeris),pointer :: eph => null()             !! the ephemeris [global]
+
+        type(segment),dimension(:),allocatable :: segs  !! the list of segments
 
         real(wp),dimension(:),allocatable :: xscale  !! opt var scale factors
         real(wp),dimension(:),allocatable :: fscale  !! function scale factors
@@ -1483,11 +1484,11 @@
 
 !*****************************************************************************************
 !>
-!  Plot the trajectory using matplotlib.
+!  Plot the trajectory using matplotlib and/or generate a text file (for MKSPK)
 !
 !@note It is assumed that all the data is present in the segments needed to propagate.
 
-    subroutine plot_trajectory(me,filename,export_trajectory)
+    subroutine plot_trajectory(me,filename,export_trajectory,draw_trajectory,only_first_rev)
 
     implicit none
 
@@ -1496,17 +1497,23 @@
     logical,intent(in),optional :: export_trajectory    !! if true, a text trajectory
                                                         !! file is also produced
                                                         !! (that can be read by MKSPK)
+                                                        !! [default is False]
+    logical,intent(in),optional :: draw_trajectory      !! if true [Default], a matplotlib
+                                                        !! plot is generated
+    logical,intent(in),optional :: only_first_rev       !! to only do the first rev [Default is False]
 
     type(pyplot) :: plt  !! for generating the plots
     integer :: iseg  !! segment number counter
     integer :: istat !! pyplot status code
     character(len=10) :: iseg_str !! string version of segment number
-    logical :: export  !! if the txt file is to be produced as well.
+    logical :: export  !! if the txt file is to be produced
+    logical :: plot    !! if the py file is to be produced
     integer :: iunit !! file unit for the txt file
     integer :: i !! counter for txt file write
     integer :: istart,iend,istep,iendprev  !! index counters
-    integer,dimension(2),parameter :: figsize = [20,20] !! figure size for plotting
+    integer :: nsegs_to_plot !! number of segments to plot
 
+    integer,dimension(2),parameter :: figsize = [20,20] !! figure size for plotting
     logical,parameter :: plot_rotating = .true.  !! if true, the rotating state is plotted.
                                                  !! if false, the inertial state is plotted.
 
@@ -1516,22 +1523,35 @@
     else
         export = .false.
     end if
+    if (present(draw_trajectory)) then
+        plot = draw_trajectory
+    else
+        plot = .true.
+    end if
+    nsegs_to_plot = size(me%segs) ! default export all the segments
+    if (present(only_first_rev)) then
+        if (only_first_rev) nsegs_to_plot = 8 ! only the first rev (8 segments)
+    end if
 
-    ! initialize the plot:
-    call plt%initialize(grid=.true.,&
-                        xlabel='\n\n\nx (km)',&
-                        ylabel='\n\n\ny (km)',&
-                        zlabel='\n\n\nz (km)',&
-                        figsize         =figsize,&
-                        font_size       = 20,&
-                        axes_labelsize  = 25,&
-                        xtick_labelsize = 20,&
-                        ytick_labelsize = 20,&
-                        ztick_labelsize = 20,&
-                        title='Halo Trajectory: '//trim(filename),&
-                        legend=.false.,&
-                        axis_equal=.true.,&
-                        mplot3d=.true.)
+    if (.not. plot .and. .not. export) return ! nothing to do
+
+    if (plot) then
+        ! initialize the plot:
+        call plt%initialize(grid=.true.,&
+                            xlabel='\n\n\nx (km)',&
+                            ylabel='\n\n\ny (km)',&
+                            zlabel='\n\n\nz (km)',&
+                            figsize         =figsize,&
+                            font_size       = 20,&
+                            axes_labelsize  = 25,&
+                            xtick_labelsize = 20,&
+                            ytick_labelsize = 20,&
+                            ztick_labelsize = 20,&
+                            title='Halo Trajectory: '//trim(filename),&
+                            legend=.false.,&
+                            axis_equal=.true.,&
+                            mplot3d=.true.)
+    end if
 
     if (export) then
         open(newunit=iunit,file=trim(filename)//'_'//me%get_case_name()//'.txt',status='REPLACE',iostat=istat)
@@ -1544,26 +1564,28 @@
         call me%segs(iseg)%traj_rotating%destroy()
     end do
 
-    do iseg = 1, size(me%segs)
+    do iseg = 1, nsegs_to_plot
 
         write(iseg_str,'(I10)') iseg
 
         ! generate the trajectory for this segment:
         call me%segs(iseg)%propagate(mode=2)    ! [export points]
 
-        ! export to plot:
-        if (plot_rotating) then
-            call plt%add_3d_plot(x=me%segs(iseg)%traj_rotating%x,&
-                                 y=me%segs(iseg)%traj_rotating%y,&
-                                 z=me%segs(iseg)%traj_rotating%z,&
-                                 label='seg'//trim(adjustl(iseg_str)),&
-                                 linestyle='r-',linewidth=1,istat=istat)
-        else
-            call plt%add_3d_plot(x=me%segs(iseg)%traj_inertial%x,&
-                                 y=me%segs(iseg)%traj_inertial%y,&
-                                 z=me%segs(iseg)%traj_inertial%z,&
-                                 label='seg'//trim(adjustl(iseg_str)),&
-                                 linestyle='r-',linewidth=1,istat=istat)
+        if (plot) then
+            ! export to plot:
+            if (plot_rotating) then
+                call plt%add_3d_plot(x=me%segs(iseg)%traj_rotating%x,&
+                                    y=me%segs(iseg)%traj_rotating%y,&
+                                    z=me%segs(iseg)%traj_rotating%z,&
+                                    label='seg'//trim(adjustl(iseg_str)),&
+                                    linestyle='r-',linewidth=1,istat=istat)
+            else
+                call plt%add_3d_plot(x=me%segs(iseg)%traj_inertial%x,&
+                                    y=me%segs(iseg)%traj_inertial%y,&
+                                    z=me%segs(iseg)%traj_inertial%z,&
+                                    label='seg'//trim(adjustl(iseg_str)),&
+                                    linestyle='r-',linewidth=1,istat=istat)
+            end if
         end if
 
         if (export) then
@@ -1594,33 +1616,34 @@
             do i=istart,iend,istep
                 ! inertial trajectory for SPK:
                 write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) &
-                                               me%segs(iseg)%traj_inertial%et(i),';',&
-                                               me%segs(iseg)%traj_inertial%x(i) ,';',&
-                                               me%segs(iseg)%traj_inertial%y(i) ,';',&
-                                               me%segs(iseg)%traj_inertial%z(i) ,';',&
-                                               me%segs(iseg)%traj_inertial%vx(i),';',&
-                                               me%segs(iseg)%traj_inertial%vy(i),';',&
-                                               me%segs(iseg)%traj_inertial%vz(i),''
+                        me%segs(iseg)%traj_inertial%et(i),';',&
+                        me%segs(iseg)%traj_inertial%x(i) ,';',&
+                        me%segs(iseg)%traj_inertial%y(i) ,';',&
+                        me%segs(iseg)%traj_inertial%z(i) ,';',&
+                        me%segs(iseg)%traj_inertial%vx(i),';',&
+                        me%segs(iseg)%traj_inertial%vy(i),';',&
+                        me%segs(iseg)%traj_inertial%vz(i),''
             end do
             iendprev = iend
         end if
 
     end do
 
-    ! add the moon as a sphere:
-    call plt%add_sphere(r=r_moon,xc=zero,yc=zero,zc=zero,istat=istat,color='Grey')
+    if (plot) then
+        ! add the moon as a sphere:
+        call plt%add_sphere(r=r_moon,xc=zero,yc=zero,zc=zero,istat=istat,color='Grey')
 
-    ! save the plot:
-    ! call plt%showfig(pyfile=trim(filename)//'.py',istat=istat)
-    call plt%savefig(trim(filename)//'_'//me%get_case_name()//'.png',&
-                     pyfile=trim(filename)//'_'//me%get_case_name()//'.py',dpi='300',&
-                     istat=istat)
+        ! save the plot:
+        ! call plt%showfig(pyfile=trim(filename)//'.py',istat=istat)
+        call plt%savefig(trim(filename)//'_'//me%get_case_name()//'.png',&
+                        pyfile=trim(filename)//'_'//me%get_case_name()//'.py',dpi='300',&
+                        istat=istat)
 
-    ! cleanup:
-    call plt%destroy()
-    if (export) then
-        close(iunit,iostat=istat)
+        ! cleanup:
+        call plt%destroy()
     end if
+
+    if (export) close(iunit,iostat=istat)
 
     end subroutine plot_trajectory
 !*****************************************************************************************

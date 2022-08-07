@@ -85,15 +85,16 @@
     config_file_name = argv(1)
 
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
+
     if (solver%mission%generate_plots) &
-        call solver%mission%plot('guess')  ! plot the initial guess
+        call solver%mission%plot('guess')    ! plot the initial guess
     if (solver%mission%generate_trajectory_files) &
-        call solver%mission%write_optvars_to_file('guess',x) ! write guess to a file
-    call solver%mission%define_problem_size(m=m)
-    allocate(f(m))
-    call solver%mission%constraint_violations(x,f)
+    call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
 
     if (debug) then
+        call solver%mission%define_problem_size(m=m)
+        allocate(f(m))
+        call solver%mission%constraint_violations(x,f)
         write(*,*) ''
         write(*,*) '----------------------'
         write(*,*) 'Initial Guess...'
