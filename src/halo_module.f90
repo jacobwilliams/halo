@@ -1311,7 +1311,7 @@
 
     !====================================
     ! now propagate the segments:
-!$OMP PARALLEL DO
+!$OMP PARALLEL DO FIRSTPRIVATE(me)
     do i = 1, size(isegs)
         call me%segs(isegs(i))%propagate()
     end do
