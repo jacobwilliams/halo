@@ -126,7 +126,7 @@
 
         real(wp),dimension(:),allocatable :: initial_r
             !! if `fix_initial_r` is True, this can be used
-            !! to specify the initial `r` (rotating frame)
+            !! to specify the initial `r` (moon-centered earth-moon rotating frame)
 
         character(len=:),allocatable :: ephemeris_file !! the JPL ephemeris file to load
         ! [note: these are build using the get_third_party script in FAT.
