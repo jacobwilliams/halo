@@ -635,7 +635,7 @@ if <code>epoch_mode=1</code></p></td>
   <td><span class="anchor" id="variable-initial_r"></span>real(kind=wp),</td>
 <td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
   <td><strong>initial_r</strong></td><td></td><td></td><td><p>if <code>fix_initial_r</code> is True, this can be used
-to specify the initial <code>r</code> (rotating frame)</p></td>
+to specify the initial <code>r</code> (moon-centered earth-moon rotating frame)</p></td>
 </tr>
 <tr>
   <td><span class="anchor" id="variable-ephemeris_file"></span>character(len=:),</td>
@@ -1277,7 +1277,7 @@ Either computes the et from the calendar state, or vice versa.</p>
 
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initial_r</span><span class="w"></span>
 <span class="w">            </span><span class="c">!! if `fix_initial_r` is True, this can be used</span>
-<span class="w">            </span><span class="c">!! to specify the initial `r` (rotating frame)</span>
+<span class="w">            </span><span class="c">!! to specify the initial `r` (moon-centered earth-moon rotating frame)</span>
 
 <span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ephemeris_file</span><span class="w"> </span><span class="c">!! the JPL ephemeris file to load</span>
 <span class="w">        </span><span class="c">! [note: these are build using the get_third_party script in FAT.</span>
