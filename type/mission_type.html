@@ -88,7 +88,7 @@
      <li><i class="fa fa-list-ol"></i>
        <a data-toggle="tooltip"
     data-placement="bottom" data-html="true"
-    title="<p>43.1% of total for derived types.</p>Including implementation: 722 statements, 59.5% of total for derived types.">47 statements</a>
+    title="<p>43.6% of total for derived types.</p>Including implementation: 728 statements, 59.6% of total for derived types.">48 statements</a>
      </li> 
     <li><i class="fa fa-code"></i><a href="../src/halo_module.f90"> Source File</a></li>
   </ul>
@@ -136,6 +136,7 @@
       <a class="list-group-item" href="../type/mission_type.html#variable-sec">sec</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-et_ref~2">et_ref</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-n_revs">n_revs</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-initial_r">initial_r</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-ephemeris_file">ephemeris_file</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-gravfile">gravfile</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-patch_point_file">patch_point_file</a>
@@ -205,8 +206,8 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~mission_type -->
 <g id="type~~mission_type~~InheritsGraph_node1" class="node">
 <title>type~mission_type</title>
-<polygon fill="none" stroke="black" points="646,-114 564,-114 564,-90 646,-90 646,-114"/>
-<text text-anchor="middle" x="605" y="-99.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type</text>
+<polygon fill="none" stroke="black" points="646,-163 564,-163 564,-139 646,-139 646,-163"/>
+<text text-anchor="middle" x="605" y="-148.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type</text>
 </g>
 <!-- geopotential_model_pines -->
 <g id="type~~mission_type~~InheritsGraph_node2" class="node">
@@ -217,53 +218,54 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~mission_type&#45;&gt;geopotential_model_pines -->
 <g id="type~~mission_type~~InheritsGraph_edge1" class="edge">
 <title>type~mission_type&#45;&gt;geopotential_model_pines</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M597.6,-114.27C588.32,-130.91 569.65,-160.57 546,-178 449.21,-249.31 409.62,-246.17 292,-271 250.18,-279.83 202.85,-283.56 163.3,-284.99"/>
-<polygon fill="#000000" stroke="#000000" points="163.05,-281.49 153.16,-285.31 163.27,-288.49 163.05,-281.49"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M590.08,-163.12C578.83,-172.38 562.25,-184.9 546,-193 440.31,-245.67 408.15,-249.68 292,-271 250.13,-278.69 202.98,-282.3 163.58,-283.95"/>
+<polygon fill="#000000" stroke="#000000" points="163.33,-280.46 153.47,-284.34 163.6,-287.45 163.33,-280.46"/>
 <text text-anchor="middle" x="351" y="-269.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
 </g>
-<!-- type~patch_point -->
-<g id="type~~mission_type~~InheritsGraph_node3" class="node">
-<title>type~patch_point</title>
-<g id="a_type~~mission_type~~InheritsGraph_node3"><a xlink:href=".././type/patch_point.html" xlink:title="patch_point">
-<polygon fill="#5cb85c" stroke="#5cb85c" points="388.5,-66 313.5,-66 313.5,-42 388.5,-42 388.5,-66"/>
-<text text-anchor="middle" x="351" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
-</a>
-</g>
-</g>
-<!-- type~mission_type&#45;&gt;type~patch_point -->
-<g id="type~~mission_type~~InheritsGraph_edge4" class="edge">
-<title>type~mission_type&#45;&gt;type~patch_point</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M579.1,-89.97C569.03,-85.56 557.17,-80.94 546,-78 496.75,-65.02 438.56,-59.01 398.85,-56.26"/>
-<polygon fill="#000000" stroke="#000000" points="398.87,-52.75 388.67,-55.6 398.42,-59.74 398.87,-52.75"/>
-<text text-anchor="middle" x="478" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
-</g>
 <!-- numdiff_type -->
-<g id="type~~mission_type~~InheritsGraph_node4" class="node">
+<g id="type~~mission_type~~InheritsGraph_node3" class="node">
 <title>numdiff_type</title>
-<polygon fill="#5cb85c" stroke="#5cb85c" points="392,-24 310,-24 310,0 392,0 392,-24"/>
-<text text-anchor="middle" x="351" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="392,-66 310,-66 310,-42 392,-42 392,-66"/>
+<text text-anchor="middle" x="351" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
 </g>
 <!-- type~mission_type&#45;&gt;numdiff_type -->
 <g id="type~~mission_type~~InheritsGraph_edge5" class="edge">
 <title>type~mission_type&#45;&gt;numdiff_type</title>
-<path fill="none" stroke="#000000" d="M593.23,-89.98C582.42,-78.67 564.71,-62.15 546,-53 500.34,-30.67 442.82,-20.46 402.3,-15.82"/>
-<polygon fill="#000000" stroke="#000000" points="402.45,-12.31 392.13,-14.73 401.7,-19.27 402.45,-12.31"/>
+<path fill="none" stroke="#000000" d="M577.69,-138.97C552.74,-127.98 513.97,-111.96 479,-102"/>
+<path fill="none" stroke="#000000" d="M477,-102C446.6,-93.34 413.24,-80.34 388.63,-70.05"/>
+<polygon fill="#000000" stroke="#000000" points="389.89,-66.79 379.32,-66.12 387.17,-73.24 389.89,-66.79"/>
 </g>
 <!-- type~segment -->
-<g id="type~~mission_type~~InheritsGraph_node5" class="node">
+<g id="type~~mission_type~~InheritsGraph_node4" class="node">
 <title>type~segment</title>
-<g id="a_type~~mission_type~~InheritsGraph_node5"><a xlink:href=".././type/segment.html" xlink:title="segment">
-<polygon fill="#5cb85c" stroke="#5cb85c" points="380.5,-197 321.5,-197 321.5,-173 380.5,-173 380.5,-197"/>
-<text text-anchor="middle" x="351" y="-182.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
+<g id="a_type~~mission_type~~InheritsGraph_node4"><a xlink:href=".././type/segment.html" xlink:title="segment">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="380.5,-201 321.5,-201 321.5,-177 380.5,-177 380.5,-201"/>
+<text text-anchor="middle" x="351" y="-186.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
 </a>
 </g>
 </g>
 <!-- type~mission_type&#45;&gt;type~segment -->
 <g id="type~~mission_type~~InheritsGraph_edge3" class="edge">
 <title>type~mission_type&#45;&gt;type~segment</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M567.36,-114.07C520.2,-129.6 438.65,-156.46 390.58,-172.29"/>
-<polygon fill="#000000" stroke="#000000" points="389.26,-169.04 380.85,-175.5 391.44,-175.69 389.26,-169.04"/>
-<text text-anchor="middle" x="478" y="-166.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M563.79,-157.06C516.25,-164.23 437.68,-176.08 390.77,-183.15"/>
+<polygon fill="#000000" stroke="#000000" points="390.07,-179.72 380.7,-184.67 391.11,-186.64 390.07,-179.72"/>
+<text text-anchor="middle" x="478" y="-181.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+</g>
+<!-- type~patch_point -->
+<g id="type~~mission_type~~InheritsGraph_node5" class="node">
+<title>type~patch_point</title>
+<g id="a_type~~mission_type~~InheritsGraph_node5"><a xlink:href=".././type/patch_point.html" xlink:title="patch_point">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="388.5,-24 313.5,-24 313.5,0 388.5,0 388.5,-24"/>
+<text text-anchor="middle" x="351" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~patch_point -->
+<g id="type~~mission_type~~InheritsGraph_edge4" class="edge">
+<title>type~mission_type&#45;&gt;type~patch_point</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M597.37,-138.88C587.97,-122.76 569.29,-94.41 546,-78 501.26,-46.49 440.25,-29.02 398.67,-20.09"/>
+<polygon fill="#000000" stroke="#000000" points="399.3,-16.65 388.8,-18.05 397.89,-23.5 399.3,-16.65"/>
+<text text-anchor="middle" x="478" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
 </g>
 <!-- jpl_ephemeris -->
 <g id="type~~mission_type~~InheritsGraph_node6" class="node">
@@ -274,23 +276,23 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~mission_type&#45;&gt;jpl_ephemeris -->
 <g id="type~~mission_type~~InheritsGraph_edge2" class="edge">
 <title>type~mission_type&#45;&gt;jpl_ephemeris</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M563.99,-102.53C470.29,-103.78 236.53,-106.89 130.86,-108.29"/>
-<polygon fill="#000000" stroke="#000000" points="130.69,-104.79 120.74,-108.43 130.78,-111.79 130.69,-104.79"/>
-<text text-anchor="middle" x="351" y="-107.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M477,-102C356.97,-67.81 208.32,-85.14 130.57,-98.45"/>
+<polygon fill="#000000" stroke="#000000" points="129.78,-95.04 120.54,-100.22 130.99,-101.93 129.78,-95.04"/>
+<text text-anchor="middle" x="351" y="-87.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
 </g>
 <!-- type~segment&#45;&gt;geopotential_model_pines -->
 <g id="type~~mission_type~~InheritsGraph_edge7" class="edge">
 <title>type~segment&#45;&gt;geopotential_model_pines</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M338.8,-197.41C327.93,-208.66 310.42,-224.86 292,-234 242.64,-258.49 224.58,-248.15 171,-261 158.66,-263.96 145.43,-267.27 132.93,-270.46"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M337.74,-201.16C326.69,-211.44 309.53,-225.75 292,-234 242.14,-257.45 224.58,-248.15 171,-261 158.66,-263.96 145.43,-267.27 132.93,-270.46"/>
 <polygon fill="#000000" stroke="#000000" points="131.9,-267.11 123.08,-272.99 133.64,-273.89 131.9,-267.11"/>
 <text text-anchor="middle" x="231.5" y="-263.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
 </g>
 <!-- type~segment&#45;&gt;jpl_ephemeris -->
 <g id="type~~mission_type~~InheritsGraph_edge8" class="edge">
 <title>type~segment&#45;&gt;jpl_ephemeris</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M334.11,-172.87C322.91,-164.91 307.25,-154.91 292,-149 239.25,-128.54 175.03,-118.34 130.69,-113.39"/>
-<polygon fill="#000000" stroke="#000000" points="131.02,-109.91 120.7,-112.33 130.27,-116.87 131.02,-109.91"/>
-<text text-anchor="middle" x="231.5" y="-151.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M335.69,-176.96C324.49,-168.16 308.16,-156.65 292,-150 239.63,-128.45 175.35,-118.09 130.89,-113.2"/>
+<polygon fill="#000000" stroke="#000000" points="131.18,-109.71 120.87,-112.15 130.46,-116.67 131.18,-109.71"/>
+<text text-anchor="middle" x="231.5" y="-152.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
 </g>
 <!-- type~segment_data -->
 <g id="type~~mission_type~~InheritsGraph_node7" class="node">
@@ -304,9 +306,9 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~segment&#45;&gt;type~segment_data -->
 <g id="type~~mission_type~~InheritsGraph_edge6" class="edge">
 <title>type~segment&#45;&gt;type~segment_data</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M321.49,-178.9C312.13,-177.09 301.66,-175.25 292,-174 237.33,-166.93 174.36,-163.03 130.86,-160.99"/>
-<polygon fill="#000000" stroke="#000000" points="130.93,-157.49 120.79,-160.53 130.62,-164.48 130.93,-157.49"/>
-<text text-anchor="middle" x="231.5" y="-176.4" font-family="Helvetica,sans-Serif" font-size="9.50">data, cached_data</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M321.21,-182.33C311.93,-180.37 301.57,-178.39 292,-177 237.39,-169.09 174.41,-164.32 130.89,-161.69"/>
+<polygon fill="#000000" stroke="#000000" points="131,-158.19 120.81,-161.1 130.59,-165.18 131,-158.19"/>
+<text text-anchor="middle" x="231.5" y="-179.4" font-family="Helvetica,sans-Serif" font-size="9.50">data, cached_data</text>
 </g>
 <!-- ddeabm_class -->
 <g id="type~~mission_type~~InheritsGraph_node8" class="node">
@@ -317,8 +319,8 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~segment&#45;&gt;ddeabm_class -->
 <g id="type~~mission_type~~InheritsGraph_edge10" class="edge">
 <title>type~segment&#45;&gt;ddeabm_class</title>
-<path fill="none" stroke="#000000" d="M324.48,-197.08C314.53,-201.39 302.91,-205.92 292,-209 238.25,-224.15 174.88,-233.15 131.03,-238.05"/>
-<polygon fill="#000000" stroke="#000000" points="130.44,-234.59 120.87,-239.15 131.19,-241.55 130.44,-234.59"/>
+<path fill="none" stroke="#000000" d="M321.43,-200.59C312.16,-204.02 301.75,-207.51 292,-210 237.93,-223.81 174.61,-232.69 130.86,-237.72"/>
+<polygon fill="#000000" stroke="#000000" points="130.28,-234.26 120.73,-238.85 131.06,-241.21 130.28,-234.26"/>
 </g>
 <!-- type~trajectory -->
 <g id="type~~mission_type~~InheritsGraph_node9" class="node">
@@ -332,9 +334,9 @@ organizational purposes.... rethink this maybe ...</p>
 <!-- type~segment&#45;&gt;type~trajectory -->
 <g id="type~~mission_type~~InheritsGraph_edge9" class="edge">
 <title>type~segment&#45;&gt;type~trajectory</title>
-<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M321.35,-186.68C272.96,-189.52 174.83,-195.29 118.93,-198.57"/>
-<polygon fill="#000000" stroke="#000000" points="118.45,-195.09 108.68,-199.17 118.86,-202.08 118.45,-195.09"/>
-<text text-anchor="middle" x="231.5" y="-197.4" font-family="Helvetica,sans-Serif" font-size="9.50">traj_inertial, traj_rotating</text>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M321.35,-190.26C272.96,-192.39 174.83,-196.71 118.93,-199.18"/>
+<polygon fill="#000000" stroke="#000000" points="118.51,-195.69 108.68,-199.63 118.82,-202.68 118.51,-195.69"/>
+<text text-anchor="middle" x="231.5" y="-198.4" font-family="Helvetica,sans-Serif" font-size="9.50">traj_inertial, traj_rotating</text>
 </g>
 </g>
 </svg>
@@ -480,6 +482,7 @@ organizational purposes.... rethink this maybe ...</p>
       <a class="list-group-item" href="../type/mission_type.html#variable-sec">sec</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-et_ref~2">et_ref</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-n_revs">n_revs</a>
+      <a class="list-group-item" href="../type/mission_type.html#variable-initial_r">initial_r</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-ephemeris_file">ephemeris_file</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-gravfile">gravfile</a>
       <a class="list-group-item" href="../type/mission_type.html#variable-patch_point_file">patch_point_file</a>
@@ -627,6 +630,12 @@ if <code>epoch_mode=1</code></p></td>
   <td><span class="anchor" id="variable-n_revs"></span>integer,</td>
 <td>public</td>  <td></td><td>::</td>
   <td><strong>n_revs</strong></td><td> =</td><td>10</td><td><p>Number of revs in the Halo.</p></td>
+</tr>
+<tr>
+  <td><span class="anchor" id="variable-initial_r"></span>real(kind=wp),</td>
+<td>public,</td>  <td>dimension(:), allocatable</td><td>::</td>
+  <td><strong>initial_r</strong></td><td></td><td></td><td><p>if <code>fix_initial_r</code> is True, this can be used
+to specify the initial <code>r</code> (rotating frame)</p></td>
 </tr>
 <tr>
   <td><span class="anchor" id="variable-ephemeris_file"></span>character(len=:),</td>
@@ -1265,6 +1274,10 @@ Either computes the et from the calendar state, or vice versa.</p>
 <span class="w">                                   </span><span class="c">!! if `epoch_mode=1`</span>
 
 <span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_revs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w">  </span><span class="c">!! Number of revs in the Halo.</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initial_r</span><span class="w"></span>
+<span class="w">            </span><span class="c">!! if `fix_initial_r` is True, this can be used</span>
+<span class="w">            </span><span class="c">!! to specify the initial `r` (rotating frame)</span>
 
 <span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ephemeris_file</span><span class="w"> </span><span class="c">!! the JPL ephemeris file to load</span>
 <span class="w">        </span><span class="c">! [note: these are build using the get_third_party script in FAT.</span>

@@ -106,6 +106,23 @@ Another example, using the Intel Fortran Compiler with OpenMP:</p>
 <div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag &quot;-O2 -qopenmp&quot; -- examples/example.json
 </code></pre></div>
 
+<h3>Building On Windows</h3>
+<p>Work in progress....</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;&lt;intel install dir&gt;\windows</span><span class="se">\b</span><span class="s2">in\ifortvars.bat&quot;</span><span class="w"> </span><span class="n">intel64</span><span class="w"></span>
+<span class="s2">&quot;&lt;intel install dir&gt;\windows\mkl</span><span class="se">\b</span><span class="s2">in\mklvars.bat&quot;</span><span class="w"> </span><span class="n">intel64</span><span class="w"></span>
+
+<span class="n">set</span><span class="w"> </span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">12</span><span class="w"></span>
+
+<span class="n">fpm</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">profile</span><span class="w"> </span><span class="n">release</span><span class="w"> </span><span class="o">--</span><span class="n">compiler</span><span class="w"> </span><span class="n">ifort</span><span class="w"> </span><span class="o">--</span><span class="n">flag</span><span class="w"> </span><span class="s2">&quot;/fpp /Qmkl:parallel /Qopenmp&quot;</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">example</span><span class="o">.</span><span class="n">json</span><span class="w"></span>
+</code></pre></div>
+
+<p>Result is:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">LINK</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">fatal</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">LNK1181</span><span class="o">:</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="n">open</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="s1">&#39;lapack.lib&#39;</span><span class="w"></span>
+</code></pre></div>
+
+<p>It's because <code>fmin</code> and <code>nlsolver-fortran</code> both have explicit <code>lapack</code> and <code>blas</code> dependencies specified in their <code>fpm.toml</code> files (<code>link = ["lapack", "blas"]</code>). If i delete those it compiles.</p>
+<p>Also: it seems like <code>FIRSTPRIVATE(me)</code> is causing random crashes on Windows. Removing that seems to make it work consistently.</p>
 <h3>Documentation</h3>
 <p>The latest API documentation can be found <a href="https://jacobwilliams.github.io/halo/">here</a>. This was generated from the source code using <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>.</p>
 <h3>See also</h3>
