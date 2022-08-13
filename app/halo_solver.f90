@@ -47,7 +47,7 @@
 
     implicit none
 
-    logical,parameter :: debug = .false.
+    logical,parameter :: debug = .false. !! for debugging prints
 
     character(len=:),allocatable :: config_file_name  !! the config file to read
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
@@ -68,7 +68,7 @@
 !$      nthreads = omp_get_num_threads()
 !$      write(*,*) '----------------------'
 !$      write(*,'(A,1X,I5)') 'number of OMP threads: ', OMP_get_num_threads()
-!$       write(*,*) '----------------------'
+!$      write(*,*) '----------------------'
 !$  end if
 !$
 !$OMP END PARALLEL
@@ -89,7 +89,7 @@
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess')    ! plot the initial guess
     if (solver%mission%generate_trajectory_files) &
-    call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
+        call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
 
     if (debug) then
         call solver%mission%define_problem_size(m=m)

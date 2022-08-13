@@ -58,7 +58,6 @@
 !**********************************************
 !>
 !  Get an integer variable from the config file.
-!  Supports optional inputs for integer, real, and char variables.
 
     subroutine get_int(me, name, variable, found)
 
@@ -86,7 +85,6 @@
 !**********************************************
 !>
 !  Get a real variable from the config file.
-!  Supports optional inputs for integer, real, and char variables.
 
     subroutine get_real(me, name, variable, found)
 
@@ -114,7 +112,6 @@
 !**********************************************
 !>
 !  Get a logical variable from the config file.
-!  Supports optional inputs for integer, real, and char variables.
 
     subroutine get_logical(me, name, variable, found)
 
@@ -142,7 +139,6 @@
 !**********************************************
 !>
 !  Get a character variable from the config file.
-!  Supports optional inputs for integer, real, and char variables.
 
     subroutine get_char(me, name, variable, found)
 
@@ -169,8 +165,7 @@
 
 !**********************************************
 !>
-!  Get a real variable from the config file.
-!  Supports optional inputs for integer, real, and char variables.
+!  Get a real vector from the config file.
 
     subroutine get_real_vec(me, name, variable, found)
 

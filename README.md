@@ -25,6 +25,30 @@ Another example, using the Intel Fortran Compiler with OpenMP:
 fpm run --profile release --compiler ifort --flag "-O2 -qopenmp" -- examples/example.json
 ```
 
+### Building On Windows
+
+Work in progress....
+
+Example:
+
+```
+"<intel install dir>\windows\bin\ifortvars.bat" intel64
+"<intel install dir>\windows\mkl\bin\mklvars.bat" intel64
+
+set OMP_NUM_THREADS=12
+
+fpm run --profile release --compiler ifort --flag "/fpp /Qmkl:parallel /Qopenmp" -- examples/example.json
+```
+
+Result is:
+```
+LINK : fatal error LNK1181: cannot open input file 'lapack.lib'
+```
+
+It's because `fmin` and `nlsolver-fortran` both have explicit `lapack` and `blas` dependencies specified in their `fpm.toml` files (`link = ["lapack", "blas"]`). If i delete those it compiles.
+
+Also: it seems like `FIRSTPRIVATE(me)` is causing random crashes on Windows. Removing that seems to make it work consistently.
+
 ### Documentation
 
 The latest API documentation can be found [here](https://jacobwilliams.github.io/halo/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford).

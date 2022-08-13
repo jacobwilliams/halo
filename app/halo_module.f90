@@ -124,6 +124,10 @@
 
         integer :: n_revs = 10  !! Number of revs in the Halo.
 
+        real(wp),dimension(:),allocatable :: initial_r
+            !! if `fix_initial_r` is True, this can be used
+            !! to specify the initial `r` (rotating frame)
+
         character(len=:),allocatable :: ephemeris_file !! the JPL ephemeris file to load
         ! [note: these are build using the get_third_party script in FAT.
         !  the files are platform (and maybe compiler specific)
@@ -846,7 +850,14 @@
         ! these are all unscaled values:
 
         t0(1) = t_periapsis + me%periapsis%t
-        x0_rotating(:,1) = me%periapsis%rv
+
+        if (me%fix_initial_r .and. allocated(me%initial_r)) then
+            x0_rotating(1:3,1) = me%initial_r(1:3) ! use the user-specified r vector
+            x0_rotating(4:6,1) = me%periapsis%rv(4:6)
+        else
+            x0_rotating(:,1) = me%periapsis%rv
+        end if
+
         tf(1) = t0(1) + me%period8
 
         t0(2) = t_periapsis + me%quarter%t
@@ -1741,7 +1752,7 @@
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
     type(config_file) :: f
-    logical :: found, found_jc, found_period, found_et
+    logical :: found, found_jc, found_period, found_et, found_initial_r
     logical,dimension(6) :: found_calendar
     real(wp):: jc !! jacobii constant from the file
     real(wp):: p !! period from file (normalized)
@@ -1779,6 +1790,10 @@
     call f%get('minute',          me%mission%minute          , found_calendar(5) )
     call f%get('sec',             me%mission%sec             , found_calendar(6) )
     call f%get('et_ref',          me%mission%et_ref          , found_et )
+
+    ! if fix_initial_r is true, can specify the r to use
+    ! [otherwise, the initial guess is used from the patch points]
+    call f%get('initial_r',       me%mission%initial_r       , found_initial_r )
 
     call f%get('n_revs',          me%mission%n_revs           )
     call f%get('ephemeris_file',  me%mission%ephemeris_file   )
