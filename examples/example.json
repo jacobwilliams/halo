@@ -18,7 +18,7 @@
     // optional inputs:
     "fix_initial_time": false,  // do not allow the initial epoch to vary
     "fix_initial_r": false,
-    "fix_ry_at_end_of_first_rev": false,
+    "fix_ry_at_end_of_rev": 0,
     "fix_final_ry_and_vx": false,
 
     // number of revs:

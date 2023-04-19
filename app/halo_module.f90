@@ -152,10 +152,11 @@
         real(wp) :: period8 = 0.0_wp !! 1/8 of Halo period [days]
 
         ! optional problem inputs
-        ! [can remove some of the variables from thte optimization problem]
+        ! [can remove some of the variables from the optimization problem]
         logical :: fix_initial_time = .false. !! to fix the initial epoch in the mission
         logical :: fix_initial_r = .false. !! fix the initial periapsis position vector (x,y,z)
-        logical :: fix_ry_at_end_of_first_rev = .false. !! fix ry at the end of the first rev (at periapsis)
+        integer :: fix_ry_at_end_of_rev = 0 !! fix ry at the end of the specified rev (at periapsis)
+                                            !! not used if `<= 0`.
         logical :: fix_final_ry_and_vx = .false. !! fix ry and vx at the end of the last rev (at periapsis)
 
     contains
@@ -260,10 +261,11 @@
         if (present(n_nonzero)) n_nonzero = n_nonzero - 3*6 ! remove columns 2,3,4 of the jacobian
     end if
 
-    ! note: assuming there are more than 2 revs
-
-    if (me%fix_ry_at_end_of_first_rev) then
-        if (me%n_revs<3) error stop 'at least 3 revs are required for fix_ry_at_end_of_first_rev'
+    ! note: assuming there are more than 2 revs for these
+    if (me%fix_ry_at_end_of_rev > 0) then
+        if (me%n_revs<3) error stop 'at least 3 revs are required for fix_ry_at_end_of_rev'
+        if (me%fix_ry_at_end_of_rev >= me%n_revs) &
+            error stop 'fix_ry_at_end_of_rev must be < number of revs'
         if (present(n)) n = n - 1 ! remove the optimization variable
         if (present(n_nonzero)) n_nonzero = n_nonzero - 12
     end if
@@ -422,7 +424,7 @@
 
                 call fill_vector(x, me%segs(iseg+8)%data%t0, i)
 
-                if (me%fix_ry_at_end_of_first_rev) then
+                if (me%fix_ry_at_end_of_rev == 1) then
                     call fill_vector(x, me%segs(iseg+8)%data%x0_rotating([1,3,4,5,6]), i)
                 else
                     call fill_vector(x, me%segs(iseg+8)%data%x0_rotating, i)
@@ -444,7 +446,9 @@
 
                 call fill_vector(x, me%segs(iseg+8)%data%t0, i)
 
-                if (irev==me%n_revs .and. me%fix_final_ry_and_vx) then
+                if (me%fix_ry_at_end_of_rev == irev) then
+                    call fill_vector(x, me%segs(iseg+8)%data%x0_rotating([1,3,4,5,6]), i)
+                elseif (irev==me%n_revs .and. me%fix_final_ry_and_vx) then
                     call fill_vector(x, me%segs(iseg+8)%data%x0_rotating([1,3,5,6]), i)
                 else
                     call fill_vector(x, me%segs(iseg+8)%data%x0_rotating, i)
@@ -555,7 +559,7 @@
             tf(6)               = tf(5)
 
             call extract_vector(t0(8)               , x, i)
-            if (me%fix_ry_at_end_of_first_rev) then
+            if (me%fix_ry_at_end_of_rev == 1) then
                 x0_rotating(2,8) = me%segs(8)%data%x0_rotating(2) ! not in x, just keep the current ry value
                 call extract_vector(x0_rotating(1,8) , x, i)
                 call extract_vector(x0_rotating(3:6,8) , x, i)
@@ -604,7 +608,11 @@
 
             call extract_vector(t0(8)               , x, i)
 
-            if (irev==me%n_revs .and. me%fix_final_ry_and_vx) then
+            if (me%fix_ry_at_end_of_rev == irev) then
+                x0_rotating(2,8) = me%segs(irev*8)%data%x0_rotating(2) ! not in x, just keep the current ry value
+                call extract_vector(x0_rotating(1,8)   , x, i)
+                call extract_vector(x0_rotating(3:6,8) , x, i)
+            else if (irev==me%n_revs .and. me%fix_final_ry_and_vx) then
                 x0_rotating(2,8) = me%segs(n_segs)%data%x0_rotating(2) ! not in x, just keep the current ry value
                 x0_rotating(4,8) = me%segs(n_segs)%data%x0_rotating(4) ! not in x, just keep the current vx value
                 call extract_vector(x0_rotating(1,8)    , x, i)
@@ -674,8 +682,9 @@
     k = 0
     do iblock = 1, me%n_revs*4 ! block loop
 
-        icol_start = (iblock-1)*7 + 1       ! [1-14, 8-21, 15-29, ...]
-        irow_start = (iblock-1)*6 + 1       ! [1-6,  7-12, 13-18, ...]
+        ! see Figure 22b in Modern Fortran paper
+        icol_start = (iblock-1)*7 + 1  ! [1-14, 8-21, 15-29, ...]
+        irow_start = (iblock-1)*6 + 1  ! [1-6,  7-12, 13-18, ...]
 
         do ii = icol_start,icol_start+13
             do jj = irow_start,irow_start+5
@@ -691,10 +700,22 @@
     ! Here we just remove the columns (optimization variables) we don't need.
 
     allocate(cols_to_remove(0))
-    if (me%fix_initial_time)            cols_to_remove = [cols_to_remove, 1]
-    if (me%fix_initial_r)               cols_to_remove = [cols_to_remove, [2,3,4]]
-    if (me%fix_ry_at_end_of_first_rev)  cols_to_remove = [cols_to_remove, 31] ! SEG8 Ry (km)
-    if (me%fix_final_ry_and_vx)         cols_to_remove = [cols_to_remove, [n-4,n-2]] ! last segment Ry & Vx
+    if (me%fix_initial_time) &
+        cols_to_remove = [cols_to_remove, 1]
+    if (me%fix_initial_r) &
+        cols_to_remove = [cols_to_remove, [2,3,4]]
+
+    if (me%fix_ry_at_end_of_rev > 0) then
+        ! remove Ry at end of specified rev
+        ! e.g. rev 1 : SEG8 Ry (km) : column 31
+        !
+        ! patch point: [t rx ry rz vx vy vz]
+        !                    ^^
+        cols_to_remove = [cols_to_remove, me%fix_ry_at_end_of_rev*7*5 - 4]
+    end if
+
+    if (me%fix_final_ry_and_vx) &
+        cols_to_remove = [cols_to_remove, [n-4,n-2]] ! last segment Ry & Vx
 
     if (size(cols_to_remove) > 0) then
 
@@ -977,18 +998,14 @@
         write(iseg_str,'(I10)') iseg
         call fill_vector(me%xscale, me%segs(iseg)%data%t0_scale, i)
         call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//t0_label, j)
-        if (iseg == 8) then ! end of first rev
-            if (me%fix_ry_at_end_of_first_rev) then
-                call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,4,5,6]), i)
-                call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,4,5,6]), j)
-                cycle
-            end if
-        else if (iseg == n_segs) then ! last state point
-            if (me%fix_final_ry_and_vx) then
-                call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,5,6]), i)
-                call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,5,6]), j)
-                cycle
-            end if
+        if (me%fix_ry_at_end_of_rev == iseg * 8) then
+            call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,4,5,6]), i)
+            call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,4,5,6]), j)
+            cycle
+        else if (me%fix_final_ry_and_vx .and. iseg == n_segs) then ! last state point
+            call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,5,6]), i)
+            call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,5,6]), j)
+            cycle
         end if
         ! otherwise, full state:
         call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale, i)
@@ -1565,7 +1582,8 @@
     end if
 
     if (export) then
-        open(newunit=iunit,file=trim(filename)//'_'//me%get_case_name()//'.txt',status='REPLACE',iostat=istat)
+        open(newunit=iunit,file=trim(filename)//'_'//me%get_case_name()//&
+                                '.txt',status='REPLACE',iostat=istat)
         if (istat/=0) error stop 'error opening trajectory file.'
     end if
 
@@ -1771,29 +1789,29 @@
 
     call f%get('jc',                        jc, found_jc)          ! one of these two must be present
     call f%get('period',                    p, found_period)       !
-    call f%get('fix_initial_time',          me%mission%fix_initial_time,           found)
-    call f%get('fix_initial_r',             me%mission%fix_initial_r,              found)
-    call f%get('fix_ry_at_end_of_first_rev',me%mission%fix_ry_at_end_of_first_rev, found)
-    call f%get('fix_final_ry_and_vx',       me%mission%fix_final_ry_and_vx,        found)
-    call f%get('generate_plots',            me%mission%generate_plots,             found)
-    call f%get('generate_trajectory_files', me%mission%generate_trajectory_files,  found)
+    call f%get('fix_initial_time',          me%mission%fix_initial_time,          found)
+    call f%get('fix_initial_r',             me%mission%fix_initial_r,             found)
+    call f%get('fix_ry_at_end_of_rev',      me%mission%fix_ry_at_end_of_rev,      found)
+    call f%get('fix_final_ry_and_vx',       me%mission%fix_final_ry_and_vx,       found)
+    call f%get('generate_plots',            me%mission%generate_plots,            found)
+    call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
 
     ! required inputs:
-    call f%get('N_or_S',          me%mission%N_or_S           )
-    call f%get('L1_or_L2',        me%mission%L1_or_L2         )
+    call f%get('N_or_S',   me%mission%N_or_S   )
+    call f%get('L1_or_L2', me%mission%L1_or_L2 )
 
     ! can specify either calendar date or et:
-    call f%get('year',            me%mission%year            , found_calendar(1) )
-    call f%get('month',           me%mission%month           , found_calendar(2) )
-    call f%get('day',             me%mission%day             , found_calendar(3) )
-    call f%get('hour',            me%mission%hour            , found_calendar(4) )
-    call f%get('minute',          me%mission%minute          , found_calendar(5) )
-    call f%get('sec',             me%mission%sec             , found_calendar(6) )
-    call f%get('et_ref',          me%mission%et_ref          , found_et )
+    call f%get('year',   me%mission%year   , found_calendar(1) )
+    call f%get('month',  me%mission%month  , found_calendar(2) )
+    call f%get('day',    me%mission%day    , found_calendar(3) )
+    call f%get('hour',   me%mission%hour   , found_calendar(4) )
+    call f%get('minute', me%mission%minute , found_calendar(5) )
+    call f%get('sec',    me%mission%sec    , found_calendar(6) )
+    call f%get('et_ref', me%mission%et_ref , found_et )
 
     ! if fix_initial_r is true, can specify the r to use
     ! [otherwise, the initial guess is used from the patch points]
-    call f%get('initial_r',       me%mission%initial_r       , found_initial_r )
+    call f%get('initial_r', me%mission%initial_r , found_initial_r )
 
     call f%get('n_revs',          me%mission%n_revs           )
     call f%get('ephemeris_file',  me%mission%ephemeris_file   )
@@ -1835,7 +1853,8 @@
     call f%get('ydot0', ydot0            )
     call f%close()
 
-    write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', normalized_period * tstar * sec2day
+    write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', &
+          normalized_period * tstar * sec2day
 
     ! which is the independant variable:
     if (found_jc) then
@@ -1850,7 +1869,8 @@
         pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
     end if
 
-    call me%mission%generate_patch_points(lstar, tstar, pp_period, pp_x0, pp_z0, pp_ydot0, pp)
+    call me%mission%generate_patch_points(lstar, tstar, pp_period, &
+                                          pp_x0, pp_z0, pp_ydot0, pp)
     me%mission%periapsis = pp(1)
     me%mission%quarter   = pp(2)
     me%mission%apoapsis  = pp(3)
