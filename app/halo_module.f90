@@ -80,6 +80,7 @@
         contains
 
         procedure,public :: set_input   => set_segment_inputs
+        procedure,public :: get_inputs  => get_segment_inputs
         procedure,public :: get_outputs => get_segment_outputs
         procedure,public :: set_outputs => set_segment_outputs
         procedure,public :: propagate   => propagate_segment
@@ -676,6 +677,22 @@
     ! get the size of the full problem, we will first construct the full pattern:
     call me%define_problem_size(n=n, m=m, n_nonzero=n_nonzero, full_problem=.true.)
 
+    !-------------------------------------
+    ! test... dense pattern
+    !-------------------------------------
+    ! allocate(irow(n*m))
+    ! allocate(icol(n*m))
+    ! k = 0
+    ! do ii = 1, n
+    !     do jj = 1, m
+    !         k = k + 1
+    !         icol(k) = ii
+    !         irow(k) = jj
+    !     end do
+    ! end do
+    ! return
+    !-------------------------------------
+
     allocate(irow(n_nonzero))
     allocate(icol(n_nonzero))
 
@@ -998,7 +1015,7 @@
         write(iseg_str,'(I10)') iseg
         call fill_vector(me%xscale, me%segs(iseg)%data%t0_scale, i)
         call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//t0_label, j)
-        if (me%fix_ry_at_end_of_rev == iseg * 8) then
+        if (iseg == me%fix_ry_at_end_of_rev*8) then
             call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,4,5,6]), i)
             call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,4,5,6]), j)
             cycle
@@ -1006,10 +1023,11 @@
             call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,5,6]), i)
             call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,5,6]), j)
             cycle
+        else
+            ! otherwise, full state:
+            call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale, i)
+            call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label, j)
         end if
-        ! otherwise, full state:
-        call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale, i)
-        call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label, j)
     end do
 
     ! f scales:
@@ -1144,18 +1162,38 @@
 
 !*****************************************************************************************
 !>
-!  After propagating a segment, this gets the outputs.
+!  Gets the initial states of a segment
 
-    subroutine get_segment_outputs(me,xf,xf_rotating)
+    subroutine get_segment_inputs(me,t0,x0_rotating)
 
     implicit none
 
     class(segment),intent(in) :: me
-    real(wp),dimension(6),intent(out) :: xf             !!  inertial frame
-    real(wp),dimension(6),intent(out) :: xf_rotating    !!  rotating frame
+    real(wp),intent(out),optional :: t0
+    real(wp),dimension(6),intent(out),optional :: x0_rotating !! rotating frame
 
-    xf = me%data%xf
-    xf_rotating = me%data%xf_rotating
+    if (present(t0)) t0 = me%data%t0
+    if (present(x0_rotating)) x0_rotating = me%data%x0_rotating
+
+    end subroutine get_segment_inputs
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  After propagating a segment, this gets the outputs.
+
+    subroutine get_segment_outputs(me,xf,xf_rotating, x0_rotating)
+
+    implicit none
+
+    class(segment),intent(in) :: me
+    real(wp),dimension(6),intent(out),optional :: xf             !!  inertial frame
+    real(wp),dimension(6),intent(out),optional :: xf_rotating    !!  rotating frame
+    real(wp),dimension(6),intent(out),optional :: x0_rotating
+
+    if (present(xf))          xf = me%data%xf
+    if (present(xf_rotating)) xf_rotating = me%data%xf_rotating
+    if (present(x0_rotating)) x0_rotating = me%data%x0_rotating
 
     end subroutine get_segment_outputs
 !*****************************************************************************************
