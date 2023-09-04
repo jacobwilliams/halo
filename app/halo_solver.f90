@@ -40,14 +40,12 @@
 
     use parameters_module
     use argv_module,       only: argv
-    use halo_module,       only: my_solver_type,halo_func,&
-                                 halo_grad,halo_export,&
-                                 define_problem_size
+    use halo_module,       only: my_solver_type,define_problem_size
 !$  use omp_lib
 
     implicit none
 
-    logical,parameter :: debug = .true. !! for debugging prints
+    logical,parameter :: debug = .false. !! for debugging prints
 
     character(len=:),allocatable :: config_file_name  !! the config file to read
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
@@ -108,13 +106,14 @@
         write(*,*) ''
     end if
 
-    write(*,*) 'INITIAL GUESS:'
-    call solver%mission%define_problem_size(n_segs=n_segs)
-    do iseg = 1, n_segs
-        call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
-        write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
-    end do
-
+    if (debug) then
+        write(*,*) 'INITIAL GUESS:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
 
     write(*,*) ''
     write(*,*) '----------------------'
@@ -148,12 +147,14 @@
         call solver%mission%plot('solution',export_trajectory=.true.) ! plot solution
 
 
-    write(*,*) 'SOLUTION:'
-    call solver%mission%define_problem_size(n_segs=n_segs)
-    do iseg = 1, n_segs
-        call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
-        write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
-    end do
+    if (debug) then
+        write(*,*) 'SOLUTION:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
 
 !*****************************************************************************************
     end program halo_solver
