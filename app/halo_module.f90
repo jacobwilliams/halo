@@ -160,6 +160,13 @@
                                             !! not used if `<= 0`.
         logical :: fix_final_ry_and_vx = .false. !! fix ry and vx at the end of the last rev (at periapsis)
 
+        integer :: solver_mode = 1  !! use sparse or dense solver:
+                                    !!
+                                    !! * 1 - dense (LAPACK)
+                                    !! * 2 - sparse (LSQR)
+                                    !! * 3 - sparse (LUSOL)
+                                    !! * 4 - sparse (LMSR)
+
     contains
 
         procedure,public :: init => initialize_the_mission
@@ -345,6 +352,7 @@
     integer :: m          !! number of equality constraints for the solver
     logical :: status_ok  !! status flag for solver initialization
     integer :: istat      !! status code from solver
+    integer,dimension(:),allocatable :: irow,icol !! sparsity pattern
 
     ! note: we don't know the problem size
     ! until we read the config file.
@@ -358,21 +366,58 @@
     call me%mission%define_problem_size(n,m)
 
     ! initialize the solver:
-    call me%initialize(     n                = n,            &
-                            m                = m,            &
-                            max_iter         = 100,          & ! maximum number of iteration
-                            func             = halo_func,    &
-                            grad             = halo_grad,    &
-                            tol              = 1.0e-6_wp,    & ! tolerance
-                            step_mode        = 4,            & ! 3-point "line search" (2 intervals)
-                            n_intervals      = 2,            & ! number of intervals for step_mode=4
-                            use_broyden      = .false.,      & ! broyden update
-                            !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
-                            export_iteration = halo_export   )
+    select case (me%mission%solver_mode)
+    case(1)
+        ! dense
+        call me%initialize(     n                = n,            &
+                                m                = m,            &
+                                max_iter         = 100,          & ! maximum number of iteration
+                                func             = halo_func,    &
+                                grad             = halo_grad,    &
+                                tol              = 1.0e-6_wp,    & ! tolerance
+                                step_mode        = 4,            & ! 3-point "line search" (2 intervals)
+                                n_intervals      = 2,            & ! number of intervals for step_mode=4
+                                use_broyden      = .false.,      & ! broyden update
+                                !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
+                                export_iteration = halo_export   )
+
+    case (2:)
+        ! sparse
+        call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
+        call me%initialize(     n                = n,            &
+                                m                = m,            &
+                                max_iter         = 100,          & ! maximum number of iteration
+                                func             = halo_func,    &
+                                grad_sparse      = halo_grad_sparse,    &
+                                tol              = 1.0e-6_wp,    & ! tolerance
+                                ! step_mode = 1,& ! TEST TEST TEST
+                                ! alpha = 1.0_wp,&
+                                step_mode        = 4,            & ! 3-point "line search" (2 intervals)
+                                n_intervals      = 2,            & ! number of intervals for step_mode=4
+                                use_broyden      = .false.,      & ! broyden update
+                                !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
+                                export_iteration = halo_export,  &
+                                sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
+                                atol          = 1.0e-12_wp,&  ! relative error in definition of `A`
+                                btol          = 1.0e-12_wp,&  ! relative error in definition of `b`
+!                                damp          = 0.00001_wp, & !  TEST: LSQR damp factor !
+                                damp          = 0.0_wp, & !  TEST: LSQR damp factor !
+   !                             damp          = 0.1_wp, & !  TEST: LSQR damp factor !
+                                itnlim        = 1000000, &  ! max iterations
+                                irow          = irow, &  ! sparsity pattern
+                                icol          = icol, &
+                                lusol_method = 0     ) ! test
+
+    case default
+        error stop 'invalid solver_mode'
+    end select
 
     call me%status(istat=istat)
     status_ok = istat == 0
-    if (.not. status_ok) error stop 'error in initialize_the_solver'
+    if (.not. status_ok) then
+        write(*,*) 'istat = ', istat
+        error stop 'error in initialize_the_solver'
+    end if
 
     end subroutine initialize_the_solver
 !*****************************************************************************************
@@ -818,16 +863,16 @@
 
     ! first set up the gradient computation in the base class:
     call me%initialize(n,m, &
-                        xlow                       = xlow,&
-                        xhigh                      = xhigh,&
-                        dpert                      = dpert,&
-                        problem_func               = my_func,&
-                        info                       = halo_grad_info,&
-                        sparsity_mode              = 3,&        ! specified below
-                        jacobian_method            = 3,&        ! standard central diff
-                        perturb_mode               = 1,&        ! absolute mode
-                        partition_sparsity_pattern = .true.,&   ! partition the pattern
-                        cache_size                 = 1000 )
+                       xlow                       = xlow,&
+                       xhigh                      = xhigh,&
+                       dpert                      = dpert,&
+                       problem_func               = my_func,&
+                       info                       = halo_grad_info,&
+                       sparsity_mode              = 3,&        ! specified below
+                       jacobian_method            = 3,&        ! standard central diff
+                       perturb_mode               = 1,&        ! absolute mode
+                       partition_sparsity_pattern = .true.,&   ! partition the pattern
+                       cache_size                 = 1000 )
 
     ! generate and set the sparsity pattern for this problem:
     call me%get_sparsity_pattern(irow,icol)
@@ -1423,7 +1468,8 @@
 
 !*****************************************************************************************
 !>
-!  Compute the gradient of the solver function (Jacobian matrix)
+!  Compute the gradient of the solver function (Jacobian matrix).
+!  Dense version.
 
     subroutine halo_grad(me,x,g)
 
@@ -1461,6 +1507,49 @@
     end select
 
     end subroutine halo_grad
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Compute the gradient of the solver function (Jacobian matrix).
+!  Sparse version.
+
+    subroutine halo_grad_sparse(me,x,g)
+
+    implicit none
+
+    class(nlesolver_type),intent(inout) :: me
+    real(wp),dimension(:),intent(in)    :: x
+    real(wp),dimension(:),intent(out)   :: g
+
+    real(wp),dimension(:),allocatable :: jac !! the jacobian matrix returned by `numdiff`
+        ! ...note: need to modify so it doesn't
+        !          have to return an allocatable array
+
+    integer :: i  !! seg number counter
+
+    select type (me)
+    class is (my_solver_type)
+
+        ! first let's cache all the segment data:
+        do i=1,size(me%mission%segs)
+            call me%mission%segs(i)%cache()
+        end do
+
+        ! use numdiff to compute the jacobian matrix (sparse version)
+        call me%mission%compute_jacobian(x,jac)
+        g = jac
+
+        ! restore data just in case:
+        do i=1,size(me%mission%segs)
+            call me%mission%segs(i)%uncache()
+        end do
+
+    class default
+        error stop 'invalid class in halo_grad'
+    end select
+
+    end subroutine halo_grad_sparse
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1833,6 +1922,9 @@
     call f%get('fix_final_ry_and_vx',       me%mission%fix_final_ry_and_vx,       found)
     call f%get('generate_plots',            me%mission%generate_plots,            found)
     call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
+
+    call f%get('solver_mode', me%mission%solver_mode, found)
+    if (.not. found) me%mission%solver_mode = 1
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
