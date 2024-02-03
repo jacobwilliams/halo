@@ -25,6 +25,12 @@ Another example, using the Intel Fortran Compiler with OpenMP:
 fpm run --profile release --compiler ifort --flag "-O2 -qopenmp" -- examples/example.json
 ```
 
+Or with Gfortran:
+
+```
+fpm run halo_solver --profile release --flag "-O2 -openmp" -- examples/example.json
+```
+
 ### Building On Windows
 
 Work in progress....
