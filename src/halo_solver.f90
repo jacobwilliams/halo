@@ -40,9 +40,7 @@
 
     use parameters_module
     use argv_module,       only: argv
-    use halo_module,       only: my_solver_type,halo_func,&
-                                 halo_grad,halo_export,&
-                                 define_problem_size
+    use halo_module,       only: my_solver_type,define_problem_size
 !$  use omp_lib
 
     implicit none
@@ -58,6 +56,8 @@
     real(wp) :: tstart_cpu, tend_cpu  !! for timing
     integer :: istat
     character(len=:),allocatable :: message  !! Text status message from solver
+    integer :: n_segs, iseg
+    real(wp),dimension(6) :: x_rotating
 !$  integer :: tid, nthreads
 
 !$OMP PARALLEL PRIVATE(NTHREADS, TID)
@@ -106,6 +106,15 @@
         write(*,*) ''
     end if
 
+    if (debug) then
+        write(*,*) 'INITIAL GUESS:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
+
     write(*,*) ''
     write(*,*) '----------------------'
     write(*,*) 'Solving...'
@@ -136,6 +145,16 @@
         call solver%mission%write_optvars_to_file('solution',x)       ! write solution to a file:
     if (solver%mission%generate_plots) &
         call solver%mission%plot('solution',export_trajectory=.true.) ! plot solution
+
+
+    if (debug) then
+        write(*,*) 'SOLUTION:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
 
 !*****************************************************************************************
     end program halo_solver
