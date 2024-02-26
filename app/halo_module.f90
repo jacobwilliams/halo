@@ -377,6 +377,8 @@
                                 tol              = 1.0e-6_wp,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
+                                alpha_min = 0.2_wp, &
+                                alpha_max = 0.8_wp, &
                                 use_broyden      = .false.,      & ! broyden update
                                 !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
                                 export_iteration = halo_export   )
@@ -1620,6 +1622,8 @@
 
     subroutine halo_export(me,x,f,iter)
 
+    use iso_fortran_env, ip => int64
+
     implicit none
 
     class(nlesolver_type),intent(inout) :: me
@@ -1627,12 +1631,24 @@
     real(wp),dimension(:),intent(in)     :: f
     integer,intent(in)                   :: iter !! iteration number
 
+    integer(ip),save :: count_start, count_end, count_rate
+
+    call system_clock(count = count_end, count_rate=count_rate)
+
     if (iter==1) then
-        write(*,'(A4,1X,*(A30,1X))') 'ITER', 'NORM(X)', 'NORM(F)'
+        write(*,'(A4,1X,*(A30,1X))') 'ITER', 'NORM(X)', 'NORM(F)', 'DT(sec)'
     end if
 
-    write(*,'(I4,1X,*(F30.16,1X))') iter, norm2(x), norm2(f)
+    if (iter==1) then
+        write(*,'(I4,1X,2(F30.16,1X),a1)') iter, norm2(x), norm2(f), ''
+    else
+        write(*,'(I4,1X,2(F30.16,1X),*(I30,1x))') iter, norm2(x), norm2(f), &
+                                                  int((count_end-count_start)/real(count_rate,wp), ip)
+
+    end if
     !write(*,'(I4,1X,*(F30.16,1X))') iter, x
+
+    count_start = count_end
 
     end subroutine halo_export
 !*****************************************************************************************
