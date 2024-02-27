@@ -27,7 +27,7 @@
 
         real(wp)              :: t0 = zero          !! initial time [days]
         real(wp)              :: t0_scale = one     !! opt var scale for `t0`
-        real(wp)              :: t0_dpert = 1.0e-2_wp   !! opt var dpert for `t0` [scaled]
+        real(wp)              :: t0_dpert = 1.0e-5_wp   !! opt var dpert for `t0` [scaled]
 
         real(wp),dimension(6) :: x0_rotating = zero !! initial state [km, km/s], rotating frame
         real(wp),dimension(6) :: x0_rotating_scale = one !! opt var scale for `x0_rotating`
