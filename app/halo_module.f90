@@ -391,7 +391,26 @@
                                 !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
                                 export_iteration = halo_export   )
 
-    case (2:)
+    case(5)
+        call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
+        ! user-defined method ! test !!!
+        call me%initialize(     n                = n,            &
+                                m                = m,            &
+                                max_iter         = 100,          & ! maximum number of iteration
+                                func             = halo_func,    &
+                                grad_sparse      = halo_grad_sparse,    &
+                                tol              = 1.0e-6_wp,    & ! tolerance
+                                step_mode        = 4,            & ! 3-point "line search" (2 intervals)
+                                n_intervals      = 2,            & ! number of intervals for step_mode=4
+                                alpha_min = 0.2_wp, &
+                                alpha_max = 0.8_wp, &
+                                use_broyden      = .false.,      & ! broyden update
+                                sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
+                                custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
+                                irow          = irow, &  ! sparsity pattern
+                                icol          = icol, &
+                                export_iteration = halo_export   )
+    case (2:4)
         ! sparse
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
         call me%initialize(     n                = n,            &
@@ -431,6 +450,58 @@
 
     end subroutine initialize_the_solver
 !*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Custom solver that uses QR_MUMPS
+!
+! TODO: add a compiler directive to indicate this is present so it can be optional
+
+    subroutine qrm_solver(me,n_cols,n_rows,n_nonzero,irow,icol,a,b,x,istat)
+
+        use dqrm_mod
+
+        implicit none
+
+        class(nlesolver_type),intent(inout) :: me
+        integer,intent(in) :: n_cols !! `n`: number of columns in A.
+        integer,intent(in) :: n_rows !! `m`: number of rows in A.
+        integer,intent(in) :: n_nonzero !! number of nonzero elements of A.
+        integer,dimension(n_nonzero),intent(in) :: irow, icol !! sparsity pattern (size is `n_nonzero`)
+        real(wp),dimension(n_nonzero),intent(in) :: a !! matrix elements (size is `n_nonzero`)
+        real(wp),dimension(n_rows),intent(in) :: b !! right hand side (size is `m`)
+        real(wp),dimension(n_cols),intent(out) :: x !! solution (size is `n`)
+        integer,intent(out) :: istat !! status code (=0 for success)
+
+        type(dqrm_spmat_type) :: qrm_spmat
+
+        ! hack because we have to point to them ! can we avoid this ?? <-----
+        integer,dimension(:),allocatable,target :: irow_, icol_
+        real(wp),dimension(:),allocatable,target :: a_, r_
+        !--------------------------------------------------------------------
+
+        allocate(irow_, source=irow)
+        allocate(icol_, source=icol)
+        allocate(a_ , source=a)
+        allocate(r_ , source=b)
+
+        call qrm_init()
+
+        ! initialize the matrix data structure.
+        call qrm_spmat_init(qrm_spmat)
+
+        qrm_spmat%m   =  n_rows
+        qrm_spmat%n   =  n_cols
+        qrm_spmat%nz  =  n_nonzero
+        qrm_spmat%irn => irow_
+        qrm_spmat%jcn => icol_
+        qrm_spmat%val => a_
+
+        call qrm_spmat_gels(qrm_spmat, r_, x)
+
+        istat = 0 ! how to get status code?
+
+    end subroutine qrm_solver
 
 !*****************************************************************************************
 !>
