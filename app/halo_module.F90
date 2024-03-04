@@ -463,7 +463,7 @@
     subroutine qrm_solver(me,n_cols,n_rows,n_nonzero,irow,icol,a,b,x,istat)
 #ifdef WITH_QRMUMPS
         use dqrm_mod
-
+#endif
         implicit none
 
         class(nlesolver_type),intent(inout) :: me
@@ -476,6 +476,7 @@
         real(wp),dimension(n_cols),intent(out) :: x !! solution (size is `n`)
         integer,intent(out) :: istat !! status code (=0 for success)
 
+#ifdef WITH_QRMUMPS
         type(dqrm_spmat_type) :: qrm_spmat
 
         ! hack because we have to point to them ! can we avoid this ?? <-----
