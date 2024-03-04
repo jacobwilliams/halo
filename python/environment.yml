@@ -1,0 +1,14 @@
+channels:
+  - conda-forge
+  - nodefaults
+
+dependencies:
+  - python=3.10
+  - liblapack=3.9.0
+  - libopenblas=0.3.24
+  - cmake=3.27.4
+  - metis=5.1.0
+  - fortran-compiler=1.6.0
+  - cxx-compiler=1.6.0
+  - c-compiler=1.6.0
+  - fpm

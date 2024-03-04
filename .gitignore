@@ -40,6 +40,8 @@ doc/
 build/
 lib/
 .vscode
+/python/env
+/python/qr_mumps
 
 # data products:
 /guess_*.*
