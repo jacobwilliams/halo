@@ -458,7 +458,7 @@
 ! TODO: add a compiler directive to indicate this is present so it can be optional
 
     subroutine qrm_solver(me,n_cols,n_rows,n_nonzero,irow,icol,a,b,x,istat)
-
+#ifdef WITH_QRMUMPS
         use dqrm_mod
 
         implicit none
@@ -501,6 +501,9 @@
 
         istat = 0 ! how to get status code?
 
+#else
+    error stop 'This code was not build with QR_MUMPS'
+#endif
     end subroutine qrm_solver
 
 !*****************************************************************************************
