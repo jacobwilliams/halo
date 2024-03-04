@@ -376,7 +376,7 @@
     ! initialize the solver:
     select case (me%mission%solver_mode)
     case(1)
-        ! dense
+        ! dense - uses lapack to solve the linear system
         call me%initialize(     n                = n,            &
                                 m                = m,            &
                                 max_iter         = 100,          & ! maximum number of iteration
@@ -392,8 +392,11 @@
                                 export_iteration = halo_export   )
 
     case(5)
+        ! this is using the qr_mumps solver as a user-defined solver to nlesolver-fortran.
+        ! the solver is defined in qrm_solver. you must use the WITH_QRMUMPS preprocessor
+        ! directive to use this method and link the code with the appropriate libraries.
+
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
-        ! user-defined method ! test !!!
         call me%initialize(     n                = n,            &
                                 m                = m,            &
                                 max_iter         = 100,          & ! maximum number of iteration
@@ -411,7 +414,7 @@
                                 icol          = icol, &
                                 export_iteration = halo_export   )
     case (2:4)
-        ! sparse
+        ! varions sparse options available in nlesolver-fortran
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
         call me%initialize(     n                = n,            &
                                 m                = m,            &
