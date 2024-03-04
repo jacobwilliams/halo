@@ -20,8 +20,19 @@ CONDA_BASE=$(conda info --base)
 source $CONDA_BASE/etc/profile.d/conda.sh    # this seems to work
 conda activate $CONDA_ENV_DIR
 
-# have to do this for qr_mumps:
-export DYLD_LIBRARY_PATH=$PYTHON_DIR/qr_mumps/install/lib:$DYLD_LIBRARY_PATH
+if [[ "$(uname)" == "Darwin" ]]; then
+    # have to do this for qr_mumps:
+    export DYLD_LIBRARY_PATH=$PYTHON_DIR/qr_mumps/install/lib:$DYLD_LIBRARY_PATH
 
-# compile the run:
-fpm run halo_solver --profile release --flag "-DWITH_QRMUMPS -fopenmp $PYTHON_DIR/qr_mumps/install/lib/libdqrm.dylib $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.dylib -I$PYTHON_DIR/qr_mumps/install/include -rpath $PYTHON_DIR/qr_mumps/install/lib" -- examples/example_sparse.json
+    # compile the run:
+    fpm run halo_solver --profile release --flag "-DWITH_QRMUMPS -fopenmp $PYTHON_DIR/qr_mumps/install/lib/libdqrm.dylib $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.dylib -I$PYTHON_DIR/qr_mumps/install/include -rpath $PYTHON_DIR/qr_mumps/install/lib" -- examples/example_sparse.json
+else
+
+    # have to do this for qr_mumps:
+    export LD_LIBRARY_PATH=$PYTHON_DIR/qr_mumps/install/lib:$LD_LIBRARY_PATH
+
+    # compile the run:
+    fpm run halo_solver --profile release --flag "-DWITH_QRMUMPS -fopenmp $CONDA_ENV_DIR/lib/libmetis.so $PYTHON_DIR/qr_mumps/install/lib/libdqrm.so $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.so -I$PYTHON_DIR/qr_mumps/install/include" -- examples/example_sparse.json
+
+fi
+

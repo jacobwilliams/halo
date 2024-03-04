@@ -30,7 +30,11 @@ git reset --hard $QRMUMPSSHA
 mkdir build
 cd build
 
-cmake -Wno-dev -DARITH=d -DCMAKE_INSTALL_PREFIX=../install -DBUILD_SHARED_LIBS=ON -DQRM_ORDERING_METIS=ON  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALLDIR -DLAPACK_LIB_DIR=$CONDAENVDIR/lib -DLAPACK_LIB="libblas.dylib;liblapack.dylib" ..
+if [[ "$(uname)" == "Darwin" ]]; then
+    cmake -Wno-dev -DARITH=d -DCMAKE_INSTALL_PREFIX=../install -DBUILD_SHARED_LIBS=ON -DQRM_ORDERING_METIS=ON  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALLDIR -DLAPACK_LIB_DIR=$CONDAENVDIR/lib -DLAPACK_LIB="libblas.dylib;liblapack.dylib" ..
+else
+    cmake -Wno-dev -DARITH=d -DCMAKE_INSTALL_PREFIX=../install -DBUILD_SHARED_LIBS=ON -DQRM_ORDERING_METIS=ON  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$INSTALLDIR -DLAPACK_LIB_DIR=$CONDAENVDIR/lib ..
+fi
 
 cmake --build . --parallel --config Release
 cmake --install .
