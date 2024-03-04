@@ -27,9 +27,16 @@
 
         real(wp)              :: t0 = zero          !! initial time [days]
         real(wp)              :: t0_scale = one     !! opt var scale for `t0`
+        real(wp)              :: t0_dpert = 1.0e-5_wp   !! opt var dpert for `t0` [scaled]
 
         real(wp),dimension(6) :: x0_rotating = zero !! initial state [km, km/s], rotating frame
         real(wp),dimension(6) :: x0_rotating_scale = one !! opt var scale for `x0_rotating`
+        real(wp),dimension(6) :: x0_rotating_dpert = [1.0e-2_wp,&
+                                                      1.0e-2_wp,&
+                                                      1.0e-2_wp,&
+                                                      1.0e-5_wp,&
+                                                      1.0e-5_wp,&
+                                                      1.0e-5_wp] !! opt var dperts for `x0_rotating` [scaled]
 
         real(wp),dimension(6) :: x0 = zero          !! initial state [km, km/s], inertial frame
         real(wp)              :: tf = zero          !! final time [days]
@@ -102,6 +109,7 @@
         type(segment),dimension(:),allocatable :: segs  !! the list of segments
 
         real(wp),dimension(:),allocatable :: xscale  !! opt var scale factors
+        real(wp),dimension(:),allocatable :: dpert_  !! opt var dpert factors [rename because already in base class]
         real(wp),dimension(:),allocatable :: fscale  !! function scale factors
         character(len=20),dimension(:),allocatable :: xname !! opt var names
 
@@ -368,7 +376,7 @@
     ! initialize the solver:
     select case (me%mission%solver_mode)
     case(1)
-        ! dense
+        ! dense - uses lapack to solve the linear system
         call me%initialize(     n                = n,            &
                                 m                = m,            &
                                 max_iter         = 100,          & ! maximum number of iteration
@@ -383,8 +391,30 @@
                                 !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
                                 export_iteration = halo_export   )
 
-    case (2:)
-        ! sparse
+    case(5)
+        ! this is using the qr_mumps solver as a user-defined solver to nlesolver-fortran.
+        ! the solver is defined in qrm_solver. you must use the WITH_QRMUMPS preprocessor
+        ! directive to use this method and link the code with the appropriate libraries.
+
+        call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
+        call me%initialize(     n                = n,            &
+                                m                = m,            &
+                                max_iter         = 100,          & ! maximum number of iteration
+                                func             = halo_func,    &
+                                grad_sparse      = halo_grad_sparse,    &
+                                tol              = 1.0e-6_wp,    & ! tolerance
+                                step_mode        = 4,            & ! 3-point "line search" (2 intervals)
+                                n_intervals      = 2,            & ! number of intervals for step_mode=4
+                                alpha_min = 0.2_wp, &
+                                alpha_max = 0.8_wp, &
+                                use_broyden      = .false.,      & ! broyden update
+                                sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
+                                custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
+                                irow          = irow, &  ! sparsity pattern
+                                icol          = icol, &
+                                export_iteration = halo_export   )
+    case (2:4)
+        ! varions sparse options available in nlesolver-fortran
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
         call me%initialize(     n                = n,            &
                                 m                = m,            &
@@ -423,6 +453,62 @@
 
     end subroutine initialize_the_solver
 !*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Custom solver that uses QR_MUMPS
+!
+! TODO: add a compiler directive to indicate this is present so it can be optional
+
+    subroutine qrm_solver(me,n_cols,n_rows,n_nonzero,irow,icol,a,b,x,istat)
+#ifdef WITH_QRMUMPS
+        use dqrm_mod
+#endif
+        implicit none
+
+        class(nlesolver_type),intent(inout) :: me
+        integer,intent(in) :: n_cols !! `n`: number of columns in A.
+        integer,intent(in) :: n_rows !! `m`: number of rows in A.
+        integer,intent(in) :: n_nonzero !! number of nonzero elements of A.
+        integer,dimension(n_nonzero),intent(in) :: irow, icol !! sparsity pattern (size is `n_nonzero`)
+        real(wp),dimension(n_nonzero),intent(in) :: a !! matrix elements (size is `n_nonzero`)
+        real(wp),dimension(n_rows),intent(in) :: b !! right hand side (size is `m`)
+        real(wp),dimension(n_cols),intent(out) :: x !! solution (size is `n`)
+        integer,intent(out) :: istat !! status code (=0 for success)
+
+#ifdef WITH_QRMUMPS
+        type(dqrm_spmat_type) :: qrm_spmat
+
+        ! hack because we have to point to them ! can we avoid this ?? <-----
+        integer,dimension(:),allocatable,target :: irow_, icol_
+        real(wp),dimension(:),allocatable,target :: a_, r_
+        !--------------------------------------------------------------------
+
+        allocate(irow_, source=irow)
+        allocate(icol_, source=icol)
+        allocate(a_ , source=a)
+        allocate(r_ , source=b)
+
+        call qrm_init()
+
+        ! initialize the matrix data structure.
+        call qrm_spmat_init(qrm_spmat)
+
+        qrm_spmat%m   =  n_rows
+        qrm_spmat%n   =  n_cols
+        qrm_spmat%nz  =  n_nonzero
+        qrm_spmat%irn => irow_
+        qrm_spmat%jcn => icol_
+        qrm_spmat%val => a_
+
+        call qrm_spmat_gels(qrm_spmat, r_, x)
+
+        istat = 0 ! how to get status code?
+
+#else
+    error stop 'This code was not build with QR_MUMPS'
+#endif
+    end subroutine qrm_solver
 
 !*****************************************************************************************
 !>
@@ -988,6 +1074,10 @@
 
             me%segs(iseg+j)%data%xf_rotating_scale = fscale_xf  ! these are all the same for the constraints
 
+            ! scale the dperts
+            me%segs(iseg+j)%data%x0_rotating_dpert = me%segs(iseg+j)%data%x0_rotating_dpert / me%segs(iseg+j)%data%x0_rotating_scale
+            me%segs(iseg+j)%data%t0_dpert = me%segs(iseg+j)%data%t0_dpert / me%segs(iseg+j)%data%t0_scale
+
         end do
 
         ! for next rev:
@@ -999,10 +1089,14 @@
 
     allocate(me%xscale(n))
     allocate(me%xname(n))
+    allocate(me%dpert_(n))
     allocate(me%fscale(m))
 
     ! also set the scale factors:
     call me%get_scales_from_segs()
+
+    ! update with the new dperts:
+    call me%set_dpert(me%dpert_)
 
     if (present(x)) then
         ! get the initial guess from the mission:
@@ -1025,7 +1119,7 @@
 
     class(mission_type),intent(inout) :: me
 
-    integer :: i,j    !! counter
+    integer :: i,j,ii !! counter
     integer :: iseg   !! segment number counter
     integer :: n_segs !! number of segments
     character(len=10) :: iseg_str  !! segment number string
@@ -1044,35 +1138,43 @@
     call me%define_problem_size(n_segs=n_segs)
 
     i = 0 ! for xscale
+    ii = 0 ! for dpert
     j = 0 ! for xname
     ! x scales - segment 1:
     if (.not. me%fix_initial_time) then
         call fill_vector(me%xscale, me%segs(1)%data%t0_scale, i)
+        call fill_vector(me%dpert_, me%segs(1)%data%t0_dpert, ii)
         call fill_vector(me%xname, 'SEG1 '//t0_label, j)
     end if
     if (me%fix_initial_r) then
         call fill_vector(me%xscale, me%segs(1)%data%x0_rotating_scale(4:6), i)
+        call fill_vector(me%dpert_, me%segs(1)%data%x0_rotating_dpert(4:6), ii)
         call fill_vector(me%xname, 'SEG1 '//x0_label(4:6), j)
     else
         call fill_vector(me%xscale, me%segs(1)%data%x0_rotating_scale, i)
+        call fill_vector(me%dpert_, me%segs(1)%data%x0_rotating_dpert, ii)
         call fill_vector(me%xname, 'SEG1 '//x0_label, j)
     end if
     ! x scales - the rest:
     do iseg = 2, n_segs, 2
         write(iseg_str,'(I10)') iseg
         call fill_vector(me%xscale, me%segs(iseg)%data%t0_scale, i)
+        call fill_vector(me%dpert_, me%segs(iseg)%data%t0_dpert, ii)
         call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//t0_label, j)
         if (iseg == me%fix_ry_at_end_of_rev*8) then
             call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,4,5,6]), i)
+            call fill_vector(me%dpert_, me%segs(iseg)%data%x0_rotating_dpert([1,3,4,5,6]), ii)
             call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,4,5,6]), j)
             cycle
         else if (me%fix_final_ry_and_vx .and. iseg == n_segs) then ! last state point
             call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale([1,3,5,6]), i)
+            call fill_vector(me%dpert_, me%segs(iseg)%data%x0_rotating_dpert([1,3,5,6]), ii)
             call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label([1,3,5,6]), j)
             cycle
         else
             ! otherwise, full state:
             call fill_vector(me%xscale, me%segs(iseg)%data%x0_rotating_scale, i)
+            call fill_vector(me%dpert_, me%segs(iseg)%data%x0_rotating_dpert, ii)
             call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//x0_label, j)
         end if
     end do

@@ -10,17 +10,19 @@ keywords = ["orbital mechanics", "nrho", "cr3bp"]
 auto-executables = true
 auto-examples = true
 auto-tests = true
+external-modules = "dqrm_mod"
+
 
 [dependencies]
 fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.5" }
-NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.7.0" }
+NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
 json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.2.5" }
 bspline-fortran = { git = "https://github.com/jacobwilliams/bspline-fortran", tag = "7.0.0" }
 pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
 fortran-search-and-sort = { git = "https://github.com/jacobwilliams/fortran-search-and-sort", tag = "1.0.0" }
 fortran-csv-module = { git = "https://github.com/jacobwilliams/fortran-csv-module", tag = "1.5.1" }
-nlesolver-fortran = { git = "https://github.com/jacobwilliams/nlesolver-fortran", tag = "2.1.0" }
+nlesolver-fortran = { git = "https://github.com/jacobwilliams/nlesolver-fortran", tag = "2.2.0" }
 argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1.0.0" }
 
 [library]

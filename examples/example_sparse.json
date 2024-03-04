@@ -24,14 +24,15 @@
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
   //  "solver_mode": 3, // sparse solver (LUSOL)    <----- doesn't seem to work at all ?
-    "solver_mode": 4, // sparse solver (LMSR)
+  //  "solver_mode": 4, // sparse solver (LMSR)
+      "solver_mode": 5, // custom solver (QR_MUMPS)
 
     // number of revs:
-    "n_revs": 10, // 2 sec for solver_mode=1, 4 sec for solver_mode=2
+    //"n_revs": 10,
     // "n_revs": 5,
     // "n_revs": 20,
-    // "n_revs": 100,  //689 days
-    // "n_revs": 1000,    // takes about 7 hrs to run right now
+    //"n_revs": 100,  //689 days
+      "n_revs": 1000,
 
     // data files:
     "ephemeris_file": "data/eph/JPLEPH.421",
