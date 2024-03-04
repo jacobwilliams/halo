@@ -77,19 +77,19 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="<p>43.8% of total for derived types.</p>Including implementation: 735 statements, 62.1% of total for derived types.">49 statements</a>
+                 title="<p>43.5% of total for derived types.</p>Including implementation: 748 statements, 62.3% of total for derived types.">50 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/halo_module.f90"> Source File</a>
+              <a href="../src/halo_module.F90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
                 <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
             <li class="breadcrumb-item active" aria-current="page">mission_type</li>
           </ol>
@@ -121,6 +121,7 @@
             <a class="list-group-item" href="../type/mission_type.html#variable-eph~2">eph</a>
             <a class="list-group-item" href="../type/mission_type.html#variable-segs">segs</a>
             <a class="list-group-item" href="../type/mission_type.html#variable-xscale">xscale</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-dpert_">dpert_</a>
             <a class="list-group-item" href="../type/mission_type.html#variable-fscale">fscale</a>
             <a class="list-group-item" href="../type/mission_type.html#variable-xname">xname</a>
             <a class="list-group-item" href="../type/mission_type.html#variable-n_or_s">N_or_S</a>
@@ -586,6 +587,23 @@ said component(s).
                 <td></td>
             <td>
                 <p>opt var scale factors</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dpert_"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>dpert_</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>opt var dpert factors [rename because already in base class]</p>
             </td>
         </tr>
         <tr>
@@ -2346,6 +2364,7 @@ Either computes the et from the calendar state, or vice versa.</p>
 <span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">segs</span><span class="w">  </span><span class="c">!! the list of segments</span>
 
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xscale</span><span class="w">  </span><span class="c">!! opt var scale factors</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dpert_</span><span class="w">  </span><span class="c">!! opt var dpert factors [rename because already in base class]</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fscale</span><span class="w">  </span><span class="c">!! function scale factors</span>
 <span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xname</span><span class="w"> </span><span class="c">!! opt var names</span>
 

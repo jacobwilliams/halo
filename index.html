@@ -74,27 +74,30 @@
       <div class="row" id='text'>
         <div class=col-md-8>
           <h1>halo</h1>
-          <p>Halo orbit solver with modern Fortran</p>
+          <h1><img alt="NumDiff" src="media/logo.jpg"></h1>
 <h2>Description</h2>
-<p>An application that can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.</p>
+<p>Halo orbit solver with modern Fortran</p>
+<p>This application can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.</p>
 <h2>Build</h2>
 <p>The application is built using the <a href="https://github.com/fortran-lang/fpm">Fortran Package Manager</a> (FPM). FPM will download all the required dependencies and compile the program, and can also be used to run the tests.</p>
 <div class="codehilite"><pre><span></span><code>fpm build --profile release
 </code></pre></div>
 
 <p>To run an example:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release -- examples/example2.json
+<div class="codehilite"><pre><span></span><code>fpm run --profile release -- examples/example.json
 </code></pre></div>
 
 <p>OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag &quot;-O2 -qopenmp&quot; -- examples/example.json
+<div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag &quot;-qopenmp&quot; -- examples/example.json
 </code></pre></div>
 
 <p>Or with Gfortran:</p>
-<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release --flag &quot;-O2 -openmp&quot; -- examples/example.json
+<div class="codehilite"><pre><span></span><code>fpm run --profile release --flag &quot;-fopenmp&quot; -- examples/example.json
 </code></pre></div>
 
+<h3>Using qr_mumps</h3>
+<p>The <a href="https://gitlab.com/qr_mumps/qr_mumps">qr_mumps</a> solver can also be used, which will run much faster than the default LAPACK solver for very large problems. See the <code>build-mac.sh</code> and <code>run.sh</code> scripts for details.</p>
 <h3>Building On Windows</h3>
 <p>Work in progress....</p>
 <p>Example:</p>
@@ -111,12 +114,13 @@ Another example, using the Intel Fortran Compiler with OpenMP:</p>
 </code></pre></div>
 
 <p>It's because <code>fmin</code> and <code>nlsolver-fortran</code> both have explicit <code>lapack</code> and <code>blas</code> dependencies specified in their <code>fpm.toml</code> files (<code>link = ["lapack", "blas"]</code>). If i delete those it compiles.</p>
-<p>Also: it seems like <code>FIRSTPRIVATE(me)</code> is causing random crashes on Windows. Removing that seems to make it work consistently.</p>
 <h3>Documentation</h3>
 <p>The latest API documentation can be found <a href="https://jacobwilliams.github.io/halo/">here</a>. This was generated from the source code using <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>.</p>
 <h3>See also</h3>
 <ul>
 <li>J. Williams, <a href="https://degenerateconic.com/near-rectilinear-halo-orbits.html">Near Rectilinear Halo Orbits</a>, July 31, 2022 [degenerateconic.com]</li>
+<li><a href="https://gitlab.com/qr_mumps/qr_mumps">qr_mumps</a> -- a software package for the solution of sparse, linear
+  systems on multicore computers.</li>
 </ul>
 <h3>Reference</h3>
 <ul>
@@ -141,7 +145,7 @@ Another example, using the Intel Fortran Compiler with OpenMP:</p>
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Source Files</h3>
-              <ul><li><a href='sourcefile/config_file_module.f90.html'>config_file_module.f90</a></li><li><a href='sourcefile/halo_module.f90.html'>halo_module.f90</a></li><li><a href='sourcefile/halo_solver.f90.html'>halo_solver.f90</a></li><li><a href='sourcefile/parameters_module.f90.html'>parameters_module.f90</a></li></ul>
+              <ul><li><a href='sourcefile/config_file_module.f90.html'>config_file_module.f90</a></li><li><a href='sourcefile/halo_module.f90.html'>halo_module.F90</a></li><li><a href='sourcefile/halo_solver.f90.html'>halo_solver.f90</a></li><li><a href='sourcefile/parameters_module.f90.html'>parameters_module.f90</a></li></ul>
             </div>
             <div>
               <ul>

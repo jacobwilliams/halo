@@ -77,19 +77,19 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="<p>10.7% of total for derived types.</p>Including implementation: 12 statements,  1.0% of total for derived types.">12 statements</a>
+                 title="<p>12.2% of total for derived types.</p>Including implementation: 14 statements,  1.2% of total for derived types.">14 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/halo_module.f90"> Source File</a>
+              <a href="../src/halo_module.F90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
                 <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
             <li class="breadcrumb-item active" aria-current="page">segment_data</li>
           </ol>
@@ -120,8 +120,10 @@
             <a class="list-group-item" href="../type/segment_data.html#variable-et_ref">et_ref</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-t0">t0</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-t0_scale">t0_scale</a>
+            <a class="list-group-item" href="../type/segment_data.html#variable-t0_dpert">t0_dpert</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-x0_rotating">x0_rotating</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-x0_rotating_scale">x0_rotating_scale</a>
+            <a class="list-group-item" href="../type/segment_data.html#variable-x0_rotating_dpert">x0_rotating_dpert</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-x0">x0</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-tf">tf</a>
             <a class="list-group-item" href="../type/segment_data.html#variable-xf">xf</a>
@@ -354,6 +356,23 @@ said component(s).
         </tr>
         <tr>
             <td>
+              <span class="anchor" id="variable-t0_dpert"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t0_dpert</strong></td>
+<td> =</td>
+                <td>1.0e-5_wp</td>
+            <td>
+                <p>opt var dpert for <code>t0</code> [scaled]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
               <span class="anchor" id="variable-x0_rotating"></span>
               real(kind=wp),
             </td>
@@ -384,6 +403,23 @@ said component(s).
                 <td>one</td>
             <td>
                 <p>opt var scale for <code>x0_rotating</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x0_rotating_dpert"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating_dpert</strong></td>
+<td> =</td>
+                <td>[1.0e-2_wp, 1.0e-2_wp, 1.0e-2_wp, 1.0e-5_wp, 1.0e-5_wp, 1.0e-5_wp]</td>
+            <td>
+                <p>opt var dperts for <code>x0_rotating</code> [scaled]</p>
             </td>
         </tr>
         <tr>
@@ -491,9 +527,16 @@ said component(s).
 
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w">          </span><span class="c">!! initial time [days]</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">t0_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="w">     </span><span class="c">!! opt var scale for `t0`</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">t0_dpert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-5_wp</span><span class="w">   </span><span class="c">!! opt var dpert for `t0` [scaled]</span>
 
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="c">!! initial state [km, km/s], rotating frame</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_rotating_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="c">!! opt var scale for `x0_rotating`</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_rotating_dpert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0e-2_wp</span><span class="p">,&amp;</span>
+<span class="w">                                                      </span><span class="mf">1.0e-2_wp</span><span class="p">,&amp;</span>
+<span class="w">                                                      </span><span class="mf">1.0e-2_wp</span><span class="p">,&amp;</span>
+<span class="w">                                                      </span><span class="mf">1.0e-5_wp</span><span class="p">,&amp;</span>
+<span class="w">                                                      </span><span class="mf">1.0e-5_wp</span><span class="p">,&amp;</span>
+<span class="w">                                                      </span><span class="mf">1.0e-5_wp</span><span class="p">]</span><span class="w"> </span><span class="c">!! opt var dperts for `x0_rotating` [scaled]</span>
 
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w">          </span><span class="c">!! initial state [km, km/s], inertial frame</span>
 <span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w">              </span><span class="kd">::</span><span class="w"> </span><span class="n">tf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w">          </span><span class="c">!! final time [days]</span>
