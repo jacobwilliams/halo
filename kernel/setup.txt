@@ -22,7 +22,7 @@ Download MKSPK from: https://naif.jpl.nasa.gov/naif/utilities.html
     CENTER_NAME       = 'MOON'
     REF_FRAME_NAME    = 'J2000'
     INPUT_DATA_UNITS  = ('ANGLES=DEGREES' 'DISTANCES=km')
-    LEAPSECONDS_FILE  = 'naif0012.tls'
+    LEAPSECONDS_FILE  = 'kernel/naif0012.tls'
     PRODUCER_ID       = 'HALO'
 
 \begintext

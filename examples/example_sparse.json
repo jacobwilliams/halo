@@ -39,7 +39,9 @@
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
     "patch_point_file": "data/L2_halos.json",
 
-    "generate_plots": false,
-    "generate_trajectory_files": false
+    "generate_plots": true,
+    "generate_trajectory_files": true,
+    "generate_guess_and_solution_files": true,
+    "generate_kernel": true
 
 }

@@ -58,6 +58,7 @@
     character(len=:),allocatable :: message  !! Text status message from solver
     integer :: n_segs, iseg
     real(wp),dimension(6) :: x_rotating
+    character(len=:),allocatable :: mkspk_input, bsp_output  !! filenames for mkspk
 !$  integer :: tid, nthreads
 
 !$OMP PARALLEL PRIVATE(NTHREADS, TID)
@@ -87,8 +88,8 @@
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
 
     if (solver%mission%generate_plots) &
-        call solver%mission%plot('guess')    ! plot the initial guess
-    if (solver%mission%generate_trajectory_files) &
+        call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
+    if (solver%mission%generate_guess_and_solution_files) &
         call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
 
     if (debug) then
@@ -141,11 +142,22 @@
 !$  write(*,*) 'OMP wall time   : ', (tend-tstart), 'sec'
     write(*,*) ''
 
-    if (solver%mission%generate_trajectory_files) &
-        call solver%mission%write_optvars_to_file('solution',x)       ! write solution to a file:
-    if (solver%mission%generate_plots) &
-        call solver%mission%plot('solution',export_trajectory=.true.) ! plot solution
-
+    if (solver%mission%generate_guess_and_solution_files) &
+        call solver%mission%write_optvars_to_file('solution',x) ! write solution to a file
+    ! export solution to plot or trajectory file
+    if (solver%mission%generate_trajectory_files .or. solver%mission%generate_plots) &
+        call solver%mission%plot('solution',&
+                draw_trajectory=solver%mission%generate_plots, &
+                export_trajectory=solver%mission%generate_trajectory_files)
+    if (solver%mission%generate_kernel) then
+        if (.not. solver%mission%generate_trajectory_files) then
+            write(*,*) 'error: kernel generation requires the trajectory file to be exported'
+        else
+            mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+            bsp_output  = 'solution_'//solver%mission%get_case_name()//'.bsp'
+            call execute_command_line('kernel/mkspk -setup kernel/setup.txt -input '//mkspk_input//' -output '//bsp_output)
+        end if
+    end if
 
     if (debug) then
         write(*,*) 'SOLUTION:'
