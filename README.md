@@ -1,8 +1,11 @@
-Halo orbit solver with modern Fortran
+![NumDiff](media/logo.jpg)
+============
 
 ## Description
 
-An application that can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.
+Halo orbit solver with modern Fortran
+
+This application can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.
 
 ## Build
 
@@ -15,21 +18,25 @@ fpm build --profile release
 To run an example:
 
 ```
-fpm run --profile release -- examples/example2.json
+fpm run --profile release -- examples/example.json
 ```
 
 OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:
 
 ```
-fpm run --profile release --compiler ifort --flag "-O2 -qopenmp" -- examples/example.json
+fpm run --profile release --compiler ifort --flag "-qopenmp" -- examples/example.json
 ```
 
 Or with Gfortran:
 
 ```
-fpm run halo_solver --profile release --flag "-O2 -openmp" -- examples/example.json
+fpm run --profile release --flag "-fopenmp" -- examples/example.json
 ```
+
+### Using qr_mumps
+
+The [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) solver can also be used, which will run much faster than the default LAPACK solver for very large problems. See the `build-mac.sh` and `run.sh` scripts for details.
 
 ### Building On Windows
 
@@ -53,8 +60,6 @@ LINK : fatal error LNK1181: cannot open input file 'lapack.lib'
 
 It's because `fmin` and `nlsolver-fortran` both have explicit `lapack` and `blas` dependencies specified in their `fpm.toml` files (`link = ["lapack", "blas"]`). If i delete those it compiles.
 
-Also: it seems like `FIRSTPRIVATE(me)` is causing random crashes on Windows. Removing that seems to make it work consistently.
-
 ### Documentation
 
 The latest API documentation can be found [here](https://jacobwilliams.github.io/halo/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford).
@@ -62,6 +67,8 @@ The latest API documentation can be found [here](https://jacobwilliams.github.io
 ### See also
 
  * J. Williams, [Near Rectilinear Halo Orbits](https://degenerateconic.com/near-rectilinear-halo-orbits.html), July 31, 2022 [degenerateconic.com]
+ * [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) -- a software package for the solution of sparse, linear
+  systems on multicore computers.
 
 ### Reference
 
