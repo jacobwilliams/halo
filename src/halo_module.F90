@@ -118,6 +118,9 @@
 
         logical :: generate_plots = .true.  !! to generate the python plots
         logical :: generate_trajectory_files = .true.  !! to export the txt trajectory files.
+        logical :: generate_guess_and_solution_files = .true.  !! to export the json guess and solution files.
+        logical :: generate_kernel = .false.  !! to generate a spice kernel (bsp) of the solution
+                                              !! [this requires the external mkspk SPICE tool]
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -2040,6 +2043,8 @@
     call f%get('fix_final_ry_and_vx',       me%mission%fix_final_ry_and_vx,       found)
     call f%get('generate_plots',            me%mission%generate_plots,            found)
     call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
+    call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
+    call f%get('generate_kernel',           me%mission%generate_kernel,           found)
 
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1
