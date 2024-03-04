@@ -4,6 +4,7 @@ channels:
 
 dependencies:
   - python=3.10
+  - matplotlib
   - liblapack=3.9.0
   - libopenblas=0.3.24
   - cmake=3.27.4
