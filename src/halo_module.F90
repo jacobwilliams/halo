@@ -13,6 +13,7 @@
     use pyplot_module
     use bspline_module
     use config_file_module
+    use splined_ephemeris_module
 
     implicit none
 
@@ -78,7 +79,7 @@
         ! These can be pointers that are pointing to the global ones in the mission,
         ! Or, when using OpenMP, they are allocated in each segment.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
-        type(jpl_ephemeris),pointer :: eph=> null()  !! the ephemeris [global]
+        class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris [global]
 
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame
@@ -103,8 +104,11 @@
         !! the mission [this is a `numdiff_type` for
         !! organizational purposes.... rethink this maybe ...
 
+        logical :: use_splined_ephemeris = .false. !! if true, the ephemeris is splined
+        real(wp) :: dt_spline_sec = 3600.0_wp !! time step in seconds for spline step [1 hr]
+
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
-        type(jpl_ephemeris),pointer :: eph => null()             !! the ephemeris [global]
+        class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
 
         type(segment),dimension(:),allocatable :: segs  !! the list of segments
 
@@ -925,6 +929,8 @@
     integer,dimension(:),allocatable :: irow    !! sparsity pattern nonzero elements row indices
     integer,dimension(:),allocatable :: icol    !! sparsity pattern nonzero elements column indices
     logical :: use_openmp !! if OpenMP is being used
+    real(wp) :: et0 !! initial et for splined ephemeris
+    real(wp) :: etf !! final et for splined ephemeirs
 
     use_openmp = .false.
 !$  use_openmp = .true.
@@ -969,16 +975,31 @@
     call me%get_sparsity_pattern(irow,icol)
     call me%set_sparsity_pattern(irow,icol)
 
-    ! pointers:
-    allocate(me%eph)
-    allocate(me%grav)
-
     ! set up the ephemeris:
     !write(*,*) 'loading ephemeris file: '//trim(me%ephemeris_file)
-    call me%eph%initialize(filename=me%ephemeris_file,status_ok=status_ok)
-    if (.not. status_ok) error stop 'error initializing ephemeris'
+    if (me%use_splined_ephemeris) then
+        ! have to compute et0, etf based on mission range.
+        ! use a 2 period buffer
+        et0 = me%et_ref - 2.0*me%period*day2sec
+        etf = me%et_ref + (me%period*day2sec * me%n_revs) + 2.0*me%period*day2sec
+        allocate(jpl_ephemeris_splined :: me%eph)
+        associate (eph => me%eph)
+            select type(eph)
+            class is (jpl_ephemeris_splined)
+                call eph%initialize_splinded_ephemeris(filename=me%ephemeris_file,&
+                                                       status_ok=status_ok,&
+                                                       et0=et0,dt=me%dt_spline_sec,etf=etf)
+            end select
+        end associate
+        if (.not. status_ok) error stop 'error initializing splined ephemeris'
+    else
+        allocate(jpl_ephemeris :: me%eph)
+        call me%eph%initialize(filename=me%ephemeris_file,status_ok=status_ok)
+        if (.not. status_ok) error stop 'error initializing ephemeris'
+    end if
 
     ! set up the force model [main body is moon]:
+    allocate(me%grav)
     call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
     if (.not. status_ok) error stop 'error initializing gravity model'
 
@@ -1015,7 +1036,6 @@
     end do
 
     ! load the initial guess from the patch point file:
-
     i = 0
     iseg = 0
     t_periapsis = 0.0_wp
@@ -1107,8 +1127,6 @@
         call me%get_problem_arrays(x=x)
     end if
 
-    write(*,*) 'Done with initialize_the_mission.'
-
     end subroutine initialize_the_mission
 !*****************************************************************************************
 
@@ -1188,11 +1206,11 @@
         call fill_vector(me%fscale, me%segs(iseg)%data%xf_rotating_scale, i)
     end do
 
-    !write(*,*) ''
-    !write(*,*) 'xscale: ', me%xscale
-    !write(*,*) ''
-    !write(*,*) 'fscale: ', me%fscale
-    !write(*,*) ''
+    ! write(*,*) ''
+    ! write(*,*) 'xscale: ', me%xscale
+    ! write(*,*) ''
+    ! write(*,*) 'fscale: ', me%fscale
+    ! write(*,*) ''
 
     end subroutine get_scales_from_segs
 !*****************************************************************************************
@@ -1214,6 +1232,7 @@
 
     real(wp),dimension(3) :: r,rb,v
     reaL(wp),dimension(6) :: rv_earth_wrt_moon,rv_sun_wrt_moon
+    reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon
     real(wp),dimension(3,3) :: rotmat
     real(wp),dimension(3) :: a_geopot
     real(wp),dimension(3) :: a_earth
@@ -1241,13 +1260,25 @@
 
         ! third-body state vectors (wrt the central body, which is the moon in this case):
         ! [inertial frame]
-        call me%eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
-        call me%eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
-
+        associate (eph => me%eph)
+            select type (eph)
+            type is (jpl_ephemeris)
+                call eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
+                call eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
+                r_earth_wrt_moon = rv_earth_wrt_moon(1:3)
+                r_sun_wrt_moon   = rv_sun_wrt_moon(1:3)
+            type is (jpl_ephemeris_splined)
+                ! for this, we can just get position vector only
+                call eph%get_r(et,body_earth,body_moon,r_earth_wrt_moon,status_ok)
+                call eph%get_r(et,body_sun,body_moon,r_sun_wrt_moon,status_ok)
+            class default
+                error stop 'invalid eph class'
+            end select
+        end associate
         ! third-body perturbation (earth & sun):
         a_third_body = 0.0_wp
-        call third_body_gravity(r,rv_earth_wrt_moon(1:3),mu_earth,a_earth)
-        call third_body_gravity(r,rv_sun_wrt_moon(1:3),mu_sun,a_sun)
+        call third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
+        call third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
         a_third_body = a_earth + a_sun
 
         !total derivative vector:
@@ -2045,6 +2076,9 @@
     call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',           me%mission%generate_kernel,           found)
+
+    call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
+    call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
 
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1

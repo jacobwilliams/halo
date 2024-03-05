@@ -1,13 +1,13 @@
     module parameters_module
 
-    use iso_fortran_env,   only: wp => real64
-    use fortran_astrodynamics_toolkit,    only: zero
+    use halo_kinds_module,             only: wp
+    use fortran_astrodynamics_toolkit, only: zero
 
     implicit none
 
     public
 
-    public :: wp
+    public :: wp ! real kind
 
     ! constants:
     real(wp),parameter :: mu_earth = 3.9860043543609593E+05_wp !! \( \mu_{earth} \)
