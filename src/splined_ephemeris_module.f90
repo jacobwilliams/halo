@@ -1,6 +1,6 @@
 !*****************************************************************************************
 !>
-!  Simple splined ephemeris model
+!  Simple splined ephemeris model for Earth/Sun wrt Moon.
 
     module splined_ephemeris_module
 
@@ -33,8 +33,8 @@
         type(body_eph),target :: sun_eph
 
         type :: body_eph_interface
-            !! the interface to a splined ephemeris.
-            !! used for calls to `db1val`. this is meant to be
+            !! the interface to a splined ephemeris for a body
+            !! used for calls to `db1val`.
             private
             integer :: inbvx = 0
             real(wp),dimension(:),allocatable :: w0  !! work array - dimension(3_ip*kx)
@@ -44,27 +44,15 @@
             procedure,public :: get_rv
             procedure,public :: destroy => destroy_body_eph_interface
         end type body_eph_interface
-       ! type(body_eph_interface) :: earth_eph_interface
-       ! type(body_eph_interface) :: sun_eph_interface
 
-        ! type, public :: halo_ephemeris
-        !     !! each segment would have one of these
-        !     type(body_eph_interface) :: earth_eph
-        !     type(body_eph_interface) :: sun_eph
-        !     contains
-        !     procedure :: initialize_splinded_ephemeris
-        !     procedure,public :: get_rv => get_halo_ephemeris_rv
-        ! end type halo_ephemeris
-
-        !... trying to make this an extension of jpl_ephemeris so we ...
-        !    can also use it in the tranformation routine ...............
-        !    ... have to make get_rv more general... when same inputs...
-        !    ...need to check how it's being used there.........
         type,extends(jpl_ephemeris),public :: jpl_ephemeris_splined
+            !! make this an extension of the [[jpl_ephemeris]],
+            !! since it is also needed in tranformations.
+            !! also, has the extra feature of a `get_r` method,
+            !! since we don't need velocity for the gravity calculation.
 
-            ! the splined versions:
-            type(body_eph_interface) :: earth_eph_interface
-            type(body_eph_interface) :: sun_eph_interface
+            type(body_eph_interface) :: earth_eph_interface !! splined version of earth ephemeris
+            type(body_eph_interface) :: sun_eph_interface !! splined version of sun ephemeris
         contains
             procedure,public :: initialize_splinded_ephemeris
             procedure :: initialize_globals !! this is done once to initialize the global ephemeris vars
@@ -73,6 +61,8 @@
         end type jpl_ephemeris_splined
 
     contains
+
+    !TODO: really we also need a routine to destroy earth_eph and sun_eph.
 
     subroutine destroy_body_eph(me)
         class(body_eph),intent(out) :: me
@@ -131,6 +121,7 @@
             i = i + 1
             et = et + dt
             et_vec(i) = et
+            ! get_rv_from_jpl_ephemeris(me,et,targ,obs,rv,status_ok)
             call me%jpl_ephemeris%get_rv(et,body_earth,body_moon,earth_eph%f(i,:),status_ok)
             if (.not. status_ok) error stop 'earth eph error'
             call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,sun_eph%f(i,:),status_ok)
@@ -215,7 +206,7 @@
         elseif (targ==body_sun .and. obs==body_moon) then
             rv = me%sun_eph_interface%get_rv(et)
 
-        elseif (targ==body_moon .and. obs==body_earth) then
+        elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
             rv = -me%earth_eph_interface%get_rv(et)
         elseif (targ==body_moon .and. obs==body_sun) then
             rv = -me%sun_eph_interface%get_rv(et)
@@ -287,17 +278,6 @@
         end do
 
     end function get_r
-
-    ! subroutine get_halo_ephemeris_r(me, r_earth, r_sun)
-
-    !     class(halo_ephemeris),intent(inout) :: me
-    !     real(wp),dimension(6),intent(out) :: r_earth
-    !     real(wp),dimension(6),intent(out) :: r_sun
-
-    !     r_earth = me%earth_eph%get_r(et)
-    !     r_sun   = me%sun_eph%get_r(et)
-
-    ! end subroutine get_halo_ephemeris_r
 
     end module splined_ephemeris_module
 !*****************************************************************************************
