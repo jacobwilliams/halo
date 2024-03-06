@@ -26,8 +26,8 @@
     "atol": 1.0e-12,
 
     //nlesolver tol:
-    "nlesolver_tol": 1.0e-6,
-    //"nlesolver_tol": 1.0e-10,
+    //"nlesolver_tol": 1.0e-6,
+    "nlesolver_tol": 1.0e-10,
 
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
@@ -55,6 +55,7 @@
     "generate_plots": false,
     "generate_trajectory_files": false,
     "generate_guess_and_solution_files": true,
-    "generate_kernel": false
+    "generate_kernel": false,
+    "generate_defect_file": true
 
 }

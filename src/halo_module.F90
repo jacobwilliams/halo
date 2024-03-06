@@ -127,6 +127,8 @@
         logical :: generate_guess_and_solution_files = .true.  !! to export the json guess and solution files.
         logical :: generate_kernel = .false.  !! to generate a spice kernel (bsp) of the solution
                                               !! [this requires the external mkspk SPICE tool]
+        logical :: generate_defect_file = .false. !! generate the file that shows the pos/vel
+                                                  !! constraint defects for the solution
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -195,6 +197,7 @@
 
         procedure,public :: write_optvars_to_file
         procedure,public :: constraint_violations
+        procedure,public :: print_constraint_defects
         procedure :: get_problem_arrays
         procedure :: put_x_in_segments
         procedure :: get_x_from_json_file
@@ -419,13 +422,13 @@
                                 tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
-                                alpha_min = 0.2_wp, &
-                                alpha_max = 0.8_wp, &
+                                alpha_min        = 0.2_wp, &
+                                alpha_max        = 0.8_wp, &
                                 use_broyden      = .false.,      & ! broyden update
-                                sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
+                                sparsity_mode    = me%mission%solver_mode, &  ! use a sparse solver
                                 custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
-                                irow          = irow, &  ! sparsity pattern
-                                icol          = icol, &
+                                irow             = irow, &  ! sparsity pattern
+                                icol             = icol, &
                                 export_iteration = halo_export   )
     case (2:4)
         ! varions sparse options available in nlesolver-fortran
@@ -637,6 +640,44 @@
     end if
 
     end subroutine get_problem_arrays
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Print the `r` and `v` constraint defect norms for each segment constraint.
+
+    subroutine print_constraint_defects(me, filename)
+
+        class(mission_type),intent(in) :: me
+        character(len=*),intent(in) :: filename !! csv file to write to
+
+        real(wp),dimension(:),allocatable :: f !! constraint violations
+        integer :: irev !! rev number
+        integer :: i, j
+        integer :: m !! number of functions
+        integer :: istat , iunit
+
+        open(newunit=iunit, file=filename, status='REPLACE', iostat=istat)
+        if (istat/=0) error stop 'error opening '//filename
+
+        call me%define_problem_size(m=m)
+        allocate(f(m))
+        call me%get_problem_arrays(f=f)
+
+        ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ... ] in rotating frame
+
+        i = 0
+        write(iunit,'(A26,A1,A26)') 'rerr (km)', ',', 'verr (km/s)'
+        do irev = 1, me%n_revs
+            do j = 1, 4
+                i = i + 1
+                write(iunit,'(1P,E26.16,A1,E26.16)') norm2(f(i:i+2)), ',', norm2(f(i+2:i+5))
+            end do
+        end do
+
+        close(iunit, iostat=istat)
+
+    end subroutine print_constraint_defects
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2140,6 +2181,7 @@
     call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',           me%mission%generate_kernel,           found)
+    call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
 
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)

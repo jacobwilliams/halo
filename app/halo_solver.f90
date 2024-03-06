@@ -175,6 +175,12 @@
         end do
     end if
 
+    if (solver%mission%generate_defect_file) then
+        call solver%mission%print_constraint_defects('solution_defects_'//&
+                                                     solver%mission%get_case_name()//&
+                                                     '.csv')
+    end if
+
 !*****************************************************************************************
     end program halo_solver
 !*****************************************************************************************
