@@ -13,6 +13,7 @@
     use pyplot_module
     use bspline_module
     use config_file_module
+    use splined_ephemeris_module
 
     implicit none
 
@@ -78,7 +79,7 @@
         ! These can be pointers that are pointing to the global ones in the mission,
         ! Or, when using OpenMP, they are allocated in each segment.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
-        type(jpl_ephemeris),pointer :: eph=> null()  !! the ephemeris [global]
+        class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris [global]
 
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame
@@ -103,8 +104,13 @@
         !! the mission [this is a `numdiff_type` for
         !! organizational purposes.... rethink this maybe ...
 
+        character(len=:),allocatable :: initial_guess_from_file !! to read the initial guess from a JSOn file
+
+        logical :: use_splined_ephemeris = .false. !! if true, the ephemeris is splined
+        real(wp) :: dt_spline_sec = 3600.0_wp !! time step in seconds for spline step [1 hr]
+
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
-        type(jpl_ephemeris),pointer :: eph => null()             !! the ephemeris [global]
+        class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
 
         type(segment),dimension(:),allocatable :: segs  !! the list of segments
 
@@ -121,6 +127,8 @@
         logical :: generate_guess_and_solution_files = .true.  !! to export the json guess and solution files.
         logical :: generate_kernel = .false.  !! to generate a spice kernel (bsp) of the solution
                                               !! [this requires the external mkspk SPICE tool]
+        logical :: generate_defect_file = .false. !! generate the file that shows the pos/vel
+                                                  !! constraint defects for the solution
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -135,6 +143,10 @@
                                    !! if `epoch_mode=1`
 
         integer :: n_revs = 10  !! Number of revs in the Halo.
+
+        real(wp) :: rtol = 1.0e-12_wp !! integrator rtol
+        real(wp) :: atol = 1.0e-12_wp !! integrator atol
+        real(wp) :: nlesolver_tol = 1.0e-6_wp !! nlesolver tol
 
         real(wp),dimension(:),allocatable :: initial_r
             !! if `fix_initial_r` is True, this can be used
@@ -185,8 +197,10 @@
 
         procedure,public :: write_optvars_to_file
         procedure,public :: constraint_violations
+        procedure,public :: print_constraint_defects
         procedure :: get_problem_arrays
         procedure :: put_x_in_segments
+        procedure :: get_x_from_json_file
         procedure :: get_scales_from_segs
         procedure :: segs_to_propagate
         procedure :: get_sparsity_pattern
@@ -385,7 +399,7 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad             = halo_grad,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min = 0.2_wp, &
@@ -405,16 +419,16 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
-                                alpha_min = 0.2_wp, &
-                                alpha_max = 0.8_wp, &
+                                alpha_min        = 0.2_wp, &
+                                alpha_max        = 0.8_wp, &
                                 use_broyden      = .false.,      & ! broyden update
-                                sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
+                                sparsity_mode    = me%mission%solver_mode, &  ! use a sparse solver
                                 custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
-                                irow          = irow, &  ! sparsity pattern
-                                icol          = icol, &
+                                irow             = irow, &  ! sparsity pattern
+                                icol             = icol, &
                                 export_iteration = halo_export   )
     case (2:4)
         ! varions sparse options available in nlesolver-fortran
@@ -424,7 +438,7 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 ! step_mode = 1,& ! TEST TEST TEST
                                 ! alpha = 1.0_wp,&
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
@@ -626,6 +640,101 @@
     end if
 
     end subroutine get_problem_arrays
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Print the `r` and `v` constraint defect norms for each segment constraint.
+
+    subroutine print_constraint_defects(me, filename)
+
+        class(mission_type),intent(in) :: me
+        character(len=*),intent(in) :: filename !! csv file to write to
+
+        real(wp),dimension(:),allocatable :: f !! constraint violations
+        integer :: irev !! rev number
+        integer :: i, j
+        integer :: m !! number of functions
+        integer :: istat , iunit
+
+        open(newunit=iunit, file=filename, status='REPLACE', iostat=istat)
+        if (istat/=0) error stop 'error opening '//filename
+
+        call me%define_problem_size(m=m)
+        allocate(f(m))
+        call me%get_problem_arrays(f=f)
+
+        ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ... ] in rotating frame
+
+        i = 0
+        write(iunit,'(A26,A1,A26)') 'rerr (km)', ',', 'verr (km/s)'
+        do irev = 1, me%n_revs
+            do j = 1, 4
+                i = i + 1
+                write(iunit,'(1P,E26.16,A1,E26.16)') norm2(f(i:i+2)), ',', norm2(f(i+2:i+5))
+            end do
+        end do
+
+        close(iunit, iostat=istat)
+
+    end subroutine print_constraint_defects
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Read the JSON solution file and put the `x` vector in the mission.
+!  Can be used to restart a solution from a previous run
+!  (e.g., with different settings, as long as the fundamental problem isn't changed).
+!
+!@note No error checking here to make sure the file is consistent with the current mission!
+
+    subroutine get_x_from_json_file(me,x)
+
+    class(mission_type),intent(inout) :: me
+    real(wp),dimension(:),intent(out),allocatable :: x !! scaled `x` vector
+
+    real(wp),dimension(:),allocatable :: xscale !! scale factors
+    type(json_core) :: json
+    type(json_file) :: f
+    type(json_value),pointer :: xvec, p_element
+    integer :: n_children, i
+    logical :: found
+
+    if (allocated(me%initial_guess_from_file)) then
+
+        ! read this file:
+        ! {
+        ! "xvec": [
+        !   {
+        !     "i": 1,
+        !     "label": "SEG1 T0 (day)",
+        !     "value": -0.96866230153337847E-3,
+        !     "scale": 0.1E+1
+        !   },
+        !   ...
+
+        call f%load(me%initial_guess_from_file)
+        call f%get('xvec',xvec,found)
+        if (.not. found) error stop 'invalid JSON solution file'
+        call json%info(xvec,n_children=n_children) ! get size of x
+        allocate(x(n_children))
+        allocate(xscale(n_children))
+        !TODO: should verify size of x compared to current problem.
+        !      really should check that all the vars are the same
+        ! get each element:
+        do i = 1, n_children
+            call json%get_child(xvec, i, p_element, found)
+            call json%get(p_element,'value',x(i), found)
+            if (.not. found) error stop 'could not find value in json file'
+            call json%get(p_element,'scale',xscale(i), found)
+            if (.not. found) error stop 'could not find scale in json file'
+        end do
+        x = x / xscale  ! return scaled vector
+    else
+        error stop 'error: the initial_guess_from_file has not been initialized'
+    end if
+
+    end subroutine get_x_from_json_file
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -925,6 +1034,8 @@
     integer,dimension(:),allocatable :: irow    !! sparsity pattern nonzero elements row indices
     integer,dimension(:),allocatable :: icol    !! sparsity pattern nonzero elements column indices
     logical :: use_openmp !! if OpenMP is being used
+    real(wp) :: et0 !! initial et for splined ephemeris
+    real(wp) :: etf !! final et for splined ephemeirs
 
     use_openmp = .false.
 !$  use_openmp = .true.
@@ -969,16 +1080,31 @@
     call me%get_sparsity_pattern(irow,icol)
     call me%set_sparsity_pattern(irow,icol)
 
-    ! pointers:
-    allocate(me%eph)
-    allocate(me%grav)
-
     ! set up the ephemeris:
     !write(*,*) 'loading ephemeris file: '//trim(me%ephemeris_file)
-    call me%eph%initialize(filename=me%ephemeris_file,status_ok=status_ok)
-    if (.not. status_ok) error stop 'error initializing ephemeris'
+    if (me%use_splined_ephemeris) then
+        ! have to compute et0, etf based on mission range.
+        ! use a 2 period buffer
+        et0 = me%et_ref - 2.0*me%period*day2sec
+        etf = me%et_ref + (me%period*day2sec * me%n_revs) + 2.0*me%period*day2sec
+        allocate(jpl_ephemeris_splined :: me%eph)
+        associate (eph => me%eph)
+            select type(eph)
+            class is (jpl_ephemeris_splined)
+                call eph%initialize_splinded_ephemeris(filename=me%ephemeris_file,&
+                                                       status_ok=status_ok,&
+                                                       et0=et0,dt=me%dt_spline_sec,etf=etf)
+            end select
+        end associate
+        if (.not. status_ok) error stop 'error initializing splined ephemeris'
+    else
+        allocate(jpl_ephemeris :: me%eph)
+        call me%eph%initialize(filename=me%ephemeris_file,status_ok=status_ok)
+        if (.not. status_ok) error stop 'error initializing ephemeris'
+    end if
 
     ! set up the force model [main body is moon]:
+    allocate(me%grav)
     call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
     if (.not. status_ok) error stop 'error initializing gravity model'
 
@@ -990,7 +1116,7 @@
     do i = 1, n_segs
 
         call me%segs(i)%initialize(n_eoms,maxnum,ballistic_derivs,&
-                                   [rtol],[atol],&
+                                   [me%rtol],[me%atol],&
                                    report=trajectory_export_func)
 
         ! make a copy of this global variable in the segment.
@@ -1015,7 +1141,6 @@
     end do
 
     ! load the initial guess from the patch point file:
-
     i = 0
     iseg = 0
     t_periapsis = 0.0_wp
@@ -1107,8 +1232,6 @@
         call me%get_problem_arrays(x=x)
     end if
 
-    write(*,*) 'Done with initialize_the_mission.'
-
     end subroutine initialize_the_mission
 !*****************************************************************************************
 
@@ -1188,11 +1311,11 @@
         call fill_vector(me%fscale, me%segs(iseg)%data%xf_rotating_scale, i)
     end do
 
-    !write(*,*) ''
-    !write(*,*) 'xscale: ', me%xscale
-    !write(*,*) ''
-    !write(*,*) 'fscale: ', me%fscale
-    !write(*,*) ''
+    ! write(*,*) ''
+    ! write(*,*) 'xscale: ', me%xscale
+    ! write(*,*) ''
+    ! write(*,*) 'fscale: ', me%fscale
+    ! write(*,*) ''
 
     end subroutine get_scales_from_segs
 !*****************************************************************************************
@@ -1214,6 +1337,7 @@
 
     real(wp),dimension(3) :: r,rb,v
     reaL(wp),dimension(6) :: rv_earth_wrt_moon,rv_sun_wrt_moon
+    reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon
     real(wp),dimension(3,3) :: rotmat
     real(wp),dimension(3) :: a_geopot
     real(wp),dimension(3) :: a_earth
@@ -1241,13 +1365,25 @@
 
         ! third-body state vectors (wrt the central body, which is the moon in this case):
         ! [inertial frame]
-        call me%eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
-        call me%eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
-
+        associate (eph => me%eph)
+            select type (eph)
+            type is (jpl_ephemeris)
+                call eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
+                call eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
+                r_earth_wrt_moon = rv_earth_wrt_moon(1:3)
+                r_sun_wrt_moon   = rv_sun_wrt_moon(1:3)
+            type is (jpl_ephemeris_splined)
+                ! for this, we can just get position vector only
+                call eph%get_r(et,body_earth,body_moon,r_earth_wrt_moon,status_ok)
+                call eph%get_r(et,body_sun,body_moon,r_sun_wrt_moon,status_ok)
+            class default
+                error stop 'invalid eph class'
+            end select
+        end associate
         ! third-body perturbation (earth & sun):
         a_third_body = 0.0_wp
-        call third_body_gravity(r,rv_earth_wrt_moon(1:3),mu_earth,a_earth)
-        call third_body_gravity(r,rv_sun_wrt_moon(1:3),mu_sun,a_sun)
+        call third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
+        call third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
         a_third_body = a_earth + a_sun
 
         !total derivative vector:
@@ -2045,6 +2181,12 @@
     call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',           me%mission%generate_kernel,           found)
+    call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
+
+    call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
+    call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
+
+    call f%get('initial_guess_from_file', me%mission%initial_guess_from_file, found)
 
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1
@@ -2061,6 +2203,11 @@
     call f%get('minute', me%mission%minute , found_calendar(5) )
     call f%get('sec',    me%mission%sec    , found_calendar(6) )
     call f%get('et_ref', me%mission%et_ref , found_et )
+
+    ! tolerances:
+    call f%get('rtol',          me%mission%rtol          , found )
+    call f%get('atol',          me%mission%atol          , found )
+    call f%get('nlesolver_tol', me%mission%nlesolver_tol , found )
 
     ! if fix_initial_r is true, can specify the r to use
     ! [otherwise, the initial guess is used from the patch points]
@@ -2280,7 +2427,7 @@
 
     ! integrate and report the points at dt steps (periapsis, 1/4, and apoapsis)
     call prop%initialize(n,maxnum=10000,df=func,&
-                         rtol=[rtol],atol=[atol],&
+                         rtol=[me%rtol],atol=[me%atol],&
                          report=report)
     call prop%first_call()
     call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)

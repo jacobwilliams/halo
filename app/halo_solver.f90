@@ -87,6 +87,13 @@
 
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
 
+    if (allocated(solver%mission%initial_guess_from_file)) then
+        !TODO: add some error checking here !
+        write(*,*) 'Reading initial guess from file: '//solver%mission%initial_guess_from_file
+        call solver%mission%get_x_from_json_file(x) ! get solution from the file
+        call solver%mission%put_x_in_segments(x) ! populate segs with solution
+    end if
+
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
     if (solver%mission%generate_guess_and_solution_files) &
@@ -166,6 +173,12 @@
             call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
             write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
         end do
+    end if
+
+    if (solver%mission%generate_defect_file) then
+        call solver%mission%print_constraint_defects('solution_defects_'//&
+                                                     solver%mission%get_case_name()//&
+                                                     '.csv')
     end if
 
 !*****************************************************************************************

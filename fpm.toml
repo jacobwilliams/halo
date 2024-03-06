@@ -12,7 +12,6 @@ auto-examples = true
 auto-tests = true
 external-modules = "dqrm_mod"
 
-
 [dependencies]
 fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.5" }
 NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
@@ -29,4 +28,4 @@ argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1
 source-dir = "src"
 
 [install]
-library = true
+library = false

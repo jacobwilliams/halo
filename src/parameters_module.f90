@@ -1,13 +1,13 @@
     module parameters_module
 
-    use iso_fortran_env,   only: wp => real64
-    use fortran_astrodynamics_toolkit,    only: zero
+    use halo_kinds_module,             only: wp
+    use fortran_astrodynamics_toolkit, only: zero
 
     implicit none
 
     public
 
-    public :: wp
+    public :: wp ! real kind
 
     ! constants:
     real(wp),parameter :: mu_earth = 3.9860043543609593E+05_wp !! \( \mu_{earth} \)
@@ -15,8 +15,6 @@
     real(wp),parameter :: mu_sun   = 1.3271244004193938E+11_wp !! \( \mu_{sun} \)
     real(wp),parameter :: r_moon   = 1737.4_wp      !! radius of hte Moon
     integer,parameter  :: n_eoms   = 6              !! size of EOM derivative vector [x,y,z,vx,vy,vz]
-    real(wp),parameter :: rtol     = 1.0e-12_wp     !! integrator tols
-    real(wp),parameter :: atol     = 1.0e-12_wp     !! integrator tols
     integer,parameter  :: maxnum   = 10000          !! integrator max steps
     integer,parameter  :: grav_n   = 8              !! max grav degree
     integer,parameter  :: grav_m   = 8              !! max grav order
