@@ -24,8 +24,14 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # have to do this for qr_mumps:
     export DYLD_LIBRARY_PATH=$PYTHON_DIR/qr_mumps/install/lib:$DYLD_LIBRARY_PATH
 
-    # compile the run:
+    # compile and run:
+
+    # with qr_mumps:
     fpm run halo_solver --profile release --flag "-DWITH_QRMUMPS -fopenmp $PYTHON_DIR/qr_mumps/install/lib/libdqrm.dylib $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.dylib -I$PYTHON_DIR/qr_mumps/install/include -rpath $PYTHON_DIR/qr_mumps/install/lib" -- examples/example_sparse.json
+
+    # without qr_mumps + real128 kinds:
+    # fpm run halo_solver --profile release --flag "-DREAL128 -fopenmp" -- examples/example_sparse.json
+
 else
 
     # have to do this for qr_mumps:

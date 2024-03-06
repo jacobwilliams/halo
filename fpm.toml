@@ -13,10 +13,10 @@ auto-tests = true
 external-modules = "dqrm_mod"
 
 [dependencies]
-fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.5" }
+fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.6" }
 NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
-json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.2.5" }
+json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.4.0" }
 bspline-fortran = { git = "https://github.com/jacobwilliams/bspline-fortran", tag = "7.0.0" }
 pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
 fortran-search-and-sort = { git = "https://github.com/jacobwilliams/fortran-search-and-sort", tag = "1.0.0" }
