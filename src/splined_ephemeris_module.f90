@@ -234,7 +234,15 @@
             r = me%earth_eph_interface%get_r(et)
         elseif (targ==body_sun .and. obs==body_moon) then
             r = me%sun_eph_interface%get_r(et)
+
+        elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
+            r = -me%earth_eph_interface%get_r(et)
+        elseif (targ==body_moon .and. obs==body_sun) then
+            r = -me%sun_eph_interface%get_r(et)
+
         else
+            write(*,*) 'targ = ', targ
+            write(*,*) 'obs  = ', obs
             error stop 'error in get_r_splined: this combo has not been splined'
             ! or could call me%jpl_ephemeris%get_rv(et,targ,obs,rv,status_ok); r = rv(1:3)
         end if

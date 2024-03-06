@@ -15,8 +15,6 @@
     real(wp),parameter :: mu_sun   = 1.3271244004193938E+11_wp !! \( \mu_{sun} \)
     real(wp),parameter :: r_moon   = 1737.4_wp      !! radius of hte Moon
     integer,parameter  :: n_eoms   = 6              !! size of EOM derivative vector [x,y,z,vx,vy,vz]
-    real(wp),parameter :: rtol     = 1.0e-12_wp     !! integrator tols
-    real(wp),parameter :: atol     = 1.0e-12_wp     !! integrator tols
     integer,parameter  :: maxnum   = 10000          !! integrator max steps
     integer,parameter  :: grav_n   = 8              !! max grav degree
     integer,parameter  :: grav_m   = 8              !! max grav order

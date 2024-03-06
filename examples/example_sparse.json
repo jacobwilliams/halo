@@ -21,6 +21,14 @@
     "fix_ry_at_end_of_rev": 0,
     "fix_final_ry_and_vx": false,
 
+    // integrator tols:
+    "rtol": 1.0e-12,
+    "atol": 1.0e-12,
+
+    //nlesolver tol:
+    "nlesolver_tol": 1.0e-6,
+    //"nlesolver_tol": 1.0e-10,
+
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
   //  "solver_mode": 3, // sparse solver (LUSOL)    <----- doesn't seem to work at all ?
@@ -41,9 +49,12 @@
     "gravfile": "data/grav/gggrx_0020pm_sha.tab",
     "patch_point_file": "data/L2_halos.json",
 
+    // read initial guess from a previous run
+    //"initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
+
     "generate_plots": false,
     "generate_trajectory_files": false,
-    "generate_guess_and_solution_files": false,
+    "generate_guess_and_solution_files": true,
     "generate_kernel": false
 
 }

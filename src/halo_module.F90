@@ -104,6 +104,8 @@
         !! the mission [this is a `numdiff_type` for
         !! organizational purposes.... rethink this maybe ...
 
+        character(len=:),allocatable :: initial_guess_from_file !! to read the initial guess from a JSOn file
+
         logical :: use_splined_ephemeris = .false. !! if true, the ephemeris is splined
         real(wp) :: dt_spline_sec = 3600.0_wp !! time step in seconds for spline step [1 hr]
 
@@ -139,6 +141,10 @@
                                    !! if `epoch_mode=1`
 
         integer :: n_revs = 10  !! Number of revs in the Halo.
+
+        real(wp) :: rtol = 1.0e-12_wp !! integrator rtol
+        real(wp) :: atol = 1.0e-12_wp !! integrator atol
+        real(wp) :: nlesolver_tol = 1.0e-6_wp !! nlesolver tol
 
         real(wp),dimension(:),allocatable :: initial_r
             !! if `fix_initial_r` is True, this can be used
@@ -191,6 +197,7 @@
         procedure,public :: constraint_violations
         procedure :: get_problem_arrays
         procedure :: put_x_in_segments
+        procedure :: get_x_from_json_file
         procedure :: get_scales_from_segs
         procedure :: segs_to_propagate
         procedure :: get_sparsity_pattern
@@ -389,7 +396,7 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad             = halo_grad,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min = 0.2_wp, &
@@ -409,7 +416,7 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min = 0.2_wp, &
@@ -428,7 +435,7 @@
                                 max_iter         = 100,          & ! maximum number of iteration
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
-                                tol              = 1.0e-6_wp,    & ! tolerance
+                                tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 ! step_mode = 1,& ! TEST TEST TEST
                                 ! alpha = 1.0_wp,&
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
@@ -630,6 +637,63 @@
     end if
 
     end subroutine get_problem_arrays
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Read the JSON solution file and put the `x` vector in the mission.
+!  Can be used to restart a solution from a previous run
+!  (e.g., with different settings, as long as the fundamental problem isn't changed).
+!
+!@note No error checking here to make sure the file is consistent with the current mission!
+
+    subroutine get_x_from_json_file(me,x)
+
+    class(mission_type),intent(inout) :: me
+    real(wp),dimension(:),intent(out),allocatable :: x !! scaled `x` vector
+
+    real(wp),dimension(:),allocatable :: xscale !! scale factors
+    type(json_core) :: json
+    type(json_file) :: f
+    type(json_value),pointer :: xvec, p_element
+    integer :: n_children, i
+    logical :: found
+
+    if (allocated(me%initial_guess_from_file)) then
+
+        ! read this file:
+        ! {
+        ! "xvec": [
+        !   {
+        !     "i": 1,
+        !     "label": "SEG1 T0 (day)",
+        !     "value": -0.96866230153337847E-3,
+        !     "scale": 0.1E+1
+        !   },
+        !   ...
+
+        call f%load(me%initial_guess_from_file)
+        call f%get('xvec',xvec,found)
+        if (.not. found) error stop 'invalid JSON solution file'
+        call json%info(xvec,n_children=n_children) ! get size of x
+        allocate(x(n_children))
+        allocate(xscale(n_children))
+        !TODO: should verify size of x compared to current problem.
+        !      really should check that all the vars are the same
+        ! get each element:
+        do i = 1, n_children
+            call json%get_child(xvec, i, p_element, found)
+            call json%get(p_element,'value',x(i), found)
+            if (.not. found) error stop 'could not find value in json file'
+            call json%get(p_element,'scale',xscale(i), found)
+            if (.not. found) error stop 'could not find scale in json file'
+        end do
+        x = x / xscale  ! return scaled vector
+    else
+        error stop 'error: the initial_guess_from_file has not been initialized'
+    end if
+
+    end subroutine get_x_from_json_file
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1011,7 +1075,7 @@
     do i = 1, n_segs
 
         call me%segs(i)%initialize(n_eoms,maxnum,ballistic_derivs,&
-                                   [rtol],[atol],&
+                                   [me%rtol],[me%atol],&
                                    report=trajectory_export_func)
 
         ! make a copy of this global variable in the segment.
@@ -2080,6 +2144,8 @@
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
 
+    call f%get('initial_guess_from_file', me%mission%initial_guess_from_file, found)
+
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1
 
@@ -2095,6 +2161,11 @@
     call f%get('minute', me%mission%minute , found_calendar(5) )
     call f%get('sec',    me%mission%sec    , found_calendar(6) )
     call f%get('et_ref', me%mission%et_ref , found_et )
+
+    ! tolerances:
+    call f%get('rtol',          me%mission%rtol          , found )
+    call f%get('atol',          me%mission%atol          , found )
+    call f%get('nlesolver_tol', me%mission%nlesolver_tol , found )
 
     ! if fix_initial_r is true, can specify the r to use
     ! [otherwise, the initial guess is used from the patch points]
@@ -2314,7 +2385,7 @@
 
     ! integrate and report the points at dt steps (periapsis, 1/4, and apoapsis)
     call prop%initialize(n,maxnum=10000,df=func,&
-                         rtol=[rtol],atol=[atol],&
+                         rtol=[me%rtol],atol=[me%atol],&
                          report=report)
     call prop%first_call()
     call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)
