@@ -1381,7 +1381,6 @@
             end select
         end associate
         ! third-body perturbation (earth & sun):
-        a_third_body = 0.0_wp
         call third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
         call third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
         a_third_body = a_earth + a_sun

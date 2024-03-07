@@ -1,5 +1,5 @@
 #
-# Create a conda environment and build qr_mumps (serial version) on a mac
+# Create a conda environment and build qr_mumps (serial version) on mac or linux
 #
 
 set -e    # quit on any errors

@@ -36,7 +36,7 @@ fpm run --profile release --flag "-fopenmp" -- examples/example.json
 
 ### Using qr_mumps
 
-The [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) solver can also be used, which will run much faster than the default LAPACK solver for very large problems. For this, the code must be compiled with the `WITH_QRMUMPS` preprocessor directive. See the `build-mac.sh` and `run.sh` scripts for details.
+The [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) solver can also be used, which will run much faster than the default LAPACK solver for very large problems. For this, the code must be compiled with the `WITH_QRMUMPS` preprocessor directive. See the `build.sh` and `run.sh` scripts for details.
 
 ### Building On Windows
 

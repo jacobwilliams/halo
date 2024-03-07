@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #
-# This is meant to be used after running ../python/build-mac.sh
+# This is meant to be used after running ../python/build.sh
 # (if you are using the qr_mumps solver). It will activate
 # the conda environment and compile/link with qr_mumps and run
 # the example file. uses the conda-forge compilers (gfortran, etc).
 #
-# Works on MacOS
+# Works on MacOS and Linux
 #
 
 set -e    # quit on any errors
