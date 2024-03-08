@@ -164,9 +164,9 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item">argv_module</li>
-                  <li class="list-inline-item">halo_module</li>
                   <li class="list-inline-item">parameters_module</li>
+                  <li class="list-inline-item">halo_module</li>
+                  <li class="list-inline-item">argv_module</li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -1052,7 +1052,8 @@ parameter
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_files</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
-<span class="k">        call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_data</span><span class="p">(</span><span class="s1">&#39;eclipse&#39;</span><span class="p">)</span>
+<span class="k">        call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_data</span><span class="p">(</span><span class="s1">&#39;eclipse&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                                  </span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_filetype</span><span class="p">)</span>
 <span class="w">    </span><span class="k">end if</span>
 
 <span class="c">!*****************************************************************************************</span>
