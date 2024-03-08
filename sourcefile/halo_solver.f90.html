@@ -68,7 +68,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="100.0% of total for source files.">96 statements</a>
+                 title="100.0% of total for source files.">99 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -328,9 +328,13 @@
 <a id="ln-181" name="ln-181" href="#ln-181"></a><span class="w">                                                     </span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
 <a id="ln-182" name="ln-182" href="#ln-182"></a><span class="w">    </span><span class="k">end if</span>
 <a id="ln-183" name="ln-183" href="#ln-183"></a>
-<a id="ln-184" name="ln-184" href="#ln-184"></a><span class="c">!*****************************************************************************************</span>
-<a id="ln-185" name="ln-185" href="#ln-185"></a><span class="w">    </span><span class="k">end program </span><span class="n">halo_solver</span>
-<a id="ln-186" name="ln-186" href="#ln-186"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-184" name="ln-184" href="#ln-184"></a><span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_files</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<a id="ln-185" name="ln-185" href="#ln-185"></a><span class="k">        call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_data</span><span class="p">(</span><span class="s1">&#39;eclipse&#39;</span><span class="p">)</span>
+<a id="ln-186" name="ln-186" href="#ln-186"></a><span class="w">    </span><span class="k">end if</span>
+<a id="ln-187" name="ln-187" href="#ln-187"></a>
+<a id="ln-188" name="ln-188" href="#ln-188"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-189" name="ln-189" href="#ln-189"></a><span class="w">    </span><span class="k">end program </span><span class="n">halo_solver</span>
+<a id="ln-190" name="ln-190" href="#ln-190"></a><span class="c">!*****************************************************************************************</span>
 </pre></div>
 
       </section>
