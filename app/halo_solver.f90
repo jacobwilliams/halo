@@ -182,7 +182,8 @@
     end if
 
     if (solver%mission%generate_eclipse_files) then
-        call solver%mission%generate_eclipse_data('eclipse')
+        call solver%mission%generate_eclipse_data('eclipse', &
+                                                  filetype = solver%mission%eclipse_filetype)
     end if
 
 !*****************************************************************************************

@@ -134,6 +134,7 @@
 
         real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
         real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
+        integer :: eclipse_filetype = 1 !! type of eclipse file: 1=csv or 2=json
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -2078,22 +2079,58 @@
 !
 !  Based on [[plot_trajectory]]
 
-    subroutine generate_eclipse_data(me,fileprefix)
+    subroutine generate_eclipse_data(me,fileprefix,filetype)
 
         class(mission_type),intent(inout) :: me
         character(len=*),intent(in) :: fileprefix !! file prefix for the csv file (case name will be added)
+        integer,intent(in),optional :: filetype !! type of output file: 1=csv [default] or 2=json
 
         integer :: i,iunit,iseg,istat,istart,istep,iend
         real(wp) :: phi !! sunfrac value
+        integer :: ifiletype
+        type(json_file) :: json
+        character(len=10) :: iseg_str
+        character(len=:),allocatable :: full_filename
+        real(wp),dimension(:),allocatable :: phi_vec !! vector of `phi` values from a segment (for JSON file)
+        real(wp),dimension(:),allocatable :: et_vec !! vector of `et` values from a segment (for JSON file)
+        real(wp),dimension(:),allocatable :: phi_vec_total, et_vec_total !! cumulative for all segments
 
-        write(*,*) 'Generating eclipse file'
+        integer,parameter :: FILETYPE_CSV = 1
+        integer,parameter :: FILETYPE_JSON = 2
+        character(len=*),dimension(*),parameter :: file_ext = ['.csv ', &
+                                                               '.json']
 
-        open(newunit=iunit,file=trim(fileprefix)//'_'//me%get_case_name()//&
-                                '.csv',status='REPLACE',iostat=istat)
-        if (istat/=0) error stop 'error opening eclipse file.'
+        if (present(filetype)) then
+            ifiletype = filetype
+        else
+            ifiletype = FILETYPE_JSON
+        end if
+        full_filename = trim(fileprefix)//'_'//me%get_case_name()//&
+                        trim(file_ext(ifiletype))
 
-        write(iunit,'(A30,A,1X,A30)',iostat=istat) 'ET (sec)', ',', 'PHI'
+        write(*,*) 'Generating eclipse file: '//full_filename
+
+        select case (ifiletype)
+        case (FILETYPE_CSV)
+            open(newunit=iunit,file=full_filename,status='REPLACE',iostat=istat)
+            if (istat/=0) error stop 'error opening eclipse csv file.'
+            write(iunit,'(A30,A,1X,A30)',iostat=istat) 'ET (sec)', ',', 'PHI'
+        case (FILETYPE_JSON)
+            call json%initialize(compress_vectors=.true.)
+        case default
+            error stop 'invalid filetype for eclipse file'
+        end select
+
+        allocate(phi_vec_total(0))
+        allocate(et_vec_total(0))
         do iseg = 1, size(me%segs)
+
+            if (ifiletype==FILETYPE_JSON) then
+                if (allocated(phi_vec)) deallocate(phi_vec); allocate(phi_vec(0))
+                if (allocated(et_vec)) deallocate(et_vec); allocate(et_vec(0))
+            end if
+            write(iseg_str,'(I10)') iseg    ! segment number as string
+            iseg_str = adjustl(iseg_str)
 
             ! destroy all trajectories first:
             call me%segs(iseg)%traj_inertial%destroy()
@@ -2125,11 +2162,40 @@
                                         me%segs(iseg)%traj_inertial%vz(i) ])
                     phi = min(0.0_wp, get_sun_fraction(me%eph, et, rv_moon, me%r_eclipse_bubble))
                     !phi >0 mean the spacecraft is in sunlight
-                    write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) et, ',', phi
+
+                    select case (ifiletype)
+                    case (FILETYPE_CSV)
+                        write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) et, ',', phi
+                    case (FILETYPE_JSON)
+                        ! for this we accumulate the data for the whole
+                        ! segment and write all at once at the end
+                        phi_vec = [phi_vec, phi] ! TODO: could use expand routines to make this more efficient
+                    end select
+
                 end associate
             end do
+            if (ifiletype==FILETYPE_JSON) then
+                ! accumulate only the points where phi < 0 (in shadow)
+                et_vec  = pack(me%segs(iseg)%traj_inertial%et, mask=phi_vec<0.0_wp)
+                phi_vec = pack(phi_vec, mask=phi_vec<0.0_wp)
+                if (size(et_vec)>0) then
+                    et_vec_total = [et_vec_total, et_vec]
+                    phi_vec_total = [phi_vec_total, phi_vec]
+                end if
+            end if
 
         end do
+
+        ! save file:
+        select case (ifiletype)
+        case (FILETYPE_CSV)
+            close(iunit,iostat=istat)
+        case (FILETYPE_JSON)
+            call json%add('et',  et_vec_total)     ! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)
+            call json%add('phi', phi_vec_total)
+            call json%print(full_filename)
+        end select
+        call json%destroy()
 
     end subroutine generate_eclipse_data
 !*****************************************************************************************
@@ -2257,8 +2323,9 @@
     call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
     call f%get('generate_eclipse_files',    me%mission%generate_eclipse_files,      found)
 
-    call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble,      found)
-    call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,      found)
+    call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
+    call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)
+    call f%get('eclipse_filetype',    me%mission%eclipse_filetype, found)
 
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
