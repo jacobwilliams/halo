@@ -43,6 +43,8 @@ lib/
 /python/env
 /python/qr_mumps
 
+__pycache__
+
 # data products:
 /guess_*.*
 /solution_*.*

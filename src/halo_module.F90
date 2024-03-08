@@ -14,6 +14,7 @@
     use bspline_module
     use config_file_module
     use splined_ephemeris_module
+    use halo_utilities_module
 
     implicit none
 
@@ -129,6 +130,10 @@
                                               !! [this requires the external mkspk SPICE tool]
         logical :: generate_defect_file = .false. !! generate the file that shows the pos/vel
                                                   !! constraint defects for the solution
+        logical :: generate_eclipse_files = .false. !! generate the eclipse data file for the solution
+
+        real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
+        real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -198,6 +203,7 @@
         procedure,public :: write_optvars_to_file
         procedure,public :: constraint_violations
         procedure,public :: print_constraint_defects
+        procedure,public :: generate_eclipse_data
         procedure :: get_problem_arrays
         procedure :: put_x_in_segments
         procedure :: get_x_from_json_file
@@ -1507,12 +1513,13 @@
 !>
 !  Propagate a segment (assumes the inputs have already been populated)
 
-    subroutine propagate_segment(me,mode)
+    subroutine propagate_segment(me,mode,tstep)
 
     implicit none
 
     class(segment),intent(inout) :: me
     integer,intent(in),optional :: mode  !! 1 - don't report steps, 2 - report steps (for plotting)
+    real(wp),intent(in),optional :: tstep !! fixed time step for mode=2
 
     integer  :: idid
     real(wp) :: t
@@ -1543,7 +1550,11 @@
     !write(*,*) 'tf:',tf
 
     call me%first_call()  !restarting the integration
-    call me%integrate(t,x,tf,idid=idid,integration_mode=integration_mode)
+    if (present(tstep)) then
+        call me%integrate(t,x,tf,idid=idid,integration_mode=integration_mode,tstep=tstep)
+    else
+        call me%integrate(t,x,tf,idid=idid,integration_mode=integration_mode)
+    end if
     if (idid<0) then
         write(*,'(A,*(I5/))')    'idid: ',idid
         error stop 'error in integrator'
@@ -2043,7 +2054,7 @@
 
     if (plot) then
         ! add the moon as a sphere:
-        call plt%add_sphere(r=r_moon,xc=zero,yc=zero,zc=zero,istat=istat,color='Grey')
+        call plt%add_sphere(r=rad_moon,xc=zero,yc=zero,zc=zero,istat=istat,color='Grey')
 
         ! save the plot:
         ! call plt%showfig(pyfile=trim(filename)//'.py',istat=istat)
@@ -2058,6 +2069,69 @@
     if (export) close(iunit,iostat=istat)
 
     end subroutine plot_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Propagate all the segments with a dense time step and export the
+!  Eclipsing data w.r.t. Earth. In this file, any point <0 is in eclipse.
+!
+!  Based on [[plot_trajectory]]
+
+    subroutine generate_eclipse_data(me,fileprefix)
+
+        class(mission_type),intent(inout) :: me
+        character(len=*),intent(in) :: fileprefix !! file prefix for the csv file (case name will be added)
+
+        integer :: i,iunit,iseg,istat,istart,istep,iend
+        real(wp) :: phi !! sunfrac value
+
+        write(*,*) 'Generating eclipse file'
+
+        open(newunit=iunit,file=trim(fileprefix)//'_'//me%get_case_name()//&
+                                '.csv',status='REPLACE',iostat=istat)
+        if (istat/=0) error stop 'error opening eclipse file.'
+
+        write(iunit,'(A30,A,1X,A30)',iostat=istat) 'ET (sec)', ',', 'PHI'
+        do iseg = 1, size(me%segs)
+
+            ! destroy all trajectories first:
+            call me%segs(iseg)%traj_inertial%destroy()
+            call me%segs(iseg)%traj_rotating%destroy()
+
+            ! generate the trajectory for this segment:
+            ! [export points at a fixed time step]
+            call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
+
+            if (me%segs(iseg)%traj_inertial%et(2) > me%segs(iseg)%traj_inertial%et(1)) then
+                ! forward propagated
+                istart = 1
+                iend   = size(me%segs(iseg)%traj_inertial%et)
+                istep  = 1
+            else
+                ! backward propagated
+                istart = size(me%segs(iseg)%traj_inertial%et)
+                iend   = 1
+                istep  = -1
+            end if
+
+            do i=istart,iend,istep
+                associate (et => me%segs(iseg)%traj_inertial%et(i),&
+                            rv_moon => [me%segs(iseg)%traj_inertial%x(i),&
+                                        me%segs(iseg)%traj_inertial%y(i),&
+                                        me%segs(iseg)%traj_inertial%z(i),&
+                                        me%segs(iseg)%traj_inertial%vx(i),&
+                                        me%segs(iseg)%traj_inertial%vy(i),&
+                                        me%segs(iseg)%traj_inertial%vz(i) ])
+                    phi = min(0.0_wp, get_sun_fraction(me%eph, et, rv_moon, me%r_eclipse_bubble))
+                    !phi >0 mean the spacecraft is in sunlight
+                    write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) et, ',', phi
+                end associate
+            end do
+
+        end do
+
+    end subroutine generate_eclipse_data
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2181,6 +2255,10 @@
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',           me%mission%generate_kernel,           found)
     call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
+    call f%get('generate_eclipse_files',    me%mission%generate_eclipse_files,      found)
+
+    call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble,      found)
+    call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,      found)
 
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)

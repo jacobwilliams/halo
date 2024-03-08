@@ -181,6 +181,10 @@
                                                      '.csv')
     end if
 
+    if (solver%mission%generate_eclipse_files) then
+        call solver%mission%generate_eclipse_data('eclipse')
+    end if
+
 !*****************************************************************************************
     end program halo_solver
 !*****************************************************************************************

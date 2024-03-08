@@ -13,9 +13,13 @@
 
     private
 
-        ! bspline order
-        integer,parameter :: kx = bspline_order_cubic
+        ! spline parameters:
+        integer,parameter :: kx = bspline_order_cubic !! spline interpolation order
         integer,parameter :: iknot = 0 !! use default knots
+
+        !TODO: this should be moved into the fortran astrodynamics toolkit
+        ! [also update the MU .... it isn't used here]
+        type(celestial_body),parameter,public :: body_ssb = celestial_body(0, 'SSB', 0.0_wp ) !! solar-system barycenter
 
         ! the coefficients are stored as global variables,
         ! so all the segments can access them without having
@@ -31,6 +35,7 @@
         end type body_eph
         type(body_eph),target :: earth_eph
         type(body_eph),target :: sun_eph
+        type(body_eph),target :: ssb_eph
 
         type :: body_eph_interface
             !! the interface to a splined ephemeris for a body
@@ -53,6 +58,7 @@
 
             type(body_eph_interface) :: earth_eph_interface !! splined version of earth ephemeris
             type(body_eph_interface) :: sun_eph_interface !! splined version of sun ephemeris
+            type(body_eph_interface) :: ssb_eph_interface !! splined version of ssb ephemeris
         contains
             procedure,public :: initialize_splinded_ephemeris
             procedure :: initialize_globals !! this is done once to initialize the global ephemeris vars
@@ -96,6 +102,7 @@
 
         call me%earth_eph_interface%destroy()
         call me%sun_eph_interface%destroy()
+        call me%ssb_eph_interface%destroy()
 
         ! first, count the number of points and allocate the arrays:
         nx = 0
@@ -107,10 +114,13 @@
         end do
         allocate(earth_eph%tx(   nx+kx,6))  ! columns are for each state element (rx,ry,rz,vx,vy,vz)
         allocate(sun_eph%tx(     nx+kx,6))
+        allocate(ssb_eph%tx(     nx+kx,6))
         allocate(earth_eph%bcoef(nx,6))
         allocate(sun_eph%bcoef(  nx,6))
+        allocate(ssb_eph%bcoef(  nx,6))
         allocate(earth_eph%f(    nx,6))
         allocate(sun_eph%f(      nx,6))
+        allocate(ssb_eph%f(      nx,6))
         allocate(et_vec(         nx))
 
         ! function calls from et0 to etf:
@@ -126,6 +136,8 @@
             if (.not. status_ok) error stop 'earth eph error'
             call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,sun_eph%f(i,:),status_ok)
             if (.not. status_ok) error stop 'sun eph error'
+            call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,ssb_eph%f(i,:),status_ok)
+            if (.not. status_ok) error stop 'ssb eph error'
         end do
 
         ! create the splines (one for each coordinate):
@@ -140,12 +152,19 @@
                 write(*,*) 'db1ink iflag = ', iflag
                 error stop 'db1ink error'
             end if
+            call db1ink(et_vec, nx, ssb_eph%f(:,i), kx, iknot, ssb_eph%tx(:,i), ssb_eph%bcoef(:,i), iflag)
+            if (iflag/=0) then
+                write(*,*) 'db1ink iflag = ', iflag
+                error stop 'db1ink error'
+            end if
         end do
         deallocate(earth_eph%f) ! don't need these anymore
         deallocate(sun_eph%f)
+        deallocate(ssb_eph%f)
 
         earth_eph%nx = nx
         sun_eph%nx = nx
+        ssb_eph%nx = nx
 
     end subroutine initialize_globals
 
@@ -182,12 +201,15 @@
         ! now, the local variables in this class
         allocate(me%earth_eph_interface%w0(3*kx))
         allocate(me%sun_eph_interface%w0(3*kx))
+        allocate(me%ssb_eph_interface%w0(3*kx))
         me%earth_eph_interface%inbvx = 0
         me%sun_eph_interface%inbvx = 0
+        me%ssb_eph_interface%inbvx = 0
 
         ! point to the global ephemeris:
         me%earth_eph_interface%eph => earth_eph
         me%sun_eph_interface%eph => sun_eph
+        me%ssb_eph_interface%eph => ssb_eph
 
     end subroutine initialize_splinded_ephemeris
 
@@ -205,11 +227,15 @@
             rv = me%earth_eph_interface%get_rv(et)
         elseif (targ==body_sun .and. obs==body_moon) then
             rv = me%sun_eph_interface%get_rv(et)
+        elseif (targ==body_ssb .and. obs==body_moon) then
+            rv = me%ssb_eph_interface%get_rv(et)
 
         elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
             rv = -me%earth_eph_interface%get_rv(et)
         elseif (targ==body_moon .and. obs==body_sun) then
             rv = -me%sun_eph_interface%get_rv(et)
+        elseif (targ==body_moon .and. obs==body_ssb) then
+            rv = -me%ssb_eph_interface%get_rv(et)
 
         else
             write(*,*) 'targ = ', targ
@@ -234,11 +260,25 @@
             r = me%earth_eph_interface%get_r(et)
         elseif (targ==body_sun .and. obs==body_moon) then
             r = me%sun_eph_interface%get_r(et)
+        elseif (targ==body_ssb .and. obs==body_moon) then
+            r = me%ssb_eph_interface%get_r(et)
 
         elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
             r = -me%earth_eph_interface%get_r(et)
         elseif (targ==body_moon .and. obs==body_sun) then
             r = -me%sun_eph_interface%get_r(et)
+        elseif (targ==body_moon .and. obs==body_ssb) then
+            r = -me%ssb_eph_interface%get_r(et)
+
+        elseif (targ==body_sun .and. obs==body_ssb) then
+            ! for this one we subtract these
+            ! ssb -> sun = ssb -> moon + moon -> sun
+            r = me%sun_eph_interface%get_r(et) - me%ssb_eph_interface%get_r(et)
+
+        elseif (targ==body_earth .and. obs==body_ssb) then
+            ! for this one we subtract these
+            ! ssb -> earth = ssb -> moon + moon -> earth
+            r = me%earth_eph_interface%get_r(et) - me%ssb_eph_interface%get_r(et)
 
         else
             write(*,*) 'targ = ', targ

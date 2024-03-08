@@ -26,8 +26,8 @@
     "atol": 1.0e-12,
 
     //nlesolver tol:
-    //"nlesolver_tol": 1.0e-6,
-    "nlesolver_tol": 1.0e-10,
+    "nlesolver_tol": 1.0e-6,
+    // "nlesolver_tol": 1.0e-10,
 
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
@@ -50,12 +50,16 @@
     "patch_point_file": "data/L2_halos.json",
 
     // read initial guess from a previous run
-    //"initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
+    // "initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
+    //"initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=100.json",
 
     "generate_plots": false,
     "generate_trajectory_files": false,
     "generate_guess_and_solution_files": true,
     "generate_kernel": false,
-    "generate_defect_file": true
+    "generate_defect_file": true,
 
+    "generate_eclipse_files": true,
+    "r_eclipse_bubble": 100.0,
+    "eclipse_dt_step": 3600.0
 }
