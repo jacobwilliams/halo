@@ -13,3 +13,8 @@ dependencies:
   - cxx-compiler=1.6.0
   - c-compiler=1.6.0
   - fpm
+  - pyvista
+  - trame-vtk
+  - trame
+  - nest-asyncio
+  - trame-vuetify
