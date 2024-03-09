@@ -36,10 +36,13 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link" href="sourcefile/halo_solver.f90.html">Source File</a>
+                    <a class="nav-link" href="./lists/files.html">Source Files</a>
                   </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="./program/halo_solver.html">Program</a>
+                  <a class="nav-link" href="./lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/programs.html">Programs</a>
                 </li>
             </ul>
               <div class="d-flex align-items-end flex-grow-1">
@@ -75,16 +78,16 @@
 </code></pre></div>
 
 <p>To run an example:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release -- examples/example.json
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release -- examples/example.json
 </code></pre></div>
 
 <p>OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release --compiler ifort --flag &quot;-qopenmp&quot; -- examples/example.json
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release --compiler ifort --flag &quot;-qopenmp&quot; -- examples/example.json
 </code></pre></div>
 
 <p>Or with Gfortran:</p>
-<div class="codehilite"><pre><span></span><code>fpm run --profile release --flag &quot;-fopenmp&quot; -- examples/example.json
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release --flag &quot;-fopenmp&quot; -- examples/example.json
 </code></pre></div>
 
 <h3>Using qr_mumps</h3>
@@ -97,7 +100,7 @@ Another example, using the Intel Fortran Compiler with OpenMP:</p>
 
 <span class="n">set</span><span class="w"> </span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">12</span>
 
-<span class="n">fpm</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="o">--</span><span class="n">profile</span><span class="w"> </span><span class="n">release</span><span class="w"> </span><span class="o">--</span><span class="n">compiler</span><span class="w"> </span><span class="n">ifort</span><span class="w"> </span><span class="o">--</span><span class="n">flag</span><span class="w"> </span><span class="s2">&quot;/fpp /Qmkl:parallel /Qopenmp&quot;</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">example</span><span class="o">.</span><span class="n">json</span>
+<span class="n">fpm</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">halo_solver</span><span class="w"> </span><span class="o">--</span><span class="n">profile</span><span class="w"> </span><span class="n">release</span><span class="w"> </span><span class="o">--</span><span class="n">compiler</span><span class="w"> </span><span class="n">ifort</span><span class="w"> </span><span class="o">--</span><span class="n">flag</span><span class="w"> </span><span class="s2">&quot;/fpp /Qmkl:parallel /Qopenmp&quot;</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">example</span><span class="o">.</span><span class="n">json</span>
 </code></pre></div>
 
 <p>Result is:</p>
@@ -133,14 +136,25 @@ Another example, using the Intel Fortran Compiler with OpenMP:</p>
       </div>
         <div class="row">
           <hr>
-          <div class="col-xs-6 col-sm-12">
+          <div class="col-xs-6 col-sm-6">
             <div>
               <h3>Source Files</h3>
-              <ul><li><a href='sourcefile/halo_solver.f90.html'>halo_solver.f90</a></li></ul>
+              <ul><li><a href='sourcefile/halo_optimizer.f90.html'>halo_optimizer.f90</a></li><li><a href='sourcefile/halo_solver.f90.html'>halo_solver.f90</a></li></ul>
             </div>
             <div>
               <ul>
                 <li><a href="./lists/files.html"><em>All source files&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-6">
+            <div>
+              <h3>Procedures</h3>
+              <ul><li><a href='proc/fcn.html'>fcn</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/procedures.html"><em>All procedures&hellip;</em></a></li>
               </ul>
             </div>
           </div>
