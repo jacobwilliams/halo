@@ -18,20 +18,20 @@ fpm build --profile release
 To run an example:
 
 ```
-fpm run --profile release -- examples/example.json
+fpm run halo_solver --profile release -- examples/example.json
 ```
 
 OpenMP can also be employed to speed up the process.
 Another example, using the Intel Fortran Compiler with OpenMP:
 
 ```
-fpm run --profile release --compiler ifort --flag "-qopenmp" -- examples/example.json
+fpm run halo_solver --profile release --compiler ifort --flag "-qopenmp" -- examples/example.json
 ```
 
 Or with Gfortran:
 
 ```
-fpm run --profile release --flag "-fopenmp" -- examples/example.json
+fpm run halo_solver --profile release --flag "-fopenmp" -- examples/example.json
 ```
 
 ### Using qr_mumps
@@ -50,7 +50,7 @@ Example:
 
 set OMP_NUM_THREADS=12
 
-fpm run --profile release --compiler ifort --flag "/fpp /Qmkl:parallel /Qopenmp" -- examples/example.json
+fpm run halo_solver --profile release --compiler ifort --flag "/fpp /Qmkl:parallel /Qopenmp" -- examples/example.json
 ```
 
 Result is:

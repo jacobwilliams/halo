@@ -20,9 +20,9 @@ json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8
 bspline-fortran = { git = "https://github.com/jacobwilliams/bspline-fortran", tag = "7.0.0" }
 pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
 fortran-search-and-sort = { git = "https://github.com/jacobwilliams/fortran-search-and-sort", tag = "1.0.0" }
-fortran-csv-module = { git = "https://github.com/jacobwilliams/fortran-csv-module", tag = "1.5.1" }
 nlesolver-fortran = { git = "https://github.com/jacobwilliams/nlesolver-fortran", tag = "2.2.0" }
 argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1.0.0" }
+simulated-annealing = { git = "https://github.com/jacobwilliams/simulated-annealing", tag = "1.2.0" }
 
 [library]
 source-dir = "src"
