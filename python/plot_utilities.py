@@ -131,7 +131,7 @@ if __name__ == "__main__":
         stars = examples.planets.download_stars_sky_background(load=False)
         p.add_background_image(stars)
 
-    p.add_text(filename, name='banner', position='upper_left', color='white')
+    p.add_text(file_to_plot, name='banner', position='upper_left', color='white')
     p.show_grid(color='gray')
     p.set_background(color='black')
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     if save_as_html:
         # note: background is white here, so would need to change the fonts above to black
-        html_filename = os.path.splitext(filename)[0] + '.html'
+        html_filename = os.path.splitext(file_to_plot)[0] + '.html'
         p.export_html(html_filename)
 
     p.show()
