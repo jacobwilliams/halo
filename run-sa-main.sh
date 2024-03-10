@@ -9,6 +9,7 @@ shopt -s expand_aliases
 
 export PYTHON_DIR=$PWD/python
 export CONDA_ENV_DIR=$PYTHON_DIR/env
+export GFORTRAN_UNBUFFERED_ALL=1
 
 # conda garbage:
 CONDA_BASE=$(conda info --base)

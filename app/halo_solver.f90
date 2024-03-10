@@ -99,6 +99,13 @@
     if (solver%mission%generate_guess_and_solution_files) &
         call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
 
+    !....debugging....
+    ! if (solver%mission%generate_trajectory_files) &
+    !     call solver%mission%plot('guess',&
+    !             draw_trajectory = .false., &
+    !             export_trajectory=solver%mission%generate_trajectory_files)
+    !....debugging....
+
     if (debug) then
         call solver%mission%define_problem_size(m=m)
         allocate(f(m))

@@ -301,6 +301,7 @@
             call db1val(et, 0, me%eph%tx(:,i), me%eph%nx, kx, me%eph%bcoef(:,i), rv(i), iflag, &
                         me%inbvx, me%w0, extrap=.false.)
             if (iflag /= 0) then
+                write(*,*) 'et    = ', et
                 write(*,*) 'iflag = ', iflag
                 error stop 'error calling get_rv'
             end if

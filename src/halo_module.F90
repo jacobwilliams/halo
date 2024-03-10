@@ -27,8 +27,8 @@
         real(wp) :: et_ref = zero  !! ephemeris time reference epoch
                                    !! (all times relative to this)
 
-        real(wp)              :: t0 = zero          !! initial time [days]
-        real(wp)              :: t0_scale = one     !! opt var scale for `t0`
+        real(wp)              :: t0 = zero              !! initial time [days]
+        real(wp)              :: t0_scale = one         !! opt var scale for `t0`
         real(wp)              :: t0_dpert = 1.0e-5_wp   !! opt var dpert for `t0` [scaled]
 
         real(wp),dimension(6) :: x0_rotating = zero !! initial state [km, km/s], rotating frame
@@ -38,13 +38,13 @@
                                                       1.0e-2_wp,&
                                                       1.0e-5_wp,&
                                                       1.0e-5_wp,&
-                                                      1.0e-5_wp] !! opt var dperts for `x0_rotating` [scaled]
+                                                      1.0e-5_wp]  !! opt var dperts for `x0_rotating` [scaled]
 
         real(wp),dimension(6) :: x0 = zero          !! initial state [km, km/s], inertial frame
         real(wp)              :: tf = zero          !! final time [days]
         real(wp),dimension(6) :: xf = zero          !! final state [km, km/s], inertial frame
 
-        real(wp),dimension(6) :: xf_rotating = zero !! final state [km, km/s], rotating frame
+        real(wp),dimension(6) :: xf_rotating = zero      !! final state [km, km/s], rotating frame
         real(wp),dimension(6) :: xf_rotating_scale = one !! func scale for `xf_rotating`
 
     end type segment_data
@@ -172,6 +172,9 @@
 
         character(len=:),allocatable :: patch_point_file   !! Halo CR3BP patch point solution file
         !! example: 'data/L2_halos.json'
+        logical :: patch_point_file_is_periapsis = .false. !! if the state in the patch point file are periapsis states
+                                                           !! (false means they are apoapsis states.
+                                                           !! the ones in L2_halos.json are apoapsis states)
 
         ! the initial guess for the Halo:
         ! This is for the "forward/backward" version of the transcription from the paper.
@@ -195,6 +198,7 @@
                                     !! * 2 - sparse (LSQR)
                                     !! * 3 - sparse (LUSOL)
                                     !! * 4 - sparse (LMSR)
+                                    !! * 5 - sparse (qr_mumps)
 
     contains
 
@@ -1999,16 +2003,16 @@
             ! export to plot:
             if (plot_rotating) then
                 call plt%add_3d_plot(x=me%segs(iseg)%traj_rotating%x,&
-                                    y=me%segs(iseg)%traj_rotating%y,&
-                                    z=me%segs(iseg)%traj_rotating%z,&
-                                    label='seg'//trim(adjustl(iseg_str)),&
-                                    linestyle='r-',linewidth=1,istat=istat)
+                                     y=me%segs(iseg)%traj_rotating%y,&
+                                     z=me%segs(iseg)%traj_rotating%z,&
+                                     label='seg'//trim(adjustl(iseg_str)),&
+                                     linestyle='r-',linewidth=1,istat=istat)
             else
                 call plt%add_3d_plot(x=me%segs(iseg)%traj_inertial%x,&
-                                    y=me%segs(iseg)%traj_inertial%y,&
-                                    z=me%segs(iseg)%traj_inertial%z,&
-                                    label='seg'//trim(adjustl(iseg_str)),&
-                                    linestyle='r-',linewidth=1,istat=istat)
+                                     y=me%segs(iseg)%traj_inertial%y,&
+                                     z=me%segs(iseg)%traj_inertial%z,&
+                                     label='seg'//trim(adjustl(iseg_str)),&
+                                     linestyle='r-',linewidth=1,istat=istat)
             end if
         end if
 
@@ -2361,6 +2365,7 @@
     call f%get('ephemeris_file',  me%mission%ephemeris_file   )
     call f%get('gravfile',        me%mission%gravfile         )
     call f%get('patch_point_file',me%mission%patch_point_file )
+    call f%get('patch_point_file_is_periapsis',me%mission%patch_point_file_is_periapsis, found )
     call f%close() ! cleanup
 
     use_json_file = index(me%mission%patch_point_file, '.json') > 0
@@ -2419,15 +2424,15 @@
     me%mission%quarter   = pp(2)
     me%mission%apoapsis  = pp(3)
 
-    write(*,*) 'periapsis t: ' , me%mission%periapsis%t, 'days'
-    write(*,*) 'quarter t:   ' , me%mission%quarter%t,   'days'
-    write(*,*) 'apoapsis t:  ' , me%mission%apoapsis%t,  'days'
+    write(*,'(a15,1x,F10.6,1x,a)') 'periapsis t: ' , me%mission%periapsis%t, 'days'
+    write(*,'(a15,1x,F10.6,1x,a)') 'quarter t:   ' , me%mission%quarter%t,   'days'
+    write(*,'(a15,1x,F10.6,1x,a)') 'apoapsis t:  ' , me%mission%apoapsis%t,  'days'
 
     ! compute some time variables:
     me%mission%period  = me%mission%apoapsis%t * 2.0_wp  ! Halo period [days]
     me%mission%period8 = me%mission%period / 8.0_wp      ! 1/8 of Halo period [days]
 
-    write(*,*) 'period: ' , me%mission%period
+    write(*,'(a15,1x,F10.6)') 'period: ' , me%mission%period
 
     contains
 !*****************************************************************************************
@@ -2552,7 +2557,8 @@
     real(wp) :: dt   !! time step (normalized) for integration
     real(wp),dimension(6) :: x  !! unnormalized state wrt barycenter, for integration
     integer :: idid  !! ddeabm output flag
-    integer :: i !! counter
+    integer :: i     !! counter
+    real(wp) :: t_, tf_ !! temp time vars for advancing guess by 1/2 period
 
     integer,parameter  :: n  = 6 !! number of state variables
 
@@ -2573,6 +2579,13 @@
     call prop%initialize(n,maxnum=10000,df=func,&
                          rtol=[me%rtol],atol=[me%atol],&
                          report=report)
+    if (.not. me%patch_point_file_is_periapsis) then
+        ! advance state by 1/2 period to put x at periapsis
+        t_ = t ! make temp copies so the originals aren't changed
+        tf_ = tf
+        call prop%first_call()
+        call prop%integrate(t_,x,tf_,idid=idid,integration_mode=1)
+    end if
     call prop%first_call()
     call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)
 
@@ -2600,8 +2613,12 @@
         !       -mu           1-mu
         !
 
-        x_wrt_moon_normalized = [x_crtbp(i) - (1.0_wp - mu), y_crtbp(i), z_crtbp(i), &
-                                 vx_crtbp(i), vy_crtbp(i), vz_crtbp(i)]
+        x_wrt_moon_normalized = [x_crtbp(i) - (1.0_wp - mu), &
+                                 y_crtbp(i), &
+                                 z_crtbp(i), &
+                                 vx_crtbp(i), &
+                                 vy_crtbp(i), &
+                                 vz_crtbp(i)]
 
         ! convert to km, km/s, days (see also unnormalize_variables)
         x_wrt_moon_unnormalized(1:3) = x_wrt_moon_normalized(1:3) * lstar         ! unscale distance

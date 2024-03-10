@@ -14,7 +14,11 @@ from pyvista.core.utilities import lines_from_points
 # things to test:
 save_as_html = True
 plot_starmap = True
-file_to_plot = '../100-rev-solution/solution_20220704131413_L2_S_NREVS=100.txt'  # file to plot
+# file_to_plot = '../100-rev-solution/solution_20220704131413_L2_S_NREVS=100.txt'  # file to plot
+# file_to_plot = '../solution_20220704131413_L2_S_NREVS=10.txt'
+# file_to_plot = '../solution_20220704131413_L2_S_NREVS=5.txt'
+# file_to_plot = '../solution_20220704131415_L2_S_NREVS=100.txt'
+file_to_plot = '../solution_20220627172948_L2_S_NREVS=100.txt'
 
 
 ##########################################################################################################
@@ -135,7 +139,7 @@ if __name__ == "__main__":
     p.show_grid(color='gray')
     p.set_background(color='black')
 
-    # p.view_isometric()
+    p.view_isometric()
 
     if save_as_html:
         # note: background is white here, so would need to change the fonts above to black
