@@ -111,15 +111,15 @@
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../program/halo_solver.html#variable-debug">debug</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-config_file_name">config_file_name</a>
-            <a class="list-group-item" href="../program/halo_solver.html#variable-solver~2">solver</a>
-            <a class="list-group-item" href="../program/halo_solver.html#variable-x~3">x</a>
+            <a class="list-group-item" href="../program/halo_solver.html#variable-solver">solver</a>
+            <a class="list-group-item" href="../program/halo_solver.html#variable-x">x</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-m">m</a>
-            <a class="list-group-item" href="../program/halo_solver.html#variable-f~3">f</a>
+            <a class="list-group-item" href="../program/halo_solver.html#variable-f">f</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-tstart">tstart</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-tend">tend</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-tstart_cpu">tstart_cpu</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-tend_cpu">tend_cpu</a>
-            <a class="list-group-item" href="../program/halo_solver.html#variable-istat~3">istat</a>
+            <a class="list-group-item" href="../program/halo_solver.html#variable-istat">istat</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-message">message</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-n_segs">n_segs</a>
             <a class="list-group-item" href="../program/halo_solver.html#variable-iseg">iseg</a>
@@ -168,8 +168,8 @@
             <li class="list-group-item">
               <ul class="list-inline">
                   <li class="list-inline-item">parameters_module</li>
-                  <li class="list-inline-item">halo_module</li>
                   <li class="list-inline-item">argv_module</li>
+                  <li class="list-inline-item">halo_module</li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -655,7 +655,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-solver~2"></span>
+              <span class="anchor" id="variable-solver"></span>
               type(my_solver_type)
             </td>
             <td>
@@ -671,7 +671,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~3"></span>
+              <span class="anchor" id="variable-x"></span>
               real(kind=wp),
             </td>
             <td>
@@ -703,7 +703,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~3"></span>
+              <span class="anchor" id="variable-f"></span>
               real(kind=wp),
             </td>
             <td>
@@ -783,7 +783,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-istat~3"></span>
+              <span class="anchor" id="variable-istat"></span>
               integer
             </td>
             <td>
@@ -971,6 +971,13 @@ parameter
 <span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;guess&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">draw_trajectory</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w">    </span><span class="c">! plot the initial guess</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_guess_and_solution_files</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
 <span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">write_optvars_to_file</span><span class="p">(</span><span class="s1">&#39;guess&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w">    </span><span class="c">! write guess to a file</span>
+
+<span class="w">    </span><span class="c">!....debugging....</span>
+<span class="w">    </span><span class="c">! if (solver%mission%generate_trajectory_files) &amp;</span>
+<span class="w">    </span><span class="c">!     call solver%mission%plot(&#39;guess&#39;,&amp;</span>
+<span class="w">    </span><span class="c">!             draw_trajectory = .false., &amp;</span>
+<span class="w">    </span><span class="c">!             export_trajectory=solver%mission%generate_trajectory_files)</span>
+<span class="w">    </span><span class="c">!....debugging....</span>
 
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
 <span class="k">        call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>

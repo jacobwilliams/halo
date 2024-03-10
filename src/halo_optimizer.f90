@@ -49,13 +49,12 @@
     open(newunit = iunit, file = 'function_evals.csv', status='REPLACE', iostat=istat)
 
     ! initial guess:
+    t  = 5.0_wp
     x = [1.5872714606_wp, 710212455.0_wp] ! period, et
     ! lower and upper bounds
-    !   * vary epoch by +/- 7 days
-    lb = [x(1)-0.2_wp, x(2)-7*day2sec]
-    ub = [x(1)+0.2_wp, x(2)+7*day2sec]
-    t  = 5.0_wp
-    vm = 1.0_wp
+    lb = [1.37_wp, x(2)-7*day2sec]  !   * vary epoch by +/- 7 days
+    ub = [1.81_wp, x(2)+7*day2sec]
+    vm = [0.2_wp, 7*day2sec]
 
     write(*,*) 'Running optimizer'
     call sa%initialize(fcn,n,lb,ub,&
