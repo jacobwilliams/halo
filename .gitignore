@@ -48,3 +48,8 @@ __pycache__
 # data products:
 /guess_*.*
 /solution_*.*
+
+# data products:
+/*.json
+/*.csv
+/*.txt

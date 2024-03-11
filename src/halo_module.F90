@@ -2018,7 +2018,7 @@
 
         if (export) then
 
-            ! write the trajectory data:     ! Note: THIS HAS TO BE THE INERTIAL FRAME
+            ! write the trajectory data:     ! Note: THIS HAS TO BE THE INERTIAL FRAME FOR THE SPK FILE
 
             if (me%segs(iseg)%traj_inertial%et(2) > me%segs(iseg)%traj_inertial%et(1)) then
                 ! forward propagated
@@ -2054,6 +2054,12 @@
             end do
             iendprev = iend
         end if
+
+        !TODO: also an option to generate a JSON trajectory file
+        !      - each seg a different structure
+        !      - et, state, specify frame.
+        !      - maybe also earth & sun ephemeris for plotting
+        !      - maybe also option for rotating frame output...
 
     end do
 

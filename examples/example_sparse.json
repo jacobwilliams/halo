@@ -2,9 +2,8 @@
 {
     // specify halo orbit to compute:
     //"period": 1.5872714606,  // normalized period [initial test case]
-    // "period":   1.4859851075368709, // [100 rev solution with no eclipses] <---when patch_point_file_is_periapsis=True ....
     // "period":   1.6907637948986587,  // for patch_point_file_is_periapsis = false --> higher orbit ...
-    "period":   1.6647057114899595,
+    "period":   1.6647057114899595,   // [100 rev solution with no eclipses]
 
     "N_or_S": "S",
     "L1_or_L2": "L2",
@@ -17,10 +16,9 @@
     // "hour": 12,
     // "minute": 0,
     // "sec": 0,
-    // "et_ref":    710212455.000000,   // 2022-07-04 13:14:15 [initial test case]
-    // "et_ref":    710212453.64383352, // [100 rev solution with no eclipses] <---when patch_point_file_is_periapsis=True ....
-    //"et_ref":       710212454.94232786, // for patch_point_file_is_periapsis=False
-    "et_ref":       709622988.34010994,
+     //"et_ref":    710212455.000000,   // 2022-07-04 13:14:15 [initial test case]
+    //"et_ref":       710212454.94232786,
+    "et_ref":       709622988.34010994, // [100 rev solution with no eclipses]
 
     // optional inputs:
     "fix_initial_time": false,  // do not allow the initial epoch to vary
@@ -33,20 +31,21 @@
     "atol": 1.0e-12,
 
     //nlesolver tol:
-     "nlesolver_tol": 1.0e-6,
-    //"nlesolver_tol": 1.0e-10,
+    //  "nlesolver_tol": 1.0e-6,
+    "nlesolver_tol": 1.0e-12,
+    // "nlesolver_tol": 1.0e-20,  // use for quad precision
 
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
   //  "solver_mode": 3, // sparse solver (LUSOL)    <----- doesn't seem to work at all ?
   //  "solver_mode": 4, // sparse solver (LMSR)
-      "solver_mode": 5, // custom solver (QR_MUMPS)
+     "solver_mode": 5, // custom solver (QR_MUMPS)
 
     // number of revs:
     // "n_revs": 10,
     //"n_revs": 5,
-    "n_revs": 20,
-    //"n_revs": 100,  //689 days
+    //"n_revs": 20,
+    "n_revs": 100,  //689 days
     //  "n_revs": 1000,
 
     // data files:
@@ -61,6 +60,8 @@
     // "initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
     //"initial_guess_from_file": "./100-rev-solution/solution_20220704131413_L2_S_NREVS=100.json",
     //"initial_guess_from_file": "./100-rev-solution-2/solution_20220704131415_L2_S_NREVS=100.html",
+    //"initial_guess_from_file": "./solution_20220704131415_L2_S_NREVS=100.json",
+    //"initial_guess_from_file": "./solution_20220627172948_L2_S_NREVS=100.json",
 
     "generate_plots": false,
     "generate_trajectory_files": true,
