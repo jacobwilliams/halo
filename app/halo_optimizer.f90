@@ -50,10 +50,10 @@
 
     ! initial guess:
     t  = 5.0_wp
-    x = [1.5872714606_wp, 710212455.0_wp] ! period, et
+    x = [1.5872714606_wp, 757339200.0_wp] ! period, et [2024-01-01]
     ! lower and upper bounds
-    lb = [1.37_wp, x(2)-7*day2sec]  !   * vary epoch by +/- 7 days
-    ub = [1.81_wp, x(2)+7*day2sec]
+    lb = [1.40_wp, x(2)-7*day2sec]  !   * vary epoch by +/- 7 days
+    ub = [1.60_wp, x(2)+7*day2sec]
     vm = [0.2_wp, 7*day2sec]
 
     write(*,*) 'Running optimizer'

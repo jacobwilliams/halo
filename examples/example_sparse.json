@@ -72,5 +72,8 @@
     "generate_eclipse_files": true,
     "r_eclipse_bubble": 1.0, // km
     "eclipse_dt_step": 3600.0,
-    "eclipse_filetype": 2 // json
+    "eclipse_filetype": 2, // json
+
+    "run_pyvista_script": false
+
 }

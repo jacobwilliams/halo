@@ -131,6 +131,7 @@
         logical :: generate_defect_file = .false. !! generate the file that shows the pos/vel
                                                   !! constraint defects for the solution
         logical :: generate_eclipse_files = .false. !! generate the eclipse data file for the solution
+        logical :: run_pyvista_script = .false. !! run the pyvista script to generate the interacdtive 3d plot
 
         real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
         real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
@@ -2331,7 +2332,8 @@
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',           me%mission%generate_kernel,           found)
     call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
-    call f%get('generate_eclipse_files',    me%mission%generate_eclipse_files,      found)
+    call f%get('generate_eclipse_files',    me%mission%generate_eclipse_files,    found)
+    call f%get('run_pyvista_script',        me%mission%run_pyvista_script,        found)
 
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
     call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)
