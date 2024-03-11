@@ -2741,24 +2741,37 @@
     character(len=*),intent(in)       :: filename !! file name [without extension]
     real(wp),dimension(:),intent(in)  :: x        !! solver opt vars vector
 
-    integer           :: i     !! counter
-    type(json_file)   :: json  !! for writing the solution file
-    character(len=10) :: istr  !! x index string
+    integer :: i  !! counter
+    type(json_core) :: json
+    type(json_value),pointer :: p_root, p_xvec, p_element, p_last
 
     call json%initialize()
-
+    call json%create_object(p_root, '')
+    call json%create_array(p_xvec, 'xvec')
+    call json%add(p_root, p_xvec)
+    p_last => null() ! for the first element
     do i = 1, size(x)
-        write(istr,'(I10)') i
-        istr = adjustl(istr)
-        call json%add('xvec('//trim(istr)//').i',i) ! var counter
-        call json%add('xvec('//trim(istr)//').label',trim(me%xname(i)))
-        call json%add('xvec('//trim(istr)//').value',x(i)*me%xscale(i))  ! unscaled value
-        call json%add('xvec('//trim(istr)//').scale',me%xscale(i))
+        nullify(p_element)
+        call json%create_object(p_element, '') ! allocate
+        call json%add(p_element, 'i',     i)
+        call json%add(p_element, 'label', trim(me%xname(i)))
+        call json%add(p_element, 'value', x(i)*me%xscale(i))
+        call json%add(p_element, 'scale', me%xscale(i))
+        ! to speed this up, we keep track of the
+        ! last element and insert after it.
+        if (associated(p_last)) then
+            ! insert after the last one
+            call json%insert_after(p_last, p_element)
+        else
+            ! first element
+            call json%add(p_xvec, p_element)
+        end if
+        p_last => p_element
     end do
 
-    call json%print_file(trim(filename)//'_'//me%get_case_name()//'.json')
+    call json%print(p_root, trim(filename)//'_'//me%get_case_name()//'.json')
 
-    call json%destroy()
+    call json%destroy(p_root)
 
     end subroutine write_optvars_to_file
 !*****************************************************************************************
