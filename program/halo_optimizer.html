@@ -70,7 +70,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="45.3% of total for programs.">82 statements</a>
+                 title="44.3% of total for programs.">82 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -110,10 +110,10 @@
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-sa">sa</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-x">x</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-f">f</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-x~2">x</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-f~2">f</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-iunit">iunit</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-istat">istat</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-istat~2">istat</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-n">n</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-ns">ns</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-nt">nt</a>
@@ -183,11 +183,11 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='https://jacobwilliams.github.io/json-fortran/'>json_module</a></li>
                   <li class="list-inline-item">simulated_annealing_module</li>
-                  <li class="list-inline-item">argv_module</li>
+                  <li class="list-inline-item"><a href='https://jacobwilliams.github.io/json-fortran/'>json_module</a></li>
                   <li class="list-inline-item">halo_module</li>
                   <li class="list-inline-item">halo_kinds_module</li>
+                  <li class="list-inline-item">argv_module</li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -515,7 +515,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x"></span>
+              <span class="anchor" id="variable-x~2"></span>
               real(kind=wp),
             </td>
             <td>
@@ -531,7 +531,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f"></span>
+              <span class="anchor" id="variable-f~2"></span>
               real(kind=wp)
             </td>
             <td>
@@ -563,7 +563,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-istat"></span>
+              <span class="anchor" id="variable-istat~2"></span>
               integer
             </td>
             <td>
@@ -898,7 +898,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~2"></span>
+              <span class="anchor" id="variable-x~3"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -913,7 +913,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~2"></span>
+              <span class="anchor" id="variable-f~3"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -928,7 +928,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-istat~2"></span>
+              <span class="anchor" id="variable-istat~3"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -991,10 +991,10 @@ parameter
 
 <span class="w">    </span><span class="c">! initial guess:</span>
 <span class="w">    </span><span class="n">t</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">5.0_wp</span>
-<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.5872714606_wp</span><span class="p">,</span><span class="w"> </span><span class="mi">71021245</span><span class="mf">5.0_wp</span><span class="p">]</span><span class="w"> </span><span class="c">! period, et</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.5872714606_wp</span><span class="p">,</span><span class="w"> </span><span class="mi">75733920</span><span class="mf">0.0_wp</span><span class="p">]</span><span class="w"> </span><span class="c">! period, et [2024-01-01]</span>
 <span class="w">    </span><span class="c">! lower and upper bounds</span>
-<span class="w">    </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.37_wp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">7</span><span class="o">*</span><span class="n">day2sec</span><span class="p">]</span><span class="w">  </span><span class="c">!   * vary epoch by +/- 7 days</span>
-<span class="w">    </span><span class="n">ub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.81_wp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">7</span><span class="o">*</span><span class="n">day2sec</span><span class="p">]</span>
+<span class="w">    </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.40_wp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">7</span><span class="o">*</span><span class="n">day2sec</span><span class="p">]</span><span class="w">  </span><span class="c">!   * vary epoch by +/- 7 days</span>
+<span class="w">    </span><span class="n">ub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">1.60_wp</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">+</span><span class="mi">7</span><span class="o">*</span><span class="n">day2sec</span><span class="p">]</span>
 <span class="w">    </span><span class="n">vm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mf">0.2_wp</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="o">*</span><span class="n">day2sec</span><span class="p">]</span>
 
 <span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Running optimizer&#39;</span>

@@ -193,6 +193,11 @@
                                                   filetype = solver%mission%eclipse_filetype)
     end if
 
+    if (solver%mission%run_pyvista_script) then
+        mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+        call execute_command_line('python ./python/plot_utilities.py '//mkspk_input)
+    end if
+
 !*****************************************************************************************
     end program halo_solver
 !*****************************************************************************************

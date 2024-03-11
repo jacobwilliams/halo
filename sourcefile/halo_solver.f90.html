@@ -71,7 +71,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="54.7% of total for source files.">99 statements</a>
+                 title="55.7% of total for source files.">103 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -343,9 +343,14 @@
 <a id="ln-193" name="ln-193" href="#ln-193"></a><span class="w">                                                  </span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_filetype</span><span class="p">)</span>
 <a id="ln-194" name="ln-194" href="#ln-194"></a><span class="w">    </span><span class="k">end if</span>
 <a id="ln-195" name="ln-195" href="#ln-195"></a>
-<a id="ln-196" name="ln-196" href="#ln-196"></a><span class="c">!*****************************************************************************************</span>
-<a id="ln-197" name="ln-197" href="#ln-197"></a><span class="w">    </span><span class="k">end program </span><span class="n">halo_solver</span>
-<a id="ln-198" name="ln-198" href="#ln-198"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-196" name="ln-196" href="#ln-196"></a><span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">run_pyvista_script</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<a id="ln-197" name="ln-197" href="#ln-197"></a><span class="k">        </span><span class="n">mkspk_input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;solution_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.txt&#39;</span>
+<a id="ln-198" name="ln-198" href="#ln-198"></a><span class="w">        </span><span class="k">call </span><span class="nb">execute_command_line</span><span class="p">(</span><span class="s1">&#39;python ./python/plot_utilities.py &#39;</span><span class="o">//</span><span class="n">mkspk_input</span><span class="p">)</span>
+<a id="ln-199" name="ln-199" href="#ln-199"></a><span class="w">    </span><span class="k">end if</span>
+<a id="ln-200" name="ln-200" href="#ln-200"></a>
+<a id="ln-201" name="ln-201" href="#ln-201"></a><span class="c">!*****************************************************************************************</span>
+<a id="ln-202" name="ln-202" href="#ln-202"></a><span class="w">    </span><span class="k">end program </span><span class="n">halo_solver</span>
+<a id="ln-203" name="ln-203" href="#ln-203"></a><span class="c">!*****************************************************************************************</span>
 </pre></div>
 
       </section>
