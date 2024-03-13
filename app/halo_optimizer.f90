@@ -39,11 +39,13 @@
     real(wp),dimension(:),allocatable :: lb !! lower bounds (size `n`)
     real(wp),dimension(:),allocatable :: ub !! upper bounds (size `n`)
     real(wp),dimension(:),allocatable :: vm !! size `n`
-    real(wp) :: fopt, t, rt
+    real(wp) :: fopt, t, rt, period
     real(wp),dimension(n) :: xopt
     integer  :: nacc, nfcnev, ier
     logical :: found
     type(config_file) :: config
+    integer :: epoch_mode, year, month, day, hour, minute
+    real(wp) :: sec, et_ref
 
     call config%open(base_config_file)
     call config%json%print()
@@ -53,8 +55,9 @@
 
     ! initial guess:
     !x = [1.5872714606_wp, 757339200.0_wp] ! period, et [2024-01-01]
-    call config%get('period', x(1)) ! required
-    call config%get('et_ref', x(2))
+    call config%get('period', period) ! required
+    call read_epoch(config, epoch_mode, year, month, day, hour, minute, sec, et_ref)
+    x = [period, et_ref]
 
     ! defaults for optional arguments:
     t        = 5.0_wp
@@ -100,6 +103,8 @@
     write(*,*) 'ier  = ', ier
     write(*,*) ''
 
+    !TODO: maybe make a new config for the solution ?
+
     close(iunit, iostat=istat) ! function eval file
     call config%close()
 
@@ -142,6 +147,12 @@
             call config%json%update('run_pyvista_script',                .false., found)
             call config%json%update('generate_eclipse_files', .true., found)  ! only need these
             call config%json%update('eclipse_filetype', 2, found)             !
+            call config%json%remove('year')
+            call config%json%remove('month')
+            call config%json%remove('day')
+            call config%json%remove('hour')
+            call config%json%remove('minute')
+            call config%json%remove('sec')
             call config%json%print(step_config)
 
             ! have to read the config so that get_case_name will return the right string:

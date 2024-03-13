@@ -238,6 +238,8 @@
 
     end type my_solver_type
 
+    public :: read_epoch ! also used by optimizer app
+
     contains
 !*****************************************************************************************
 
@@ -2293,6 +2295,52 @@
 
 !*****************************************************************************************
 !>
+!  Read the epoch info from a config file.
+
+    subroutine read_epoch(f, epoch_mode, year, month, day, hour, minute, sec, et)
+
+    type(config_file),intent(inout) :: f
+    integer,intent(out) :: year, month, day, hour, minute !! only output if found (epoch_mode=1)
+    real(wp),intent(out) :: sec                           !! only output if found (epoch_mode=1)
+    integer,intent(out) :: epoch_mode !! 1 : calendar date was specified, 2: ephemeris time was specified
+    real(wp),intent(out) :: et !! the ephemeris time [always output]
+
+    logical :: found, found_et
+    logical,dimension(6) :: found_calendar
+
+    ! can specify either calendar date or et:
+    call f%get('year',   year   , found_calendar(1) )
+    call f%get('month',  month  , found_calendar(2) )
+    call f%get('day',    day    , found_calendar(3) )
+    call f%get('hour',   hour   , found_calendar(4) )
+    call f%get('minute', minute , found_calendar(5) )
+    call f%get('sec',    sec    , found_calendar(6) )
+    call f%get('et_ref', et     , found_et )
+
+    found = all(found_calendar) .or. found_et ! at least one
+    if (found) found = .not. (all(found_calendar) .and. found_et) ! only one
+    if (.not. found) error stop 'error: just specify epoch as year,month,day,hour,minute,sec or et_ref'
+    if (found_et) then
+        epoch_mode = 2 ! ephemeris time was specified
+    else
+        epoch_mode = 1 ! calendar date was specified
+    end if
+
+    if (epoch_mode==1) then
+        ! have to convert to et [see update_epoch]
+        et = jd_to_et(julian_date(year,&
+                                  month,&
+                                  day,&
+                                  hour,&
+                                  minute,&
+                                  sec))
+    end if
+
+    end subroutine read_epoch
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Read the config file that defines the problem
 !  to be solved and set all the global variables.
 
@@ -2304,8 +2352,7 @@
     character(len=*),intent(in) :: filename  !! the JSON config file to read
 
     type(config_file) :: f
-    logical :: found, found_jc, found_period, found_et, found_initial_r
-    logical,dimension(6) :: found_calendar
+    logical :: found, found_jc, found_period, found_initial_r
     real(wp):: jc !! jacobii constant from the file
     real(wp):: p !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
@@ -2351,14 +2398,15 @@
     call f%get('N_or_S',   me%mission%N_or_S   )
     call f%get('L1_or_L2', me%mission%L1_or_L2 )
 
-    ! can specify either calendar date or et:
-    call f%get('year',   me%mission%year   , found_calendar(1) )
-    call f%get('month',  me%mission%month  , found_calendar(2) )
-    call f%get('day',    me%mission%day    , found_calendar(3) )
-    call f%get('hour',   me%mission%hour   , found_calendar(4) )
-    call f%get('minute', me%mission%minute , found_calendar(5) )
-    call f%get('sec',    me%mission%sec    , found_calendar(6) )
-    call f%get('et_ref', me%mission%et_ref , found_et )
+    ! reach the epoch. can specify either calendar date or et:
+    call read_epoch(f,  me%mission%epoch_mode, &
+                        me%mission%year, &
+                        me%mission%month, &
+                        me%mission%day, &
+                        me%mission%hour, &
+                        me%mission%minute, &
+                        me%mission%sec, &
+                        me%mission%et_ref)
 
     ! tolerances:
     call f%get('rtol',          me%mission%rtol          , found )
@@ -2382,15 +2430,7 @@
         error stop 'error: must either specify period or jc in the config file to use JSON patch point file.'
         ! csv file no longer supported
 
-    ! check epoch:
-    found = all(found_calendar) .or. found_et ! at least one
-    if (found) found = .not. (all(found_calendar) .and. found_et) ! only one
-    if (.not. found) error stop 'error: just specify epoch as year,month,day,hour,minute,sec or et_ref'
-    if (found_et) then
-        me%mission%epoch_mode = 2 !! ephemeris time was specified
-    else
-        me%mission%epoch_mode = 1 !! calendar date was specified
-    end if
+    ! set the epoch:
     call me%mission%update_epoch()
 
     ! read the patch point file and load it:

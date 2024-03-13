@@ -15,7 +15,7 @@
     real(wp),parameter :: mu_sun   = 1.3271244004193938E+11_wp !! \( \mu_{sun} \)
     real(wp),parameter :: rad_moon  = 1737.4_wp     !! radius of the Moon
     real(wp),parameter :: rad_sun   = 695700.0_wp   !! sun radius (km)
-    real(wp),parameter :: rad_earth = 6371.0_wp     !! earth radius (km)
+    real(wp),parameter :: rad_earth = 6378.0_wp     !! earth radius (km)
     integer,parameter  :: n_eoms   = 6              !! size of EOM derivative vector [x,y,z,vx,vy,vz]
     integer,parameter  :: maxnum   = 10000          !! integrator max steps
     integer,parameter  :: grav_n   = 8              !! max grav degree
