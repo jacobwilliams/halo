@@ -88,10 +88,12 @@
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
 
     if (allocated(solver%mission%initial_guess_from_file)) then
-        !TODO: add some error checking here !
-        write(*,*) 'Reading initial guess from file: '//solver%mission%initial_guess_from_file
-        call solver%mission%get_x_from_json_file(x) ! get solution from the file
-        call solver%mission%put_x_in_segments(x) ! populate segs with solution
+        if (solver%mission%initial_guess_from_file /= '') then
+            !TODO: add some error checking here !
+            write(*,*) 'Reading initial guess from file: '//solver%mission%initial_guess_from_file
+            call solver%mission%get_x_from_json_file(x) ! get solution from the file
+            call solver%mission%put_x_in_segments(x) ! populate segs with solution
+        end if
     end if
 
     if (solver%mission%generate_plots) &
