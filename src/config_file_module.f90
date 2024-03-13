@@ -14,7 +14,7 @@
         !! a class for handling JSON config files.
         private
         character(len=:),allocatable :: name !! the file name
-        type(json_file) :: json
+        type(json_file),public :: json
         contains
         private
         procedure,public :: open  => open_config_file

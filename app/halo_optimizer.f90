@@ -18,6 +18,7 @@
     use argv_module,                only: argv
     use simulated_annealing_module, only: simulated_annealing_type
     use json_module,                only: json_file
+    use config_file_module,         only: config_file
     use halo_module
 
     implicit none
@@ -28,33 +29,55 @@
     integer :: iunit, istat
 
     integer,parameter :: n = 2 !! the 2 optimization variables are `et_ref` and `period` in the config file
+    character(len=*),parameter :: base_config_file = './examples/example_sparse.json' ! TODO: should be an input
+    character(len=*),parameter :: base_script_file = './run-sa.sh' ! the script to run for the function evaluation
 
-    ! simulated annealing parameters -- set some small values for testing...
-    integer,parameter  :: ns = 3  !! number of cycles.
-    integer,parameter  :: nt = 3 !! number of iterations before temperature reduction.
-    integer,parameter  :: neps = 2 !! number of final function values used to decide upon termination.
-    integer,parameter  :: n_resets = 1 !! number of times to run the main loop
-    real(wp),parameter :: rt = 0.5_wp
-
-    real(wp),dimension(n) :: lb !! lower bounds
-    real(wp),dimension(n) :: ub !! upper bounds
-    real(wp) :: fopt, t
+    integer :: ns   !! number of cycles.
+    integer :: nt  !! number of iterations before temperature reduction.
+    integer :: neps  !! number of final function values used to decide upon termination.
+    integer :: n_resets  !! number of times to run the main loop
+    real(wp),dimension(:),allocatable :: lb !! lower bounds (size `n`)
+    real(wp),dimension(:),allocatable :: ub !! upper bounds (size `n`)
+    real(wp),dimension(:),allocatable :: vm !! size `n`
+    real(wp) :: fopt, t, rt
     real(wp),dimension(n) :: xopt
-    real(wp),dimension(n) :: vm
     integer  :: nacc, nfcnev, ier
+    logical :: found
+    type(config_file) :: config
 
-    character(len=*),parameter :: base_config_file = './examples/example_sparse.json'
-    character(len=*),parameter :: base_script_file = './run-sa.sh'
+    call config%open(base_config_file)
+    call config%json%print()
 
     open(newunit = iunit, file = 'function_evals.csv', status='REPLACE', iostat=istat)
+    write(iunit,'(A20,1X,2(A30,1X),A8)') 'CONFIG', 'PERIOD', 'ET', 'OBJFCN'
 
     ! initial guess:
-    t  = 5.0_wp
-    x = [1.5872714606_wp, 757339200.0_wp] ! period, et [2024-01-01]
-    ! lower and upper bounds
-    lb = [1.40_wp, x(2)-7*day2sec]  !   * vary epoch by +/- 7 days
-    ub = [1.60_wp, x(2)+7*day2sec]
-    vm = [0.2_wp, 7*day2sec]
+    !x = [1.5872714606_wp, 757339200.0_wp] ! period, et [2024-01-01]
+    call config%get('period', x(1)) ! required
+    call config%get('et_ref', x(2))
+
+    ! defaults for optional arguments:
+    t        = 5.0_wp
+    lb       = [1.40_wp, x(2)-7*day2sec]  ! * vary epoch by +/- 7 days
+    ub       = [1.60_wp, x(2)+7*day2sec]
+    vm       = [0.2_wp, 7*day2sec]
+    ! set some small values for testing...
+    ns       = 3      ! number of cycles.
+    nt       = 3      ! number of iterations before temperature reduction.
+    neps     = 2      ! number of final function values used to decide upon termination.
+    n_resets = 1      ! number of times to run the main loop
+    rt       = 0.5_wp ! temperature reduction factor
+
+    ! if these are specified in the config file then use those instead:
+    call config%get('sa_t',       t,        found)
+    call config%get('sa_lb',      lb,       found)
+    call config%get('sa_ub',      ub,       found)
+    call config%get('sa_vm',      vm,       found)
+    call config%get('sa_ns',      ns,       found)
+    call config%get('sa_nt',      nt,       found)
+    call config%get('sa_neps',    neps,     found)
+    call config%get('sa_n_resets',n_resets, found)
+    call config%get('sa_rt',      rt,       found)
 
     write(*,*) 'Running optimizer'
     call sa%initialize(fcn,n,lb,ub,&
@@ -63,8 +86,8 @@
                        nt       = nt, &
                        neps     = neps, &
                        optimal_f_specified = .true.,&
-                       optimal_f           = 0.0_wp,& ! 0 is the desired solution (no eclipses) if it's found, we can stop.
-                       optimal_f_tol       = epsilon(1.0_wp))
+                       optimal_f     = 0.0_wp,& ! 0 is the desired solution (no eclipses) if it's found, we can stop.
+                       optimal_f_tol = epsilon(1.0_wp)) ! since this is really an int, this doesn't matter much
     call sa%optimize(x, rt, t, vm, xopt, fopt, nacc, nfcnev, ier)
 
     write(*,*) ''
@@ -78,6 +101,7 @@
     write(*,*) ''
 
     close(iunit, iostat=istat) ! function eval file
+    call config%close()
 
     contains
 
@@ -91,13 +115,13 @@
             integer,intent(out) :: istat
 
             integer,save :: istep = 0 !! number of function evaluations
+
             character(len=5) :: istep_str
             character(len=:),allocatable :: script !! script to run
-            character(len=:),allocatable :: config !! config file for this step
+            character(len=:),allocatable :: step_config !! config file for this step
             character(len=:),allocatable :: eclipse_file !! eclipse file
-            type(json_file) :: json
+            type(json_file) :: json !! for loading the eclipse json file
             real(wp),dimension(:),allocatable :: et_vec !! ephemeris time of eclipse violations
-            logical :: found
             type(my_solver_type) :: solver !! just so we can read the base config and generate the case name
 
             istep = istep + 1
@@ -105,25 +129,33 @@
 
             ! create the script
             ! read the original script and modify with the inputs, then save the new one
-            config = './STEP='//trim(adjustl(istep_str))//'.json'
-            call json%load(base_config_file)
-            call json%update('period', x(1), found)   ! should we scale these?
-            call json%update('et_ref', x(2), found)   !
-            !TODO: make sure the output settings are right (have to generate the eclipse json files ....)
-            call json%print(config)
-            call json%destroy()
+            step_config = './STEP='//trim(adjustl(istep_str))//'.json'
+            call config%json%update('period', x(1), found)
+            call config%json%update('et_ref', x(2), found)
+            ! make sure the output settings are right:
+            call config%json%update('initial_guess_from_file', '', found)
+            call config%json%update('generate_plots',                    .false., found)
+            call config%json%update('generate_trajectory_files',         .false., found)
+            call config%json%update('generate_guess_and_solution_files', .false., found)
+            call config%json%update('generate_kernel',                   .false., found)
+            call config%json%update('generate_defect_file',              .false., found)
+            call config%json%update('run_pyvista_script',                .false., found)
+            call config%json%update('generate_eclipse_files', .true., found)  ! only need these
+            call config%json%update('eclipse_filetype', 2, found)             !
+            call config%json%print(step_config)
 
             ! have to read the config so that get_case_name will return the right string:
             write(*,*) 'reading base config file: '//base_config_file
-            call solver%read_config_file(config)
+            call solver%read_config_file(step_config)
 
             ! the env var is used by the script to indicate the config file to use:
-            call execute_command_line('export HALO_CONFIG_FILE='//config//'; '//base_script_file)
+            call execute_command_line('export HALO_CONFIG_FILE='//step_config//'; '//base_script_file)
 
             ! read the eclipse function output file
             eclipse_file = './eclipse_'//solver%mission%get_case_name()//'.json'
             call json%load(eclipse_file)
-            call json%get('et', et_vec)
+            call json%get('et', et_vec, found)
+            if (.not. found) error stop 'error reading eclipse file. et not found.'
             call json%destroy()
 
             ! f is just the count the 1-hr epochs where the phi is < 0
@@ -135,7 +167,7 @@
             write(*,*) '======================'
             write(*,*) ' Latest f: ', f
             write(*,*) '======================'
-            write(iunit,'(A,1X,*(E30.16,1X))') config, x, f
+            write(iunit,'(A20,1X,2(E30.16,1X),I8)') step_config, x, int(f)
 
         end subroutine fcn
 
