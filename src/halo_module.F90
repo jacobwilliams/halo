@@ -81,6 +81,7 @@
         ! Or, when using OpenMP, they are allocated in each segment.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris [global]
+        logical :: pointmass_central_body = .false.
 
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame
@@ -110,6 +111,8 @@
         logical :: use_splined_ephemeris = .false. !! if true, the ephemeris is splined
         real(wp) :: dt_spline_sec = 3600.0_wp !! time step in seconds for spline step [1 hr]
 
+        logical :: pointmass_central_body = .false. !! if true, the central body is a pointmass (moon).
+                                                   !! otherwise, the `grav` model is used.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
 
@@ -1117,10 +1120,12 @@
         if (.not. status_ok) error stop 'error initializing ephemeris'
     end if
 
-    ! set up the force model [main body is moon]:
-    allocate(me%grav)
-    call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
-    if (.not. status_ok) error stop 'error initializing gravity model'
+    if (.not. me%pointmass_central_body) then
+        ! set up the force model [main body is moon]:
+        allocate(me%grav)
+        call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
+        if (.not. status_ok) error stop 'error initializing gravity model'
+    end if
 
     ! now, we set up the segment structure for the problem we are solving:
     ! This is for the "forward-backward" method from the paper (see Figure 2b):
@@ -1140,13 +1145,14 @@
 
         if (use_openmp) then
             ! make a copy for each segment, so they can run in parallel
-            allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
+            if (.not. me%pointmass_central_body) allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
             allocate(me%segs(i)%eph,  source = me%eph)
         else
             ! for serial use, each seg just points to the global ones for the whole mission
-            me%segs(i)%grav => me%grav
+            if (.not. me%pointmass_central_body) me%segs(i)%grav => me%grav
             me%segs(i)%eph  => me%eph
         end if
+        me%segs(i)%pointmass_central_body = me%pointmass_central_body
 
         ! name all the segments:
         write(seg_name,'(I10)') i
@@ -1371,11 +1377,16 @@
         ! compute ephemeris time [sec]:
         et = me%data%et_ref + t
 
-        ! geopotential gravity:
-        rotmat = icrf_to_iau_moon(et)   ! rotation matrix from inertial to body-fixed Moon frame
-        rb = matmul(rotmat,r)           ! r in body-fixed frame
-        call me%grav%get_acc(rb,grav_n,grav_m,a_geopot)  ! get the acc due to the geopotential
-        a_geopot = matmul(transpose(rotmat),a_geopot)    ! convert acc back to inertial frame
+        if (me%pointmass_central_body) then
+            ! pointmass moon gravity model
+            a_geopot = -mu_moon / norm2(r)**3 * r
+        else
+            ! geopotential gravity:
+            rotmat = icrf_to_iau_moon(et)   ! rotation matrix from inertial to body-fixed Moon frame
+            rb = matmul(rotmat,r)           ! r in body-fixed frame
+            call me%grav%get_acc(rb,grav_n,grav_m,a_geopot)  ! get the acc due to the geopotential
+            a_geopot = matmul(transpose(rotmat),a_geopot)    ! convert acc back to inertial frame
+        end if
 
         ! third-body state vectors (wrt the central body, which is the moon in this case):
         ! [inertial frame]
@@ -2388,6 +2399,8 @@
 
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
+
+    call f%get('pointmass_central_body',  me%mission%pointmass_central_body,  found)
 
     call f%get('initial_guess_from_file', me%mission%initial_guess_from_file, found)
 
