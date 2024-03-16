@@ -29,7 +29,7 @@
     integer :: iunit, istat
 
     integer,parameter :: n = 2 !! the 2 optimization variables are `et_ref` and `period` in the config file
-    character(len=*),parameter :: base_config_file = './examples/example_sparse.json' ! TODO: should be an input
+    character(len=*),parameter :: default_base_config_file = './examples/example_sparse.json' ! TODO: should be an input
     character(len=*),parameter :: base_script_file = './run-sa.sh' ! the script to run for the function evaluation
 
     integer :: ns   !! number of cycles.
@@ -46,6 +46,21 @@
     type(config_file) :: config
     integer :: epoch_mode, year, month, day, hour, minute
     real(wp) :: sec, et_ref
+    character(len=:),allocatable :: base_config_file
+
+    write(*,*) ''
+    write(*,*) '----------------------'
+    write(*,*) 'Initializing...'
+    write(*,*) '----------------------'
+    write(*,*) ''
+
+    if (command_argument_count() == 0 ) then
+        base_config_file = default_base_config_file
+    else
+        ! can pass this in as the first command line argument
+        base_config_file = argv(1)
+        write(*,*) 'Using base config file: '//base_config_file
+    end if
 
     call config%open(base_config_file)
     call config%json%print()
@@ -82,7 +97,12 @@
     call config%get('sa_n_resets',n_resets, found)
     call config%get('sa_rt',      rt,       found)
 
-    write(*,*) 'Running optimizer'
+    write(*,*) ''
+    write(*,*) '----------------------'
+    write(*,*) 'Running SA optimizer..'
+    write(*,*) '----------------------'
+    write(*,*) ''
+
     call sa%initialize(fcn,n,lb,ub,&
                        n_resets = n_resets, &
                        ns       = ns, &
@@ -92,6 +112,12 @@
                        optimal_f     = 0.0_wp,& ! 0 is the desired solution (no eclipses) if it's found, we can stop.
                        optimal_f_tol = epsilon(1.0_wp)) ! since this is really an int, this doesn't matter much
     call sa%optimize(x, rt, t, vm, xopt, fopt, nacc, nfcnev, ier)
+
+    write(*,*) ''
+    write(*,*) '----------------------'
+    write(*,*) 'Done with SA'
+    write(*,*) '----------------------'
+    write(*,*) ''
 
     write(*,*) ''
     write(*,*) '=============='
