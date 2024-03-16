@@ -128,6 +128,9 @@
 
         logical :: generate_plots = .true.  !! to generate the python plots
         logical :: generate_trajectory_files = .true.  !! to export the txt trajectory files.
+        logical :: generate_json_trajectory_file = .false. !! to export the JSON trajectory file for the solution
+                                                           !! (contains inertial and rotating data). This one is used
+                                                           !! by the PyVista python script for plotting
         logical :: generate_guess_and_solution_files = .true.  !! to export the json guess and solution files.
         logical :: generate_kernel = .false.  !! to generate a spice kernel (bsp) of the solution
                                               !! [this requires the external mkspk SPICE tool]
@@ -208,6 +211,7 @@
 
         procedure,public :: init => initialize_the_mission
         procedure,public :: plot => plot_trajectory
+        procedure,public :: export_trajectory_json_file
 
         procedure,public :: write_optvars_to_file
         procedure,public :: constraint_violations
@@ -1637,6 +1641,9 @@
             call add_it(j*2+2,isegs_to_propagate)
         end do
 
+        ! warning: we are not accounting for fixing certain variables!
+        ! see get_sparsity_pattern
+
     else
         ! propagate all the segments:
         isegs_to_propagate = [(i, i=1,size(me%segs))]
@@ -2069,12 +2076,6 @@
             iendprev = iend
         end if
 
-        !TODO: also an option to generate a JSON trajectory file
-        !      - each seg a different structure
-        !      - et, state, specify frame.
-        !      - maybe also earth & sun ephemeris for plotting
-        !      - maybe also option for rotating frame output...
-
     end do
 
     if (plot) then
@@ -2094,6 +2095,91 @@
     if (export) close(iunit,iostat=istat)
 
     end subroutine plot_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Export the trajectory JSON file.
+!
+!@note It is assumed that all the data is present in the segments needed to propagate.
+
+    subroutine export_trajectory_json_file(me,filename,only_first_rev)
+
+    implicit none
+
+    class(mission_type),intent(inout) :: me
+    character(len=*),intent(in) :: filename !! plot file name [without extension]
+    logical,intent(in),optional :: only_first_rev  !! to only do the first rev [Default is False]
+
+    integer :: iseg  !! segment number counter
+    integer :: nsegs_to_plot !! number of segments to plot
+    type(json_core) :: json
+    type(json_value),pointer :: p_root, p_segs, p_seg, p_current
+
+    ! optional arguments:
+    nsegs_to_plot = size(me%segs) ! default export all the segments
+    if (present(only_first_rev)) then
+        if (only_first_rev) nsegs_to_plot = 8 ! only the first rev (8 segments)
+    end if
+
+    ! the JSON file will contain an array of segments:
+    call json%initialize(compress_vectors=.true.)
+    call json%create_object(p_root, '')
+    call json%create_array(p_segs, 'segs')
+    call json%add(p_root, p_segs)
+    p_current => null()
+
+    do iseg = 1, nsegs_to_plot
+
+        call destroy_traj(iseg)
+
+        ! generate the trajectory for this segment:
+        call me%segs(iseg)%propagate(mode=2)  ! [export points]
+
+        ! create the segment object for exporting the trajectory:
+        call json%create_object(p_seg, '')
+        if (associated(p_current)) then
+            call json%insert_after(p_current, p_seg) ! next one
+        else
+            call json%add(p_segs, p_seg) ! first one
+        end if
+        p_current => p_seg ! update for next seg
+
+        call json%add(p_seg, 'iseg', iseg)
+        call json%add(p_seg, 'et', me%segs(iseg)%traj_inertial%et)
+
+        call json%add(p_seg, 'x_inertial',  me%segs(iseg)%traj_inertial%x)
+        call json%add(p_seg, 'y_inertial',  me%segs(iseg)%traj_inertial%y)
+        call json%add(p_seg, 'z_inertial',  me%segs(iseg)%traj_inertial%z)
+        call json%add(p_seg, 'vx_inertial', me%segs(iseg)%traj_inertial%vx)
+        call json%add(p_seg, 'vy_inertial', me%segs(iseg)%traj_inertial%vy)
+        call json%add(p_seg, 'vz_inertial', me%segs(iseg)%traj_inertial%vz)
+
+        call json%add(p_seg, 'x_rotating',  me%segs(iseg)%traj_rotating%x)
+        call json%add(p_seg, 'y_rotating',  me%segs(iseg)%traj_rotating%y)
+        call json%add(p_seg, 'z_rotating',  me%segs(iseg)%traj_rotating%z)
+        call json%add(p_seg, 'vx_rotating', me%segs(iseg)%traj_rotating%vx)
+        call json%add(p_seg, 'vy_rotating', me%segs(iseg)%traj_rotating%vy)
+        call json%add(p_seg, 'vz_rotating', me%segs(iseg)%traj_rotating%vz)
+
+        !TODO:
+        !  - maybe also earth & sun ephemeris for plotting
+
+        call destroy_traj(iseg)
+    end do
+
+    call json%print(p_root, trim(filename)//'.json')
+    call json%destroy(p_root)
+
+    contains
+
+        subroutine destroy_traj(iseg)
+            integer,intent(in) :: iseg !! segment number
+            call me%segs(iseg)%traj_inertial%destroy()
+            call me%segs(iseg)%traj_rotating%destroy()
+        end subroutine destroy_traj
+
+    end subroutine export_trajectory_json_file
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2381,17 +2467,18 @@
 
     call f%get('jc',                        jc, found_jc)          ! one of these two must be present
     call f%get('period',                    p, found_period)       !
-    call f%get('fix_initial_time',          me%mission%fix_initial_time,          found)
-    call f%get('fix_initial_r',             me%mission%fix_initial_r,             found)
-    call f%get('fix_ry_at_end_of_rev',      me%mission%fix_ry_at_end_of_rev,      found)
-    call f%get('fix_final_ry_and_vx',       me%mission%fix_final_ry_and_vx,       found)
-    call f%get('generate_plots',            me%mission%generate_plots,            found)
-    call f%get('generate_trajectory_files', me%mission%generate_trajectory_files, found)
+    call f%get('fix_initial_time',                  me%mission%fix_initial_time,          found)
+    call f%get('fix_initial_r',                     me%mission%fix_initial_r,             found)
+    call f%get('fix_ry_at_end_of_rev',              me%mission%fix_ry_at_end_of_rev,      found)
+    call f%get('fix_final_ry_and_vx',               me%mission%fix_final_ry_and_vx,       found)
+    call f%get('generate_plots',                    me%mission%generate_plots,            found)
+    call f%get('generate_trajectory_files',         me%mission%generate_trajectory_files, found)
+    call f%get('generate_json_trajectory_file',     me%mission%generate_json_trajectory_file,     found)
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
-    call f%get('generate_kernel',           me%mission%generate_kernel,           found)
-    call f%get('generate_defect_file',      me%mission%generate_defect_file,      found)
-    call f%get('generate_eclipse_files',    me%mission%generate_eclipse_files,    found)
-    call f%get('run_pyvista_script',        me%mission%run_pyvista_script,        found)
+    call f%get('generate_kernel',                   me%mission%generate_kernel,           found)
+    call f%get('generate_defect_file',              me%mission%generate_defect_file,      found)
+    call f%get('generate_eclipse_files',            me%mission%generate_eclipse_files,    found)
+    call f%get('run_pyvista_script',                me%mission%run_pyvista_script,        found)
 
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
     call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)

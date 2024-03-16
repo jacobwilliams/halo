@@ -158,17 +158,24 @@
 !$  write(*,*) 'OMP wall time   : ', (tend-tstart), 'sec'
     write(*,*) ''
 
-    if (solver%mission%generate_guess_and_solution_files) &
+    if (solver%mission%generate_guess_and_solution_files) then
+        write(*,*) 'generate solution file'
         call solver%mission%write_optvars_to_file('solution',x) ! write solution to a file
+    end if
+
     ! export solution to plot or trajectory file
-    if (solver%mission%generate_trajectory_files .or. solver%mission%generate_plots) &
+    if (solver%mission%generate_trajectory_files .or. solver%mission%generate_plots) then
+        write(*,*) 'export solution trajectory'
         call solver%mission%plot('solution',&
                 draw_trajectory=solver%mission%generate_plots, &
                 export_trajectory=solver%mission%generate_trajectory_files)
+    end if
+
     if (solver%mission%generate_kernel) then
         if (.not. solver%mission%generate_trajectory_files) then
             write(*,*) 'error: kernel generation requires the trajectory file to be exported'
         else
+            write(*,*) 'generate kernel'
             mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
             bsp_output  = 'solution_'//solver%mission%get_case_name()//'.bsp'
             call execute_command_line('kernel/mkspk -setup kernel/setup.txt -input '//mkspk_input//' -output '//bsp_output)
@@ -185,18 +192,27 @@
     end if
 
     if (solver%mission%generate_defect_file) then
+        write(*,*) 'generate defect file'
         call solver%mission%print_constraint_defects('solution_defects_'//&
                                                      solver%mission%get_case_name()//&
                                                      '.csv')
     end if
 
     if (solver%mission%generate_eclipse_files) then
+        write(*,*) 'generate eclipse file'
         call solver%mission%generate_eclipse_data('eclipse', &
                                                   filetype = solver%mission%eclipse_filetype)
     end if
 
+    if (solver%mission%generate_json_trajectory_file) then
+        write(*,*) 'export JSON trajectory file'
+        call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
+    end if
+
     if (solver%mission%run_pyvista_script) then
-        mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+        write(*,*) 'run pyvista script'
+        !mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+        mkspk_input = 'traj_'//solver%mission%get_case_name()//'.json'
         call execute_command_line('python ./python/plot_utilities.py '//mkspk_input)
     end if
 

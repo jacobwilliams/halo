@@ -68,6 +68,7 @@
     "generate_guess_and_solution_files": true,
     "generate_kernel": false,
     "generate_defect_file": true,
+    "generate_json_trajectory_file": true,
 
     "generate_eclipse_files": true,
     "r_eclipse_bubble": 1.0, // km
