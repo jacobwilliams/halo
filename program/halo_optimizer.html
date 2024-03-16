@@ -70,7 +70,7 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title="54.1% of total for programs.">140 statements</a>
+                 title="93.3% of total for programs.">140 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -110,13 +110,12 @@
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-sa">sa</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-x~2">x</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-f~2">f</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-x">x</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-f">f</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-iunit">iunit</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-istat~2">istat</a>
+            <a class="list-group-item" href="../program/halo_optimizer.html#variable-istat">istat</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-n">n</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-default_base_config_file">default_base_config_file</a>
-            <a class="list-group-item" href="../program/halo_optimizer.html#variable-base_script_file">base_script_file</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-ns">ns</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-nt">nt</a>
             <a class="list-group-item" href="../program/halo_optimizer.html#variable-neps">neps</a>
@@ -196,11 +195,11 @@
             <li class="list-group-item">
               <ul class="list-inline">
                   <li class="list-inline-item">simulated_annealing_module</li>
+                  <li class="list-inline-item">argv_module</li>
+                  <li class="list-inline-item">halo_module</li>
+                  <li class="list-inline-item">halo_kinds_module</li>
                   <li class="list-inline-item"><a href='https://jacobwilliams.github.io/json-fortran/'>json_module</a></li>
                   <li class="list-inline-item">config_file_module</li>
-                  <li class="list-inline-item">halo_module</li>
-                  <li class="list-inline-item">argv_module</li>
-                  <li class="list-inline-item">halo_kinds_module</li>
               </ul>
             </li>
             <li class="list-group-item">
@@ -371,14 +370,13 @@ modules which it uses.
     </div>
 
     <p>Main program to find an eclipse-free halo orbit.
-  This program calls the solver as a command line call and reads the outputs.
+  This program calls the solver and reads the outputs.
   It uses a simulated annealing algorithm to minimize the time in earth eclipse.</p>
 <p>See: <code>run-sa-main.sh</code></p>
-<p>TODO: replace with a single program.</p>
 <h3>Notes</h3>
 <ul>
 <li>could enable the initial_guess_from_file output for iterations after the first one [not currently done]</li>
-<li>could switch to real128 for the last iteration? or after the final trajectory is found?</li>
+<li>could switch to <code>real128</code> for the last iteration? or after the final trajectory is found?</li>
 </ul>
     <br>
     <div class="card">
@@ -576,7 +574,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~2"></span>
+              <span class="anchor" id="variable-x"></span>
               real(kind=wp),
             </td>
             <td>
@@ -592,7 +590,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~2"></span>
+              <span class="anchor" id="variable-f"></span>
               real(kind=wp)
             </td>
             <td>
@@ -624,7 +622,7 @@ implementation in a submodule of an interface in a parent module.
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-istat~2"></span>
+              <span class="anchor" id="variable-istat"></span>
               integer
             </td>
             <td>
@@ -667,23 +665,7 @@ parameter
 <td> =</td>
                 <td>&#39;./examples/example_sparse.json&#39;</td>
             <td>
-                
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-base_script_file"></span>
-              character(len=*),
-            </td>
-            <td>
-parameter               
-            </td>
-            <td>::</td>
-            <td><strong>base_script_file</strong></td>
-<td> =</td>
-                <td>&#39;./run-sa.sh&#39;</td>
-            <td>
-                
+                <p>default if not specified</p>
             </td>
         </tr>
         <tr>
@@ -1151,7 +1133,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~3"></span>
+              <span class="anchor" id="variable-x~2"></span>
               real(kind=wp),
             </td>
 <td>intent(in),</td>
@@ -1166,7 +1148,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-f~3"></span>
+              <span class="anchor" id="variable-f~2"></span>
               real(kind=wp),
             </td>
 <td>intent(out)</td>
@@ -1181,7 +1163,7 @@ parameter
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-istat~3"></span>
+              <span class="anchor" id="variable-istat~2"></span>
               integer,
             </td>
 <td>intent(out)</td>
@@ -1223,8 +1205,8 @@ parameter
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iunit</span><span class="p">,</span><span class="w"> </span><span class="n">istat</span>
 
 <span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="c">!! the 2 optimization variables are `et_ref` and `period` in the config file</span>
-<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">default_base_config_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;./examples/example_sparse.json&#39;</span><span class="w"> </span><span class="c">! TODO: should be an input</span>
-<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">base_script_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;./run-sa.sh&#39;</span><span class="w"> </span><span class="c">! the script to run for the function evaluation</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">default_base_config_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;./examples/example_sparse.json&#39;</span><span class="w"> </span><span class="c">!! default if not specified</span>
+<span class="w">    </span><span class="c">!character(len=*),parameter :: base_script_file = &#39;./run-sa.sh&#39; ! the script to run for the function evaluation</span>
 
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ns</span><span class="w">   </span><span class="c">!! number of cycles.</span>
 <span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nt</span><span class="w">  </span><span class="c">!! number of iterations before temperature reduction.</span>
@@ -1364,6 +1346,7 @@ parameter
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;generate_guess_and_solution_files&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span>
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;generate_kernel&#39;</span><span class="p">,</span><span class="w">                   </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span>
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;generate_defect_file&#39;</span><span class="p">,</span><span class="w">              </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;generate_json_trajectory_file&#39;</span><span class="p">,</span><span class="w">     </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span>
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;run_pyvista_script&#39;</span><span class="p">,</span><span class="w">                </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span>
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;generate_eclipse_files&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span><span class="w">  </span><span class="c">! only need these</span>
 <span class="w">            </span><span class="k">call </span><span class="n">config</span><span class="p">%</span><span class="n">json</span><span class="p">%</span><span class="n">update</span><span class="p">(</span><span class="s1">&#39;eclipse_filetype&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">found</span><span class="p">)</span><span class="w">             </span><span class="c">!</span>
@@ -1380,7 +1363,9 @@ parameter
 <span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">read_config_file</span><span class="p">(</span><span class="n">step_config</span><span class="p">)</span>
 
 <span class="w">            </span><span class="c">! the env var is used by the script to indicate the config file to use:</span>
-<span class="w">            </span><span class="k">call </span><span class="nb">execute_command_line</span><span class="p">(</span><span class="s1">&#39;export HALO_CONFIG_FILE=&#39;</span><span class="o">//</span><span class="n">step_config</span><span class="o">//</span><span class="s1">&#39;; &#39;</span><span class="o">//</span><span class="n">base_script_file</span><span class="p">)</span>
+<span class="w">            </span><span class="c">!call execute_command_line(&#39;export HALO_CONFIG_FILE=&#39;//step_config//&#39;; &#39;//base_script_file)</span>
+<span class="w">            </span><span class="c">! new way: call the solver as a function:</span>
+<span class="w">            </span><span class="k">call </span><span class="n">halo_solver_main</span><span class="p">(</span><span class="n">step_config</span><span class="p">,</span><span class="n">debug</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.)</span>
 
 <span class="w">            </span><span class="c">! read the eclipse function output file</span>
 <span class="w">            </span><span class="n">eclipse_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;./eclipse_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.json&#39;</span>
@@ -1390,7 +1375,7 @@ parameter
 <span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
 
 <span class="w">            </span><span class="c">! f is just the count the 1-hr epochs where the phi is &lt; 0</span>
-<span class="w">            </span><span class="c">!TODO:: could use unique() to remove duplidate et&#39;s. just count the unique ets (can be zero)</span>
+<span class="w">            </span><span class="c">!TODO:: could use unique() to remove duplicate et&#39;s. just count the unique ets (can be zero)</span>
 <span class="w">            </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">et_vec</span><span class="p">),</span><span class="w"> </span><span class="n">wp</span><span class="p">)</span>
 
 <span class="w">            </span><span class="n">istat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">! no problems</span>
