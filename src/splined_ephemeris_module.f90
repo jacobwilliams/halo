@@ -104,6 +104,17 @@
         call me%sun_eph_interface%destroy()
         call me%ssb_eph_interface%destroy()
 
+        if (allocated(earth_eph%tx)) deallocate(earth_eph%tx)
+        if (allocated(sun_eph%tx)) deallocate(sun_eph%tx)
+        if (allocated(ssb_eph%tx)) deallocate(ssb_eph%tx)
+        if (allocated(earth_eph%bcoef)) deallocate(earth_eph%bcoef)
+        if (allocated(sun_eph%bcoef)) deallocate(sun_eph%bcoef)
+        if (allocated(ssb_eph%bcoef)) deallocate(ssb_eph%bcoef)
+        if (allocated(earth_eph%f)) deallocate(earth_eph%f)
+        if (allocated(sun_eph%f)) deallocate(sun_eph%f)
+        if (allocated(ssb_eph%f)) deallocate(ssb_eph%f)
+        if (allocated(et_vec)) deallocate(et_vec)
+
         ! first, count the number of points and allocate the arrays:
         nx = 0
         et = et0
@@ -187,7 +198,7 @@
         real(wp),intent(in) :: dt  !! ephemeris time step [sec]
         real(wp),intent(in) :: etf !! final ephemeris time [sec]
 
-        write(*,*) 'using splined ephemeris'
+        write(*,'(A)') ' * Using splined ephemeris'
 
         ! have to first initialize the base one:
         call me%jpl_ephemeris%initialize(filename,ksize,km,bary,status_ok)

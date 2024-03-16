@@ -1,16 +1,14 @@
 !*****************************************************************************************
 !>
 !  Main program to find an eclipse-free halo orbit.
-!  This program calls the solver as a command line call and reads the outputs.
+!  This program calls the solver and reads the outputs.
 !  It uses a simulated annealing algorithm to minimize the time in earth eclipse.
 !
 !  See: `run-sa-main.sh`
 !
-! TODO: replace with a single program.
-!
 !### Notes
 !  * could enable the initial_guess_from_file output for iterations after the first one [not currently done]
-!  * could switch to real128 for the last iteration? or after the final trajectory is found?
+!  * could switch to `real128` for the last iteration? or after the final trajectory is found?
 
     program halo_optimizer
 
@@ -29,8 +27,8 @@
     integer :: iunit, istat
 
     integer,parameter :: n = 2 !! the 2 optimization variables are `et_ref` and `period` in the config file
-    character(len=*),parameter :: default_base_config_file = './examples/example_sparse.json' ! TODO: should be an input
-    character(len=*),parameter :: base_script_file = './run-sa.sh' ! the script to run for the function evaluation
+    character(len=*),parameter :: default_base_config_file = './examples/example_sparse.json' !! default if not specified
+    !character(len=*),parameter :: base_script_file = './run-sa.sh' ! the script to run for the function evaluation
 
     integer :: ns   !! number of cycles.
     integer :: nt  !! number of iterations before temperature reduction.
@@ -170,6 +168,7 @@
             call config%json%update('generate_guess_and_solution_files', .false., found)
             call config%json%update('generate_kernel',                   .false., found)
             call config%json%update('generate_defect_file',              .false., found)
+            call config%json%update('generate_json_trajectory_file',     .false., found)
             call config%json%update('run_pyvista_script',                .false., found)
             call config%json%update('generate_eclipse_files', .true., found)  ! only need these
             call config%json%update('eclipse_filetype', 2, found)             !
@@ -186,7 +185,9 @@
             call solver%read_config_file(step_config)
 
             ! the env var is used by the script to indicate the config file to use:
-            call execute_command_line('export HALO_CONFIG_FILE='//step_config//'; '//base_script_file)
+            !call execute_command_line('export HALO_CONFIG_FILE='//step_config//'; '//base_script_file)
+            ! new way: call the solver as a function:
+            call halo_solver_main(step_config,debug=.false.)
 
             ! read the eclipse function output file
             eclipse_file = './eclipse_'//solver%mission%get_case_name()//'.json'
@@ -196,7 +197,7 @@
             call json%destroy()
 
             ! f is just the count the 1-hr epochs where the phi is < 0
-            !TODO:: could use unique() to remove duplidate et's. just count the unique ets (can be zero)
+            !TODO:: could use unique() to remove duplicate et's. just count the unique ets (can be zero)
             f = real(size(et_vec), wp)
 
             istat = 0 ! no problems

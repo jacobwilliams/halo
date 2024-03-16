@@ -245,9 +245,200 @@
 
     end type my_solver_type
 
+    public :: halo_solver_main !! main program
     public :: read_epoch ! also used by optimizer app
 
     contains
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Main program to solve the Halo targeting problem.
+!
+!### Author
+!  * Jacob Williams : Sept. 2017
+
+    subroutine halo_solver_main(config_file_name,debug)
+
+    use parameters_module
+!$  use omp_lib
+
+    implicit none
+
+    character(len=*),intent(in) :: config_file_name  !! the config file to read
+    logical,intent(in) :: debug !! for debugging prints
+
+    type(my_solver_type) :: solver  !! an instance of the solver that we will use
+    real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
+    integer :: m  !! number of functions
+    real(wp),dimension(:),allocatable :: f  !! function vector (constraint violations)
+    real(wp) :: tstart, tend  !! for timing
+    real(wp) :: tstart_cpu, tend_cpu  !! for timing
+    integer :: istat
+    character(len=:),allocatable :: message  !! Text status message from solver
+    integer :: n_segs, iseg
+    real(wp),dimension(6) :: x_rotating
+    character(len=:),allocatable :: mkspk_input, bsp_output  !! filenames for mkspk
+!$  integer :: tid, nthreads
+
+!$OMP PARALLEL PRIVATE(NTHREADS, TID)
+!$
+!$  tid = omp_get_thread_num()
+!$
+!$  if (tid == 0) then
+!$      nthreads = omp_get_num_threads()
+!$      write(*,'(A,1X,I3)') ' * Number of OMP threads: ', OMP_get_num_threads()
+!$  end if
+!$
+!$OMP END PARALLEL
+
+    if (debug) then
+        write(*,*) ''
+        write(*,*) '----------------------'
+        write(*,*) 'Initializing...'
+        write(*,*) '----------------------'
+        write(*,*) ''
+    end if
+
+    call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
+
+    if (allocated(solver%mission%initial_guess_from_file)) then
+        if (solver%mission%initial_guess_from_file /= '') then
+            !TODO: add some error checking here !
+            if (debug) write(*,*) 'Reading initial guess from file: '//solver%mission%initial_guess_from_file
+            call solver%mission%get_x_from_json_file(x) ! get solution from the file
+            call solver%mission%put_x_in_segments(x) ! populate segs with solution
+        end if
+    end if
+
+    if (solver%mission%generate_plots) &
+        call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
+    if (solver%mission%generate_guess_and_solution_files) &
+        call solver%mission%write_optvars_to_file('guess',x)    ! write guess to a file
+
+    !....debugging....
+    ! if (solver%mission%generate_trajectory_files) &
+    !     call solver%mission%plot('guess',&
+    !             draw_trajectory = .false., &
+    !             export_trajectory=solver%mission%generate_trajectory_files)
+    !....debugging....
+
+    if (debug) then
+        call solver%mission%define_problem_size(m=m)
+        allocate(f(m))
+        call solver%mission%constraint_violations(x,f)
+        write(*,*) ''
+        write(*,*) '----------------------'
+        write(*,*) 'Initial Guess...'
+        write(*,*) '----------------------'
+        write(*,*) ''
+        write(*,'(A/,*(F30.16/))') 'x:      ', x * solver%mission%xscale    ! unscaled values
+        write(*,*) ''
+        write(*,'(A/,*(F30.16/))') 'f:      ', f    ! scaled values
+        write(*,*) ''
+    end if
+
+    if (debug) then
+        write(*,*) 'INITIAL GUESS:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
+
+    if (debug) then
+        write(*,*) ''
+        write(*,*) '----------------------'
+        write(*,*) 'Solving...'
+        write(*,*) '----------------------'
+        write(*,*) ''
+    end if
+    write(*,'(A)') ' * Solving'
+    write(*,*) ''
+
+    call cpu_time(tstart_cpu)
+!$  tstart = omp_get_wtime()
+    call solver%solve(x)  ! call the solver
+    call solver%status(istat=istat, message=message)
+    call cpu_time(tend_cpu)
+!$  tend = omp_get_wtime()
+
+    call solver%mission%put_x_in_segments(x) ! populate segs with solution
+
+    if (debug) then
+        write(*,*) ''
+        write(*,*) '----------------------'
+        write(*,*) 'Solution...'
+        write(*,*) '----------------------'
+        write(*,*) ''
+    end if
+
+    write(*,*) ''
+    write(*,'(A)') ' * Status: '//message
+    write(*,'(A,1x,F10.3,1x,a)') ' * Elapsed cpu_time: ', (tend_cpu-tstart_cpu), 'sec'
+!$  write(*,'(A,1x,F10.3,1x,a)') ' * OMP wall time   : ', (tend-tstart), 'sec'
+    write(*,*) ''
+
+    if (solver%mission%generate_guess_and_solution_files) then
+        if (debug) write(*,*) 'generate solution file'
+        call solver%mission%write_optvars_to_file('solution',x) ! write solution to a file
+    end if
+
+    ! export solution to plot or trajectory file
+    if (solver%mission%generate_trajectory_files .or. solver%mission%generate_plots) then
+        if (debug) write(*,*) 'export solution trajectory'
+        call solver%mission%plot('solution',&
+                draw_trajectory=solver%mission%generate_plots, &
+                export_trajectory=solver%mission%generate_trajectory_files)
+    end if
+
+    if (solver%mission%generate_kernel) then
+        if (.not. solver%mission%generate_trajectory_files) then
+            write(*,*) 'error: kernel generation requires the trajectory file to be exported'
+        else
+            if (debug) write(*,*) 'generate kernel'
+            mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+            bsp_output  = 'solution_'//solver%mission%get_case_name()//'.bsp'
+            call execute_command_line('kernel/mkspk -setup kernel/setup.txt -input '//mkspk_input//' -output '//bsp_output)
+        end if
+    end if
+
+    if (debug) then
+        write(*,*) 'SOLUTION:'
+        call solver%mission%define_problem_size(n_segs=n_segs)
+        do iseg = 1, n_segs
+            call solver%mission%segs(iseg)%get_inputs(x0_rotating=x_rotating)
+            write(*,'(I5, *(F15.6,1X))') iseg, x_rotating
+        end do
+    end if
+
+    if (solver%mission%generate_defect_file) then
+        if (debug) write(*,*) 'generate defect file'
+        call solver%mission%print_constraint_defects('solution_defects_'//&
+                                                     solver%mission%get_case_name()//&
+                                                     '.csv')
+    end if
+
+    if (solver%mission%generate_eclipse_files) then
+        if (debug) write(*,*) 'generate eclipse file'
+        call solver%mission%generate_eclipse_data('eclipse', &
+                                                  filetype = solver%mission%eclipse_filetype)
+    end if
+
+    if (solver%mission%generate_json_trajectory_file) then
+        if (debug) write(*,*) 'export JSON trajectory file'
+        call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
+    end if
+
+    if (solver%mission%run_pyvista_script) then
+        if (debug) write(*,*) 'run pyvista script'
+        !mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
+        mkspk_input = 'traj_'//solver%mission%get_case_name()//'.json'
+        call execute_command_line('python ./python/plot_utilities.py '//mkspk_input)
+    end if
+
+    end subroutine halo_solver_main
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1065,12 +1256,12 @@
     call me%define_problem_size(n=n,m=m,n_segs=n_segs,n_nonzero=n_nonzero)
 
     write(*,*) ''
-    write(*,'(A,1X,I10)') 'n:                                     ', n
-    write(*,'(A,1X,I10)') 'm:                                     ', m
-    write(*,'(A,1X,I10)') 'total number of elements in Jacobian:  ', n*m
-    write(*,'(A,1X,I10)') 'number of nonzero elements in Jacobian:', n_nonzero
-    write(*,'(A,1X,I10)') 'number of segments:                    ', n_segs
-    write(*,'(A,1X,I10)') 'number of revs:                        ', me%n_revs
+    write(*,'(A,1X,I10)') '    n:                                     ', n
+    write(*,'(A,1X,I10)') '    m:                                     ', m
+    write(*,'(A,1X,I10)') '    total number of elements in Jacobian:  ', n*m
+    write(*,'(A,1X,I10)') '    number of nonzero elements in Jacobian:', n_nonzero
+    write(*,'(A,1X,I10)') '    number of segments:                    ', n_segs
+    write(*,'(A,1X,I10)') '    number of revs:                        ', me%n_revs
     write(*,*) ''
 
     ! arrays for the gradient computations:
@@ -2440,6 +2631,10 @@
 !>
 !  Read the config file that defines the problem
 !  to be solved and set all the global variables.
+!
+!### Notes
+!  * "period" is the normalized period ("jc", the jacobi constant, is also allowed)
+!  * The states in the patch point file are assumed to be "S" family
 
     subroutine read_config_file(me, filename)
 
@@ -2550,8 +2745,8 @@
     call f%get('ydot0', ydot0            )
     call f%close()
 
-    write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', &
-          normalized_period * tstar * sec2day
+    ! write(*,'(A, *(F6.2,",",1X))') 'period range in database (days): ', &
+    !       normalized_period * tstar * sec2day
 
     ! which is the independant variable:
     if (found_jc) then
@@ -2572,15 +2767,15 @@
     me%mission%quarter   = pp(2)
     me%mission%apoapsis  = pp(3)
 
-    write(*,'(a15,1x,F10.6,1x,a)') 'periapsis t: ' , me%mission%periapsis%t, 'days'
-    write(*,'(a15,1x,F10.6,1x,a)') 'quarter t:   ' , me%mission%quarter%t,   'days'
-    write(*,'(a15,1x,F10.6,1x,a)') 'apoapsis t:  ' , me%mission%apoapsis%t,  'days'
+    ! write(*,'(a15,1x,F10.6,1x,a)') 'periapsis t: ' , me%mission%periapsis%t, 'days'
+    ! write(*,'(a15,1x,F10.6,1x,a)') 'quarter t:   ' , me%mission%quarter%t,   'days'
+    ! write(*,'(a15,1x,F10.6,1x,a)') 'apoapsis t:  ' , me%mission%apoapsis%t,  'days'
 
     ! compute some time variables:
     me%mission%period  = me%mission%apoapsis%t * 2.0_wp  ! Halo period [days]
     me%mission%period8 = me%mission%period / 8.0_wp      ! 1/8 of Halo period [days]
 
-    write(*,'(a15,1x,F10.6)') 'period: ' , me%mission%period
+    ! write(*,'(a15,1x,F10.6)') 'period: ' , me%mission%period
 
     contains
 !*****************************************************************************************
@@ -2738,16 +2933,16 @@
     call prop%integrate(t,x,tf,idid=idid,integration_mode=2,tstep=dt)
 
     ! normalized patch points are now in x_crtbp,y_crtbp,z_crtbp,vx_crtbp,vy_crtbp,vz_crtbp
-    write(*,*) ''
-    write(*,*) 'generate_patch_points'
-    write(*,'(A,*(F10.6,1X))') '  t_crtbp  = ', t_crtbp
-    write(*,'(A,*(F10.6,1X))') '  x_crtbp  = ', x_crtbp
-    write(*,'(A,*(F10.6,1X))') '  y_crtbp  = ', y_crtbp
-    write(*,'(A,*(F10.6,1X))') '  z_crtbp  = ', z_crtbp
-    write(*,'(A,*(F10.6,1X))') '  vx_crtbp = ', vx_crtbp
-    write(*,'(A,*(F10.6,1X))') '  vy_crtbp = ', vy_crtbp
-    write(*,'(A,*(F10.6,1X))') '  vz_crtbp = ', vz_crtbp
-    write(*,*) ''
+    ! write(*,*) ''
+    ! write(*,*) 'generate_patch_points'
+    ! write(*,'(A,*(F10.6,1X))') '  t_crtbp  = ', t_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  x_crtbp  = ', x_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  y_crtbp  = ', y_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  z_crtbp  = ', z_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  vx_crtbp = ', vx_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  vy_crtbp = ', vy_crtbp
+    ! write(*,'(A,*(F10.6,1X))') '  vz_crtbp = ', vz_crtbp
+    ! write(*,*) ''
 
     ! transform state to moon-centered and unnormalize
     do i = 1, 3 ! periapsis, quarter, apoapsis
