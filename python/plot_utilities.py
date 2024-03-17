@@ -332,9 +332,11 @@ def read_trajectory_solution_file(filename : str, traj : int = 1):
             x  = np.array(data[x_str])
             y  = np.array(data[y_str])
             z  = np.array(data[z_str])
-            rmag = np.array(data['phi_se'])  # this is really phi !
+            rmag = np.array(data['phi_se'])  # this is really phi (<0 means eclipsed)
+            rmag = np.where(rmag >= 0.0, 0.0, rmag)
 
-            rmag = np.where(rmag > 1.0, 1.0, rmag)
+            # eclipsed_epochs = np.extract(rmag<0.0, rmag)
+            # print(f'eclipsed_points = {eclipsed_epochs}')
 
         else:
             # these are in the file by segment ...
