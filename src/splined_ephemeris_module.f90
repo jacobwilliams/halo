@@ -248,6 +248,10 @@
         elseif (targ==body_moon .and. obs==body_ssb) then
             rv = -me%ssb_eph_interface%get_rv(et)
 
+        elseif (targ==body_earth .and. obs==body_sun) then
+            ! for this one we subtract these
+            rv = me%earth_eph_interface%get_rv(et) - me%sun_eph_interface%get_rv(et)
+
         else
             write(*,*) 'targ = ', targ
             write(*,*) 'obs  = ', obs

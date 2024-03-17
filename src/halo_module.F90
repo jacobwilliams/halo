@@ -84,8 +84,9 @@
         logical :: pointmass_central_body = .false.
 
         ! for saving the trajectory for plotting:
-        type(trajectory) :: traj_inertial  !! in the inertial frame
-        type(trajectory) :: traj_rotating  !! in the rotating frame
+        type(trajectory) :: traj_inertial  !! in the inertial frame (j2000-moon)
+        type(trajectory) :: traj_rotating  !! in the rotating frame (moon-earth, moon-centered)
+        type(trajectory) :: traj_se_rotating  !! in the rotating frame (sun-earth, earth-centered)
 
         contains
 
@@ -420,15 +421,15 @@
                                                      '.csv')
     end if
 
+    if (solver%mission%generate_json_trajectory_file) then
+        if (debug) write(*,*) 'export JSON trajectory file'
+        call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
+    end if
+
     if (solver%mission%generate_eclipse_files) then
         if (debug) write(*,*) 'generate eclipse file'
         call solver%mission%generate_eclipse_data('eclipse', &
                                                   filetype = solver%mission%eclipse_filetype)
-    end if
-
-    if (solver%mission%generate_json_trajectory_file) then
-        if (debug) write(*,*) 'export JSON trajectory file'
-        call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
     end if
 
     if (solver%mission%run_pyvista_script) then
@@ -2202,6 +2203,7 @@
         ! destroy all trajectories:
         call me%segs(iseg)%traj_inertial%destroy()
         call me%segs(iseg)%traj_rotating%destroy()
+        call me%segs(iseg)%traj_se_rotating%destroy()
     end do
 
     do iseg = 1, nsegs_to_plot
@@ -2349,14 +2351,22 @@
         call json%add(p_seg, 'x_rotating',  me%segs(iseg)%traj_rotating%x)
         call json%add(p_seg, 'y_rotating',  me%segs(iseg)%traj_rotating%y)
         call json%add(p_seg, 'z_rotating',  me%segs(iseg)%traj_rotating%z)
-        call json%add(p_seg, 'vx_rotating', me%segs(iseg)%traj_rotating%vx)
-        call json%add(p_seg, 'vy_rotating', me%segs(iseg)%traj_rotating%vy)
-        call json%add(p_seg, 'vz_rotating', me%segs(iseg)%traj_rotating%vz)
+        ! call json%add(p_seg, 'vx_rotating', me%segs(iseg)%traj_rotating%vx)
+        ! call json%add(p_seg, 'vy_rotating', me%segs(iseg)%traj_rotating%vy)
+        ! call json%add(p_seg, 'vz_rotating', me%segs(iseg)%traj_rotating%vz)
+
+        call json%add(p_seg, 'x_se_rotating',  me%segs(iseg)%traj_se_rotating%x)
+        call json%add(p_seg, 'y_se_rotating',  me%segs(iseg)%traj_se_rotating%y)
+        call json%add(p_seg, 'z_se_rotating',  me%segs(iseg)%traj_se_rotating%z)
+        ! call json%add(p_seg, 'vx_se_rotating', me%segs(iseg)%traj_se_rotating%vx) ! don't need these
+        ! call json%add(p_seg, 'vy_se_rotating', me%segs(iseg)%traj_se_rotating%vy)
+        ! call json%add(p_seg, 'vz_se_rotating', me%segs(iseg)%traj_se_rotating%vz)
 
         !TODO:
         !  - maybe also earth & sun ephemeris for plotting
+        !  - solar fraction to color the trajectory [but really that should go in the eclipse file?]
 
-        call destroy_traj(iseg)
+        call destroy_traj(iseg) ! keep them for the eclipse file generation ...
     end do
 
     call json%print(p_root, trim(filename)//'.json')
@@ -2368,6 +2378,7 @@
             integer,intent(in) :: iseg !! segment number
             call me%segs(iseg)%traj_inertial%destroy()
             call me%segs(iseg)%traj_rotating%destroy()
+            call me%segs(iseg)%traj_se_rotating%destroy()
         end subroutine destroy_traj
 
     end subroutine export_trajectory_json_file
@@ -2379,6 +2390,8 @@
 !  Eclipsing data w.r.t. Earth. In this file, any point <0 is in eclipse.
 !
 !  Based on [[plot_trajectory]]
+!
+!  TODO: use the data from [[export_trajectory_json_file]], so that should be run first
 
     subroutine generate_eclipse_data(me,fileprefix,filetype)
 
@@ -2388,6 +2401,7 @@
 
         integer :: i,iunit,iseg,istat,istart,istep,iend
         real(wp) :: phi !! sunfrac value
+        real(wp) :: p
         integer :: ifiletype
         type(json_file) :: json
         character(len=10) :: iseg_str
@@ -2395,6 +2409,12 @@
         real(wp),dimension(:),allocatable :: phi_vec !! vector of `phi` values from a segment (for JSON file)
         real(wp),dimension(:),allocatable :: et_vec !! vector of `et` values from a segment (for JSON file)
         real(wp),dimension(:),allocatable :: phi_vec_total, et_vec_total !! cumulative for all segments
+
+        real(wp),dimension(:),allocatable :: x_se, y_se, z_se, vx_se, vy_se, vz_se, et_se, phi_se
+        type(icrf_frame) :: inertial
+        type(two_body_rotating_frame) :: se_rotating
+        real(wp),dimension(6) :: x_se_rotating
+        logical :: status_ok
 
         integer,parameter :: FILETYPE_CSV = 1
         integer,parameter :: FILETYPE_JSON = 2
@@ -2422,13 +2442,17 @@
             error stop 'invalid filetype for eclipse file'
         end select
 
+        allocate(x_se(0));allocate(y_se(0));allocate(z_se(0))
+        allocate(vx_se(0));allocate(vy_se(0));allocate(vz_se(0))
+        allocate(et_se(0))
+        allocate(phi_se(0))
         allocate(phi_vec_total(0))
         allocate(et_vec_total(0))
         do iseg = 1, size(me%segs)
 
             if (ifiletype==FILETYPE_JSON) then
                 if (allocated(phi_vec)) deallocate(phi_vec); allocate(phi_vec(0))
-                if (allocated(et_vec)) deallocate(et_vec); allocate(et_vec(0))
+                if (allocated(et_vec))  deallocate(et_vec);  allocate(et_vec(0))
             end if
             write(iseg_str,'(I10)') iseg    ! segment number as string
             iseg_str = adjustl(iseg_str)
@@ -2436,6 +2460,7 @@
             ! destroy all trajectories first:
             call me%segs(iseg)%traj_inertial%destroy()
             call me%segs(iseg)%traj_rotating%destroy()
+            call me%segs(iseg)%traj_se_rotating%destroy()
 
             ! generate the trajectory for this segment:
             ! [export points at a fixed time step]
@@ -2461,8 +2486,9 @@
                                         me%segs(iseg)%traj_inertial%vx(i),&
                                         me%segs(iseg)%traj_inertial%vy(i),&
                                         me%segs(iseg)%traj_inertial%vz(i) ])
-                    phi = min(0.0_wp, get_sun_fraction(me%eph, et, rv_moon, me%r_eclipse_bubble))
-                    !phi >0 mean the spacecraft is in sunlight
+
+                    p = get_sun_fraction(me%eph, et, rv_moon, me%r_eclipse_bubble)
+                    phi = min(0.0_wp, p) ! phi >0 mean the spacecraft is in sunlight
 
                     select case (ifiletype)
                     case (FILETYPE_CSV)
@@ -2471,6 +2497,22 @@
                         ! for this we accumulate the data for the whole
                         ! segment and write all at once at the end
                         phi_vec = [phi_vec, phi] ! TODO: could use expand routines to make this more efficient
+                        phi_se = [phi_se, p] ! save the actual value
+                        et_se = [et_se, et]
+
+                        ! also convert to sun-earth rotating
+                        se_rotating = two_body_rotating_frame(primary_body=body_sun,&
+                                                              secondary_body=body_earth,&
+                                                              center=center_at_secondary_body,&
+                                                              et=et)
+                        ! from inertial to rotating:
+                        inertial = icrf_frame(b=body_moon)
+                        call inertial%transform(rv_moon,se_rotating,et,me%segs(iseg)%eph,x_se_rotating,status_ok)
+                        if (.not. status_ok) error stop 'transformation error in propagate_segment'
+                        x_se = [x_se, x_se_rotating(1)]
+                        y_se = [y_se, x_se_rotating(2)]
+                        z_se = [z_se, x_se_rotating(3)]
+
                     end select
 
                 end associate
@@ -2494,6 +2536,12 @@
         case (FILETYPE_JSON)
             call json%add('et',  et_vec_total)     ! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)
             call json%add('phi', phi_vec_total)
+
+            call json%add('phi_se', phi_se) ! also the full S-E trajectory data for plotting
+            call json%add('et_se', et_se)
+            call json%add('x_se_rotating', x_se)
+            call json%add('y_se_rotating', y_se)
+            call json%add('z_se_rotating', z_se)
             call json%print(full_filename)
         end select
         call json%destroy()
@@ -2551,8 +2599,10 @@
 
     real(wp) :: et !! ephemeris time [sec]
     real(wp),dimension(6) :: x_rotating !! the state to export
+    real(wp),dimension(6) :: x_se_rotating !! the state to export
     type(icrf_frame) :: inertial
     type(two_body_rotating_frame) :: rotating
+    type(two_body_rotating_frame) :: se_rotating
     logical :: status_ok !! transformation status flag
 
     select type (me)
@@ -2570,9 +2620,19 @@
         call inertial%transform(x,rotating,et,me%eph,x_rotating,status_ok)
         if (.not. status_ok) error stop 'transformation error in propagate_segment'
 
+        ! also convert to sun-earth rotating for plotting: -- really should only do when when exporting the json traj file
+        se_rotating = two_body_rotating_frame(primary_body=body_sun,&
+                                              secondary_body=body_earth,&
+                                              center=center_at_secondary_body,&
+                                              et=et)
+        ! from inertial to rotating:
+        call inertial%transform(x,se_rotating,et,me%eph,x_se_rotating,status_ok)
+        if (.not. status_ok) error stop 'transformation error in propagate_segment'
+
         ! save both the inertial and rotating trajectories:
         call me%traj_inertial%add(et,x)
         call me%traj_rotating%add(et,x_rotating)
+        call me%traj_se_rotating%add(et,x_se_rotating)
 
     class default
         error stop 'invalid class in trajectory_export_func'
@@ -2775,7 +2835,16 @@
     me%mission%period  = me%mission%apoapsis%t * 2.0_wp  ! Halo period [days]
     me%mission%period8 = me%mission%period / 8.0_wp      ! 1/8 of Halo period [days]
 
-    ! write(*,'(a15,1x,F10.6)') 'period: ' , me%mission%period
+    write(*,*) ''
+    write(*,'(A30,1x,f16.6,a,i4,a,i2,a,i2,a,i0.2,a,i0.2,a,f9.6,a)') '   Reference ephemeris time: ', &
+                                                                          me%mission%et_ref, &
+                                                                    ' (', me%mission%year,'-',&
+                                                                          me%mission%month,'-',&
+                                                                          me%mission%day,' ',&
+                                                                          me%mission%hour,':',&
+                                                                          me%mission%minute,':',&
+                                                                          me%mission%sec, ')'
+    write(*,'(a30,1x,f30.17)') '   Orbit period (days): ', me%mission%period
 
     contains
 !*****************************************************************************************
