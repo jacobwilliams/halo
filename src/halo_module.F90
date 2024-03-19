@@ -965,12 +965,13 @@
     real(wp),dimension(8) :: t0 !! [days]
     real(wp),dimension(8) :: tf !! [days]
     real(wp),dimension(6,8) :: x0_rotating  !! rotating frame
-    real(wp),dimension(size(x_scaled)) :: x !! opt var vector (unscaled)
+    real(wp),dimension(:),allocatable :: x !! opt var vector (unscaled)
     integer :: n_segs  !! number of segments
 
     call me%define_problem_size(n_segs=n_segs)
 
     ! unscale the x vector:
+    allocate(x(size(x_scaled)))
     x = x_scaled * me%xscale
 
     ! first extract data from the opt var vector and put it into the segments:
