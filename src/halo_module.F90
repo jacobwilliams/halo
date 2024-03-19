@@ -127,6 +127,7 @@
         character(len=:),allocatable :: N_or_S      !! 'N' or 'S'
         character(len=:),allocatable :: L1_or_L2    !! 'L1' or 'L2'
 
+        logical :: solve = .true. !! run the nle solver to solve the problem
         logical :: generate_plots = .true.  !! to generate the python plots
         logical :: generate_trajectory_files = .true.  !! to export the txt trajectory files.
         logical :: generate_json_trajectory_file = .false. !! to export the JSON trajectory file for the solution
@@ -348,22 +349,24 @@
         end do
     end if
 
-    if (debug) then
+    if (solver%mission%solve) then
+        if (debug) then
+            write(*,*) ''
+            write(*,*) '----------------------'
+            write(*,*) 'Solving...'
+            write(*,*) '----------------------'
+            write(*,*) ''
+        end if
+        write(*,'(A)') ' * Solving'
         write(*,*) ''
-        write(*,*) '----------------------'
-        write(*,*) 'Solving...'
-        write(*,*) '----------------------'
-        write(*,*) ''
-    end if
-    write(*,'(A)') ' * Solving'
-    write(*,*) ''
 
-    call cpu_time(tstart_cpu)
-!$  tstart = omp_get_wtime()
-    call solver%solve(x)  ! call the solver
-    call solver%status(istat=istat, message=message)
-    call cpu_time(tend_cpu)
-!$  tend = omp_get_wtime()
+        call cpu_time(tstart_cpu)
+!$      tstart = omp_get_wtime()
+        call solver%solve(x)  ! call the solver
+        call solver%status(istat=istat, message=message)
+        call cpu_time(tend_cpu)
+!$      tend = omp_get_wtime()
+    end if
 
     call solver%mission%put_x_in_segments(x) ! populate segs with solution
 
@@ -2723,6 +2726,7 @@
 
     call f%get('jc',                        jc, found_jc)          ! one of these two must be present
     call f%get('period',                    p, found_period)       !
+    call f%get('solve',                             me%mission%solve,                     found)
     call f%get('fix_initial_time',                  me%mission%fix_initial_time,          found)
     call f%get('fix_initial_r',                     me%mission%fix_initial_r,             found)
     call f%get('fix_ry_at_end_of_rev',              me%mission%fix_ry_at_end_of_rev,      found)
