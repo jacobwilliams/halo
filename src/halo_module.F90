@@ -2483,7 +2483,7 @@
         ! now propagate the segments:
         ! [export points at a fixed time step]
 !$OMP PARALLEL DO    !...FIRSTPRIVATE(me)
-        do i = 1, nsegs_to_plot
+        do i = 1, size(me%segs)
             call me%segs(isegs(i))%propagate(mode=2,tstep=me%eclipse_dt_step)
         end do
 !$OMP END PARALLEL DO
