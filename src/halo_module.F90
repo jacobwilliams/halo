@@ -366,9 +366,9 @@
         call solver%status(istat=istat, message=message)
         call cpu_time(tend_cpu)
 !$      tend = omp_get_wtime()
+        call solver%mission%put_x_in_segments(x) ! populate segs with solution
     end if
 
-    call solver%mission%put_x_in_segments(x) ! populate segs with solution
 
     if (debug) then
         write(*,*) ''
