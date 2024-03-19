@@ -2336,7 +2336,7 @@
     !====================================
     ! now propagate the segments:
 !$OMP PARALLEL DO    !...FIRSTPRIVATE(me)
-    do i = 1, nsegs_to_plot
+    do iseg = 1, nsegs_to_plot
         call me%segs(isegs(i))%propagate(mode=2)  ! [export points]
     end do
 !$OMP END PARALLEL DO
