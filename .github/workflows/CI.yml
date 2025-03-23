@@ -69,7 +69,7 @@ jobs:
     #     files: build/coverage/coverage.info
 
     - name: Build documentation
-      run: ford ./ford.md
+      run: ford ./ford.md --external_links "fortran_astrodynamics_toolkit = https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit" --externalize
 
     - name: Deploy Documentation
       if: github.ref == 'refs/heads/master'
