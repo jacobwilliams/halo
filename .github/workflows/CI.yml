@@ -46,6 +46,9 @@ jobs:
       if: contains( matrix.os, 'ubuntu')
       run: |
         sudo apt-get install lcov
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+        sudo apt-get update
+        sudo apt-get install -y gcc-${{ matrix.gcc_v }} gfortran-${{ matrix.gcc_v }}
         sudo update-alternatives \
            --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.gcc_v }} 100 \
            --slave /usr/bin/gfortran gfortran /usr/bin/gfortran-${{ matrix.gcc_v }} \
