@@ -56,7 +56,8 @@ jobs:
         sudo apt-get install libblas-dev liblapack-dev
 
     - name: Run tests
-      run: fpm run --profile debug --compiler gfortran --flag -fopenmp -- examples/example.json
+      run: fpm run halo_solver --profile debug --compiler gfortran --flag -fopenmp -- examples/example.json
+      # run: fpm run --profile debug --compiler gfortran --flag -fopenmp -- examples/example.json
 
     # - name: Create coverage report
     #   run: |
