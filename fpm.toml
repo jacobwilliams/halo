@@ -11,6 +11,7 @@ auto-executables = true
 auto-examples = true
 auto-tests = true
 external-modules = "dqrm_mod"
+link = ["lapack", "blas"]
 
 [dependencies]
 fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.6" }
