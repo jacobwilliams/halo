@@ -445,16 +445,19 @@ if __name__ == "__main__":
 
         if iplot==0:
             title = os.path.basename(file_to_plot) + ' [Earth-Moon Rotating Frame]'
+            axis_prefix = 'EMR'
         elif iplot==1:
             title = os.path.basename(file_to_plot) + ' [Inertial Frame]'
+            axis_prefix = 'J2000'
         elif iplot==2:
             title = os.path.basename(file_to_plot) + ' [Sun-Earth Rotating Frame]'
+            axis_prefix = 'SER'
 
         p.add_text(title, name='banner', position='upper_left', color=font_color)
         p.show_grid(color='gray', font_size=20, font_family='times',
-                    xtitle = 'J2000 X (km)',
-                    ytitle = 'J2000 Y (km)',
-                    ztitle = 'J2000 Z (km)')
+                    xtitle = f'{axis_prefix} X (km)',
+                    ytitle = f'{axis_prefix} Y (km)',
+                    ztitle = f'{axis_prefix} Z (km)')
         p.set_background(color=background_color)
 
         p.view_isometric()
