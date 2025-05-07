@@ -442,7 +442,7 @@
         if (debug) write(*,*) 'run pyvista script'
         !mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
         mkspk_input = 'traj_'//solver%mission%get_case_name()//'.json'
-        call execute_command_line('python ./python/plot_utilities.py '//mkspk_input)
+        call execute_command_line('python ./python/plot_utilities.py '//mkspk_input, wait=.false.)
     end if
 
     end subroutine halo_solver_main
