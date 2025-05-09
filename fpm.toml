@@ -19,9 +19,9 @@ NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
 json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.4.0" }
 bspline-fortran = { git = "https://github.com/jacobwilliams/bspline-fortran", tag = "7.0.0" }
-pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.2.0" }
+pyplot-fortran = { git = "https://github.com/jacobwilliams/pyplot-fortran", tag = "3.6.0" }
 fortran-search-and-sort = { git = "https://github.com/jacobwilliams/fortran-search-and-sort", tag = "1.0.0" }
-nlesolver-fortran = { git = "https://github.com/jacobwilliams/nlesolver-fortran", tag = "2.2.0" }
+nlesolver-fortran = { git = "https://github.com/jacobwilliams/nlesolver-fortran", tag = "3.0.0" }
 argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1.0.0" }
 simulated-annealing = { git = "https://github.com/jacobwilliams/simulated-annealing", tag = "1.2.0" }
 
@@ -30,3 +30,6 @@ source-dir = "src"
 
 [install]
 library = false
+
+[preprocess]
+[preprocess.cpp]
