@@ -14,7 +14,7 @@ external-modules = "dqrm_mod"
 link = ["lapack", "blas"]
 
 [dependencies]
-fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.6" }
+fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.7" }
 NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
 json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.4.0" }

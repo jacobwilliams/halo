@@ -53,3 +53,5 @@ __pycache__
 /*.json
 /*.csv
 /*.txt
+*NREVS=*.*
+STEP=*.*
