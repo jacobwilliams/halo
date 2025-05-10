@@ -60,6 +60,10 @@ LINK : fatal error LNK1181: cannot open input file 'lapack.lib'
 
 It's because `fmin` and `nlsolver-fortran` both have explicit `lapack` and `blas` dependencies specified in their `fpm.toml` files (`link = ["lapack", "blas"]`). If i delete those it compiles.
 
+### Other notes
+
+Another source of CR3BP halos that can be used as initial guesses for this tool can be found here: https://ssd.jpl.nasa.gov/tools/periodic_orbits.html
+
 ### Documentation
 
 The latest API documentation can be found [here](https://jacobwilliams.github.io/halo/). This was generated from the source code using [FORD](https://github.com/Fortran-FOSS-Programmers/ford).
