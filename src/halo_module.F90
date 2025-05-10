@@ -645,8 +645,12 @@
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min        = 0.2_wp, &
-                                alpha_max        = 0.8_wp, &
+                                alpha_max        = 1.0_wp, &
+                                ! step_mode = 2,            & ! backtracking "line search"
+                                ! alpha_min = 0.1_wp, &
+                                ! alpha_max = 1.0_wp, &
                                 use_broyden      = .false.,      & ! broyden update
+                                ! use_broyden=.true.,broyden_update_n=4, & ! ... test ...
                                 sparsity_mode    = me%mission%solver_mode, &  ! use a sparse solver
                                 custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
                                 irow             = irow, &  ! sparsity pattern

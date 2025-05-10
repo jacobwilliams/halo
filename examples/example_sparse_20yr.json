@@ -1,0 +1,174 @@
+// example case using the JSON input file
+{
+    // specify halo orbit to compute:
+    // "period": 1.5872714606,  // normalized period [initial test case]
+    // "period":   1.6907637948986587,  // for patch_point_file_is_periapsis = false --> higher orbit ...
+    //"period":   1.6647057114899595,   // [100 rev solution with no eclipses]
+    // "period": 1.5872714606,
+    // "sa_lb": [1.5, 757340200.0],
+    // "sa_ub": [1.62, 757341200.0],
+
+    //"period": 3.2266000495,  //larger halo
+    // "sa_lb": [3.1, 757340200.0],
+    // "sa_ub": [3.3, 757341200.0],
+
+                        // 10 rev case       100 rev case
+                        // -----------       ------------
+     // "period": 1.49,
+    // "period": 1.499,
+    //"period": 1.50,
+    // "period": 1.51,  // rp min 3162
+    //"period": 1.52,   // rp min 3275
+    //"period": 1.53,   // rp min 3393       3461
+    //"period": 1.54,
+
+    // NOTE: ref nrho: 3195 - 3556 km (mean 3366 km)
+    //
+    // test 1
+    // "period": 1.54,     //                   3576
+    // "et_ref": 757341200.0,
+    // "sa_lb": [1.50, 757946000.0], // 757341200 + 604800
+    // "sa_ub": [1.55, 757341200.0], // 757341200 - 604800
+    // "vm":    [0.05, 604800.0],    // +/- 7 days
+    //----------------------------------------------------------------
+    //... solution [no eclipse, but not right for the full 20 years]:
+    // "period": 1.5391347689082586,     //                   3576
+    // "et_ref": 757340913.48172498,
+    //----------------------------------------------------------------
+
+    // "period": 1.5872714606,    // with three eclipses
+    //"et_ref": 710212455.000000, // with three eclipses
+    // "et_ref": 710298855.0,   // + 1 day
+    // "et_ref": 710385255.0,   // + 2 day
+    //"et_ref": 710471655.0,   // + 3 days
+
+
+    "N_or_S": "S",
+    "L1_or_L2": "L2",
+
+    // reference epoch (all times are relative to this epoch)
+    // can specify as calendar date or ET
+    // "year": 2000,
+    // "month": 1,
+    // "day": 1,
+    // "hour": 12,
+    // "minute": 0,
+    // "sec": 0,
+    // "et_ref":    710212455.000000,   // 2022-07-04 13:14:15 [initial test case]
+    //"et_ref":       710212454.94232786,
+    //"et_ref":       709622988.34010994, // [100 rev solution with no eclipses]
+    //"et_ref":    757339200.0,
+
+    // note from whitepaper: The resulting orbit has a perilune radius that
+    //  varies from 3196 to 3557 km, with an average of 3366
+    //  km. The average orbit period of the reference trajectory
+    //  is 6.562 days, closely matching the value that would be
+    //  expected by applying the resonance ratio to the mean
+    //  lunar synodic period.
+
+    //---------------------- test 2 - with 200 revs
+    // "et_ref": 818877600.000000,
+    "year": 2025,
+    "month": 12,
+    // "day": 30,  // eclipse free for 200 revs
+    //"hour": 1,
+    // "minute": 0,
+    // "day": 30,     // small eclipses for 1000 revs
+    // "hour": 0,
+    // "minute": 0,
+    // "day": 29,     // one small eclipse  1000 revs   .. prev minus 1 hr
+    // "hour": 23,
+    // "minute": 0,
+    // "day": 29,     // 1 very small eclipse  1000 revs   .. prev minus 0.5 hr
+    // "hour": 22,
+    // "minute": 30,
+    // "sec": 0,
+    // "day": 29,     // still very small eclipse  1000 revs   .. prev minus 1 min
+    // "hour": 22,
+    // "minute": 29,
+    // "sec": 0,
+    "day": 29,     // no eclipses for 1000 revs !
+    "hour": 22,
+    "minute": 0,
+    "sec": 0,
+
+    // "period": 1.499,
+    "period": 1.5112,
+    // "sa_lb": [1.49, 818704800.0], // 818877600 - 2 days
+    // "sa_ub": [1.51, 819050400.0], // 818877600 + 2 days
+    // "vm":    [0.01, 172800.0],    // +/- 2 days
+    // "sa_ns":   4,      // number of cycles.
+    // "sa_nt":   5,      // number of iterations before temperature reduction.
+    // "sa_neps": 5,      // number of final function values used to decide upon termination.
+    //---------------------- test
+
+    // optional inputs:
+    "fix_initial_time": false,  // do not allow the initial epoch to vary
+    "fix_initial_r": false,
+    "fix_ry_at_end_of_rev": 0,
+    "fix_final_ry_and_vx": false,
+
+    // integrator tols:
+    "rtol": 1.0e-12,
+    "atol": 1.0e-12,
+    // "rtol": 1.0e-10,
+    // "atol": 1.0e-10,
+
+    //nlesolver tol:
+      "nlesolver_tol": 1.0e-6,
+    // "nlesolver_tol": 1.0e-9,
+    // "nlesolver_tol": 1.0e-12,
+    // "nlesolver_tol": 1.0e-20,  // use for quad precision
+
+  //  "solver_mode": 1, // dense solver (LAPACK)
+  //  "solver_mode": 2, // sparse solver (LSQR)
+  //  "solver_mode": 3, // sparse solver (LUSOL)    <----- doesn't seem to work at all ?
+  //  "solver_mode": 4, // sparse solver (LMSR)
+     "solver_mode": 5, // custom solver (QR_MUMPS)
+
+  // number of revs:
+  //"n_revs": 2,
+  //"n_revs": 10,
+  //"n_revs": 5,
+  // "n_revs": 20,
+  //"n_revs": 100,  //689 days
+  // "n_revs": 200,
+  //"n_revs": 1000,   // tests above
+  "n_revs": 1120,   // 20 years <--- now try this
+
+    // data files:
+    "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
+    "dt_spline_sec": 3600,
+    "ephemeris_file": "data/eph/JPLEPH.421",
+    "gravfile": "data/grav/gggrx_0020pm_sha.tab",
+    "patch_point_file": "data/L2_halos.json",
+    "patch_point_file_is_periapsis": false, //true: patch points are periapsis, false: they are apoapsis
+
+    "pointmass_central_body": false, // enable pointmass moon for the central body
+
+    // read initial guess from a previous run
+    // "initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
+    //"initial_guess_from_file": "./100-rev-solution/solution_20220704131413_L2_S_NREVS=100.json",
+    //"initial_guess_from_file": "./100-rev-solution-2/solution_20220704131415_L2_S_NREVS=100.html",
+    //"initial_guess_from_file": "./solution_20220704131415_L2_S_NREVS=100.json",
+    // "initial_guess_from_file": "./solution_20251204120000_L2_S_NREVS=20.json",
+    // "initial_guess_from_file": "./solution_20231231242833_L2_S_NREVS=100.json",
+    // "initial_guess_from_file": "./solution_20251213060000_L2_S_NREVS=100.json",
+
+    // "initial_guess_from_file": "./solution_20251229220000_L2_S_NREVS=1120.json",
+
+    "generate_plots": false,
+    "generate_trajectory_files": false,
+    "generate_guess_and_solution_files": true,
+    "generate_kernel": false,
+    "generate_defect_file": true,
+    "generate_json_trajectory_file": true,
+
+    "generate_eclipse_files": true,
+    "r_eclipse_bubble": 1.0, // km
+    "eclipse_dt_step": 3600.0,
+    "eclipse_filetype": 2, // json
+
+    "run_pyvista_script": true
+
+}
