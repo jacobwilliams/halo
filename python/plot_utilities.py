@@ -42,9 +42,13 @@ center_camera_on_body = False
 if plot_starmap:
     font_color = 'white'
     background_color = 'black'
+    cylinder_color='cyan'
+    cylinder_opacity=0.1
 else:
     font_color = 'black'
     background_color = 'white'
+    cylinder_color='grey'
+    cylinder_opacity=0.05
 
 ###################################################################
 def generate_eclipse_plot(filename : str, save : bool = True,
@@ -433,7 +437,7 @@ if __name__ == "__main__":
             #       isn't a cone, isn't using the apparent position of the sun, and isn't using
             #       the eclipse bubble radius, so it's won't be quite right, but is close.  -TODO: fix this.
             cylinder = pv.Cylinder( center=[250000, 0, 0], direction=[149597871.0, 0, 0], radius=6378, height=500000.0 )
-            _ = p.add_mesh(cylinder, show_edges=False, color='grey', opacity=0.05)
+            _ = p.add_mesh(cylinder, show_edges=False, color=cylinder_color, opacity=cylinder_opacity)
             #inter = cylinder.boolean_intersection(traj)  # doesn't work ..
             # p.add_mesh(inter, show_edges=False, color='red')
 
@@ -445,16 +449,19 @@ if __name__ == "__main__":
 
         if iplot==0:
             title = os.path.basename(file_to_plot) + ' [Earth-Moon Rotating Frame]'
+            axis_prefix = 'EMR'
         elif iplot==1:
             title = os.path.basename(file_to_plot) + ' [Inertial Frame]'
+            axis_prefix = 'J2000'
         elif iplot==2:
             title = os.path.basename(file_to_plot) + ' [Sun-Earth Rotating Frame]'
+            axis_prefix = 'SER'
 
         p.add_text(title, name='banner', position='upper_left', color=font_color)
         p.show_grid(color='gray', font_size=20, font_family='times',
-                    xtitle = 'J2000 X (km)',
-                    ytitle = 'J2000 Y (km)',
-                    ztitle = 'J2000 Z (km)')
+                    xtitle = f'{axis_prefix} X (km)',
+                    ytitle = f'{axis_prefix} Y (km)',
+                    ztitle = f'{axis_prefix} Z (km)')
         p.set_background(color=background_color)
 
         p.view_isometric()

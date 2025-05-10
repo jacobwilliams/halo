@@ -1,6 +1,5 @@
 project: halo
-src_dir: ./app
-project_dir: ./app
+src_dir: ./src
 output_dir: ./doc
 media_dir: ./media
 project_github: https://github.com/jacobwilliams/halo
