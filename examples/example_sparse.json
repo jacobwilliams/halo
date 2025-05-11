@@ -133,6 +133,8 @@
     "include_pointmass_sun": true,       // sun is included as a pointmass in the force model
     "include_pointmass_jupiter": false,  // jupiter is included as a pointmass in the force model
 
+    "use_battin_gravity": false,  // use the alternate battin 3rd body gravity formulation
+
     // read initial guess from a previous run
     // "initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
     //"initial_guess_from_file": "./100-rev-solution/solution_20220704131413_L2_S_NREVS=100.json",
