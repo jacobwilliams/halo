@@ -2360,11 +2360,23 @@
     p_current => null()
 
     do iseg = 1, nsegs_to_plot
-
         call destroy_traj(iseg)
+    end do
+
+    !====================================
+    ! now propagate the segments:
+!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)
+    do iseg = 1, nsegs_to_plot
+        call me%segs(iseg)%propagate(mode=2)  ! [export points]
+    end do
+!$OMP END PARALLEL DO
+    !====================================
+
+    do iseg = 1, nsegs_to_plot
 
         ! generate the trajectory for this segment:
-        call me%segs(iseg)%propagate(mode=2)  ! [export points]
+        !call destroy_traj(iseg)
+        !call me%segs(iseg)%propagate(mode=2)  ! [export points]
 
         ! create the segment object for exporting the trajectory:
         call json%create_object(p_seg, '')
@@ -2403,7 +2415,11 @@
         !  - maybe also earth & sun ephemeris for plotting
         !  - solar fraction to color the trajectory [but really that should go in the eclipse file?]
 
-        call destroy_traj(iseg) ! keep them for the eclipse file generation ...
+        !call destroy_traj(iseg) ! keep them for the eclipse file generation ...
+    end do
+
+    do iseg = 1, nsegs_to_plot
+        call destroy_traj(iseg)
     end do
 
     call json%print(p_root, trim(filename)//'.json')
@@ -2485,6 +2501,25 @@
         allocate(phi_se(0))
         allocate(phi_vec_total(0))
         allocate(et_vec_total(0))
+
+        ! destroy all trajectories first:
+        do iseg = 1, size(me%segs)
+            call me%segs(iseg)%traj_inertial%destroy()
+            call me%segs(iseg)%traj_rotating%destroy()
+            call me%segs(iseg)%traj_se_rotating%destroy()
+        end do
+
+        !====================================
+        ! now propagate the segments:
+        ! [export points at a fixed time step]
+!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)
+        do iseg = 1, size(me%segs)
+            call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
+        end do
+!$OMP END PARALLEL DO
+        !====================================
+
+        ! TODO: could also try to do this stuff in parallel too...
         do iseg = 1, size(me%segs)
 
             if (ifiletype==FILETYPE_JSON) then
@@ -2495,13 +2530,12 @@
             iseg_str = adjustl(iseg_str)
 
             ! destroy all trajectories first:
-            call me%segs(iseg)%traj_inertial%destroy()
-            call me%segs(iseg)%traj_rotating%destroy()
-            call me%segs(iseg)%traj_se_rotating%destroy()
-
+            ! call me%segs(iseg)%traj_inertial%destroy()
+            ! call me%segs(iseg)%traj_rotating%destroy()
+            ! call me%segs(iseg)%traj_se_rotating%destroy()
             ! generate the trajectory for this segment:
             ! [export points at a fixed time step]
-            call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
+            !call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
 
             if (me%segs(iseg)%traj_inertial%et(2) > me%segs(iseg)%traj_inertial%et(1)) then
                 ! forward propagated
