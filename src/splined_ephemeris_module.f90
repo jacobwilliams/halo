@@ -32,6 +32,9 @@
             integer :: nx = 0
             contains
             procedure,public :: destroy => destroy_body_eph
+            procedure,public :: allocate => allocate_body_eph
+            procedure,public :: populate => populate_body_eph
+            procedure,public :: spline   => spline_body_eph
         end type body_eph
         type(body_eph),target :: earth_eph
         type(body_eph),target :: sun_eph
@@ -70,11 +73,44 @@
 
     contains
 
-    !TODO: really we also need a routine to destroy earth_eph and sun_eph.
-
     subroutine destroy_body_eph(me)
         class(body_eph),intent(out) :: me
     end subroutine destroy_body_eph
+
+    subroutine allocate_body_eph(me, nx, kx)
+        class(body_eph),intent(inout) :: me
+        integer,intent(in) :: nx
+        integer,intent(in) :: kx
+        me%nx = nx
+        allocate(me%tx(      nx+kx,6))  ! columns are for each state element (rx,ry,rz,vx,vy,vz)
+        allocate(me%bcoef(   nx,6))
+        allocate(me%f(       nx,6))
+    end subroutine allocate_body_eph
+
+    subroutine populate_body_eph(me,eph,et,targ,obs,i)
+        !! populate the `f` array with the ephemeris data
+        class(body_eph),intent(inout)   :: me
+        type(jpl_ephemeris),intent(inout) :: eph
+        real(wp),intent(in)             :: et    !! ephemeris time [sec]
+        type(celestial_body),intent(in) :: targ  !! target body
+        type(celestial_body),intent(in) :: obs   !! observer body
+        integer,intent(in)              :: i     !! index in the ephemeris
+        logical :: status_ok
+        call eph%get_rv(et,targ,obs,me%f(i,:),status_ok)
+        if (.not. status_ok) error stop 'eph error'
+    end subroutine populate_body_eph
+
+    subroutine spline_body_eph(me,et_vec,i)
+        class(body_eph),intent(inout) :: me
+        real(wp),dimension(:),intent(in) :: et_vec !! ephemeris time vector [sec]
+        integer,intent(in) :: i !! state element index (1-6)
+        integer :: iflag
+        call db1ink(et_vec, me%nx, me%f(:,i), kx, iknot, me%tx(:,i), me%bcoef(:,i), iflag)
+        if (iflag/=0) then
+            write(*,*) 'db1ink iflag = ', iflag
+            error stop 'db1ink error'
+        end if
+    end subroutine spline_body_eph
 
     subroutine destroy_body_eph_interface(me)
         class(body_eph_interface),intent(out) :: me
@@ -92,8 +128,6 @@
         integer :: i !! counter
         real(wp) :: et !! ephemeris time
         integer :: nx !! number of points
-        real(wp),dimension(6) :: rv_earth, rv_sun
-        logical :: status_ok
         real(wp),dimension(:),allocatable :: et_vec
         integer :: iflag
 
@@ -106,20 +140,10 @@
         call me%sun_eph_interface%destroy()
         call me%ssb_eph_interface%destroy()
         call me%jupiter_eph_interface%destroy()
-
-        if (allocated(earth_eph%tx)) deallocate(earth_eph%tx)
-        if (allocated(earth_eph%bcoef)) deallocate(earth_eph%bcoef)
-        if (allocated(earth_eph%f)) deallocate(earth_eph%f)
-        if (allocated(sun_eph%tx)) deallocate(sun_eph%tx)
-        if (allocated(sun_eph%bcoef)) deallocate(sun_eph%bcoef)
-        if (allocated(sun_eph%f)) deallocate(sun_eph%f)
-        if (allocated(ssb_eph%tx)) deallocate(ssb_eph%tx)
-        if (allocated(ssb_eph%bcoef)) deallocate(ssb_eph%bcoef)
-        if (allocated(ssb_eph%f)) deallocate(ssb_eph%f)
-        if (allocated(jupiter_eph%tx)) deallocate(jupiter_eph%tx)
-        if (allocated(jupiter_eph%bcoef)) deallocate(jupiter_eph%bcoef)
-        if (allocated(jupiter_eph%f)) deallocate(jupiter_eph%f)
-        if (allocated(et_vec)) deallocate(et_vec)
+        call earth_eph%destroy()
+        call sun_eph%destroy()
+        call ssb_eph%destroy()
+        call jupiter_eph%destroy()
 
         ! first, count the number of points and allocate the arrays:
         nx = 0
@@ -129,19 +153,11 @@
             nx = nx + 1
             et = et + dt
         end do
-        allocate(earth_eph%tx(      nx+kx,6))  ! columns are for each state element (rx,ry,rz,vx,vy,vz)
-        allocate(sun_eph%tx(        nx+kx,6))
-        allocate(ssb_eph%tx(        nx+kx,6))
-        allocate(jupiter_eph%tx(    nx+kx,6))
-        allocate(earth_eph%bcoef(   nx,6))
-        allocate(sun_eph%bcoef(     nx,6))
-        allocate(ssb_eph%bcoef(     nx,6))
-        allocate(jupiter_eph%bcoef( nx,6))
-        allocate(earth_eph%f(       nx,6))
-        allocate(sun_eph%f(         nx,6))
-        allocate(ssb_eph%f(         nx,6))
-        allocate(jupiter_eph%f(     nx,6))
-        allocate(et_vec(            nx))
+        call earth_eph%allocate(nx, kx)
+        call sun_eph%allocate(nx, kx)
+        call ssb_eph%allocate(nx, kx)
+        call jupiter_eph%allocate(nx, kx)
+        allocate(et_vec(nx))
 
         ! function calls from et0 to etf:
         i = 0 ! index in the arrays
@@ -151,49 +167,23 @@
             i = i + 1
             et = et + dt
             et_vec(i) = et
-            ! get_rv_from_jpl_ephemeris(me,et,targ,obs,rv,status_ok)
-            call me%jpl_ephemeris%get_rv(et,body_earth,body_moon,earth_eph%f(i,:),status_ok)
-            if (.not. status_ok) error stop 'earth eph error'
-            call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,sun_eph%f(i,:),status_ok)
-            if (.not. status_ok) error stop 'sun eph error'
-            call me%jpl_ephemeris%get_rv(et,body_ssb,body_moon,ssb_eph%f(i,:),status_ok)
-            if (.not. status_ok) error stop 'ssb eph error'
-            call me%jpl_ephemeris%get_rv(et,body_jupiter,body_moon,jupiter_eph%f(i,:),status_ok)
-            if (.not. status_ok) error stop 'jupiter eph error'
+            call earth_eph%populate  (me%jpl_ephemeris,et,body_earth,  body_moon,i)
+            call sun_eph%populate    (me%jpl_ephemeris,et,body_sun,    body_moon,i)
+            call ssb_eph%populate    (me%jpl_ephemeris,et,body_ssb,    body_moon,i)
+            call jupiter_eph%populate(me%jpl_ephemeris,et,body_jupiter,body_moon,i)
         end do
 
         ! create the splines (one for each coordinate):
         do i = 1, 6
-            call db1ink(et_vec, nx, earth_eph%f(:,i), kx, iknot, earth_eph%tx(:,i), earth_eph%bcoef(:,i), iflag)
-            if (iflag/=0) then
-                write(*,*) 'earth: db1ink iflag = ', iflag
-                error stop 'earth: db1ink error'
-            end if
-            call db1ink(et_vec, nx, sun_eph%f(:,i), kx, iknot, sun_eph%tx(:,i), sun_eph%bcoef(:,i), iflag)
-            if (iflag/=0) then
-                write(*,*) 'sun: db1ink iflag = ', iflag
-                error stop 'sun: db1ink error'
-            end if
-            call db1ink(et_vec, nx, ssb_eph%f(:,i), kx, iknot, ssb_eph%tx(:,i), ssb_eph%bcoef(:,i), iflag)
-            if (iflag/=0) then
-                write(*,*) 'ssb: db1ink iflag = ', iflag
-                error stop 'ssb: db1ink error'
-            end if
-            call db1ink(et_vec, nx, jupiter_eph%f(:,i), kx, iknot, jupiter_eph%tx(:,i), jupiter_eph%bcoef(:,i), iflag)
-            if (iflag/=0) then
-                write(*,*) 'jupiter: db1ink iflag = ', iflag
-                error stop 'jupiter: db1ink error'
-            end if
+            call earth_eph%spline(et_vec,i)
+            call sun_eph%spline  (et_vec,i)
+            call ssb_eph%spline  (et_vec,i)
+            call jupiter_eph%spline(et_vec,i)
         end do
         deallocate(earth_eph%f) ! don't need these anymore
         deallocate(sun_eph%f)
         deallocate(ssb_eph%f)
         deallocate(jupiter_eph%f)
-
-        earth_eph%nx = nx
-        sun_eph%nx = nx
-        ssb_eph%nx = nx
-        jupiter_eph%nx = nx
 
     end subroutine initialize_globals
 
