@@ -52,6 +52,7 @@
             procedure,public :: get_r
             procedure,public :: get_rv
             procedure,public :: destroy => destroy_body_eph_interface
+            procedure,public :: initialize => initialize_body_eph_interface
         end type body_eph_interface
 
         type,extends(jpl_ephemeris),public :: jpl_ephemeris_splined
@@ -59,7 +60,6 @@
             !! since it is also needed in tranformations.
             !! also, has the extra feature of a `get_r` method,
             !! since we don't need velocity for the gravity calculation.
-
             type(body_eph_interface) :: earth_eph_interface !! splined version of earth ephemeris
             type(body_eph_interface) :: sun_eph_interface !! splined version of sun ephemeris
             type(body_eph_interface) :: ssb_eph_interface !! splined version of ssb ephemeris
@@ -69,9 +69,18 @@
             procedure :: initialize_globals !! this is done once to initialize the global ephemeris vars
             procedure,public :: get_r  => get_r_splined
             procedure,public :: get_rv => get_rv_splined
+            procedure,public :: destroy => destroy_jpl_ephemeris_splined
         end type jpl_ephemeris_splined
 
     contains
+
+    subroutine destroy_jpl_ephemeris_splined(me)
+        class(jpl_ephemeris_splined),intent(inout) :: me
+        call me%earth_eph_interface%destroy()
+        call me%sun_eph_interface%destroy()
+        call me%ssb_eph_interface%destroy()
+        call me%jupiter_eph_interface%destroy()
+    end subroutine destroy_jpl_ephemeris_splined
 
     subroutine destroy_body_eph(me)
         class(body_eph),intent(out) :: me
@@ -113,8 +122,20 @@
     end subroutine spline_body_eph
 
     subroutine destroy_body_eph_interface(me)
-        class(body_eph_interface),intent(out) :: me
+        class(body_eph_interface),intent(inout) :: me
+        if (associated(me%eph)) call me%eph%destroy()
+        me%eph => null()
+        if (allocated(me%w0)) deallocate(me%w0)
+        me%inbvx = 0
     end subroutine destroy_body_eph_interface
+
+    subroutine initialize_body_eph_interface(me,eph)
+        class(body_eph_interface),intent(inout) :: me
+        type(body_eph),target :: eph
+        allocate(me%w0(3*kx))
+        me%inbvx = 0
+        me%eph => eph   ! point to the global ephemeris
+    end subroutine initialize_body_eph_interface
 
     subroutine initialize_globals(me, et0, dt, etf)
 
@@ -136,10 +157,7 @@
         ! write(*,*) '  dt  = ', dt
         ! write(*,*) '  etf = ', etf
 
-        call me%earth_eph_interface%destroy()
-        call me%sun_eph_interface%destroy()
-        call me%ssb_eph_interface%destroy()
-        call me%jupiter_eph_interface%destroy()
+        call me%destroy()
         call earth_eph%destroy()
         call sun_eph%destroy()
         call ssb_eph%destroy()
@@ -218,20 +236,10 @@
         call me%initialize_globals(et0, abs(dt), etf)
 
         ! now, the local variables in this class
-        allocate(me%earth_eph_interface%w0(3*kx))
-        allocate(me%sun_eph_interface%w0(3*kx))
-        allocate(me%ssb_eph_interface%w0(3*kx))
-        allocate(me%jupiter_eph_interface%w0(3*kx))
-        me%earth_eph_interface%inbvx = 0
-        me%sun_eph_interface%inbvx = 0
-        me%ssb_eph_interface%inbvx = 0
-        me%jupiter_eph_interface%inbvx = 0
-
-        ! point to the global ephemeris:
-        me%earth_eph_interface%eph => earth_eph
-        me%sun_eph_interface%eph => sun_eph
-        me%ssb_eph_interface%eph => ssb_eph
-        me%jupiter_eph_interface%eph => jupiter_eph
+        call me%earth_eph_interface%initialize(earth_eph)
+        call me%sun_eph_interface%initialize(sun_eph)
+        call me%ssb_eph_interface%initialize(ssb_eph)
+        call me%jupiter_eph_interface%initialize(jupiter_eph)
 
     end subroutine initialize_splinded_ephemeris
 

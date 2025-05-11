@@ -24,6 +24,7 @@
     integer ,public :: grav_m     = 8              !! max grav order
     real(wp),dimension(:),allocatable,public :: xscale_x0 ! scale values for opt vars [must be size 6]
     real(wp),dimension(:),allocatable,public :: fscale_xf ! scale values for constraints [must be size 6]
+    logical,public :: use_battin_gravity = .false. !! use Battin gravity formulation
 
     type,public :: patch_point
         !! a CR3BP Halo state, to be used as

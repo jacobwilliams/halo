@@ -1327,6 +1327,9 @@
                 call eph%initialize_splinded_ephemeris(filename=me%ephemeris_file,&
                                                        status_ok=status_ok,&
                                                        et0=et0,dt=me%dt_spline_sec,etf=etf)
+                ! If not using jupiter, destroy it here
+                ! (note: inefficient but it's pretty fast so not a big deal)
+                if (.not. me%include_pointmass_jupiter) call eph%jupiter_eph_interface%destroy()
             end select
         end associate
         if (.not. status_ok) error stop 'error initializing splined ephemeris'
@@ -1638,9 +1641,15 @@
             end select
         end associate
         ! third-body perturbation (earth, sun, jupiter):
-        if (me%include_pointmass_earth)   call third_body_gravity(r,r_earth_wrt_moon,  mu_earth,   a_earth)
-        if (me%include_pointmass_sun)     call third_body_gravity(r,r_sun_wrt_moon,    mu_sun,     a_sun)
-        if (me%include_pointmass_jupiter) call third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+        if (use_battin_gravity) then
+            if (me%include_pointmass_earth)   call third_body_gravity_alt(r,r_earth_wrt_moon,  mu_earth,   a_earth)
+            if (me%include_pointmass_sun)     call third_body_gravity_alt(r,r_sun_wrt_moon,    mu_sun,     a_sun)
+            if (me%include_pointmass_jupiter) call third_body_gravity_alt(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+        else
+            if (me%include_pointmass_earth)   call third_body_gravity(r,r_earth_wrt_moon,  mu_earth,   a_earth)
+            if (me%include_pointmass_sun)     call third_body_gravity(r,r_sun_wrt_moon,    mu_sun,     a_sun)
+            if (me%include_pointmass_jupiter) call third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+        end if
         a_third_body = a_earth + a_sun + a_jupiter
 
         !total derivative vector:
@@ -2841,6 +2850,7 @@
     call f%get('fscale_xf', fscale_xf, found)
     if (.not. found) fscale_xf = [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0e+02_wp,1.0e+02_wp,1.0e+02_wp]
     if (size(fscale_xf) /= 6) error stop 'error: fscale_xf must be a 6 element vector'
+    call f%get('use_battin_gravity', use_battin_gravity, found)
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
