@@ -36,6 +36,7 @@
         type(body_eph),target :: earth_eph
         type(body_eph),target :: sun_eph
         type(body_eph),target :: ssb_eph
+        type(body_eph),target :: jupiter_eph
 
         type :: body_eph_interface
             !! the interface to a splined ephemeris for a body
@@ -59,6 +60,7 @@
             type(body_eph_interface) :: earth_eph_interface !! splined version of earth ephemeris
             type(body_eph_interface) :: sun_eph_interface !! splined version of sun ephemeris
             type(body_eph_interface) :: ssb_eph_interface !! splined version of ssb ephemeris
+            type(body_eph_interface) :: jupiter_eph_interface !! splined version of jupiter ephemeris
         contains
             procedure,public :: initialize_splinded_ephemeris
             procedure :: initialize_globals !! this is done once to initialize the global ephemeris vars
@@ -103,16 +105,20 @@
         call me%earth_eph_interface%destroy()
         call me%sun_eph_interface%destroy()
         call me%ssb_eph_interface%destroy()
+        call me%jupiter_eph_interface%destroy()
 
         if (allocated(earth_eph%tx)) deallocate(earth_eph%tx)
-        if (allocated(sun_eph%tx)) deallocate(sun_eph%tx)
-        if (allocated(ssb_eph%tx)) deallocate(ssb_eph%tx)
         if (allocated(earth_eph%bcoef)) deallocate(earth_eph%bcoef)
-        if (allocated(sun_eph%bcoef)) deallocate(sun_eph%bcoef)
-        if (allocated(ssb_eph%bcoef)) deallocate(ssb_eph%bcoef)
         if (allocated(earth_eph%f)) deallocate(earth_eph%f)
+        if (allocated(sun_eph%tx)) deallocate(sun_eph%tx)
+        if (allocated(sun_eph%bcoef)) deallocate(sun_eph%bcoef)
         if (allocated(sun_eph%f)) deallocate(sun_eph%f)
+        if (allocated(ssb_eph%tx)) deallocate(ssb_eph%tx)
+        if (allocated(ssb_eph%bcoef)) deallocate(ssb_eph%bcoef)
         if (allocated(ssb_eph%f)) deallocate(ssb_eph%f)
+        if (allocated(jupiter_eph%tx)) deallocate(jupiter_eph%tx)
+        if (allocated(jupiter_eph%bcoef)) deallocate(jupiter_eph%bcoef)
+        if (allocated(jupiter_eph%f)) deallocate(jupiter_eph%f)
         if (allocated(et_vec)) deallocate(et_vec)
 
         ! first, count the number of points and allocate the arrays:
@@ -123,16 +129,19 @@
             nx = nx + 1
             et = et + dt
         end do
-        allocate(earth_eph%tx(   nx+kx,6))  ! columns are for each state element (rx,ry,rz,vx,vy,vz)
-        allocate(sun_eph%tx(     nx+kx,6))
-        allocate(ssb_eph%tx(     nx+kx,6))
-        allocate(earth_eph%bcoef(nx,6))
-        allocate(sun_eph%bcoef(  nx,6))
-        allocate(ssb_eph%bcoef(  nx,6))
-        allocate(earth_eph%f(    nx,6))
-        allocate(sun_eph%f(      nx,6))
-        allocate(ssb_eph%f(      nx,6))
-        allocate(et_vec(         nx))
+        allocate(earth_eph%tx(      nx+kx,6))  ! columns are for each state element (rx,ry,rz,vx,vy,vz)
+        allocate(sun_eph%tx(        nx+kx,6))
+        allocate(ssb_eph%tx(        nx+kx,6))
+        allocate(jupiter_eph%tx(    nx+kx,6))
+        allocate(earth_eph%bcoef(   nx,6))
+        allocate(sun_eph%bcoef(     nx,6))
+        allocate(ssb_eph%bcoef(     nx,6))
+        allocate(jupiter_eph%bcoef( nx,6))
+        allocate(earth_eph%f(       nx,6))
+        allocate(sun_eph%f(         nx,6))
+        allocate(ssb_eph%f(         nx,6))
+        allocate(jupiter_eph%f(     nx,6))
+        allocate(et_vec(            nx))
 
         ! function calls from et0 to etf:
         i = 0 ! index in the arrays
@@ -147,35 +156,44 @@
             if (.not. status_ok) error stop 'earth eph error'
             call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,sun_eph%f(i,:),status_ok)
             if (.not. status_ok) error stop 'sun eph error'
-            call me%jpl_ephemeris%get_rv(et,body_sun,body_moon,ssb_eph%f(i,:),status_ok)
+            call me%jpl_ephemeris%get_rv(et,body_ssb,body_moon,ssb_eph%f(i,:),status_ok)
             if (.not. status_ok) error stop 'ssb eph error'
+            call me%jpl_ephemeris%get_rv(et,body_jupiter,body_moon,jupiter_eph%f(i,:),status_ok)
+            if (.not. status_ok) error stop 'jupiter eph error'
         end do
 
         ! create the splines (one for each coordinate):
         do i = 1, 6
             call db1ink(et_vec, nx, earth_eph%f(:,i), kx, iknot, earth_eph%tx(:,i), earth_eph%bcoef(:,i), iflag)
             if (iflag/=0) then
-                write(*,*) 'db1ink iflag = ', iflag
-                error stop 'db1ink error'
+                write(*,*) 'earth: db1ink iflag = ', iflag
+                error stop 'earth: db1ink error'
             end if
             call db1ink(et_vec, nx, sun_eph%f(:,i), kx, iknot, sun_eph%tx(:,i), sun_eph%bcoef(:,i), iflag)
             if (iflag/=0) then
-                write(*,*) 'db1ink iflag = ', iflag
-                error stop 'db1ink error'
+                write(*,*) 'sun: db1ink iflag = ', iflag
+                error stop 'sun: db1ink error'
             end if
             call db1ink(et_vec, nx, ssb_eph%f(:,i), kx, iknot, ssb_eph%tx(:,i), ssb_eph%bcoef(:,i), iflag)
             if (iflag/=0) then
-                write(*,*) 'db1ink iflag = ', iflag
-                error stop 'db1ink error'
+                write(*,*) 'ssb: db1ink iflag = ', iflag
+                error stop 'ssb: db1ink error'
+            end if
+            call db1ink(et_vec, nx, jupiter_eph%f(:,i), kx, iknot, jupiter_eph%tx(:,i), jupiter_eph%bcoef(:,i), iflag)
+            if (iflag/=0) then
+                write(*,*) 'jupiter: db1ink iflag = ', iflag
+                error stop 'jupiter: db1ink error'
             end if
         end do
         deallocate(earth_eph%f) ! don't need these anymore
         deallocate(sun_eph%f)
         deallocate(ssb_eph%f)
+        deallocate(jupiter_eph%f)
 
         earth_eph%nx = nx
         sun_eph%nx = nx
         ssb_eph%nx = nx
+        jupiter_eph%nx = nx
 
     end subroutine initialize_globals
 
@@ -213,14 +231,17 @@
         allocate(me%earth_eph_interface%w0(3*kx))
         allocate(me%sun_eph_interface%w0(3*kx))
         allocate(me%ssb_eph_interface%w0(3*kx))
+        allocate(me%jupiter_eph_interface%w0(3*kx))
         me%earth_eph_interface%inbvx = 0
         me%sun_eph_interface%inbvx = 0
         me%ssb_eph_interface%inbvx = 0
+        me%jupiter_eph_interface%inbvx = 0
 
         ! point to the global ephemeris:
         me%earth_eph_interface%eph => earth_eph
         me%sun_eph_interface%eph => sun_eph
         me%ssb_eph_interface%eph => ssb_eph
+        me%jupiter_eph_interface%eph => jupiter_eph
 
     end subroutine initialize_splinded_ephemeris
 
@@ -240,6 +261,8 @@
             rv = me%sun_eph_interface%get_rv(et)
         elseif (targ==body_ssb .and. obs==body_moon) then
             rv = me%ssb_eph_interface%get_rv(et)
+        elseif (targ==body_jupiter .and. obs==body_moon) then
+            rv = me%jupiter_eph_interface%get_rv(et)
 
         elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
             rv = -me%earth_eph_interface%get_rv(et)
@@ -247,6 +270,8 @@
             rv = -me%sun_eph_interface%get_rv(et)
         elseif (targ==body_moon .and. obs==body_ssb) then
             rv = -me%ssb_eph_interface%get_rv(et)
+        elseif (targ==body_moon .and. obs==body_jupiter) then
+            rv = -me%jupiter_eph_interface%get_rv(et)
 
         elseif (targ==body_earth .and. obs==body_sun) then
             ! for this one we subtract these
@@ -277,6 +302,8 @@
             r = me%sun_eph_interface%get_r(et)
         elseif (targ==body_ssb .and. obs==body_moon) then
             r = me%ssb_eph_interface%get_r(et)
+        elseif (targ==body_jupiter .and. obs==body_moon) then
+            r = me%jupiter_eph_interface%get_r(et)
 
         elseif (targ==body_moon .and. obs==body_earth) then  ! inverse are negative
             r = -me%earth_eph_interface%get_r(et)
@@ -284,6 +311,8 @@
             r = -me%sun_eph_interface%get_r(et)
         elseif (targ==body_moon .and. obs==body_ssb) then
             r = -me%ssb_eph_interface%get_r(et)
+        elseif (targ==body_moon .and. obs==body_jupiter) then
+            r = -me%jupiter_eph_interface%get_r(et)
 
         elseif (targ==body_sun .and. obs==body_ssb) then
             ! for this one we subtract these

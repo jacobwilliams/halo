@@ -82,6 +82,9 @@
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris [global]
         logical :: pointmass_central_body = .false.
+        logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
+        logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
+        logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model
 
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame (j2000-moon)
@@ -116,6 +119,9 @@
                                                    !! otherwise, the `grav` model is used.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
+        logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
+        logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
+        logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model
 
         type(segment),dimension(:),allocatable :: segs  !! the list of segments
 
@@ -645,7 +651,10 @@
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min        = 0.2_wp, &
-                                alpha_max        = 0.8_wp, &
+                                alpha_max        = 1.0_wp, &
+                                ! step_mode = 2,            & ! backtracking "line search"  seems to not work as well for large problems. why?
+                                ! alpha_min = 0.1_wp, &
+                                ! alpha_max = 1.0_wp, &
                                 use_broyden      = .false.,      & ! broyden update
                                 sparsity_mode    = me%mission%solver_mode, &  ! use a sparse solver
                                 custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
@@ -1359,6 +1368,9 @@
             me%segs(i)%eph  => me%eph
         end if
         me%segs(i)%pointmass_central_body = me%pointmass_central_body
+        me%segs(i)%include_pointmass_earth   =  me%include_pointmass_earth
+        me%segs(i)%include_pointmass_sun     =  me%include_pointmass_sun
+        me%segs(i)%include_pointmass_jupiter =  me%include_pointmass_jupiter
 
         ! name all the segments:
         write(seg_name,'(I10)') i
@@ -1562,12 +1574,13 @@
     real(wp),dimension(:),intent(out) :: xdot !! derivative of state (\( dx/dt \))
 
     real(wp),dimension(3) :: r,rb,v
-    reaL(wp),dimension(6) :: rv_earth_wrt_moon,rv_sun_wrt_moon
-    reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon
+    reaL(wp),dimension(6) :: rv_earth_wrt_moon,rv_sun_wrt_moon,rv_jupiter_wrt_moon
+    reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon,r_jupiter_wrt_moon
     real(wp),dimension(3,3) :: rotmat
     real(wp),dimension(3) :: a_geopot
     real(wp),dimension(3) :: a_earth
     real(wp),dimension(3) :: a_sun
+    real(wp),dimension(3) :: a_jupiter
     real(wp),dimension(3) :: a_third_body
     real(wp) :: et !! ephemeris time of `t`
     logical :: status_ok
@@ -1597,24 +1610,37 @@
         ! third-body state vectors (wrt the central body, which is the moon in this case):
         ! [inertial frame]
         associate (eph => me%eph)
+            a_earth  = zero
+            a_sun = zero
+            a_jupiter = zero
             select type (eph)
             type is (jpl_ephemeris)
-                call eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
-                call eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
-                r_earth_wrt_moon = rv_earth_wrt_moon(1:3)
-                r_sun_wrt_moon   = rv_sun_wrt_moon(1:3)
+                if (me%include_pointmass_earth) then
+                    call eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
+                    r_earth_wrt_moon = rv_earth_wrt_moon(1:3)
+                end if
+                if (me%include_pointmass_sun) then
+                    call eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
+                    r_sun_wrt_moon = rv_sun_wrt_moon(1:3)
+                end if
+                if (me%include_pointmass_jupiter) then
+                    call eph%get_rv(et,body_jupiter,body_moon,rv_jupiter_wrt_moon,status_ok)
+                    r_jupiter_wrt_moon = rv_jupiter_wrt_moon(1:3)
+                end if
             type is (jpl_ephemeris_splined)
                 ! for this, we can just get position vector only
-                call eph%get_r(et,body_earth,body_moon,r_earth_wrt_moon,status_ok)
-                call eph%get_r(et,body_sun,body_moon,r_sun_wrt_moon,status_ok)
+                if (me%include_pointmass_earth)   call eph%get_r(et,body_earth,  body_moon,r_earth_wrt_moon,  status_ok)
+                if (me%include_pointmass_sun)     call eph%get_r(et,body_sun,    body_moon,r_sun_wrt_moon,    status_ok)
+                if (me%include_pointmass_jupiter) call eph%get_r(et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
             class default
                 error stop 'invalid eph class'
             end select
         end associate
-        ! third-body perturbation (earth & sun):
-        call third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
-        call third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
-        a_third_body = a_earth + a_sun
+        ! third-body perturbation (earth, sun, jupiter):
+        if (me%include_pointmass_earth)   call third_body_gravity(r,r_earth_wrt_moon,  mu_earth,   a_earth)
+        if (me%include_pointmass_sun)     call third_body_gravity(r,r_sun_wrt_moon,    mu_sun,     a_sun)
+        if (me%include_pointmass_jupiter) call third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+        a_third_body = a_earth + a_sun + a_jupiter
 
         !total derivative vector:
         xdot(1:3) = v
@@ -2754,11 +2780,32 @@
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)
 
     call f%get('pointmass_central_body',  me%mission%pointmass_central_body,  found)
+    call f%get('include_pointmass_earth',    me%mission%include_pointmass_earth,    found)
+    call f%get('include_pointmass_sun',      me%mission%include_pointmass_sun,      found)
+    call f%get('include_pointmass_jupiter',  me%mission%include_pointmass_jupiter,  found)
 
     call f%get('initial_guess_from_file', me%mission%initial_guess_from_file, found)
 
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1
+
+    !optional global parameter inputs:
+    call f%get('mu_earth'  , mu_earth,  found)
+    call f%get('mu_moon'   , mu_moon,   found)
+    call f%get('mu_sun'    , mu_sun,    found)
+    call f%get('mu_jupiter', mu_jupiter, found)
+    call f%get('rad_moon'  , rad_moon,  found)
+    call f%get('rad_sun'   , rad_sun,   found)
+    call f%get('rad_earth' , rad_earth, found)
+    call f%get('maxnum'    , maxnum,    found)
+    call f%get('grav_n'    , grav_n,    found)
+    call f%get('grav_m'    , grav_m,    found)
+    call f%get('xscale_x0' , xscale_x0, found) ! scale values (defaults are good values for the 4500 Rp case)
+    if (.not. found) xscale_x0 = [1.0e+05_wp,1.0e+05_wp,1.0e+05_wp,2.0e+00_wp,2.0e+00_wp,2.0e+00_wp]
+    if (size(xscale_x0) /= 6) error stop 'error: xscale_x0 must be a 6 element vector'
+    call f%get('fscale_xf', fscale_xf, found)
+    if (.not. found) fscale_xf = [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0e+02_wp,1.0e+02_wp,1.0e+02_wp]
+    if (size(fscale_xf) /= 6) error stop 'error: fscale_xf must be a 6 element vector'
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
@@ -2969,21 +3016,21 @@
     real(wp),intent(in) :: ydot0
     type(patch_point),dimension(3), intent(out) :: pp !! periapsis, quarter, apoapsis patch points
 
-    real(wp),dimension(6) :: x_wrt_moon_normalized       ! normalized state wrt to moon
-    real(wp),dimension(6) :: x_wrt_moon_unnormalized       ! unnormalized state wrt to moon
-    real(wp) :: t_unnormalized ! unnormalized time
-    type(ddeabm_class) :: prop  !! integrator
-    real(wp) :: mu    !! CRTPB parameter
+    integer,parameter  :: n = 6 !! number of state variables
+
+    real(wp),dimension(n) :: x_wrt_moon_normalized   !! normalized state wrt to moon
+    real(wp),dimension(n) :: x_wrt_moon_unnormalized !! unnormalized state wrt to moon
+    real(wp),dimension(n) :: x                       !! unnormalized state wrt barycenter, for integration
     real(wp),dimension(:),allocatable :: t_crtbp, x_crtbp,y_crtbp,z_crtbp,vx_crtbp,vy_crtbp,vz_crtbp
+    type(ddeabm_class) :: prop  !! integrator
+    real(wp) :: t_unnormalized ! unnormalized time
+    real(wp) :: mu    !! CRTPB parameter
     real(wp) :: t    !! normalized time for integration
     real(wp) :: tf   !! final time (normalized) for integration
     real(wp) :: dt   !! time step (normalized) for integration
-    real(wp),dimension(6) :: x  !! unnormalized state wrt barycenter, for integration
     integer :: idid  !! ddeabm output flag
     integer :: i     !! counter
     real(wp) :: t_, tf_ !! temp time vars for advancing guess by 1/2 period
-
-    integer,parameter  :: n  = 6 !! number of state variables
 
     ! preallocate the arrays used in the report function:
     allocate(t_crtbp(0),x_crtbp(0),y_crtbp(0),z_crtbp(0),&
@@ -2999,7 +3046,7 @@
     x = [x0, zero, z0, zero, ydot0, zero] ! initial state: normalized wrt barycenter
 
     ! integrate and report the points at dt steps (periapsis, 1/4, and apoapsis)
-    call prop%initialize(n,maxnum=10000,df=func,&
+    call prop%initialize(n,maxnum=maxnum,df=func,&
                          rtol=[me%rtol],atol=[me%atol],&
                          report=report)
     if (.not. me%patch_point_file_is_periapsis) then
