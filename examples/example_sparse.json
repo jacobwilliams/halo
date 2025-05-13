@@ -59,21 +59,30 @@
     //"et_ref":       709622988.34010994, // [100 rev solution with no eclipses]
     //"et_ref":    757339200.0,
 
+    // note from whitepaper: The resulting orbit has a perilune radius that
+    //  varies from 3196 to 3557 km, with an average of 3366
+    //  km. The average orbit period of the reference trajectory
+    //  is 6.562 days, closely matching the value that would be
+    //  expected by applying the resonance ratio to the mean
+    //  lunar synodic period.
+
     //---------------------- test 2 - with 200 revs
     // "et_ref": 818877600.000000,
     "year": 2025,
     "month": 12,
-    "day": 13,
-    "hour": 6,
+    "day": 29,     // no eclipses for 1000 revs !
+    "hour": 22,
     "minute": 0,
     "sec": 0,
-    "period": 1.499,
-    "sa_lb": [1.49, 818704800.0], // 818877600 - 2 days
-    "sa_ub": [1.51, 819050400.0], // 818877600 + 2 days
-    "vm":    [0.01, 172800.0],    // +/- 2 days
-    "sa_ns":   4,      // number of cycles.
-    "sa_nt":   5,      // number of iterations before temperature reduction.
-    "sa_neps": 5,      // number of final function values used to decide upon termination.
+
+    // "period": 1.499,
+    "period": 1.5112,
+    // "sa_lb": [1.49, 818704800.0], // 818877600 - 2 days
+    // "sa_ub": [1.51, 819050400.0], // 818877600 + 2 days
+    // "vm":    [0.01, 172800.0],    // +/- 2 days
+    // "sa_ns":   4,      // number of cycles.
+    // "sa_nt":   5,      // number of iterations before temperature reduction.
+    // "sa_neps": 5,      // number of final function values used to decide upon termination.
     //---------------------- test
 
     // optional inputs:
@@ -104,10 +113,11 @@
   //"n_revs": 2,
   //"n_revs": 10,
   //"n_revs": 5,
-  // "n_revs": 20,
+   "n_revs": 20,
   //"n_revs": 100,  //689 days
-   "n_revs": 200,
-  //"n_revs": 1000,
+  // "n_revs": 200,
+  //"n_revs": 1000,   // tests above
+  //"n_revs": 1120,   // 20 years <--- now try this
 
     // data files:
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
@@ -117,7 +127,13 @@
     "patch_point_file": "data/L2_halos.json",
     "patch_point_file_is_periapsis": false, //true: patch points are periapsis, false: they are apoapsis
 
-    "pointmass_central_body": false, // enable pointmass moon for the central body
+    "pointmass_central_body": false, // enable pointmass moon for the central body [by default, spherical harmonics is used]
+
+    "include_pointmass_earth": true,     // earth is included as a pointmass in the force model
+    "include_pointmass_sun": true,       // sun is included as a pointmass in the force model
+    "include_pointmass_jupiter": false,  // jupiter is included as a pointmass in the force model
+
+    "use_battin_gravity": false,  // use the alternate battin 3rd body gravity formulation
 
     // read initial guess from a previous run
     // "initial_guess_from_file": "solution_20220704131415_L2_S_NREVS=20.json",
