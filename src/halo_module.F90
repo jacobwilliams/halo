@@ -229,6 +229,7 @@
         procedure :: get_case_name
         procedure :: generate_patch_points
         procedure :: update_epoch
+        procedure :: export_rp_ra_json_file
 
     end type mission_type
 
@@ -2310,23 +2311,35 @@
 !
 !@note It is assumed that all the data is present in the segments needed to propagate.
 
-    subroutine export_trajectory_json_file(me,filename,only_first_rev)
+    subroutine export_trajectory_json_file(me,filename,only_first_rev,generate_rp_ra_file)
 
     implicit none
 
     class(mission_type),intent(inout) :: me
     character(len=*),intent(in) :: filename !! plot file name [without extension]
     logical,intent(in),optional :: only_first_rev  !! to only do the first rev [Default is False]
+    logical,intent(in),optional :: generate_rp_ra_file !! also generate the rdot/rp/ra file
 
     integer :: iseg  !! segment number counter
     integer :: nsegs_to_plot !! number of segments to plot
     type(json_core) :: json
     type(json_value),pointer :: p_root, p_segs, p_seg, p_current
+    real(wp),dimension(:),allocatable :: rdot, rmag
+    logical :: accumulate_rdot
+    real(wp),dimension(:),allocatable :: cumulative_et,cumulative_rdot,cumulative_r
+    integer :: n
+
+    write(*,'(A)') ' * Export the trajectory JSON file.'
 
     ! optional arguments:
     nsegs_to_plot = size(me%segs) ! default export all the segments
     if (present(only_first_rev)) then
         if (only_first_rev) nsegs_to_plot = 8 ! only the first rev (8 segments)
+    end if
+    if (present(generate_rp_ra_file)) then
+        accumulate_rdot = generate_rp_ra_file
+    else
+        accumulate_rdot = .true.
     end if
 
     ! the JSON file will contain an array of segments:
@@ -2349,51 +2362,81 @@
 !$OMP END PARALLEL DO
     !====================================
 
+    if (accumulate_rdot) then
+        allocate(cumulative_et(0))
+        allocate(cumulative_rdot(0))
+        allocate(cumulative_r(0))
+    end if
+
     do iseg = 1, nsegs_to_plot
 
-        ! generate the trajectory for this segment:
-        !call destroy_traj(iseg)
-        !call me%segs(iseg)%propagate(mode=2)  ! [export points]
+        associate (seg => me%segs(iseg))
+            ! generate the trajectory for this segment:
+            !call destroy_traj(iseg)
+            !call seg%propagate(mode=2)  ! [export points]
 
-        ! create the segment object for exporting the trajectory:
-        call json%create_object(p_seg, '')
-        if (associated(p_current)) then
-            call json%insert_after(p_current, p_seg) ! next one
-        else
-            call json%add(p_segs, p_seg) ! first one
-        end if
-        p_current => p_seg ! update for next seg
+            ! create the segment object for exporting the trajectory:
+            call json%create_object(p_seg, '')
+            if (associated(p_current)) then
+                call json%insert_after(p_current, p_seg) ! next one
+            else
+                call json%add(p_segs, p_seg) ! first one
+            end if
+            p_current => p_seg ! update for next seg
 
-        call json%add(p_seg, 'iseg', iseg)
-        call json%add(p_seg, 'et', me%segs(iseg)%traj_inertial%et)
+            call json%add(p_seg, 'iseg', iseg)
+            call json%add(p_seg, 'et', seg%traj_inertial%et)
 
-        call json%add(p_seg, 'x_inertial',  me%segs(iseg)%traj_inertial%x)
-        call json%add(p_seg, 'y_inertial',  me%segs(iseg)%traj_inertial%y)
-        call json%add(p_seg, 'z_inertial',  me%segs(iseg)%traj_inertial%z)
-        call json%add(p_seg, 'vx_inertial', me%segs(iseg)%traj_inertial%vx)
-        call json%add(p_seg, 'vy_inertial', me%segs(iseg)%traj_inertial%vy)
-        call json%add(p_seg, 'vz_inertial', me%segs(iseg)%traj_inertial%vz)
+            call json%add(p_seg, 'x_inertial',  seg%traj_inertial%x)
+            call json%add(p_seg, 'y_inertial',  seg%traj_inertial%y)
+            call json%add(p_seg, 'z_inertial',  seg%traj_inertial%z)
+            call json%add(p_seg, 'vx_inertial', seg%traj_inertial%vx)
+            call json%add(p_seg, 'vy_inertial', seg%traj_inertial%vy)
+            call json%add(p_seg, 'vz_inertial', seg%traj_inertial%vz)
 
-        call json%add(p_seg, 'x_rotating',  me%segs(iseg)%traj_rotating%x)
-        call json%add(p_seg, 'y_rotating',  me%segs(iseg)%traj_rotating%y)
-        call json%add(p_seg, 'z_rotating',  me%segs(iseg)%traj_rotating%z)
-        ! call json%add(p_seg, 'vx_rotating', me%segs(iseg)%traj_rotating%vx)
-        ! call json%add(p_seg, 'vy_rotating', me%segs(iseg)%traj_rotating%vy)
-        ! call json%add(p_seg, 'vz_rotating', me%segs(iseg)%traj_rotating%vz)
+            if (accumulate_rdot) then
+                call compute_rdot(seg%traj_inertial%x,seg%traj_inertial%y,seg%traj_inertial%z,&
+                                  seg%traj_inertial%vx,seg%traj_inertial%vy,seg%traj_inertial%vz,&
+                                  rmag, rdot)
+                call append_traj_to_arrays(seg)
+                !call json%add(p_seg, 'rdot_inertial', rdot)
+                ! don't include the last time step since that will overlap the next segment
+                ! n = size(seg%traj_inertial%x)
+                ! cumulative_et   = [cumulative_et,   seg%traj_inertial%et]
+                ! cumulative_rdot = [cumulative_rdot, rdot]
+                ! cumulative_r    = [cumulative_r,    rmag]
+            end if
 
-        call json%add(p_seg, 'x_se_rotating',  me%segs(iseg)%traj_se_rotating%x)
-        call json%add(p_seg, 'y_se_rotating',  me%segs(iseg)%traj_se_rotating%y)
-        call json%add(p_seg, 'z_se_rotating',  me%segs(iseg)%traj_se_rotating%z)
-        ! call json%add(p_seg, 'vx_se_rotating', me%segs(iseg)%traj_se_rotating%vx) ! don't need these
-        ! call json%add(p_seg, 'vy_se_rotating', me%segs(iseg)%traj_se_rotating%vy)
-        ! call json%add(p_seg, 'vz_se_rotating', me%segs(iseg)%traj_se_rotating%vz)
+            call json%add(p_seg, 'x_rotating',  seg%traj_rotating%x)
+            call json%add(p_seg, 'y_rotating',  seg%traj_rotating%y)
+            call json%add(p_seg, 'z_rotating',  seg%traj_rotating%z)
+            ! call json%add(p_seg, 'vx_rotating', seg%traj_rotating%vx)
+            ! call json%add(p_seg, 'vy_rotating', seg%traj_rotating%vy)
+            ! call json%add(p_seg, 'vz_rotating', seg%traj_rotating%vz)
+            ! call compute_rdot(seg%traj_rotating%x,seg%traj_rotating%y,seg%traj_rotating%z,&
+            !                   seg%traj_rotating%vx,seg%traj_rotating%vy,seg%traj_rotating%vz,&
+            !                   rdot)
+            ! call json%add(p_seg, 'rdot_rotating', rdot)
 
-        !TODO:
-        !  - maybe also earth & sun ephemeris for plotting
-        !  - solar fraction to color the trajectory [but really that should go in the eclipse file?]
+            call json%add(p_seg, 'x_se_rotating',  seg%traj_se_rotating%x)
+            call json%add(p_seg, 'y_se_rotating',  seg%traj_se_rotating%y)
+            call json%add(p_seg, 'z_se_rotating',  seg%traj_se_rotating%z)
+            ! call json%add(p_seg, 'vx_se_rotating', seg%traj_se_rotating%vx) ! don't need these
+            ! call json%add(p_seg, 'vy_se_rotating', seg%traj_se_rotating%vy)
+            ! call json%add(p_seg, 'vz_se_rotating', seg%traj_se_rotating%vz)
 
-        !call destroy_traj(iseg) ! keep them for the eclipse file generation ...
+            !TODO:
+            !  - maybe also earth & sun ephemeris for plotting
+            !  - solar fraction to color the trajectory [but really that should go in the eclipse file?]
+
+            !call destroy_traj(iseg) ! keep them for the eclipse file generation ...
+
+        end associate
     end do
+
+    if (accumulate_rdot) then
+        call me%export_rp_ra_json_file(cumulative_et, cumulative_r, cumulative_rdot, filename)
+    end if
 
     do iseg = 1, nsegs_to_plot
         call destroy_traj(iseg)
@@ -2411,7 +2454,177 @@
             call me%segs(iseg)%traj_se_rotating%destroy()
         end subroutine destroy_traj
 
+        subroutine append_traj_to_arrays(seg)
+            type(segment),intent(in) :: seg
+
+            integer :: n, i
+
+            n = size(seg%traj_inertial%et)
+            if (seg%traj_inertial%et(1)<=seg%traj_inertial%et(2)) then
+                cumulative_et   = [cumulative_et,   seg%traj_inertial%et(1:n-1)]
+                cumulative_rdot = [cumulative_rdot, rdot(1:n-1)]
+                cumulative_r    = [cumulative_r,    rmag(1:n-1)]
+            else
+                ! some of the segments are propagated backwards, so we have to reverse them
+                do i = n, 2, -1
+                    cumulative_et   = [cumulative_et,   seg%traj_inertial%et(i)]
+                    cumulative_rdot = [cumulative_rdot, rdot(i)]
+                    cumulative_r    = [cumulative_r,    rmag(i)]
+                end do
+            end if
+
+        end subroutine append_traj_to_arrays
+
     end subroutine export_trajectory_json_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Export the rp/ra file.
+!
+!@note It is assumed that all the data is present in the segments needed to propagate.
+
+    subroutine export_rp_ra_json_file(me,et,rmag,rdot,filename)
+
+    use root_module
+    use bspline_module
+
+    class(mission_type),intent(inout) :: me
+    real(wp),dimension(:),intent(in) :: et
+    real(wp),dimension(:),intent(in) :: rmag
+    real(wp),dimension(:),intent(in) :: rdot
+    character(len=*),intent(in) :: filename !! file name [without extension]
+
+    type,extends(chandrupatla_solver) :: my_solver
+        !! the solver to use for the root finding
+    end type my_solver
+
+    real(wp) :: et0, etf, et_root, rdot_root, initial_et, final_et, rdot0, rdotf, rmag_root
+    integer :: i, n
+    real(wp),dimension(:),allocatable :: et_for_rp, et_for_ra, rp_vec, ra_vec
+    real(wp) :: x, f
+    integer :: iflag
+    type(my_solver) :: solver
+    type(bspline_1d) :: rdot_spline, rmag_spline
+    type(json_file) :: json
+
+    integer,parameter :: kx = 4  !! spline order (cubic bspline)
+    integer,parameter :: idx = 0 !! interpolate value only
+    real(wp),parameter :: et_step = 3600.0_wp * 24.0_wp !! et step size [should be an input] (sec)
+
+    write(*,'(A)') ' * Generating ra/rp file.'
+
+    ! error check to make sure et is strictly increasing.
+    do i = 2, size(et)
+        if (et(i)<=et(i-1)) then
+            write(*,*) 'error in et point ', i
+            write(*,*) 'et(i)  ', et(i)
+            write(*,*) 'et(i-1)', et(i-1)
+            error stop
+        end if
+    end do
+    ! first spline rmag and rdot as a functions of et:
+    call rdot_spline%initialize(et,rdot,kx,iflag,.false.); call check_spline('rdot')
+    call rmag_spline%initialize(et,rmag,kx,iflag,.false.); call check_spline('rmag')
+
+    allocate(et_for_rp(0), et_for_ra(0), rp_vec(0), ra_vec(0)) ! arrays to hold results
+
+    ! step through the trajectory and find all the rdot roots (periapsis and apoapsis):
+    call solver%initialize(rdot_func)
+    n = size(et)
+    initial_et = et(1)
+    final_et = et(n)
+    et0 = initial_et
+    i = 1
+    do
+        i = i + 1
+        etf = min(final_et, et0+et_step)
+        ! if there is a root on this interval (change of sign of rdot):
+        rdot0 = rdot_func(solver, et0)
+        rdotf = rdot_func(solver, etf)
+        if (rdot0*rdotf<=zero) then  ! there is a root on this interval
+            ! find the root:
+            call solver%solve(et0,etf,et_root,rdot_root,iflag)
+            rmag_root = rmag_func(et_root)  ! get corresponding rmag at the root
+            if (rdotf>rdot0) then
+                ! increasing - periapsis
+                et_for_rp = [et_for_rp, et_root]
+                rp_vec    = [rp_vec, rmag_root]
+            else
+                ! decreasing - apoapsis
+                et_for_ra = [et_for_ra, et_root]
+                ra_vec    = [ra_vec, rmag_root]
+            end if
+        end if
+        if (etf==et(n)) exit
+        et0 = etf ! set up for next step
+    end do
+
+    ! output results to file:
+    call json%initialize(compress_vectors=.true.)
+    call json%add('et_for_rp', et_for_rp)
+    call json%add('rp_vec',    rp_vec)
+    call json%add('et_for_ra', et_for_ra)
+    call json%add('ra_vec',    ra_vec)
+    call json%print(trim(filename)//'_rp_ra.json')
+    call json%destroy()
+
+    contains
+
+        subroutine check_spline(case) !! error checking for splines
+            character(len=*),intent(in) :: case !! case name
+            if (iflag/=0) then
+                select case (iflag)
+                case(2); error stop case//' : bspline error: iknot out of range.'
+                case(3); error stop case//' : bspline error: nx out of range.'
+                case(4); error stop case//' : bspline error: kx out of range.'
+                case(5); error stop case//' : bspline error: x not strictly increasing.'
+                end select
+            end if
+        end subroutine check_spline
+
+        function rdot_func(me,x)  !! compute rdot from spline
+            class(root_solver),intent(inout) :: me
+            real(wp),intent(in) :: x
+            real(wp) :: rdot_func
+            integer :: iflag
+            call rdot_spline%evaluate(x,idx,rdot_func,iflag)
+            if (iflag/=0) error stop 'error evaluating bspline for rdot.'
+        end function rdot_func
+        function rmag_func(x)  !! compute rmag from spline
+            real(wp),intent(in) :: x
+            real(wp) :: rmag_func
+            integer :: iflag
+            call rmag_spline%evaluate(x,idx,rmag_func,iflag)
+            if (iflag/=0) error stop 'error evaluating bspline for rmag.'
+        end function rmag_func
+
+    end subroutine export_rp_ra_json_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  compute the rmag and rdot vectors, given the state vectors
+
+    subroutine compute_rdot(x,y,z,vx,vy,vz,rmag,rdot)
+        real(wp),dimension(:),intent(in) :: x !! x-position component
+        real(wp),dimension(:),intent(in) :: y !! y-position component
+        real(wp),dimension(:),intent(in) :: z !! z-position component
+        real(wp),dimension(:),intent(in) :: vx !! x-velocity component
+        real(wp),dimension(:),intent(in) :: vy !! y-velocity component
+        real(wp),dimension(:),intent(in) :: vz !! z-velocity component
+        real(wp),dimension(:),intent(out),allocatable :: rmag !! magnitude of position vector [km]
+        real(wp),dimension(:),intent(out),allocatable :: rdot !! derivative of radius magniutde [km/s]
+        integer :: i !! counter
+        real(wp),dimension(3) :: r, v
+        allocate(rdot(size(x)),rmag(size(x)))
+        do i = 1, size(x)
+            r = [x(i), y(i), z(i)]
+            v = [vx(i), vy(i), vz(i)]
+            rmag(i) = norm2(r)
+            rdot(i) = dot_product(r,v) / rmag(i)
+        end do
+    end subroutine compute_rdot
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2459,7 +2672,7 @@
         full_filename = trim(fileprefix)//'_'//me%get_case_name()//&
                         trim(file_ext(ifiletype))
 
-        write(*,*) 'Generating eclipse file: '//full_filename
+        write(*,'(A)') ' * Generating eclipse file: '//full_filename
 
         select case (ifiletype)
         case (FILETYPE_CSV)
