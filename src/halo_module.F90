@@ -2567,9 +2567,7 @@
     initial_et = et(1)
     final_et = et(n)
     et0 = initial_et
-    i = 1
     do
-        i = i + 1
         etf = min(final_et, et0+et_step)
         ! if there is a root on this interval (change of sign of rdot):
         rdot0 = rdot_func(solver, et0)
