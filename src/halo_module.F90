@@ -147,6 +147,8 @@
         logical :: generate_eclipse_files = .false. !! generate the eclipse data file for the solution
         logical :: run_pyvista_script = .false. !! run the pyvista script to generate the interacdtive 3d plot
 
+        logical :: generate_rp_ra_file = .false. !! to generate the rp_ra file
+
         real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
         real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
         integer :: eclipse_filetype = 1 !! type of eclipse file: 1=csv or 2=json
@@ -722,8 +724,6 @@
 !*****************************************************************************************
 !>
 !  Custom solver that uses QR_MUMPS
-!
-! TODO: add a compiler directive to indicate this is present so it can be optional
 
     subroutine qrm_solver(me,n_cols,n_rows,n_nonzero,irow,icol,a,b,x,istat)
 #ifdef WITH_QRMUMPS
@@ -1903,10 +1903,10 @@
 
     if (present(funcs_to_compute)) then
 
-        ! this is for the "forward-backward" problem formulation:
+        ! this is for the full "forward-backward" problem formulation:
 
         !       1-6      7-12    13-19     20-26
-        ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ... ]
+        ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ..., [rdot] ]
         !
         !      0     1     2
         ! f = [123456123456123456]
@@ -1935,6 +1935,8 @@
 
         ! WARNING: we are not accounting for fixing certain variables!
         ! see get_sparsity_pattern <--- this is likely why some of those options don't work !  -TODO
+        !
+        ! need to have a mapping of each function to the segments that need to be propagated
 
     else
         ! propagate all the segments:
@@ -2401,21 +2403,20 @@
 !
 !@note It is assumed that all the data is present in the segments needed to propagate.
 
-    subroutine export_trajectory_json_file(me,filename,only_first_rev,generate_rp_ra_file)
+    subroutine export_trajectory_json_file(me,filename,only_first_rev)
 
     implicit none
 
     class(mission_type),intent(inout) :: me
     character(len=*),intent(in) :: filename !! plot file name [without extension]
     logical,intent(in),optional :: only_first_rev  !! to only do the first rev [Default is False]
-    logical,intent(in),optional :: generate_rp_ra_file !! also generate the rdot/rp/ra file
 
     integer :: iseg  !! segment number counter
     integer :: nsegs_to_plot !! number of segments to plot
     type(json_core) :: json
     type(json_value),pointer :: p_root, p_segs, p_seg, p_current
     real(wp),dimension(:),allocatable :: rdot, rmag
-    logical :: accumulate_rdot
+    logical :: accumulate_rdot !! to generate the rdot/rp/ra file
     real(wp),dimension(:),allocatable :: cumulative_et,cumulative_rdot,cumulative_r
     integer :: n
 
@@ -2426,11 +2427,7 @@
     if (present(only_first_rev)) then
         if (only_first_rev) nsegs_to_plot = 8 ! only the first rev (8 segments)
     end if
-    if (present(generate_rp_ra_file)) then
-        accumulate_rdot = generate_rp_ra_file
-    else
-        accumulate_rdot = .true.
-    end if
+    accumulate_rdot = me%generate_rp_ra_file
 
     ! the JSON file will contain an array of segments:
     call json%initialize(compress_vectors=.true.)
@@ -2551,16 +2548,16 @@
 
             n = size(seg%traj_inertial%et)
             if (seg%traj_inertial%et(1)<=seg%traj_inertial%et(2)) then
+                ! forward propagated segment
                 cumulative_et   = [cumulative_et,   seg%traj_inertial%et(1:n-1)]
                 cumulative_rdot = [cumulative_rdot, rdot(1:n-1)]
                 cumulative_r    = [cumulative_r,    rmag(1:n-1)]
             else
                 ! some of the segments are propagated backwards, so we have to reverse them
-                do i = n, 2, -1
-                    cumulative_et   = [cumulative_et,   seg%traj_inertial%et(i)]
-                    cumulative_rdot = [cumulative_rdot, rdot(i)]
-                    cumulative_r    = [cumulative_r,    rmag(i)]
-                end do
+                ! [note this is very inefficient... need to fix this]  -TODO
+                cumulative_et   = [cumulative_et,   seg%traj_inertial%et(n:2:-1)]
+                cumulative_rdot = [cumulative_rdot, rdot(n:2:-1)]
+                cumulative_r    = [cumulative_r,    rmag(n:2:-1)]
             end if
 
         end subroutine append_traj_to_arrays
@@ -3099,6 +3096,7 @@
     call f%get('generate_defect_file',              me%mission%generate_defect_file,      found)
     call f%get('generate_eclipse_files',            me%mission%generate_eclipse_files,    found)
     call f%get('run_pyvista_script',                me%mission%run_pyvista_script,        found)
+    call f%get('generate_rp_ra_file',               me%mission%generate_rp_ra_file,       found)
 
     call f%get('constrain_initial_rdot', me%mission%constrain_initial_rdot, found)
 

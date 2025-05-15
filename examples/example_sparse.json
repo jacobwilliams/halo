@@ -160,6 +160,8 @@
     "eclipse_dt_step": 3600.0,
     "eclipse_filetype": 2, // json
 
-    "run_pyvista_script": true
+    "run_pyvista_script": true,
+
+    "generate_rp_ra_file": true
 
 }
