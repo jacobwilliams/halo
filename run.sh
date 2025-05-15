@@ -30,6 +30,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # with qr_mumps:
     fpm run halo_solver --profile release --flag "-DWITH_QRMUMPS -fopenmp $PYTHON_DIR/qr_mumps/install/lib/libdqrm.dylib $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.dylib -I$PYTHON_DIR/qr_mumps/install/include -rpath $PYTHON_DIR/qr_mumps/install/lib" -- $HALO_CONFIG_FILE
 
+    # debugging:
+    # fpm run halo_solver --profile debug --flag "-DWITH_QRMUMPS $PYTHON_DIR/qr_mumps/install/lib/libdqrm.dylib $PYTHON_DIR/qr_mumps/install/lib/libqrm_common.dylib -I$PYTHON_DIR/qr_mumps/install/include -rpath $PYTHON_DIR/qr_mumps/install/lib" -- $HALO_CONFIG_FILE
+
     # without qr_mumps + real128 kinds:
     # fpm run halo_solver --profile release --flag "-DREAL128 -fopenmp" -- $HALO_CONFIG_FILE
 
