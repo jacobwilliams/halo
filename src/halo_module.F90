@@ -1905,7 +1905,8 @@
 
         ! this is for the full "forward-backward" problem formulation:
 
-        !       1-6      7-12    13-19     20-26
+        !                                               optional:
+        !       1-6      7-12    13-19     20-26        [m]
         ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ..., [rdot] ]
         !
         !      0     1     2
@@ -1932,11 +1933,6 @@
                 call add_it(1,isegs_to_propagate)
             end if
         end if
-
-        ! WARNING: we are not accounting for fixing certain variables!
-        ! see get_sparsity_pattern <--- this is likely why some of those options don't work !  -TODO
-        !
-        ! need to have a mapping of each function to the segments that need to be propagated
 
     else
         ! propagate all the segments:
