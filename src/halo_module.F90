@@ -207,6 +207,8 @@
                                             !! not used if `<= 0`.
         logical :: fix_final_ry_and_vx = .false. !! fix ry and vx at the end of the last rev (at periapsis)
 
+        logical :: constrain_initial_rdot = .false. !! impose an rdot=0 constraint on the initial point
+
         integer :: solver_mode = 1  !! use sparse or dense solver:
                                     !!
                                     !! * 1 - dense (LAPACK)
@@ -504,7 +506,20 @@
 
     ! there are 4 blocks of nonzeros per rev
     ! (each block contains 84 elements)
-    if (present(n_nonzero)) n_nonzero = me%n_revs * (84*4)
+    if (present(n_nonzero)) then
+        n_nonzero = me%n_revs * (84*4)
+        if (me%constrain_initial_rdot) then
+            if (me%fix_initial_r) then ! add elements (rdot is function of initial r,v)
+                n_nonzero = n_nonzero + 3  ! only v is in the opt var vec
+            else
+                n_nonzero = n_nonzero + 6  ! r,v in opt var vec
+            end if
+        end if
+    end if
+    ! optional rdot constraint
+    if (me%constrain_initial_rdot) then
+        if (present(m)) m = m + 1  ! add one function (the last row)
+    end if
 
     if (present(full_problem)) then
         if (full_problem) return ! don't do the stuff below
@@ -775,6 +790,7 @@
     integer :: i          !! counter for index in `x`
     integer :: irev       !! counter for number of revs
     integer :: iseg       !! segment number counter
+    real(wp) :: rdot      !! initial d(rmag)/dt (km/s) in moon-centered rotating frame
 
     if (present(x)) then
 
@@ -789,7 +805,7 @@
                 ! the first one has an extra opt point at the initial periapsis passage
 
                 if (.not. me%fix_initial_time) &
-                call fill_vector(x, me%segs(iseg+1)%data%t0, i)
+                    call fill_vector(x, me%segs(iseg+1)%data%t0, i)
 
                 if (me%fix_initial_r) then
                     call fill_vector(x, me%segs(iseg+1)%data%x0_rotating(4:6), i) ! v only
@@ -845,6 +861,10 @@
 
         end do
 
+        if (any(x == -huge(1.0_wp))) then
+            error stop 'error: not all x values were set'
+        end if
+
         ! scale the x vector:
         x = x / me%xscale
 
@@ -866,6 +886,12 @@
             iseg = iseg + 8
 
         end do
+        if (me%constrain_initial_rdot) then
+            rdot = compute_rdot(me%segs(1)%data%x0)
+            call fill_vector(f, rdot, i)  ! last one is the rdot=0 constraint
+        end if
+
+        if (size(f) /= size(me%fscale)) error stop 'error: f and fscale are not the same size'
 
         !scale the f vector:
         f = f / me%fscale
@@ -907,6 +933,10 @@
                 write(iunit,'(1P,E26.16,A1,E26.16)') norm2(f(i:i+2)), ',', norm2(f(i+2:i+5))
             end do
         end do
+
+        if (me%constrain_initial_rdot) then  ! also the rdot one
+           write(iunit,'(1P,E26.16,A1,E26.16)') f(m), ',', 0.0_wp
+        end if
 
         close(iunit, iostat=istat)
 
@@ -1188,6 +1218,16 @@
                 irow(k) = jj
                 icol(k) = ii
             end do
+            ! if necessary, add on the last row for the
+            ! initial rdot constraint (depends on initial r,v)
+            if (me%constrain_initial_rdot) then
+                select case (ii) ! column for initial r,v opt vars
+                case(2:7)
+                    k = k + 1
+                    irow(k) = m  ! last row
+                    icol(k) = ii
+                end select
+            end if
         end do
 
     end do
@@ -1458,6 +1498,7 @@
 
     end do
 
+
     allocate(me%xscale(n))
     allocate(me%xname(n))
     allocate(me%dpert_(n))
@@ -1503,7 +1544,6 @@
 
     ! iseg loop: x: [1,2,4,...n_segs]
     !            f: [  2,4,...n_segs]
-
     call me%define_problem_size(n_segs=n_segs)
 
     i = 0 ! for xscale
@@ -1553,13 +1593,14 @@
     do iseg = 2, n_segs, 2
         call fill_vector(me%fscale, me%segs(iseg)%data%xf_rotating_scale, i)
     end do
-
+    if (me%constrain_initial_rdot) then
+        call fill_vector(me%fscale, fscale_rdot, i)  ! scale rdot constraint
+    end if
     ! write(*,*) ''
     ! write(*,*) 'xscale: ', me%xscale
     ! write(*,*) ''
     ! write(*,*) 'fscale: ', me%fscale
     ! write(*,*) ''
-
     end subroutine get_scales_from_segs
 !*****************************************************************************************
 
@@ -1855,6 +1896,7 @@
     integer,dimension(:),allocatable,intent(out) :: isegs_to_propagate  !! segment numbers
 
     integer :: i,j  !! counters
+    integer :: m    !! number of constraints
 
     ! In this example, there are no dependencies, so we assume they
     ! can be propagated in any order.
@@ -1874,14 +1916,25 @@
         ! 2: 5-6
         ! 3: 7-8
 
+        if (me%constrain_initial_rdot) call me%define_problem_size(m=m) ! we need m below
+
         do i = 1, size(funcs_to_compute)
+            if (me%constrain_initial_rdot) then
+                if (funcs_to_compute(i)==m) cycle  ! for the rdot constraint, handle below separately
+            end if
             j = (funcs_to_compute(i)-1) / 6 ! 0,1,2,...
             call add_it(j*2+1,isegs_to_propagate) ! ... is this correct ?
             call add_it(j*2+2,isegs_to_propagate)
         end do
 
-        ! warning: we are not accounting for fixing certain variables!
-        ! see get_sparsity_pattern
+        if (me%constrain_initial_rdot) then  ! for the rdot constraint we have to propagate segment 1
+            if (any(m==funcs_to_compute)) then
+                call add_it(1,isegs_to_propagate)
+            end if
+        end if
+
+        ! WARNING: we are not accounting for fixing certain variables!
+        ! see get_sparsity_pattern <--- this is likely why some of those options don't work !  -TODO
 
     else
         ! propagate all the segments:
@@ -2166,6 +2219,11 @@
 
     count_start = count_end
 
+    !select type (me)
+    !class is (my_solver_type)
+    !    write(*,*) 'rdot = ', compute_rdot(me%mission%segs(1)%data%x0)
+    !end select
+
     end subroutine halo_export
 !*****************************************************************************************
 
@@ -2427,9 +2485,9 @@
             call json%add(p_seg, 'vz_inertial', seg%traj_inertial%vz)
 
             if (accumulate_rdot) then
-                call compute_rdot(seg%traj_inertial%x,seg%traj_inertial%y,seg%traj_inertial%z,&
-                                  seg%traj_inertial%vx,seg%traj_inertial%vy,seg%traj_inertial%vz,&
-                                  rmag, rdot)
+                call compute_rdot_vecs(seg%traj_inertial%x,seg%traj_inertial%y,seg%traj_inertial%z,&
+                                       seg%traj_inertial%vx,seg%traj_inertial%vy,seg%traj_inertial%vz,&
+                                       rmag, rdot)
                 call append_traj_to_arrays(seg)
                 !call json%add(p_seg, 'rdot_inertial', rdot)
                 ! don't include the last time step since that will overlap the next segment
@@ -2445,9 +2503,9 @@
             ! call json%add(p_seg, 'vx_rotating', seg%traj_rotating%vx)
             ! call json%add(p_seg, 'vy_rotating', seg%traj_rotating%vy)
             ! call json%add(p_seg, 'vz_rotating', seg%traj_rotating%vz)
-            ! call compute_rdot(seg%traj_rotating%x,seg%traj_rotating%y,seg%traj_rotating%z,&
-            !                   seg%traj_rotating%vx,seg%traj_rotating%vy,seg%traj_rotating%vz,&
-            !                   rdot)
+            ! call compute_rdot_vecs(seg%traj_rotating%x,seg%traj_rotating%y,seg%traj_rotating%z,&
+            !                        seg%traj_rotating%vx,seg%traj_rotating%vy,seg%traj_rotating%vz,&
+            !                        rdot)
             ! call json%add(p_seg, 'rdot_rotating', rdot)
 
             call json%add(p_seg, 'x_se_rotating',  seg%traj_se_rotating%x)
@@ -2634,9 +2692,24 @@
 
 !*****************************************************************************************
 !>
+!  compute rdot, which is d(rmag)/dt.
+!
+!  See also: [[compute_rdot_vecs]]
+
+    function compute_rdot(rv) result(rdot)
+        real(wp),dimension(6),intent(in) :: rv !! rv vector (km, km/s)
+        real(wp) :: rdot !! [km/s]
+        associate(r => rv(1:3), v => rv(4:6))
+            rdot = dot_product(r,v) / norm2(r)
+        end associate
+    end function compute_rdot
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  compute the rmag and rdot vectors, given the state vectors
 
-    subroutine compute_rdot(x,y,z,vx,vy,vz,rmag,rdot)
+    subroutine compute_rdot_vecs(x,y,z,vx,vy,vz,rmag,rdot)
         real(wp),dimension(:),intent(in) :: x !! x-position component
         real(wp),dimension(:),intent(in) :: y !! y-position component
         real(wp),dimension(:),intent(in) :: z !! z-position component
@@ -2654,7 +2727,7 @@
             rmag(i) = norm2(r)
             rdot(i) = dot_product(r,v) / rmag(i)
         end do
-    end subroutine compute_rdot
+    end subroutine compute_rdot_vecs
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3027,6 +3100,8 @@
     call f%get('generate_eclipse_files',            me%mission%generate_eclipse_files,    found)
     call f%get('run_pyvista_script',                me%mission%run_pyvista_script,        found)
 
+    call f%get('constrain_initial_rdot', me%mission%constrain_initial_rdot, found)
+
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
     call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)
     call f%get('eclipse_filetype',    me%mission%eclipse_filetype, found)
@@ -3061,6 +3136,8 @@
     call f%get('fscale_xf', fscale_xf, found)
     if (.not. found) fscale_xf = [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0e+02_wp,1.0e+02_wp,1.0e+02_wp]
     if (size(fscale_xf) /= 6) error stop 'error: fscale_xf must be a 6 element vector'
+    call f%get('fscale_rdot' , fscale_rdot, found) ! rdot function scale value
+
     call f%get('use_battin_gravity', use_battin_gravity, found)
 
     ! required inputs:

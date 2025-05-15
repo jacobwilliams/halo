@@ -91,6 +91,10 @@
     "fix_ry_at_end_of_rev": 0,
     "fix_final_ry_and_vx": false,
 
+    // option to fix the initial rdot
+    "constrain_initial_rdot": false, // test: constrain the initial rdot = 0
+    "fscale_rdot": 10.0, // scale factor for rdot function
+
     // integrator tols:
     "rtol": 1.0e-12,
     "atol": 1.0e-12,
