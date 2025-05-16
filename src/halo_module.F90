@@ -1620,7 +1620,6 @@
     real(wp),dimension(:),intent(out) :: xdot !! derivative of state (\( dx/dt \))
 
     real(wp),dimension(3) :: r,rb,v
-    reaL(wp),dimension(6) :: rv_earth_wrt_moon,rv_sun_wrt_moon,rv_jupiter_wrt_moon
     reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon,r_jupiter_wrt_moon
     real(wp),dimension(3,3) :: rotmat
     real(wp),dimension(3) :: a_geopot
@@ -1661,18 +1660,9 @@
             a_jupiter = zero
             select type (eph)
             type is (jpl_ephemeris)
-                if (me%include_pointmass_earth) then
-                    call eph%get_rv(et,body_earth,body_moon,rv_earth_wrt_moon,status_ok)
-                    r_earth_wrt_moon = rv_earth_wrt_moon(1:3)
-                end if
-                if (me%include_pointmass_sun) then
-                    call eph%get_rv(et,body_sun,body_moon,rv_sun_wrt_moon,status_ok)
-                    r_sun_wrt_moon = rv_sun_wrt_moon(1:3)
-                end if
-                if (me%include_pointmass_jupiter) then
-                    call eph%get_rv(et,body_jupiter,body_moon,rv_jupiter_wrt_moon,status_ok)
-                    r_jupiter_wrt_moon = rv_jupiter_wrt_moon(1:3)
-                end if
+                if (me%include_pointmass_earth)   call get_r(eph,et,body_earth,  body_moon,r_earth_wrt_moon,  status_ok)
+                if (me%include_pointmass_sun)     call get_r(eph,et,body_sun,    body_moon,r_sun_wrt_moon,    status_ok)
+                if (me%include_pointmass_jupiter) call get_r(eph,et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
             type is (jpl_ephemeris_splined)
                 ! for this, we can just get position vector only
                 if (me%include_pointmass_earth)   call eph%get_r(et,body_earth,  body_moon,r_earth_wrt_moon,  status_ok)
@@ -1703,6 +1693,21 @@
         error stop 'invalid class in ballistic_derivs'
 
     end select
+
+    contains
+
+        subroutine get_r(eph,et,targ,obs,r,status_ok)
+            !! wrapper just to get r from the ephemeris
+            type(jpl_ephemeris),intent(inout) :: eph
+            real(wp), intent(in) :: et
+            type(celestial_body), intent(in) :: targ
+            type(celestial_body), intent(in) :: obs
+            real(wp), dimension(3), intent(out) :: r
+            logical, intent(out) :: status_ok
+            real(wp), dimension(6) :: rv
+            call eph%get_rv(et,targ,obs,rv,status_ok)
+            r = rv(1:3)
+        end subroutine get_r
 
     end subroutine ballistic_derivs
 !*****************************************************************************************
