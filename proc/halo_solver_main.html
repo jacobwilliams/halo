@@ -1,0 +1,2139 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>halo_solver_main &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>halo_solver_main
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 5.7% of total for procedures.">130 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">halo_solver_main</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/halo_solver_main.html#src">halo_solver_main</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine halo_solver_main(config_file_name, debug)  
+</h2>
+        <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='../module/parameters_module.html'>parameters_module</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~halo_solver_main~~UsesGraph Pages: 1 -->
+<svg id="prochalo_solver_mainUsesGraph" width="607pt" height="74pt"
+ viewBox="0.00 0.00 607.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~halo_solver_main~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>proc~~halo_solver_main~~UsesGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 603,-70 603,4 -4,4"/>
+<!-- proc~halo_solver_main -->
+<g id="proc~~halo_solver_main~~UsesGraph_node1" class="node">
+<title>proc~halo_solver_main</title>
+<polygon fill="none" stroke="black" points="599,-45 493,-45 493,-21 599,-21 599,-45"/>
+<text text-anchor="middle" x="546" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">halo_solver_main</text>
+</g>
+<!-- module~parameters_module -->
+<g id="proc~~halo_solver_main~~UsesGraph_node2" class="node">
+<title>module~parameters_module</title>
+<g id="a_proc~~halo_solver_main~~UsesGraph_node2"><a xlink:href="../module/parameters_module.html" xlink:title="parameters_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="457,-45 336,-45 336,-21 457,-21 457,-45"/>
+<text text-anchor="middle" x="396.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parameters_module</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;module~parameters_module -->
+<g id="proc~~halo_solver_main~~UsesGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M493,-33C484.65,-33 475.9,-33 467.22,-33"/>
+<polygon fill="#000000" stroke="#000000" points="467.09,-29.5 457.09,-33 467.09,-36.5 467.09,-29.5"/>
+</g>
+<!-- fortran_astrodynamics_toolkit -->
+<g id="proc~~halo_solver_main~~UsesGraph_node3" class="node">
+<title>fortran_astrodynamics_toolkit</title>
+<g id="a_proc~~halo_solver_main~~UsesGraph_node3"><a xlink:href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/" xlink:title="fortran_astrodynamics_toolkit">
+<polygon fill="#337ab7" stroke="#337ab7" points="300,-66 130,-66 130,-42 300,-42 300,-66"/>
+<text text-anchor="middle" x="215" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fortran_astrodynamics_toolkit</text>
+</a>
+</g>
+</g>
+<!-- module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="proc~~halo_solver_main~~UsesGraph_edge2" class="edge">
+<title>module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M335.73,-39.99C327.52,-40.95 318.93,-41.96 310.29,-42.97"/>
+<polygon fill="#000000" stroke="#000000" points="309.66,-39.52 300.13,-44.16 310.47,-46.47 309.66,-39.52"/>
+</g>
+<!-- module~halo_kinds_module -->
+<g id="proc~~halo_solver_main~~UsesGraph_node4" class="node">
+<title>module~halo_kinds_module</title>
+<g id="a_proc~~halo_solver_main~~UsesGraph_node4"><a xlink:href="../module/halo_kinds_module.html" xlink:title="halo_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="272.5,-24 157.5,-24 157.5,0 272.5,0 272.5,-24"/>
+<text text-anchor="middle" x="215" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_kinds_module</text>
+</a>
+</g>
+</g>
+<!-- module~parameters_module&#45;&gt;module~halo_kinds_module -->
+<g id="proc~~halo_solver_main~~UsesGraph_edge3" class="edge">
+<title>module~parameters_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M335.73,-26.01C318.76,-24.02 300.18,-21.85 282.83,-19.82"/>
+<polygon fill="#000000" stroke="#000000" points="283.11,-16.33 272.77,-18.64 282.3,-23.28 283.11,-16.33"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="proc~~halo_solver_main~~UsesGraph_node5" class="node">
+<title>iso_fortran_env</title>
+<g id="a_proc~~halo_solver_main~~UsesGraph_node5"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="94,-24 0,-24 0,0 94,0 94,-24"/>
+<text text-anchor="middle" x="47" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~halo_kinds_module&#45;&gt;iso_fortran_env -->
+<g id="proc~~halo_solver_main~~UsesGraph_edge4" class="edge">
+<title>module~halo_kinds_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M157.34,-12C140.3,-12 121.62,-12 104.59,-12"/>
+<polygon fill="#000000" stroke="#000000" points="104.23,-8.5 94.23,-12 104.23,-15.5 104.23,-8.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="518pt" height="32pt"
+ viewBox="0.00 0.00 517.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 513.5,-28 513.5,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="145.5,-24 72.5,-24 72.5,0 145.5,0 145.5,-24"/>
+<text text-anchor="middle" x="109" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="234,-24 164,-24 164,0 234,0 234,-24"/>
+<text text-anchor="middle" x="199" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="310,-24 252,-24 252,0 310,0 310,-24"/>
+<text text-anchor="middle" x="281" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="386,-24 328,-24 328,0 386,0 386,-24"/>
+<text text-anchor="middle" x="357" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="509.5,-24 404.5,-24 404.5,0 509.5,0 509.5,-24"/>
+<text text-anchor="middle" x="457" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <p>Main program to solve the Halo targeting problem.</p>
+<h3>Author</h3>
+<ul>
+<li>Jacob Williams : Sept. 2017</li>
+</ul>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-config_file_name"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>config_file_name</strong></td>
+            <td>
+                <p>the config file to read</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-debug"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>debug</strong></td>
+            <td>
+                <p>for debugging prints</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~halo_solver_main~~CallsGraph Pages: 1 -->
+<svg id="prochalo_solver_mainCallsGraph" width="641pt" height="912pt"
+ viewBox="0.00 0.00 641.00 912.35" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~halo_solver_main~~CallsGraph" class="graph" transform="scale(0.46 0.46) rotate(0) translate(4 1975.84)">
+<title>proc~~halo_solver_main~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-1975.84 1387,-1975.84 1387,4 -4,4"/>
+<!-- proc~halo_solver_main -->
+<g id="proc~~halo_solver_main~~CallsGraph_node1" class="node">
+<title>proc~halo_solver_main</title>
+<polygon fill="none" stroke="black" points="106,-1066.29 0,-1066.29 0,-1042.29 106,-1042.29 106,-1066.29"/>
+<text text-anchor="middle" x="53" y="-1051.89" font-family="Helvetica,sans-Serif" font-size="10.50">halo_solver_main</text>
+</g>
+<!-- proc~constraint_violations -->
+<g id="proc~~halo_solver_main~~CallsGraph_node2" class="node">
+<title>proc~constraint_violations</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node2"><a xlink:href="../proc/constraint_violations.html" xlink:title="mission_type%constraint_violations">
+<polygon fill="#d9534f" stroke="#d9534f" points="358,-1697.29 157,-1697.29 157,-1673.29 358,-1673.29 358,-1697.29"/>
+<text text-anchor="middle" x="257.5" y="-1682.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%constraint_violations</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~constraint_violations -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M56.48,-1066.37C65.78,-1111.07 100.22,-1271.17 142,-1399.29 174.99,-1500.43 225.84,-1617.05 246.88,-1664.05"/>
+<polygon fill="#000000" stroke="#000000" points="243.71,-1665.55 251.01,-1673.23 250.1,-1662.68 243.71,-1665.55"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_node3" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node3"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="1113,-1740.29 913,-1740.29 913,-1716.29 1113,-1716.29 1113,-1740.29"/>
+<text text-anchor="middle" x="1013" y="-1725.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M54.52,-1066.33C58.64,-1158.63 87.16,-1751.45 142,-1806.29 373.8,-2038.05 575.09,-1994.93 877,-1867.29 933.97,-1843.2 978.74,-1782.02 999.45,-1749.45"/>
+<polygon fill="#000000" stroke="#000000" points="1002.58,-1751.04 1004.87,-1740.7 996.63,-1747.36 1002.58,-1751.04"/>
+</g>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_node4" class="node">
+<title>proc~export_trajectory_json_file</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node4"><a xlink:href="../proc/export_trajectory_json_file.html" xlink:title="mission_type%export_trajectory_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="373,-522.29 142,-522.29 142,-498.29 373,-498.29 373,-522.29"/>
+<text text-anchor="middle" x="257.5" y="-507.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_trajectory_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge3" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M58.51,-1042.16C84.45,-972.49 214.52,-623.06 248.41,-532.01"/>
+<polygon fill="#000000" stroke="#000000" points="251.77,-533.03 251.98,-522.44 245.21,-530.59 251.77,-533.03"/>
+</g>
+<!-- proc~generate_eclipse_data -->
+<g id="proc~~halo_solver_main~~CallsGraph_node5" class="node">
+<title>proc~generate_eclipse_data</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node5"><a xlink:href="../proc/generate_eclipse_data.html" xlink:title="mission_type%generate_eclipse_data">
+<polygon fill="#d9534f" stroke="#d9534f" points="363.5,-889.29 151.5,-889.29 151.5,-865.29 363.5,-865.29 363.5,-889.29"/>
+<text text-anchor="middle" x="257.5" y="-874.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%generate_eclipse_data</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge4" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data</title>
+<path fill="none" stroke="#000000" d="M64.2,-1042.18C79.98,-1023.77 111.66,-988.05 142,-961.29 170.2,-936.41 205.43,-911.36 229.32,-895.17"/>
+<polygon fill="#000000" stroke="#000000" points="231.53,-897.9 237.88,-889.42 227.62,-892.09 231.53,-897.9"/>
+</g>
+<!-- proc~get_case_name -->
+<g id="proc~~halo_solver_main~~CallsGraph_node6" class="node">
+<title>proc~get_case_name</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node6"><a xlink:href="../proc/get_case_name.html" xlink:title="mission_type%get_case_name">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="606,-948.29 431,-948.29 431,-924.29 606,-924.29 606,-948.29"/>
+<text text-anchor="middle" x="518.5" y="-933.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_case_name</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~get_case_name -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge5" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M94.21,-1042.23C159.76,-1022.82 293.89,-984.11 409,-957.29 419.37,-954.87 430.35,-952.51 441.18,-950.3"/>
+<polygon fill="#000000" stroke="#000000" points="441.94,-953.72 451.06,-948.32 440.57,-946.86 441.94,-953.72"/>
+</g>
+<!-- proc~get_segment_inputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_node7" class="node">
+<title>proc~get_segment_inputs</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node7"><a xlink:href="../proc/get_segment_inputs.html" xlink:title="segment%get_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="345,-97.29 170,-97.29 170,-73.29 345,-73.29 345,-97.29"/>
+<text text-anchor="middle" x="257.5" y="-82.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%get_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~get_segment_inputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge6" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~get_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M54.26,-1041.96C56.6,-935.86 75.61,-178.85 142,-106.29 147.21,-100.6 153.4,-96.14 160.18,-92.67"/>
+<polygon fill="#000000" stroke="#000000" points="161.96,-95.71 169.74,-88.52 159.18,-89.29 161.96,-95.71"/>
+</g>
+<!-- proc~get_x_from_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_node8" class="node">
+<title>proc~get_x_from_json_file</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node8"><a xlink:href="../proc/get_x_from_json_file.html" xlink:title="mission_type%get_x_from_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="357,-139.29 158,-139.29 158,-115.29 357,-115.29 357,-139.29"/>
+<text text-anchor="middle" x="257.5" y="-124.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_x_from_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~get_x_from_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge7" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~get_x_from_json_file</title>
+<path fill="none" stroke="#000000" d="M54.47,-1041.99C58.45,-940.8 87.58,-247.31 142,-174.29 152.63,-160.03 168.35,-150.08 184.76,-143.14"/>
+<polygon fill="#000000" stroke="#000000" points="186.4,-146.26 194.47,-139.39 183.88,-139.72 186.4,-146.26"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~halo_solver_main~~CallsGraph_node9" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node9"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="362,-1390.29 153,-1390.29 153,-1366.29 362,-1366.29 362,-1390.29"/>
+<text text-anchor="middle" x="257.5" y="-1375.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge8" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M61.69,-1066.59C92.2,-1115.41 204.92,-1295.76 243.47,-1357.44"/>
+<polygon fill="#000000" stroke="#000000" points="240.53,-1359.34 248.8,-1365.97 246.47,-1355.63 240.53,-1359.34"/>
+</g>
+<!-- proc~plot_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_node10" class="node">
+<title>proc~plot_trajectory</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node10"><a xlink:href="../proc/plot_trajectory.html" xlink:title="mission_type%plot_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="342,-1086.29 173,-1086.29 173,-1062.29 342,-1062.29 342,-1086.29"/>
+<text text-anchor="middle" x="257.5" y="-1071.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%plot_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~plot_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge9" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~plot_trajectory</title>
+<path fill="none" stroke="#000000" d="M106.15,-1059.44C123.41,-1061.14 143.19,-1063.09 162.6,-1065.01"/>
+<polygon fill="#000000" stroke="#000000" points="162.41,-1068.51 172.71,-1066.01 163.1,-1061.54 162.41,-1068.51"/>
+</g>
+<!-- proc~print_constraint_defects -->
+<g id="proc~~halo_solver_main~~CallsGraph_node11" class="node">
+<title>proc~print_constraint_defects</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node11"><a xlink:href="../proc/print_constraint_defects.html" xlink:title="mission_type%print_constraint_defects">
+<polygon fill="#d9534f" stroke="#d9534f" points="628,-1821.29 409,-1821.29 409,-1797.29 628,-1797.29 628,-1821.29"/>
+<text text-anchor="middle" x="518.5" y="-1806.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%print_constraint_defects</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~print_constraint_defects -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge10" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~print_constraint_defects</title>
+<path fill="none" stroke="#000000" d="M54.64,-1066.38C59.45,-1155.28 91.18,-1705.8 142,-1757.29 220.3,-1836.62 359.35,-1833.74 444.5,-1822.71"/>
+<polygon fill="#000000" stroke="#000000" points="445.17,-1826.15 454.6,-1821.33 444.22,-1819.21 445.17,-1826.15"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~halo_solver_main~~CallsGraph_node12" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node12"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="614.5,-1779.29 422.5,-1779.29 422.5,-1755.29 614.5,-1755.29 614.5,-1779.29"/>
+<text text-anchor="middle" x="518.5" y="-1764.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge11" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M53.76,-1066.3C52.44,-1147.06 48.98,-1610.73 142,-1706.29 214.9,-1781.17 341.14,-1786.79 426.93,-1780.16"/>
+<polygon fill="#000000" stroke="#000000" points="427.25,-1783.64 436.92,-1779.31 426.67,-1776.67 427.25,-1783.64"/>
+</g>
+<!-- proc~write_optvars_to_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_node13" class="node">
+<title>proc~write_optvars_to_file</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node13"><a xlink:href="../proc/write_optvars_to_file.html" xlink:title="mission_type%write_optvars_to_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="357.5,-379.29 157.5,-379.29 157.5,-355.29 357.5,-355.29 357.5,-379.29"/>
+<text text-anchor="middle" x="257.5" y="-364.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%write_optvars_to_file</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~write_optvars_to_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge12" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~write_optvars_to_file</title>
+<path fill="none" stroke="#000000" d="M54.91,-1042.12C60.52,-969.45 91.7,-592.33 142,-489.29 163.16,-445.95 205.03,-407.51 231.85,-385.84"/>
+<polygon fill="#000000" stroke="#000000" points="234.31,-388.36 239.99,-379.41 229.97,-382.87 234.31,-388.36"/>
+</g>
+<!-- solve -->
+<g id="proc~~halo_solver_main~~CallsGraph_node14" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="797.5,-299.29 743.5,-299.29 743.5,-275.29 797.5,-275.29 797.5,-299.29"/>
+<text text-anchor="middle" x="770.5" y="-284.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;solve -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge13" class="edge">
+<title>proc~halo_solver_main&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M53.97,-1042.11C53.96,-958.07 57.54,-464.05 142,-346.29 272.25,-164.69 410.39,-166.4 628,-217.29 670.92,-227.32 715.76,-252.37 743.16,-269.61"/>
+<polygon fill="#000000" stroke="#000000" points="741.45,-272.68 751.76,-275.13 745.23,-266.78 741.45,-272.68"/>
+</g>
+<!-- status -->
+<g id="proc~~halo_solver_main~~CallsGraph_node15" class="node">
+<title>status</title>
+<polygon fill="#777777" stroke="#777777" points="545.5,-1272.29 491.5,-1272.29 491.5,-1248.29 545.5,-1248.29 545.5,-1272.29"/>
+<text text-anchor="middle" x="518.5" y="-1257.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status</text>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;status -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge14" class="edge">
+<title>proc~halo_solver_main&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M72.37,-1066.33C123.46,-1099.29 272.52,-1191.65 409,-1239.29 432.35,-1247.44 459.7,-1252.7 481.09,-1255.92"/>
+<polygon fill="#000000" stroke="#000000" points="480.68,-1259.4 491.07,-1257.34 481.67,-1252.47 480.68,-1259.4"/>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge17" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M287.76,-1697.32C329.78,-1714.57 402.87,-1744.47 409,-1746.29 417.35,-1748.76 426.16,-1751.02 434.99,-1753.06"/>
+<polygon fill="#000000" stroke="#000000" points="434.43,-1756.52 444.95,-1755.27 435.95,-1749.69 434.43,-1756.52"/>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~halo_solver_main~~CallsGraph_node33" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node33"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="869,-1680.29 672,-1680.29 672,-1656.29 869,-1656.29 869,-1680.29"/>
+<text text-anchor="middle" x="770.5" y="-1665.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge15" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M358.24,-1681.97C445.5,-1679.07 571.95,-1674.86 661.56,-1671.88"/>
+<polygon fill="#000000" stroke="#000000" points="661.87,-1675.37 671.75,-1671.54 661.64,-1668.37 661.87,-1675.37"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~halo_solver_main~~CallsGraph_node37" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node37"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="858,-910.29 683,-910.29 683,-886.29 858,-886.29 858,-910.29"/>
+<text text-anchor="middle" x="770.5" y="-895.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~propagate_segment -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge16" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M262.65,-1673.05C281.13,-1619.24 357.17,-1404.36 409,-1357.29 485.27,-1288.02 564.19,-1362.17 628,-1281.29 678.07,-1217.82 609.69,-979.16 664,-919.29 666.96,-916.02 670.28,-913.17 673.86,-910.7"/>
+<polygon fill="#000000" stroke="#000000" points="675.75,-913.65 682.63,-905.6 672.23,-907.6 675.75,-913.65"/>
+</g>
+<!-- proc~segs_to_propagate -->
+<g id="proc~~halo_solver_main~~CallsGraph_node39" class="node">
+<title>proc~segs_to_propagate</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node39"><a xlink:href="../proc/segs_to_propagate.html" xlink:title="mission_type%segs_to_propagate">
+<polygon fill="#d9534f" stroke="#d9534f" points="614,-1737.29 423,-1737.29 423,-1713.29 614,-1713.29 614,-1737.29"/>
+<text text-anchor="middle" x="518.5" y="-1722.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%segs_to_propagate</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~segs_to_propagate -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge18" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~segs_to_propagate</title>
+<path fill="none" stroke="#000000" d="M336.21,-1697.29C365.53,-1701.82 399.08,-1707 429.29,-1711.66"/>
+<polygon fill="#000000" stroke="#000000" points="428.98,-1715.16 439.4,-1713.22 430.05,-1708.24 428.98,-1715.16"/>
+</g>
+<!-- add -->
+<g id="proc~~halo_solver_main~~CallsGraph_node16" class="node">
+<title>add</title>
+<polygon fill="#777777" stroke="#777777" points="797.5,-514.29 743.5,-514.29 743.5,-490.29 797.5,-490.29 797.5,-514.29"/>
+<text text-anchor="middle" x="770.5" y="-499.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;add -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge19" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M329.87,-522.31C354.82,-525.96 383.08,-529.49 409,-531.29 506.1,-538.03 531.25,-541.91 628,-531.29 644.29,-529.5 647.96,-526.66 664,-523.29 687.14,-518.41 713.19,-513.22 733.62,-509.22"/>
+<polygon fill="#000000" stroke="#000000" points="734.31,-512.65 743.45,-507.3 732.97,-505.78 734.31,-512.65"/>
+</g>
+<!-- create_array -->
+<g id="proc~~halo_solver_main~~CallsGraph_node19" class="node">
+<title>create_array</title>
+<polygon fill="#777777" stroke="#777777" points="558.5,-358.29 478.5,-358.29 478.5,-334.29 558.5,-334.29 558.5,-358.29"/>
+<text text-anchor="middle" x="518.5" y="-343.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">create_array</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;create_array -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge20" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;create_array</title>
+<path fill="none" stroke="#000000" d="M267.44,-497.91C288.55,-469.69 344.59,-400.45 409,-367.29 427.15,-357.94 448.95,-352.74 468.23,-349.85"/>
+<polygon fill="#000000" stroke="#000000" points="468.9,-353.29 478.35,-348.5 467.98,-346.35 468.9,-353.29"/>
+</g>
+<!-- create_object -->
+<g id="proc~~halo_solver_main~~CallsGraph_node20" class="node">
+<title>create_object</title>
+<polygon fill="#777777" stroke="#777777" points="561,-316.29 476,-316.29 476,-292.29 561,-292.29 561,-316.29"/>
+<text text-anchor="middle" x="518.5" y="-301.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">create_object</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;create_object -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge21" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;create_object</title>
+<path fill="none" stroke="#000000" d="M271.93,-498C294.5,-476.93 340.72,-431.97 373,-388.29 392.17,-362.35 382.78,-344.06 409,-325.29 425.33,-313.59 446.45,-307.95 465.71,-305.37"/>
+<polygon fill="#000000" stroke="#000000" points="466.31,-308.82 475.87,-304.25 465.55,-301.86 466.31,-308.82"/>
+</g>
+<!-- destroy -->
+<g id="proc~~halo_solver_main~~CallsGraph_node21" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="797.5,-456.29 743.5,-456.29 743.5,-432.29 797.5,-432.29 797.5,-456.29"/>
+<text text-anchor="middle" x="770.5" y="-441.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;destroy -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge22" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M280.07,-498.08C308.54,-482.74 360.72,-457.19 409,-447.29 525.45,-423.39 667.54,-433.3 733.12,-440.01"/>
+<polygon fill="#000000" stroke="#000000" points="733.04,-443.52 743.35,-441.09 733.77,-436.56 733.04,-443.52"/>
+</g>
+<!-- initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_node27" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="1041.5,-992.29 984.5,-992.29 984.5,-968.29 1041.5,-968.29 1041.5,-992.29"/>
+<text text-anchor="middle" x="1013" y="-977.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge23" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M261.88,-522.35C273.98,-563.2 319.34,-697.13 409,-758.29 490.61,-813.95 530.97,-777.74 628,-796.29 739.04,-817.51 787.25,-779.53 877,-848.29 905.09,-869.8 889.04,-893.25 913,-919.29 930.43,-938.22 955.05,-953.43 975.37,-963.92"/>
+<polygon fill="#000000" stroke="#000000" points="973.86,-967.07 984.37,-968.4 976.98,-960.81 973.86,-967.07"/>
+</g>
+<!-- insert_after -->
+<g id="proc~~halo_solver_main~~CallsGraph_node28" class="node">
+<title>insert_after</title>
+<polygon fill="#777777" stroke="#777777" points="555,-400.29 482,-400.29 482,-376.29 555,-376.29 555,-400.29"/>
+<text text-anchor="middle" x="518.5" y="-385.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">insert_after</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;insert_after -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge24" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;insert_after</title>
+<path fill="none" stroke="#000000" d="M273.78,-498.06C299.94,-477.72 355.65,-436.93 409,-414.29 428.89,-405.84 452.05,-399.82 471.85,-395.71"/>
+<polygon fill="#000000" stroke="#000000" points="472.73,-399.11 481.86,-393.74 471.37,-392.24 472.73,-399.11"/>
+</g>
+<!-- proc~compute_rdot_vecs -->
+<g id="proc~~halo_solver_main~~CallsGraph_node30" class="node">
+<title>proc~compute_rdot_vecs</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node30"><a xlink:href="../proc/compute_rdot_vecs.html" xlink:title="compute_rdot_vecs">
+<polygon fill="#d9534f" stroke="#d9534f" points="576.5,-480.29 460.5,-480.29 460.5,-456.29 576.5,-456.29 576.5,-480.29"/>
+<text text-anchor="middle" x="518.5" y="-465.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot_vecs</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~compute_rdot_vecs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge25" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~compute_rdot_vecs</title>
+<path fill="none" stroke="#000000" d="M332.72,-498.25C369.75,-492.25 414.2,-485.04 450.22,-479.2"/>
+<polygon fill="#000000" stroke="#000000" points="450.84,-482.64 460.15,-477.59 449.71,-475.73 450.84,-482.64"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_node31" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node31"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="603.5,-990.29 433.5,-990.29 433.5,-966.29 603.5,-966.29 603.5,-990.29"/>
+<text text-anchor="middle" x="518.5" y="-975.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge26" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M262.55,-522.59C286.1,-594.13 404.56,-953.4 409,-957.29 413.53,-961.25 418.59,-964.56 423.96,-967.31"/>
+<polygon fill="#000000" stroke="#000000" points="422.72,-970.59 433.28,-971.44 425.56,-964.19 422.72,-970.59"/>
+</g>
+<!-- proc~export_rp_ra_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_node32" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node32"><a xlink:href="../proc/export_rp_ra_json_file.html" xlink:title="mission_type%export_rp_ra_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="622,-522.29 415,-522.29 415,-498.29 622,-498.29 622,-522.29"/>
+<text text-anchor="middle" x="518.5" y="-507.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_rp_ra_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge27" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file</title>
+<path fill="none" stroke="#000000" d="M373.23,-510.29C383.58,-510.29 394.06,-510.29 404.4,-510.29"/>
+<polygon fill="#000000" stroke="#000000" points="404.68,-513.79 414.68,-510.29 404.68,-506.79 404.68,-513.79"/>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~propagate_segment -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge28" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M261.25,-522.53C271.85,-566.73 314.19,-719.45 409,-796.29 452.76,-831.75 602.3,-865.91 694.47,-884.3"/>
+<polygon fill="#000000" stroke="#000000" points="693.82,-887.74 704.31,-886.25 695.18,-880.88 693.82,-887.74"/>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~get_case_name -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge33" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M311.22,-889.3C352.66,-898.74 410.52,-911.92 454.42,-921.92"/>
+<polygon fill="#000000" stroke="#000000" points="453.88,-925.38 464.41,-924.19 455.43,-918.56 453.88,-925.38"/>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;add -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge29" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M261.59,-865.08C273.05,-822.39 317.26,-678.58 409,-607.29 488.51,-545.51 537,-592.37 628,-549.29 645.84,-540.84 645.91,-531.17 664,-523.29 685.97,-513.71 712.42,-508.46 733.34,-505.6"/>
+<polygon fill="#000000" stroke="#000000" points="733.93,-509.06 743.42,-504.35 733.07,-502.11 733.93,-509.06"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_node25" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1046.5,-781.29 979.5,-781.29 979.5,-757.29 1046.5,-757.29 1046.5,-781.29"/>
+<text text-anchor="middle" x="1013" y="-766.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;icrf_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge30" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M288.22,-865.2C318.19,-853.54 366.03,-836.37 409,-827.29 615.75,-783.58 869.42,-772.75 968.99,-770.12"/>
+<polygon fill="#000000" stroke="#000000" points="969.35,-773.61 979.25,-769.86 969.17,-766.61 969.35,-773.61"/>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge31" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M363.61,-866.86C515.71,-853.52 788.65,-836.65 877,-877.29 899.34,-887.56 894.31,-903.31 913,-919.29 933.23,-936.58 958.87,-952.23 978.99,-963.35"/>
+<polygon fill="#000000" stroke="#000000" points="977.35,-966.44 987.81,-968.13 980.69,-960.29 977.35,-966.44"/>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge32" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M277.14,-889.56C304.78,-907.19 358.78,-939.53 409,-957.29 415.84,-959.7 423.03,-961.87 430.31,-963.8"/>
+<polygon fill="#000000" stroke="#000000" points="429.72,-967.26 440.27,-966.28 431.42,-960.47 429.72,-967.26"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~halo_solver_main~~CallsGraph_node35" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node35"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="568.5,-640.29 468.5,-640.29 468.5,-616.29 568.5,-616.29 568.5,-640.29"/>
+<text text-anchor="middle" x="518.5" y="-625.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge34" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M262.99,-865.06C277.58,-827.16 327.43,-710.83 409,-654.29 423.51,-644.23 441.43,-638.04 458.5,-634.24"/>
+<polygon fill="#000000" stroke="#000000" points="459.3,-637.65 468.42,-632.26 457.93,-630.78 459.3,-637.65"/>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~propagate_segment -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge35" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M363.76,-881.61C454.49,-885.34 584.41,-890.68 672.61,-894.3"/>
+<polygon fill="#000000" stroke="#000000" points="672.49,-897.8 682.62,-894.72 672.77,-890.81 672.49,-897.8"/>
+</g>
+<!-- transform -->
+<g id="proc~~halo_solver_main~~CallsGraph_node42" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="1045.5,-853.29 980.5,-853.29 980.5,-829.29 1045.5,-829.29 1045.5,-853.29"/>
+<text text-anchor="middle" x="1013" y="-838.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;transform -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge36" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M301.89,-865.22C331.74,-857.56 372.44,-848.34 409,-844.29 618.82,-821.02 872.24,-832.55 970.38,-838.49"/>
+<polygon fill="#000000" stroke="#000000" points="970.28,-841.99 980.48,-839.11 970.71,-835 970.28,-841.99"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_node43" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1086.5,-1096.29 939.5,-1096.29 939.5,-1072.29 1086.5,-1072.29 1086.5,-1096.29"/>
+<text text-anchor="middle" x="1013" y="-1081.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge37" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M271.35,-889.58C296.34,-913.05 353.91,-964.95 409,-999.29 514.98,-1065.33 542.04,-1090.44 664,-1117.29 756.45,-1137.64 783.56,-1132.45 877,-1117.29 893.65,-1114.58 896.72,-1109.71 913,-1105.29 921.72,-1102.92 930.92,-1100.65 940.07,-1098.55"/>
+<polygon fill="#000000" stroke="#000000" points="940.96,-1101.93 949.95,-1096.33 939.43,-1095.1 940.96,-1101.93"/>
+</g>
+<!-- get -->
+<g id="proc~~halo_solver_main~~CallsGraph_node23" class="node">
+<title>get</title>
+<polygon fill="#777777" stroke="#777777" points="1383,-1222.29 1329,-1222.29 1329,-1198.29 1383,-1198.29 1383,-1222.29"/>
+<text text-anchor="middle" x="1356" y="-1207.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge38" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M357.09,-115.28C362.69,-112.76 368.05,-109.79 373,-106.29 399.31,-87.64 381.54,-60.2 409,-43.29 545.6,40.87 609.06,-24.29 769.5,-24.29 769.5,-24.29 769.5,-24.29 1014,-24.29 1284.54,-24.29 1216.68,-305.74 1293,-565.29 1328.52,-686.09 1349.33,-1088.87 1353.99,-1188.07"/>
+<polygon fill="#000000" stroke="#000000" points="1350.5,-1188.32 1354.46,-1198.15 1357.49,-1188 1350.5,-1188.32"/>
+</g>
+<!-- get_child -->
+<g id="proc~~halo_solver_main~~CallsGraph_node24" class="node">
+<title>get_child</title>
+<polygon fill="#777777" stroke="#777777" points="549,-76.29 488,-76.29 488,-52.29 549,-52.29 549,-76.29"/>
+<text text-anchor="middle" x="518.5" y="-61.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_child</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;get_child -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge39" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;get_child</title>
+<path fill="none" stroke="#000000" d="M342.89,-115.27C353.18,-112.79 363.43,-109.83 373,-106.29 390.37,-99.85 391.66,-91.8 409,-85.29 430.97,-77.03 456.72,-71.86 477.62,-68.73"/>
+<polygon fill="#000000" stroke="#000000" points="478.34,-72.16 487.75,-67.3 477.36,-65.23 478.34,-72.16"/>
+</g>
+<!-- info -->
+<g id="proc~~halo_solver_main~~CallsGraph_node26" class="node">
+<title>info</title>
+<polygon fill="#777777" stroke="#777777" points="545.5,-160.29 491.5,-160.29 491.5,-136.29 545.5,-136.29 545.5,-160.29"/>
+<text text-anchor="middle" x="518.5" y="-145.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">info</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;info -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge40" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;info</title>
+<path fill="none" stroke="#000000" d="M357.16,-135.29C400.57,-138.81 448.89,-142.72 481.02,-145.33"/>
+<polygon fill="#000000" stroke="#000000" points="481.02,-148.84 491.27,-146.16 481.59,-141.86 481.02,-148.84"/>
+</g>
+<!-- load -->
+<g id="proc~~halo_solver_main~~CallsGraph_node29" class="node">
+<title>load</title>
+<polygon fill="#777777" stroke="#777777" points="545.5,-118.29 491.5,-118.29 491.5,-94.29 545.5,-94.29 545.5,-118.29"/>
+<text text-anchor="middle" x="518.5" y="-103.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">load</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;load -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge41" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;load</title>
+<path fill="none" stroke="#000000" d="M357.16,-119.29C400.57,-115.77 448.89,-111.85 481.02,-109.24"/>
+<polygon fill="#000000" stroke="#000000" points="481.59,-112.71 491.27,-108.41 481.02,-105.73 481.59,-112.71"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge43" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M267.61,-1390.68C289.51,-1419.89 347.89,-1494.3 409,-1543.29 510.9,-1624.96 539.86,-1648.73 664,-1689.29 707.01,-1703.34 817.66,-1714.24 902.75,-1720.89"/>
+<polygon fill="#000000" stroke="#000000" points="902.49,-1724.39 912.73,-1721.67 903.03,-1717.41 902.49,-1724.39"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;status -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge47" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M274.73,-1365.98C301.36,-1346.34 356.64,-1307.93 409,-1286.29 432.23,-1276.68 459.79,-1270.14 481.32,-1266.01"/>
+<polygon fill="#000000" stroke="#000000" points="482.15,-1269.42 491.36,-1264.18 480.89,-1262.53 482.15,-1269.42"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge42" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M348.05,-1366.25C445.11,-1351.29 591.12,-1322.6 628,-1281.29 702.47,-1197.88 585.12,-1111.54 664,-1032.29 669.47,-1026.79 885.52,-997.25 974.4,-985.31"/>
+<polygon fill="#000000" stroke="#000000" points="974.89,-988.77 984.34,-983.97 973.96,-981.83 974.89,-988.77"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~halo_solver_main~~CallsGraph_node34" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node34"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="870,-1638.29 671,-1638.29 671,-1614.29 870,-1614.29 870,-1638.29"/>
+<text text-anchor="middle" x="770.5" y="-1623.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge44" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M276.65,-1390.53C332.18,-1427.48 505.67,-1539.09 664,-1600.29 675.2,-1604.62 687.36,-1608.4 699.3,-1611.64"/>
+<polygon fill="#000000" stroke="#000000" points="698.7,-1615.1 709.26,-1614.24 700.47,-1608.33 698.7,-1615.1"/>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~halo_solver_main~~CallsGraph_node36" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node36"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="620.5,-1453.29 416.5,-1453.29 416.5,-1429.29 620.5,-1429.29 620.5,-1453.29"/>
+<text text-anchor="middle" x="518.5" y="-1438.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge45" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M308.13,-1390.36C350.87,-1400.76 412.66,-1415.78 458.04,-1426.82"/>
+<polygon fill="#000000" stroke="#000000" points="457.49,-1430.29 468.04,-1429.25 459.15,-1423.49 457.49,-1430.29"/>
+</g>
+<!-- proc~read_config_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_node38" class="node">
+<title>proc~read_config_file</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node38"><a xlink:href="../proc/read_config_file.html" xlink:title="my_solver_type%read_config_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="613,-1390.29 424,-1390.29 424,-1366.29 613,-1366.29 613,-1390.29"/>
+<text text-anchor="middle" x="518.5" y="-1375.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%read_config_file</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~read_config_file -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge46" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~read_config_file</title>
+<path fill="none" stroke="#000000" d="M362.35,-1378.29C379.14,-1378.29 396.52,-1378.29 413.31,-1378.29"/>
+<polygon fill="#000000" stroke="#000000" points="413.67,-1381.79 423.67,-1378.29 413.67,-1374.79 413.67,-1381.79"/>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~get_case_name -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge52" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M275.93,-1062.07C298.69,-1045.96 339.58,-1016.46 373,-989.29 389.61,-975.78 389.81,-966.77 409,-957.29 413.29,-955.17 417.77,-953.26 422.37,-951.55"/>
+<polygon fill="#000000" stroke="#000000" points="423.61,-954.82 431.95,-948.29 421.35,-948.2 423.61,-954.82"/>
+</g>
+<!-- add_3d_plot -->
+<g id="proc~~halo_solver_main~~CallsGraph_node17" class="node">
+<title>add_3d_plot</title>
+<polygon fill="#777777" stroke="#777777" points="557,-1230.29 480,-1230.29 480,-1206.29 557,-1206.29 557,-1230.29"/>
+<text text-anchor="middle" x="518.5" y="-1215.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_3d_plot</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;add_3d_plot -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge48" class="edge">
+<title>proc~plot_trajectory&#45;&gt;add_3d_plot</title>
+<path fill="none" stroke="#000000" d="M275.2,-1086.48C297.86,-1103.19 339.36,-1134.44 373,-1163.29 389.71,-1177.61 389.42,-1187.24 409,-1197.29 427.68,-1206.87 450.21,-1212.1 469.9,-1214.94"/>
+<polygon fill="#000000" stroke="#000000" points="469.53,-1218.42 479.89,-1216.22 470.42,-1211.48 469.53,-1218.42"/>
+</g>
+<!-- add_sphere -->
+<g id="proc~~halo_solver_main~~CallsGraph_node18" class="node">
+<title>add_sphere</title>
+<polygon fill="#777777" stroke="#777777" points="555.5,-1188.29 481.5,-1188.29 481.5,-1164.29 555.5,-1164.29 555.5,-1188.29"/>
+<text text-anchor="middle" x="518.5" y="-1173.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_sphere</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;add_sphere -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge49" class="edge">
+<title>proc~plot_trajectory&#45;&gt;add_sphere</title>
+<path fill="none" stroke="#000000" d="M276.66,-1086.43C304.12,-1104.23 358.41,-1137.25 409,-1155.29 428.85,-1162.36 451.65,-1167.23 471.2,-1170.49"/>
+<polygon fill="#000000" stroke="#000000" points="470.68,-1173.95 481.1,-1172.05 471.76,-1167.03 470.68,-1173.95"/>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge50" class="edge">
+<title>proc~plot_trajectory&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M328.13,-1086.32C406.05,-1096.22 533.7,-1101.54 628,-1051.29 651.22,-1038.91 640.82,-1016.74 664,-1004.29 765.03,-950.01 907.01,-962.9 974.08,-973.29"/>
+<polygon fill="#000000" stroke="#000000" points="973.75,-976.78 984.18,-974.92 974.87,-969.87 973.75,-976.78"/>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge51" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M280.86,-1062.16C309.74,-1046.89 361.92,-1020.69 409,-1004.29 421.39,-999.97 434.82,-996.12 447.87,-992.78"/>
+<polygon fill="#000000" stroke="#000000" points="448.89,-996.14 457.75,-990.34 447.2,-989.34 448.89,-996.14"/>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~propagate_segment -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge53" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M342.04,-1078.13C423.46,-1077.49 546.56,-1064.35 628,-999.29 658.46,-974.95 633.49,-943.57 664,-919.29 667.03,-916.88 670.26,-914.72 673.63,-912.79"/>
+<polygon fill="#000000" stroke="#000000" points="675.48,-915.78 682.88,-908.2 672.37,-909.51 675.48,-915.78"/>
+</g>
+<!-- savefig -->
+<g id="proc~~halo_solver_main~~CallsGraph_node41" class="node">
+<title>savefig</title>
+<polygon fill="#777777" stroke="#777777" points="545.5,-1146.29 491.5,-1146.29 491.5,-1122.29 545.5,-1122.29 545.5,-1146.29"/>
+<text text-anchor="middle" x="518.5" y="-1131.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">savefig</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;savefig -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge54" class="edge">
+<title>proc~plot_trajectory&#45;&gt;savefig</title>
+<path fill="none" stroke="#000000" d="M310.6,-1086.36C361.31,-1098.1 437.02,-1115.64 481.42,-1125.93"/>
+<polygon fill="#000000" stroke="#000000" points="480.66,-1129.35 491.2,-1128.19 482.24,-1122.53 480.66,-1129.35"/>
+</g>
+<!-- proc~print_constraint_defects&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge55" class="edge">
+<title>proc~print_constraint_defects&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M550.33,-1821.33C613.74,-1844.21 762.45,-1888.02 877,-1845.29 928.88,-1825.93 974.06,-1776.67 996.65,-1748.63"/>
+<polygon fill="#000000" stroke="#000000" points="999.48,-1750.69 1002.92,-1740.66 993.98,-1746.36 999.48,-1750.69"/>
+</g>
+<!-- proc~print_constraint_defects&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge56" class="edge">
+<title>proc~print_constraint_defects&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M604.4,-1797.28C612.56,-1794.82 620.56,-1791.85 628,-1788.29 679.59,-1763.54 727.71,-1715.36 752.34,-1688.18"/>
+<polygon fill="#000000" stroke="#000000" points="755.17,-1690.27 759.21,-1680.47 749.94,-1685.61 755.17,-1690.27"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge58" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M614.74,-1760.44C686.78,-1755.17 788.14,-1747.59 877,-1740.29 885.34,-1739.6 893.98,-1738.87 902.65,-1738.13"/>
+<polygon fill="#000000" stroke="#000000" points="903.19,-1741.6 912.85,-1737.25 902.59,-1734.62 903.19,-1741.6"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~halo_solver_main~~CallsGraph_node22" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="814.5,-1836.29 726.5,-1836.29 726.5,-1812.29 814.5,-1812.29 814.5,-1836.29"/>
+<text text-anchor="middle" x="770.5" y="-1821.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge57" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M586.24,-1779.33C600.09,-1782.08 614.55,-1785.12 628,-1788.29 644.16,-1792.09 647.94,-1794.08 664,-1798.29 680.92,-1802.72 699.43,-1807.36 716.16,-1811.46"/>
+<polygon fill="#000000" stroke="#000000" points="715.77,-1814.97 726.31,-1813.94 717.43,-1808.17 715.77,-1814.97"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_node40" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node40"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="857.5,-1108.29 683.5,-1108.29 683.5,-1084.29 857.5,-1084.29 857.5,-1108.29"/>
+<text text-anchor="middle" x="770.5" y="-1093.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge59" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M614.98,-1757.18C619.79,-1754.2 624.19,-1750.6 628,-1746.29 709.42,-1653.89 610.86,-1304.38 664,-1193.29 680.52,-1158.75 715.29,-1130.69 740.41,-1113.8"/>
+<polygon fill="#000000" stroke="#000000" points="742.38,-1116.69 748.84,-1108.29 738.55,-1110.83 742.38,-1116.69"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;proc~get_case_name -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge66" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M275.14,-379.35C300.95,-399.1 350.07,-441.01 373,-489.29 424.74,-598.24 368.75,-644.58 409,-758.29 431.08,-820.66 476.95,-884.72 501.38,-916.25"/>
+<polygon fill="#000000" stroke="#000000" points="498.73,-918.55 507.66,-924.26 504.24,-914.23 498.73,-918.55"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;add -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge60" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M274.7,-355.17C330.64,-314.9 518.2,-193.08 628,-283.29 691.71,-335.63 609.98,-402.99 664,-465.29 681.31,-485.25 710.05,-494.45 733.16,-498.68"/>
+<polygon fill="#000000" stroke="#000000" points="732.9,-502.18 743.33,-500.29 734,-495.27 732.9,-502.18"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;create_array -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge61" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;create_array</title>
+<path fill="none" stroke="#000000" d="M357.53,-359.26C395.37,-356.19 436.91,-352.82 468.16,-350.29"/>
+<polygon fill="#000000" stroke="#000000" points="468.67,-353.76 478.35,-349.46 468.1,-346.78 468.67,-353.76"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;create_object -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge62" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;create_object</title>
+<path fill="none" stroke="#000000" d="M298.2,-355.26C328.41,-346.34 371.11,-334.22 409,-325.29 427.43,-320.94 447.77,-316.82 465.81,-313.41"/>
+<polygon fill="#000000" stroke="#000000" points="466.67,-316.81 475.86,-311.53 465.38,-309.93 466.67,-316.81"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;destroy -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge63" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M268.63,-355.26C290.88,-329.91 347.02,-271.55 409,-250.29 501.07,-218.71 542.94,-202.97 628,-250.29 654.51,-265.03 646.68,-283.38 664,-308.29 693.58,-350.83 731.49,-398.13 752.88,-424.23"/>
+<polygon fill="#000000" stroke="#000000" points="750.4,-426.73 759.46,-432.23 755.81,-422.29 750.4,-426.73"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge64" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M274.64,-379.6C299.77,-399.7 347.96,-442.06 373,-489.29 407.14,-553.68 359.75,-595.56 409,-649.29 556.5,-810.2 724.12,-642.47 877,-798.29 916.29,-838.34 878.87,-874.75 913,-919.29 928.87,-939.99 953.94,-955.33 974.88,-965.46"/>
+<polygon fill="#000000" stroke="#000000" points="973.62,-968.73 984.16,-969.74 976.55,-962.37 973.62,-968.73"/>
+</g>
+<!-- proc~write_optvars_to_file&#45;&gt;insert_after -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge65" class="edge">
+<title>proc~write_optvars_to_file&#45;&gt;insert_after</title>
+<path fill="none" stroke="#000000" d="M357.53,-375.32C396.79,-378.5 440.01,-382 471.62,-384.57"/>
+<polygon fill="#000000" stroke="#000000" points="471.62,-388.08 481.87,-385.4 472.19,-381.1 471.62,-388.08"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;solve -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge71" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M612.49,-498.27C617.97,-495.76 623.2,-492.8 628,-489.29 654.97,-469.57 645.7,-451.24 664,-423.29 692.23,-380.16 730.32,-333.4 752.16,-307.49"/>
+<polygon fill="#000000" stroke="#000000" points="755.11,-309.42 758.91,-299.54 749.77,-304.9 755.11,-309.42"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;add -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge67" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M622.27,-507C661.73,-505.73 704.24,-504.37 733.4,-503.44"/>
+<polygon fill="#000000" stroke="#000000" points="733.62,-506.94 743.5,-503.12 733.39,-499.94 733.62,-506.94"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;destroy -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge68" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M588.07,-498.27C601.38,-495.59 615.17,-492.56 628,-489.29 664.53,-479.97 705.51,-466.62 733.93,-456.87"/>
+<polygon fill="#000000" stroke="#000000" points="735.12,-460.16 743.43,-453.59 732.83,-453.55 735.12,-460.16"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge70" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M534.45,-522.56C555.92,-540.42 596.35,-574.97 628,-607.29 645.2,-624.85 644.97,-633.72 664,-649.29 747.92,-717.96 811.58,-681.81 877,-768.29 918.63,-823.31 872.56,-863.39 913,-919.29 928.39,-940.56 953.7,-955.97 974.88,-965.97"/>
+<polygon fill="#000000" stroke="#000000" points="973.71,-969.28 984.27,-970.19 976.58,-962.9 973.71,-969.28"/>
+</g>
+<!-- evaluate -->
+<g id="proc~~halo_solver_main~~CallsGraph_node44" class="node">
+<title>evaluate</title>
+<polygon fill="#777777" stroke="#777777" points="800,-952.29 741,-952.29 741,-928.29 800,-928.29 800,-952.29"/>
+<text text-anchor="middle" x="770.5" y="-937.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;evaluate -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge69" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;evaluate</title>
+<path fill="none" stroke="#000000" d="M540.42,-522.3C565.9,-538.18 608.01,-568.7 628,-607.29 660.11,-669.25 616.7,-867.96 664,-919.29 680.68,-937.39 708.15,-942.42 730.88,-943.03"/>
+<polygon fill="#000000" stroke="#000000" points="730.93,-946.53 740.94,-943.04 730.94,-939.53 730.93,-946.53"/>
+</g>
+<!-- fill_vector -->
+<g id="proc~~halo_solver_main~~CallsGraph_node45" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="1045,-1598.29 981,-1598.29 981,-1574.29 1045,-1574.29 1045,-1598.29"/>
+<text text-anchor="middle" x="1013" y="-1583.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge72" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M843.57,-1656.23C854.87,-1653.68 866.33,-1650.71 877,-1647.29 913.58,-1635.55 953.44,-1616.74 980.3,-1603.11"/>
+<polygon fill="#000000" stroke="#000000" points="981.93,-1606.2 989.22,-1598.52 978.73,-1599.98 981.93,-1606.2"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~halo_solver_main~~CallsGraph_node52" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node52"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1056.5,-1680.29 969.5,-1680.29 969.5,-1656.29 1056.5,-1656.29 1056.5,-1680.29"/>
+<text text-anchor="middle" x="1013" y="-1665.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge73" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M869.32,-1668.29C900.09,-1668.29 932.89,-1668.29 959.27,-1668.29"/>
+<polygon fill="#000000" stroke="#000000" points="959.42,-1671.79 969.42,-1668.29 959.42,-1664.79 959.42,-1671.79"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge74" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M857.66,-1638.34C864.42,-1640.8 870.96,-1643.75 877,-1647.29 898.22,-1659.7 892.97,-1675.03 913,-1689.29 926.71,-1699.05 943.2,-1706.8 958.75,-1712.74"/>
+<polygon fill="#000000" stroke="#000000" points="957.69,-1716.07 968.28,-1716.2 960.08,-1709.49 957.69,-1716.07"/>
+</g>
+<!-- proc~apparent_position -->
+<g id="proc~~halo_solver_main~~CallsGraph_node51" class="node">
+<title>proc~apparent_position</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node51"><a xlink:href="../proc/apparent_position.html" xlink:title="apparent_position">
+<polygon fill="#d9534f" stroke="#d9534f" points="824.5,-598.29 716.5,-598.29 716.5,-574.29 824.5,-574.29 824.5,-598.29"/>
+<text text-anchor="middle" x="770.5" y="-583.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~apparent_position -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge75" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~apparent_position</title>
+<path fill="none" stroke="#000000" d="M568.59,-620.04C607.96,-613.43 663.48,-604.1 706.19,-596.92"/>
+<polygon fill="#000000" stroke="#000000" points="706.91,-600.35 716.19,-595.24 705.75,-593.45 706.91,-600.35"/>
+</g>
+<!-- proc~cubic_shadow_model -->
+<g id="proc~~halo_solver_main~~CallsGraph_node53" class="node">
+<title>proc~cubic_shadow_model</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node53"><a xlink:href="../proc/cubic_shadow_model.html" xlink:title="cubic_shadow_model">
+<polygon fill="#d9534f" stroke="#d9534f" points="833.5,-556.29 707.5,-556.29 707.5,-532.29 833.5,-532.29 833.5,-556.29"/>
+<text text-anchor="middle" x="770.5" y="-541.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge76" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M568.67,-622.53C588.07,-618.76 609.98,-612.53 628,-602.29 647.94,-590.94 643.84,-576.24 664,-565.29 674.32,-559.68 685.94,-555.56 697.59,-552.53"/>
+<polygon fill="#000000" stroke="#000000" points="698.42,-555.93 707.36,-550.24 696.82,-549.12 698.42,-555.93"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~halo_solver_main~~CallsGraph_node54" class="node">
+<title>proc~from_j2000moon_to_j2000ssb</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node54"><a xlink:href="../proc/from_j2000moon_to_j2000ssb.html" xlink:title="from_j2000moon_to_j2000ssb">
+<polygon fill="#d9534f" stroke="#d9534f" points="856.5,-640.29 684.5,-640.29 684.5,-616.29 856.5,-616.29 856.5,-640.29"/>
+<text text-anchor="middle" x="770.5" y="-625.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000moon_to_j2000ssb</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge77" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M568.59,-628.29C598.68,-628.29 638.22,-628.29 674.25,-628.29"/>
+<polygon fill="#000000" stroke="#000000" points="674.31,-631.79 684.31,-628.29 674.31,-624.79 674.31,-631.79"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge82" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M592.1,-1453.38C605.21,-1458.19 617.9,-1464.91 628,-1474.29 660.48,-1504.44 629.79,-1539.11 664,-1567.29 738.22,-1628.42 801.7,-1545.48 877,-1605.29 908.81,-1630.55 883.86,-1660.99 913,-1689.29 923.45,-1699.43 936.84,-1707.02 950.38,-1712.67"/>
+<polygon fill="#000000" stroke="#000000" points="949.16,-1715.95 959.75,-1716.29 951.68,-1709.42 949.16,-1715.95"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;destroy -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge78" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M585.57,-1429.24C601.98,-1423.02 617.78,-1413.58 628,-1399.29 687.34,-1316.23 603.34,-563.39 664,-481.29 679.98,-459.66 709.55,-450.61 733.32,-446.85"/>
+<polygon fill="#000000" stroke="#000000" points="733.99,-450.29 743.44,-445.51 733.06,-443.35 733.99,-450.29"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge79" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M581.8,-1429.24C599.07,-1423.01 616.27,-1413.57 628,-1399.29 686.96,-1327.44 604.09,-1264.34 664,-1193.29 728.79,-1116.45 797.77,-1179.13 877,-1117.29 899.74,-1099.54 893.75,-1084.77 913,-1063.29 935.36,-1038.33 965.34,-1014.23 986.43,-998.49"/>
+<polygon fill="#000000" stroke="#000000" points="988.62,-1001.22 994.6,-992.48 984.47,-995.59 988.62,-1001.22"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge83" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M524.17,-1453.48C538.69,-1489.64 586.79,-1596.94 664,-1647.29 666.61,-1648.99 669.34,-1650.56 672.14,-1652.01"/>
+<polygon fill="#000000" stroke="#000000" points="670.8,-1655.25 681.35,-1656.23 673.72,-1648.88 670.8,-1655.25"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge85" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M532.88,-1453.41C554.07,-1472.9 596.22,-1512.82 628,-1550.29 645.72,-1571.17 641.31,-1584.96 664,-1600.29 669.96,-1604.32 676.49,-1607.72 683.29,-1610.6"/>
+<polygon fill="#000000" stroke="#000000" points="682.1,-1613.89 692.69,-1614.21 684.61,-1607.36 682.1,-1613.89"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge86" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M582.58,-1429.21C599.66,-1422.98 616.57,-1413.55 628,-1399.29 695.17,-1315.45 604.46,-1249.69 664,-1160.29 678.6,-1138.37 703.51,-1122.74 725.45,-1112.42"/>
+<polygon fill="#000000" stroke="#000000" points="726.94,-1115.59 734.64,-1108.31 724.08,-1109.2 726.94,-1115.59"/>
+</g>
+<!-- initialize_splinded_ephemeris -->
+<g id="proc~~halo_solver_main~~CallsGraph_node47" class="node">
+<title>initialize_splinded_ephemeris</title>
+<polygon fill="#777777" stroke="#777777" points="855,-1432.29 686,-1432.29 686,-1408.29 855,-1408.29 855,-1432.29"/>
+<text text-anchor="middle" x="770.5" y="-1417.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_splinded_ephemeris</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge80" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris</title>
+<path fill="none" stroke="#000000" d="M620.82,-1432.77C638.81,-1431.26 657.48,-1429.7 675.27,-1428.2"/>
+<polygon fill="#000000" stroke="#000000" points="675.95,-1431.66 685.62,-1427.33 675.36,-1424.68 675.95,-1431.66"/>
+</g>
+<!-- magnitude -->
+<g id="proc~~halo_solver_main~~CallsGraph_node49" class="node">
+<title>magnitude</title>
+<polygon fill="#777777" stroke="#777777" points="805.5,-1390.29 735.5,-1390.29 735.5,-1366.29 805.5,-1366.29 805.5,-1390.29"/>
+<text text-anchor="middle" x="770.5" y="-1375.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">magnitude</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;magnitude -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge81" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;magnitude</title>
+<path fill="none" stroke="#000000" d="M557.59,-1429.24C586.59,-1420.3 627.58,-1408.19 664,-1399.29 683.99,-1394.4 706.32,-1389.83 725.27,-1386.21"/>
+<polygon fill="#000000" stroke="#000000" points="725.95,-1389.64 735.13,-1384.35 724.65,-1382.76 725.95,-1389.64"/>
+</g>
+<!-- proc~get_scales_from_segs -->
+<g id="proc~~halo_solver_main~~CallsGraph_node56" class="node">
+<title>proc~get_scales_from_segs</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node56"><a xlink:href="../proc/get_scales_from_segs.html" xlink:title="mission_type%get_scales_from_segs">
+<polygon fill="#d9534f" stroke="#d9534f" points="873.5,-1558.29 667.5,-1558.29 667.5,-1534.29 873.5,-1534.29 873.5,-1558.29"/>
+<text text-anchor="middle" x="770.5" y="-1543.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_scales_from_segs</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge84" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs</title>
+<path fill="none" stroke="#000000" d="M535.93,-1453.3C561.83,-1471.65 614.33,-1506.5 664,-1525.29 670.22,-1527.64 676.75,-1529.74 683.39,-1531.62"/>
+<polygon fill="#000000" stroke="#000000" points="682.59,-1535.03 693.16,-1534.22 684.39,-1528.27 682.59,-1535.03"/>
+</g>
+<!-- set_dpert -->
+<g id="proc~~halo_solver_main~~CallsGraph_node60" class="node">
+<title>set_dpert</title>
+<polygon fill="#777777" stroke="#777777" points="801.5,-1516.29 739.5,-1516.29 739.5,-1492.29 801.5,-1492.29 801.5,-1516.29"/>
+<text text-anchor="middle" x="770.5" y="-1501.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_dpert</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_dpert -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge87" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_dpert</title>
+<path fill="none" stroke="#000000" d="M557.59,-1453.33C586.59,-1462.27 627.58,-1474.39 664,-1483.29 685.47,-1488.53 709.64,-1493.42 729.43,-1497.15"/>
+<polygon fill="#000000" stroke="#000000" points="728.86,-1500.61 739.33,-1499 730.14,-1493.73 728.86,-1500.61"/>
+</g>
+<!-- set_sparsity_pattern -->
+<g id="proc~~halo_solver_main~~CallsGraph_node61" class="node">
+<title>set_sparsity_pattern</title>
+<polygon fill="#777777" stroke="#777777" points="830,-1474.29 711,-1474.29 711,-1450.29 830,-1450.29 830,-1474.29"/>
+<text text-anchor="middle" x="770.5" y="-1459.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_sparsity_pattern</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_sparsity_pattern -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge88" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M620.82,-1449.8C647.71,-1452.06 676.11,-1454.44 700.81,-1456.52"/>
+<polygon fill="#000000" stroke="#000000" points="700.53,-1460 710.79,-1457.35 701.12,-1453.03 700.53,-1460"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge90" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M792.97,-886.2C820.61,-870.71 870.18,-843.11 913,-820.29 934.85,-808.64 959.61,-795.89 978.9,-786.04"/>
+<polygon fill="#000000" stroke="#000000" points="980.57,-789.12 987.9,-781.46 977.4,-782.88 980.57,-789.12"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge93" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M822.21,-886.27C866.29,-875.82 929.38,-860.87 970.51,-851.12"/>
+<polygon fill="#000000" stroke="#000000" points="971.55,-854.47 980.47,-848.76 969.93,-847.66 971.55,-854.47"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge94" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M858.16,-908.14C864.93,-911.07 871.32,-914.72 877,-919.29 908.03,-944.21 889.12,-969.44 913,-1001.29 932.75,-1027.62 962.4,-1051.05 984.1,-1066.24"/>
+<polygon fill="#000000" stroke="#000000" points="982.34,-1069.27 992.57,-1072.03 986.29,-1063.5 982.34,-1069.27"/>
+</g>
+<!-- first_call -->
+<g id="proc~~halo_solver_main~~CallsGraph_node46" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="1041.5,-1138.29 984.5,-1138.29 984.5,-1114.29 1041.5,-1114.29 1041.5,-1138.29"/>
+<text text-anchor="middle" x="1013" y="-1123.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge89" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M858.07,-906.24C865.07,-909.53 871.53,-913.79 877,-919.29 936.38,-978.98 853.99,-1045.22 913,-1105.29 928.69,-1121.26 953.3,-1126.54 974.06,-1127.8"/>
+<polygon fill="#000000" stroke="#000000" points="974.08,-1131.31 984.19,-1128.13 974.31,-1124.31 974.08,-1131.31"/>
+</g>
+<!-- integrate -->
+<g id="proc~~halo_solver_main~~CallsGraph_node48" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="1043.5,-1180.29 982.5,-1180.29 982.5,-1156.29 1043.5,-1156.29 1043.5,-1180.29"/>
+<text text-anchor="middle" x="1013" y="-1165.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge91" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M858.02,-905.92C865.07,-909.27 871.57,-913.63 877,-919.29 948.08,-993.26 842.38,-1072.87 913,-1147.29 928,-1163.1 951.71,-1168.51 972.16,-1169.9"/>
+<polygon fill="#000000" stroke="#000000" points="972.07,-1173.4 982.19,-1170.29 972.34,-1166.4 972.07,-1173.4"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_node58" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node58"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1103.5,-910.29 922.5,-910.29 922.5,-886.29 1103.5,-886.29 1103.5,-910.29"/>
+<text text-anchor="middle" x="1013" y="-895.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge92" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M858.33,-898.29C875.84,-898.29 894.38,-898.29 912.3,-898.29"/>
+<polygon fill="#000000" stroke="#000000" points="912.47,-901.79 922.47,-898.29 912.47,-894.79 912.47,-901.79"/>
+</g>
+<!-- proc~read_config_file&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge96" class="edge">
+<title>proc~read_config_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M610.07,-1366.16C616.76,-1362.53 622.88,-1357.98 628,-1352.29 711.01,-1259.98 579.34,-1166.09 664,-1075.29 729.86,-1004.65 784.28,-1059.29 877,-1032.29 911.04,-1022.37 948.59,-1007.58 975.43,-996.3"/>
+<polygon fill="#000000" stroke="#000000" points="976.96,-999.45 984.8,-992.32 974.23,-993.01 976.96,-999.45"/>
+</g>
+<!-- proc~read_config_file&#45;&gt;evaluate -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge95" class="edge">
+<title>proc~read_config_file&#45;&gt;evaluate</title>
+<path fill="none" stroke="#000000" d="M610.15,-1366.23C616.83,-1362.59 622.92,-1358.01 628,-1352.29 674.02,-1300.4 633.28,-1104.46 664,-1042.29 681.67,-1006.53 717.18,-976.36 742.1,-958.32"/>
+<polygon fill="#000000" stroke="#000000" points="744.27,-961.07 750.43,-952.45 740.24,-955.35 744.27,-961.07"/>
+</g>
+<!-- none~get -->
+<g id="proc~~halo_solver_main~~CallsGraph_node50" class="node">
+<title>none~get</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node50"><a xlink:href="../type/config_file.html#boundprocedure-get" xlink:title="config_file%get">
+<polygon fill="#a7506f" stroke="#a7506f" points="1060,-1264.29 966,-1264.29 966,-1240.29 1060,-1240.29 1060,-1264.29"/>
+<text text-anchor="middle" x="1013" y="-1249.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;none~get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge97" class="edge">
+<title>proc~read_config_file&#45;&gt;none~get</title>
+<path fill="none" stroke="#000000" d="M604.05,-1366.28C612.7,-1362.71 620.9,-1358.14 628,-1352.29 657.78,-1327.75 632.19,-1295.13 664,-1273.29 709.91,-1241.76 869.63,-1244.71 955.82,-1248.86"/>
+<polygon fill="#000000" stroke="#000000" points="955.79,-1252.36 965.96,-1249.37 956.15,-1245.37 955.79,-1252.36"/>
+</g>
+<!-- proc~generate_patch_points -->
+<g id="proc~~halo_solver_main~~CallsGraph_node55" class="node">
+<title>proc~generate_patch_points</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node55"><a xlink:href="../proc/generate_patch_points.html" xlink:title="mission_type%generate_patch_points">
+<polygon fill="#d9534f" stroke="#d9534f" points="877,-1226.29 664,-1226.29 664,-1202.29 877,-1202.29 877,-1226.29"/>
+<text text-anchor="middle" x="770.5" y="-1211.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%generate_patch_points</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~generate_patch_points -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge98" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~generate_patch_points</title>
+<path fill="none" stroke="#000000" d="M606.63,-1366.25C614.44,-1362.65 621.75,-1358.08 628,-1352.29 666.35,-1316.74 625.77,-1275.95 664,-1240.29 667.78,-1236.76 671.96,-1233.69 676.42,-1231.02"/>
+<polygon fill="#000000" stroke="#000000" points="678.06,-1234.11 685.28,-1226.36 674.8,-1227.91 678.06,-1234.11"/>
+</g>
+<!-- proc~read_epoch -->
+<g id="proc~~halo_solver_main~~CallsGraph_node57" class="node">
+<title>proc~read_epoch</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node57"><a xlink:href="../proc/read_epoch.html" xlink:title="read_epoch">
+<polygon fill="#d9534f" stroke="#d9534f" points="808,-1306.29 733,-1306.29 733,-1282.29 808,-1282.29 808,-1306.29"/>
+<text text-anchor="middle" x="770.5" y="-1291.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_epoch</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~read_epoch -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge99" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~read_epoch</title>
+<path fill="none" stroke="#000000" d="M594.29,-1366.27C606,-1362.74 617.65,-1358.18 628,-1352.29 647.94,-1340.94 643.84,-1326.24 664,-1315.29 681.94,-1305.54 703.81,-1300.28 722.97,-1297.47"/>
+<polygon fill="#000000" stroke="#000000" points="723.53,-1300.92 733,-1296.17 722.63,-1293.98 723.53,-1300.92"/>
+</g>
+<!-- proc~update_epoch -->
+<g id="proc~~halo_solver_main~~CallsGraph_node59" class="node">
+<title>proc~update_epoch</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node59"><a xlink:href="../proc/update_epoch.html" xlink:title="mission_type%update_epoch">
+<polygon fill="#d9534f" stroke="#d9534f" points="854,-1348.29 687,-1348.29 687,-1324.29 854,-1324.29 854,-1348.29"/>
+<text text-anchor="middle" x="770.5" y="-1333.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%update_epoch</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~update_epoch -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge100" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~update_epoch</title>
+<path fill="none" stroke="#000000" d="M591.14,-1366.25C621.35,-1361.18 656.67,-1355.24 687.87,-1350"/>
+<polygon fill="#000000" stroke="#000000" points="688.57,-1353.43 697.85,-1348.32 687.41,-1346.53 688.57,-1353.43"/>
+</g>
+<!-- proc~segs_to_propagate&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge101" class="edge">
+<title>proc~segs_to_propagate&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M614.17,-1725.86C696.68,-1726.37 816.36,-1727.09 902.88,-1727.62"/>
+<polygon fill="#000000" stroke="#000000" points="902.97,-1731.12 912.99,-1727.68 903.02,-1724.12 902.97,-1731.12"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge102" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M783.95,-1084.11C806.04,-1061.8 852.08,-1012.01 877,-961.29 905.52,-903.24 872.71,-870.88 913,-820.29 927.39,-802.22 949.9,-789.91 969.83,-781.92"/>
+<polygon fill="#000000" stroke="#000000" points="971.23,-785.13 979.36,-778.33 968.76,-778.58 971.23,-785.13"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge103" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M782.86,-1084.05C803.59,-1061.27 848.08,-1010.19 877,-961.29 897.68,-926.33 883.48,-905.19 913,-877.29 928.73,-862.41 951.08,-853.6 970.56,-848.42"/>
+<polygon fill="#000000" stroke="#000000" points="971.54,-851.78 980.44,-846.03 969.9,-844.98 971.54,-851.78"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge104" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M857.65,-1091.99C880.89,-1090.83 905.99,-1089.58 929.06,-1088.42"/>
+<polygon fill="#000000" stroke="#000000" points="929.34,-1091.91 939.16,-1087.92 928.99,-1084.92 929.34,-1091.91"/>
+</g>
+<!-- proc~get_char -->
+<g id="proc~~halo_solver_main~~CallsGraph_node71" class="node">
+<title>proc~get_char</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node71"><a xlink:href="../proc/get_char.html" xlink:title="config_file%get_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="1283,-1327.29 1159,-1327.29 1159,-1303.29 1283,-1303.29 1283,-1327.29"/>
+<text text-anchor="middle" x="1221" y="-1312.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_char</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_char -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge105" class="edge">
+<title>none~get&#45;&gt;proc~get_char</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1060.23,-1258.93C1077.17,-1262.18 1096.28,-1266.83 1113,-1273.29 1130.28,-1279.96 1132,-1286.94 1149,-1294.29 1153.67,-1296.31 1158.6,-1298.2 1163.59,-1299.97"/>
+<polygon fill="#000000" stroke="#000000" points="1162.62,-1303.33 1173.22,-1303.19 1164.85,-1296.7 1162.62,-1303.33"/>
+</g>
+<!-- proc~get_int -->
+<g id="proc~~halo_solver_main~~CallsGraph_node72" class="node">
+<title>proc~get_int</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node72"><a xlink:href="../proc/get_int.html" xlink:title="config_file%get_int">
+<polygon fill="#d9534f" stroke="#d9534f" points="1277.5,-1285.29 1164.5,-1285.29 1164.5,-1261.29 1277.5,-1261.29 1277.5,-1285.29"/>
+<text text-anchor="middle" x="1221" y="-1270.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_int</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_int -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge106" class="edge">
+<title>none~get&#45;&gt;proc~get_int</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1060.23,-1257C1087.94,-1259.82 1123.62,-1263.46 1154.23,-1266.58"/>
+<polygon fill="#000000" stroke="#000000" points="1154.1,-1270.09 1164.4,-1267.62 1154.81,-1263.12 1154.1,-1270.09"/>
+</g>
+<!-- proc~get_logical -->
+<g id="proc~~halo_solver_main~~CallsGraph_node73" class="node">
+<title>proc~get_logical</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node73"><a xlink:href="../proc/get_logical.html" xlink:title="config_file%get_logical">
+<polygon fill="#d9534f" stroke="#d9534f" points="1288.5,-1243.29 1153.5,-1243.29 1153.5,-1219.29 1288.5,-1219.29 1288.5,-1243.29"/>
+<text text-anchor="middle" x="1221" y="-1228.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_logical</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_logical -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge107" class="edge">
+<title>none~get&#45;&gt;proc~get_logical</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1060.23,-1247.57C1084.64,-1245.09 1115.22,-1241.97 1143.09,-1239.13"/>
+<polygon fill="#000000" stroke="#000000" points="1143.62,-1242.59 1153.21,-1238.09 1142.91,-1235.63 1143.62,-1242.59"/>
+</g>
+<!-- proc~get_real -->
+<g id="proc~~halo_solver_main~~CallsGraph_node75" class="node">
+<title>proc~get_real</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node75"><a xlink:href="../proc/get_real.html" xlink:title="config_file%get_real">
+<polygon fill="#d9534f" stroke="#d9534f" points="1281,-1201.29 1161,-1201.29 1161,-1177.29 1281,-1177.29 1281,-1201.29"/>
+<text text-anchor="middle" x="1221" y="-1186.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_real</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_real -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge108" class="edge">
+<title>none~get&#45;&gt;proc~get_real</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1060.23,-1245.64C1077.17,-1242.39 1096.28,-1237.74 1113,-1231.29 1130.28,-1224.61 1132,-1217.63 1149,-1210.29 1153.67,-1208.27 1158.6,-1206.37 1163.59,-1204.6"/>
+<polygon fill="#000000" stroke="#000000" points="1164.85,-1207.88 1173.22,-1201.38 1162.62,-1201.24 1164.85,-1207.88"/>
+</g>
+<!-- proc~get_real_vec -->
+<g id="proc~~halo_solver_main~~CallsGraph_node76" class="node">
+<title>proc~get_real_vec</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node76"><a xlink:href="../proc/get_real_vec.html" xlink:title="config_file%get_real_vec">
+<polygon fill="#d9534f" stroke="#d9534f" points="1293,-1159.29 1149,-1159.29 1149,-1135.29 1293,-1135.29 1293,-1159.29"/>
+<text text-anchor="middle" x="1221" y="-1144.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_real_vec</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_real_vec -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge109" class="edge">
+<title>none~get&#45;&gt;proc~get_real_vec</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1060.14,-1250.49C1078.03,-1247.85 1097.81,-1242.37 1113,-1231.29 1139.05,-1212.28 1123.71,-1188.3 1149,-1168.29 1150.8,-1166.86 1152.7,-1165.53 1154.67,-1164.29"/>
+<polygon fill="#000000" stroke="#000000" points="1156.56,-1167.25 1163.69,-1159.42 1153.23,-1161.09 1156.56,-1167.25"/>
+</g>
+<!-- axis_angle_rotation -->
+<g id="proc~~halo_solver_main~~CallsGraph_node64" class="node">
+<title>axis_angle_rotation</title>
+<polygon fill="#777777" stroke="#777777" points="1070.5,-703.29 955.5,-703.29 955.5,-679.29 1070.5,-679.29 1070.5,-703.29"/>
+<text text-anchor="middle" x="1013" y="-688.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">axis_angle_rotation</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;axis_angle_rotation -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge110" class="edge">
+<title>proc~apparent_position&#45;&gt;axis_angle_rotation</title>
+<path fill="none" stroke="#000000" d="M824.67,-588.06C842.63,-590.84 861.92,-596.43 877,-607.29 903.17,-626.13 886.95,-651.28 913,-670.29 922.59,-677.28 934.02,-682.05 945.64,-685.28"/>
+<polygon fill="#000000" stroke="#000000" points="944.87,-688.69 955.42,-687.64 946.52,-681.89 944.87,-688.69"/>
+</g>
+<!-- cross -->
+<g id="proc~~halo_solver_main~~CallsGraph_node66" class="node">
+<title>cross</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-661.29 986,-661.29 986,-637.29 1040,-637.29 1040,-661.29"/>
+<text text-anchor="middle" x="1013" y="-646.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;cross -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge111" class="edge">
+<title>proc~apparent_position&#45;&gt;cross</title>
+<path fill="none" stroke="#000000" d="M824.51,-593.3C841.6,-596.49 860.41,-601 877,-607.29 894.32,-613.85 895.72,-621.61 913,-628.29 933.05,-636.03 956.55,-641.17 975.62,-644.42"/>
+<polygon fill="#000000" stroke="#000000" points="975.28,-647.91 985.71,-646.04 976.39,-641 975.28,-647.91"/>
+</g>
+<!-- proc~get_pos -->
+<g id="proc~~halo_solver_main~~CallsGraph_node74" class="node">
+<title>proc~get_pos</title>
+<g id="a_proc~~halo_solver_main~~CallsGraph_node74"><a xlink:href="../proc/get_pos.html" xlink:title="get_pos">
+<polygon fill="#d9534f" stroke="#d9534f" points="1040,-619.29 986,-619.29 986,-595.29 1040,-595.29 1040,-619.29"/>
+<text text-anchor="middle" x="1013" y="-604.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_pos</text>
+</a>
+</g>
+</g>
+<!-- proc~apparent_position&#45;&gt;proc~get_pos -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge112" class="edge">
+<title>proc~apparent_position&#45;&gt;proc~get_pos</title>
+<path fill="none" stroke="#000000" d="M824.58,-590.92C870.42,-594.92 935.43,-600.6 975.6,-604.11"/>
+<polygon fill="#000000" stroke="#000000" points="975.47,-607.61 985.74,-604.99 976.08,-600.64 975.47,-607.61"/>
+</g>
+<!-- unit -->
+<g id="proc~~halo_solver_main~~CallsGraph_node77" class="node">
+<title>unit</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-577.29 986,-577.29 986,-553.29 1040,-553.29 1040,-577.29"/>
+<text text-anchor="middle" x="1013" y="-562.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">unit</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;unit -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge113" class="edge">
+<title>proc~apparent_position&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M824.58,-581.65C870.42,-577.65 935.43,-571.97 975.6,-568.46"/>
+<polygon fill="#000000" stroke="#000000" points="976.08,-571.94 985.74,-567.58 975.47,-564.96 976.08,-571.94"/>
+</g>
+<!-- acosd -->
+<g id="proc~~halo_solver_main~~CallsGraph_node62" class="node">
+<title>acosd</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-535.29 986,-535.29 986,-511.29 1040,-511.29 1040,-535.29"/>
+<text text-anchor="middle" x="1013" y="-520.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">acosd</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;acosd -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge114" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;acosd</title>
+<path fill="none" stroke="#000000" d="M833.75,-538.85C878.91,-534.91 938.43,-529.71 975.96,-526.43"/>
+<polygon fill="#000000" stroke="#000000" points="976.28,-529.92 985.93,-525.56 975.67,-522.95 976.28,-529.92"/>
+</g>
+<!-- asind -->
+<g id="proc~~halo_solver_main~~CallsGraph_node63" class="node">
+<title>asind</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-493.29 986,-493.29 986,-469.29 1040,-469.29 1040,-493.29"/>
+<text text-anchor="middle" x="1013" y="-478.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">asind</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;asind -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge115" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;asind</title>
+<path fill="none" stroke="#000000" d="M833.55,-535.49C848.07,-532.47 863.29,-528.48 877,-523.29 894.32,-516.72 895.72,-508.96 913,-502.29 933.05,-494.54 956.55,-489.4 975.62,-486.15"/>
+<polygon fill="#000000" stroke="#000000" points="976.39,-489.57 985.71,-484.53 975.28,-482.66 976.39,-489.57"/>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;unit -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge116" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M833.75,-549.72C878.91,-553.66 938.43,-558.86 975.96,-562.14"/>
+<polygon fill="#000000" stroke="#000000" points="975.67,-565.63 985.93,-563.01 976.28,-558.65 975.67,-565.63"/>
+</g>
+<!-- wrap_angle -->
+<g id="proc~~halo_solver_main~~CallsGraph_node78" class="node">
+<title>wrap_angle</title>
+<polygon fill="#777777" stroke="#777777" points="1050,-451.29 976,-451.29 976,-427.29 1050,-427.29 1050,-451.29"/>
+<text text-anchor="middle" x="1013" y="-436.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">wrap_angle</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;wrap_angle -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge117" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;wrap_angle</title>
+<path fill="none" stroke="#000000" d="M833.69,-540.89C848.91,-537.74 864.42,-532.34 877,-523.29 903.17,-504.44 886.95,-479.29 913,-460.29 928.07,-449.29 947.66,-443.8 965.44,-441.15"/>
+<polygon fill="#000000" stroke="#000000" points="966.15,-444.59 975.65,-439.89 965.3,-437.64 966.15,-444.59"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge118" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M850.05,-640.32C859.65,-643.85 868.91,-648.41 877,-654.29 901.54,-672.12 891.19,-691.19 913,-712.29 930.47,-729.19 953.91,-742.98 973.6,-752.75"/>
+<polygon fill="#000000" stroke="#000000" points="972.1,-755.92 982.63,-757.09 975.13,-749.61 972.1,-755.92"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;transform -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge119" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M802.67,-640.42C826.03,-650.96 857.26,-668.3 877,-692.29 906.49,-728.11 882.28,-755.51 913,-790.29 928.4,-807.72 951.19,-820.03 971.03,-828.18"/>
+<polygon fill="#000000" stroke="#000000" points="969.89,-831.5 980.48,-831.86 972.43,-824.97 969.89,-831.5"/>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;initialize -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge122" class="edge">
+<title>proc~generate_patch_points&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M856.41,-1202.16C863.98,-1198.58 871.02,-1194.04 877,-1188.29 918.67,-1148.21 881.47,-1111.75 913,-1063.29 930.82,-1035.9 960.41,-1012.81 982.61,-997.99"/>
+<polygon fill="#000000" stroke="#000000" points="984.53,-1000.91 991.01,-992.53 980.72,-995.04 984.53,-1000.91"/>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;first_call -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge121" class="edge">
+<title>proc~generate_patch_points&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M845.32,-1202.24C856.39,-1198.71 867.33,-1194.16 877,-1188.29 897.72,-1175.7 892.07,-1159.54 913,-1147.29 931.51,-1136.45 954.87,-1131.17 974.26,-1128.62"/>
+<polygon fill="#000000" stroke="#000000" points="974.73,-1132.09 984.27,-1127.49 973.94,-1125.13 974.73,-1132.09"/>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;integrate -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge123" class="edge">
+<title>proc~generate_patch_points&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M834.37,-1202.26C878.01,-1193.91 934.81,-1183.05 972.29,-1175.88"/>
+<polygon fill="#000000" stroke="#000000" points="973.16,-1179.28 982.32,-1173.96 971.84,-1172.4 973.16,-1179.28"/>
+</g>
+<!-- compute_crtpb_parameter -->
+<g id="proc~~halo_solver_main~~CallsGraph_node65" class="node">
+<title>compute_crtpb_parameter</title>
+<polygon fill="#777777" stroke="#777777" points="1090.5,-1222.29 935.5,-1222.29 935.5,-1198.29 1090.5,-1198.29 1090.5,-1222.29"/>
+<text text-anchor="middle" x="1013" y="-1207.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_crtpb_parameter</text>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;compute_crtpb_parameter -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge120" class="edge">
+<title>proc~generate_patch_points&#45;&gt;compute_crtpb_parameter</title>
+<path fill="none" stroke="#000000" d="M877.34,-1212.53C893.36,-1212.26 909.73,-1211.99 925.29,-1211.73"/>
+<polygon fill="#000000" stroke="#000000" points="925.44,-1215.23 935.38,-1211.56 925.32,-1208.23 925.44,-1215.23"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;proc~define_problem_size -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge125" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M856.05,-1558.4C863.73,-1561.98 870.9,-1566.52 877,-1572.29 916.55,-1609.65 876.03,-1649.37 913,-1689.29 922.34,-1699.37 934.62,-1706.89 947.34,-1712.48"/>
+<polygon fill="#000000" stroke="#000000" points="946.06,-1715.74 956.64,-1716.22 948.67,-1709.25 946.06,-1715.74"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;fill_vector -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge124" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M843.66,-1558.29C885.16,-1565.19 935.82,-1573.62 970.65,-1579.41"/>
+<polygon fill="#000000" stroke="#000000" points="970.49,-1582.93 980.93,-1581.12 971.64,-1576.03 970.49,-1582.93"/>
+</g>
+<!-- proc~read_epoch&#45;&gt;none~get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge128" class="edge">
+<title>proc~read_epoch&#45;&gt;none~get</title>
+<path fill="none" stroke="#000000" d="M808.03,-1287.91C847.24,-1281.06 910.04,-1270.09 955.61,-1262.13"/>
+<polygon fill="#000000" stroke="#000000" points="956.38,-1265.55 965.63,-1260.38 955.18,-1258.66 956.38,-1265.55"/>
+</g>
+<!-- jd_to_et -->
+<g id="proc~~halo_solver_main~~CallsGraph_node68" class="node">
+<title>jd_to_et</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-1348.29 986,-1348.29 986,-1324.29 1040,-1324.29 1040,-1348.29"/>
+<text text-anchor="middle" x="1013" y="-1333.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jd_to_et</text>
+</g>
+<!-- proc~read_epoch&#45;&gt;jd_to_et -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge126" class="edge">
+<title>proc~read_epoch&#45;&gt;jd_to_et</title>
+<path fill="none" stroke="#000000" d="M808.03,-1300.66C853.5,-1308.61 930.68,-1322.08 975.94,-1329.99"/>
+<polygon fill="#000000" stroke="#000000" points="975.45,-1333.46 985.9,-1331.73 976.65,-1326.56 975.45,-1333.46"/>
+</g>
+<!-- julian_date -->
+<g id="proc~~halo_solver_main~~CallsGraph_node69" class="node">
+<title>julian_date</title>
+<polygon fill="#777777" stroke="#777777" points="1048.5,-1306.29 977.5,-1306.29 977.5,-1282.29 1048.5,-1282.29 1048.5,-1306.29"/>
+<text text-anchor="middle" x="1013" y="-1291.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julian_date</text>
+</g>
+<!-- proc~read_epoch&#45;&gt;julian_date -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge127" class="edge">
+<title>proc~read_epoch&#45;&gt;julian_date</title>
+<path fill="none" stroke="#000000" d="M808.03,-1294.29C850.69,-1294.29 921.28,-1294.29 967.21,-1294.29"/>
+<polygon fill="#000000" stroke="#000000" points="967.47,-1297.79 977.47,-1294.29 967.47,-1290.79 967.47,-1297.79"/>
+</g>
+<!-- et_to_jd -->
+<g id="proc~~halo_solver_main~~CallsGraph_node67" class="node">
+<title>et_to_jd</title>
+<polygon fill="#777777" stroke="#777777" points="1040,-1390.29 986,-1390.29 986,-1366.29 1040,-1366.29 1040,-1390.29"/>
+<text text-anchor="middle" x="1013" y="-1375.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">et_to_jd</text>
+</g>
+<!-- proc~update_epoch&#45;&gt;et_to_jd -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge129" class="edge">
+<title>proc~update_epoch&#45;&gt;et_to_jd</title>
+<path fill="none" stroke="#000000" d="M840.42,-1348.32C884.63,-1356.04 940.25,-1365.76 975.96,-1371.99"/>
+<polygon fill="#000000" stroke="#000000" points="975.48,-1375.46 985.93,-1373.73 976.68,-1368.56 975.48,-1375.46"/>
+</g>
+<!-- proc~update_epoch&#45;&gt;jd_to_et -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge130" class="edge">
+<title>proc~update_epoch&#45;&gt;jd_to_et</title>
+<path fill="none" stroke="#000000" d="M854.27,-1336.29C895.65,-1336.29 943.61,-1336.29 975.69,-1336.29"/>
+<polygon fill="#000000" stroke="#000000" points="975.92,-1339.79 985.92,-1336.29 975.92,-1332.79 975.92,-1339.79"/>
+</g>
+<!-- proc~update_epoch&#45;&gt;julian_date -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge131" class="edge">
+<title>proc~update_epoch&#45;&gt;julian_date</title>
+<path fill="none" stroke="#000000" d="M840.42,-1324.25C881.22,-1317.12 931.74,-1308.3 967.36,-1302.08"/>
+<polygon fill="#000000" stroke="#000000" points="968.2,-1305.49 977.45,-1300.32 966.99,-1298.59 968.2,-1305.49"/>
+</g>
+<!-- julian_date_to_calendar_date -->
+<g id="proc~~halo_solver_main~~CallsGraph_node70" class="node">
+<title>julian_date_to_calendar_date</title>
+<polygon fill="#777777" stroke="#777777" points="1097.5,-1432.29 928.5,-1432.29 928.5,-1408.29 1097.5,-1408.29 1097.5,-1432.29"/>
+<text text-anchor="middle" x="1013" y="-1417.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julian_date_to_calendar_date</text>
+</g>
+<!-- proc~update_epoch&#45;&gt;julian_date_to_calendar_date -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge132" class="edge">
+<title>proc~update_epoch&#45;&gt;julian_date_to_calendar_date</title>
+<path fill="none" stroke="#000000" d="M854.13,-1347.1C862.14,-1349.79 869.91,-1353.14 877,-1357.29 898.22,-1369.7 891.86,-1386.74 913,-1399.29 916.08,-1401.11 919.29,-1402.78 922.6,-1404.31"/>
+<polygon fill="#000000" stroke="#000000" points="921.57,-1407.67 932.15,-1408.23 924.23,-1401.19 921.57,-1407.67"/>
+</g>
+<!-- proc~get_char&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge133" class="edge">
+<title>proc~get_char&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1276.44,-1303.24C1282.29,-1300.78 1287.95,-1297.83 1293,-1294.29 1316.11,-1278.09 1334.04,-1250.52 1344.55,-1231.41"/>
+<polygon fill="#000000" stroke="#000000" points="1347.66,-1233.02 1349.23,-1222.54 1341.46,-1229.75 1347.66,-1233.02"/>
+</g>
+<!-- proc~get_int&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge134" class="edge">
+<title>proc~get_int&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1270.11,-1261.25C1277.91,-1258.68 1285.79,-1255.69 1293,-1252.29 1306.68,-1245.82 1320.73,-1236.56 1331.99,-1228.38"/>
+<polygon fill="#000000" stroke="#000000" points="1334.08,-1231.18 1340,-1222.39 1329.89,-1225.57 1334.08,-1231.18"/>
+</g>
+<!-- proc~get_logical&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge135" class="edge">
+<title>proc~get_logical&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1288.89,-1220.72C1299.23,-1219.09 1309.56,-1217.46 1318.87,-1215.99"/>
+<polygon fill="#000000" stroke="#000000" points="1319.57,-1219.42 1328.9,-1214.41 1318.48,-1212.51 1319.57,-1219.42"/>
+</g>
+<!-- get_r -->
+<g id="proc~~halo_solver_main~~CallsGraph_node79" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="1248,-598.29 1194,-598.29 1194,-574.29 1248,-574.29 1248,-598.29"/>
+<text text-anchor="middle" x="1221" y="-583.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~get_pos&#45;&gt;get_r -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge136" class="edge">
+<title>proc~get_pos&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M1040.09,-604.63C1076.44,-600.92 1142.49,-594.19 1183.65,-589.99"/>
+<polygon fill="#000000" stroke="#000000" points="1184.2,-593.45 1193.8,-588.96 1183.49,-586.49 1184.2,-593.45"/>
+</g>
+<!-- get_rv -->
+<g id="proc~~halo_solver_main~~CallsGraph_node80" class="node">
+<title>get_rv</title>
+<polygon fill="#777777" stroke="#777777" points="1248,-640.29 1194,-640.29 1194,-616.29 1248,-616.29 1248,-640.29"/>
+<text text-anchor="middle" x="1221" y="-625.89" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv</text>
+</g>
+<!-- proc~get_pos&#45;&gt;get_rv -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge137" class="edge">
+<title>proc~get_pos&#45;&gt;get_rv</title>
+<path fill="none" stroke="#000000" d="M1040.09,-609.95C1076.44,-613.65 1142.49,-620.38 1183.65,-624.58"/>
+<polygon fill="#000000" stroke="#000000" points="1183.49,-628.08 1193.8,-625.61 1184.2,-621.12 1183.49,-628.08"/>
+</g>
+<!-- proc~get_real&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge138" class="edge">
+<title>proc~get_real&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1281.11,-1198.62C1293.86,-1200.63 1306.97,-1202.7 1318.55,-1204.53"/>
+<polygon fill="#000000" stroke="#000000" points="1318.27,-1208.03 1328.69,-1206.13 1319.36,-1201.12 1318.27,-1208.03"/>
+</g>
+<!-- proc~get_real_vec&#45;&gt;get -->
+<g id="proc~~halo_solver_main~~CallsGraph_edge139" class="edge">
+<title>proc~get_real_vec&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1270.11,-1159.32C1277.91,-1161.89 1285.79,-1164.88 1293,-1168.29 1306.68,-1174.75 1320.73,-1184.01 1331.99,-1192.2"/>
+<polygon fill="#000000" stroke="#000000" points="1329.89,-1195 1340,-1198.18 1334.08,-1189.39 1329.89,-1195"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprochalo_solver_mainCallsGraph = svgPanZoom('#prochalo_solver_mainCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">halo_solver_main</span><span class="p">(</span><span class="n">config_file_name</span><span class="p">,</span><span class="n">debug</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">use </span><span class="n">parameters_module</span>
+<span class="c">!$  use omp_lib</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">config_file_name</span><span class="w">  </span><span class="c">!! the config file to read</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">debug</span><span class="w"> </span><span class="c">!! for debugging prints</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">my_solver_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">solver</span><span class="w">  </span><span class="c">!! an instance of the solver that we will use</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">  </span><span class="c">!! solver opt vars vector [&quot;forward-backward&quot; formulation]</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="w">  </span><span class="c">!! number of functions</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">f</span><span class="w">  </span><span class="c">!! function vector (constraint violations)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tstart</span><span class="p">,</span><span class="w"> </span><span class="n">tend</span><span class="w">  </span><span class="c">!! for timing</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tstart_cpu</span><span class="p">,</span><span class="w"> </span><span class="n">tend_cpu</span><span class="w">  </span><span class="c">!! for timing</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istat</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">message</span><span class="w">  </span><span class="c">!! Text status message from solver</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_segs</span><span class="p">,</span><span class="w"> </span><span class="n">iseg</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_rotating</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mkspk_input</span><span class="p">,</span><span class="w"> </span><span class="n">bsp_output</span><span class="w">  </span><span class="c">!! filenames for mkspk</span>
+<span class="c">!$  integer :: tid, nthreads</span>
+
+<span class="c">!$OMP PARALLEL PRIVATE(NTHREADS, TID)</span>
+<span class="c">!$</span>
+<span class="c">!$  tid = omp_get_thread_num()</span>
+<span class="c">!$</span>
+<span class="c">!$  if (tid == 0) then</span>
+<span class="c">!$      nthreads = omp_get_num_threads()</span>
+<span class="c">!$      write(*,&#39;(A,1X,I3)&#39;) &#39; * Number of OMP threads: &#39;, OMP_get_num_threads()</span>
+<span class="c">!$  end if</span>
+<span class="c">!$</span>
+<span class="c">!$OMP END PARALLEL</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Initializing...&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    call </span><span class="n">solver</span><span class="p">%</span><span class="n">init</span><span class="p">(</span><span class="n">config_file_name</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c">! initialize the solver &amp; mission (and generate the initial guess)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="c">!TODO: add some error checking here !</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Reading initial guess from file: &#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span>
+<span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_x_from_json_file</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! get solution from the file</span>
+<span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! populate segs with solution</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_plots</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;guess&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">draw_trajectory</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span><span class="w">    </span><span class="c">! plot the initial guess</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_guess_and_solution_files</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">write_optvars_to_file</span><span class="p">(</span><span class="s1">&#39;guess&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w">    </span><span class="c">! write guess to a file</span>
+
+<span class="w">    </span><span class="c">!....debugging....</span>
+<span class="w">    </span><span class="c">! if (solver%mission%generate_trajectory_files) &amp;</span>
+<span class="w">    </span><span class="c">!     call solver%mission%plot(&#39;guess&#39;,&amp;</span>
+<span class="w">    </span><span class="c">!             draw_trajectory = .false., &amp;</span>
+<span class="w">    </span><span class="c">!             export_trajectory=solver%mission%generate_trajectory_files)</span>
+<span class="w">    </span><span class="c">!....debugging....</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">constraint_violations</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Initial Guess...&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A/,*(F30.16/))&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;x:      &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">xscale</span><span class="w">    </span><span class="c">! unscaled values</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A/,*(F30.16/))&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;f:      &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="w">    </span><span class="c">! scaled values</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;INITIAL GUESS:&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n_segs</span><span class="o">=</span><span class="n">n_segs</span><span class="p">)</span>
+<span class="w">        </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">x0_rotating</span><span class="o">=</span><span class="n">x_rotating</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(I5, *(F15.6,1X))&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">x_rotating</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">solve</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Solving...&#39;</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39; * Solving&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+
+<span class="w">        </span><span class="k">call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">tstart_cpu</span><span class="p">)</span>
+<span class="c">!$      tstart = omp_get_wtime()</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c">! call the solver</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">status</span><span class="p">(</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">tend_cpu</span><span class="p">)</span>
+<span class="c">!$      tend = omp_get_wtime()</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! populate segs with solution</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">tstart_cpu</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="nb">cpu_time</span><span class="p">(</span><span class="n">tend_cpu</span><span class="p">)</span>
+<span class="w">        </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Not solved&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;Solution...&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;----------------------&#39;</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39; * Status: &#39;</span><span class="o">//</span><span class="n">message</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1x,F10.3,1x,a)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39; * Elapsed cpu_time: &#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">tend_cpu</span><span class="o">-</span><span class="n">tstart_cpu</span><span class="p">),</span><span class="w"> </span><span class="s1">&#39;sec&#39;</span>
+<span class="c">!$  write(*,&#39;(A,1x,F10.3,1x,a)&#39;) &#39; * OMP wall time   : &#39;, (tend-tstart), &#39;sec&#39;</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_guess_and_solution_files</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;generate solution file&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">write_optvars_to_file</span><span class="p">(</span><span class="s1">&#39;solution&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! write solution to a file</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! export solution to plot or trajectory file</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_trajectory_files</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_plots</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;export solution trajectory&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;solution&#39;</span><span class="p">,&amp;</span>
+<span class="w">                </span><span class="n">draw_trajectory</span><span class="o">=</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_plots</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                </span><span class="n">export_trajectory</span><span class="o">=</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_trajectory_files</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_kernel</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_trajectory_files</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;error: kernel generation requires the trajectory file to be exported&#39;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;generate kernel&#39;</span>
+<span class="w">            </span><span class="n">mkspk_input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;solution_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.txt&#39;</span>
+<span class="w">            </span><span class="n">bsp_output</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;solution_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.bsp&#39;</span>
+<span class="w">            </span><span class="k">call </span><span class="nb">execute_command_line</span><span class="p">(</span><span class="s1">&#39;kernel/mkspk -setup kernel/setup.txt -input &#39;</span><span class="o">//</span><span class="n">mkspk_input</span><span class="o">//</span><span class="s1">&#39; -output &#39;</span><span class="o">//</span><span class="n">bsp_output</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;SOLUTION:&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n_segs</span><span class="o">=</span><span class="n">n_segs</span><span class="p">)</span>
+<span class="w">        </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">get_inputs</span><span class="p">(</span><span class="n">x0_rotating</span><span class="o">=</span><span class="n">x_rotating</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(I5, *(F15.6,1X))&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">x_rotating</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">    end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_defect_file</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;generate defect file&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">print_constraint_defects</span><span class="p">(</span><span class="s1">&#39;solution_defects_&#39;</span><span class="o">//</span><span class="p">&amp;</span>
+<span class="w">                                                     </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="p">&amp;</span>
+<span class="w">                                                     </span><span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_json_trajectory_file</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;export JSON trajectory file&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">export_trajectory_json_file</span><span class="p">(</span><span class="s1">&#39;traj_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">())</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_files</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;generate eclipse file&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">generate_eclipse_data</span><span class="p">(</span><span class="s1">&#39;eclipse&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                                  </span><span class="n">filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_filetype</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">run_pyvista_script</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">debug</span><span class="p">)</span><span class="w"> </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;run pyvista script&#39;</span>
+<span class="w">        </span><span class="c">!mkspk_input = &#39;solution_&#39;//solver%mission%get_case_name()//&#39;.txt&#39;</span>
+<span class="w">        </span><span class="n">mkspk_input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;traj_&#39;</span><span class="o">//</span><span class="n">solver</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.json&#39;</span>
+<span class="w">        </span><span class="k">call </span><span class="nb">execute_command_line</span><span class="p">(</span><span class="s1">&#39;python ./python/plot_utilities.py &#39;</span><span class="o">//</span><span class="n">mkspk_input</span><span class="p">,</span><span class="w"> </span><span class="n">wait</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    end subroutine </span><span class="n">halo_solver_main</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
