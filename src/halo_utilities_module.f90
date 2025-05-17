@@ -45,35 +45,6 @@
 !********************************************************************************
 
 !********************************************************************************
-    subroutine get_pos(eph,et,b_target,b_obs,r,status_ok)
-
-        !! ephemeris wrapper to just return position vector
-        !! see also: [[ballistic_derivs]]
-
-        class(jpl_ephemeris),intent(inout) :: eph
-        real(wp),intent(in) :: et !! ephemeris time (sec)
-        type(celestial_body),intent(in) :: b_target !! target body
-        type(celestial_body),intent(in) :: b_obs !! observer body
-        real(wp),dimension(3),intent(out) :: r !! j2000 state (km, km/s)
-        logical,intent(out) :: status_ok !! true if no problems
-
-        real(wp),dimension(6) :: rv !! r,v vector
-
-        select type (eph)
-        type is (jpl_ephemeris)
-            call eph%get_rv(et,b_target,b_obs,rv,status_ok)
-            r = rv(1:3)
-        type is (jpl_ephemeris_splined)
-            ! for this, we can just get position vector only
-            call eph%get_r(et,b_target,b_obs,r,status_ok)
-        class default
-            error stop 'error in get_pos: invalid eph class'
-        end select
-
-    end subroutine get_pos
-!********************************************************************************
-
-!********************************************************************************
     subroutine apparent_position(eph, b_target, et, rv_obs_ssb, r_target, status_ok)
 
         !! Return the position of a target body relative to an observer,
@@ -100,7 +71,7 @@
         ! solar system barycenter. Subtract the position of the observer
         ! to get the relative position. Use this to compute the one-way
         ! light time.
-        call get_pos(eph,et,b_target,body_ssb,r_targ_ssb,status_ok)
+        call eph%get_r(et,b_target,body_ssb,r_targ_ssb,status_ok)
         if (.not. status_ok) return
         r_targ_ssb = r_targ_ssb - rv_obs_ssb(1:3) ! relative pos of target
         lt = norm2(r_targ_ssb) / c ! light time
@@ -108,7 +79,7 @@
         ! To correct for light time, find the position of the target body
         ! at the current epoch minus the one-way light time. Note that
         ! the observer remains where he is.
-        call get_pos(eph,et-lt,b_target,body_ssb,r_targ_ssb,status_ok)
+        call eph%get_r(et-lt,b_target,body_ssb,r_targ_ssb,status_ok)
         if (.not. status_ok) return
         r_targ_ssb = r_targ_ssb - rv_obs_ssb(1:3)
 

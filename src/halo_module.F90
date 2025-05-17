@@ -85,6 +85,7 @@
         logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
         logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
         logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model
+        procedure(third_body_grav_f),pointer,nopass :: third_body_gravity => null() !! procedure used to compute 3rd body gravity
 
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame (j2000-moon)
@@ -257,6 +258,17 @@
         procedure :: read_config_file
 
     end type my_solver_type
+
+    abstract interface
+        subroutine third_body_grav_f(r,rb,mu,acc) !! for compute third-body gravity
+            import :: wp
+            implicit none
+            real(wp),dimension(3),intent(in)  :: r   !! satellite position vector [km]
+            real(wp),dimension(3),intent(in)  :: rb  !! third-body position vector [km]
+            real(wp),intent(in)               :: mu  !! third-body gravitational parameter [km^3/s^2]
+            real(wp),dimension(3),intent(out) :: acc !! gravity acceleration vector [km/s^2]
+        end subroutine third_body_grav_f
+    end interface
 
     public :: halo_solver_main !! main program
     public :: read_epoch ! also used by optimizer app
@@ -1417,6 +1429,13 @@
         me%segs(i)%include_pointmass_sun     =  me%include_pointmass_sun
         me%segs(i)%include_pointmass_jupiter =  me%include_pointmass_jupiter
 
+        ! set 3rd body grav routine:
+        if (use_battin_gravity) then
+            me%segs(i)%third_body_gravity => third_body_gravity_alt
+        else
+            me%segs(i)%third_body_gravity => third_body_gravity
+        end if
+
         ! name all the segments:
         write(seg_name,'(I10)') i
         me%segs(i)%name = trim(adjustl(seg_name))
@@ -1622,11 +1641,11 @@
     real(wp),dimension(3) :: r,rb,v
     reaL(wp),dimension(3) :: r_earth_wrt_moon,r_sun_wrt_moon,r_jupiter_wrt_moon
     real(wp),dimension(3,3) :: rotmat
-    real(wp),dimension(3) :: a_geopot
+    real(wp),dimension(3) :: a_geopot  !! central body acc
     real(wp),dimension(3) :: a_earth
     real(wp),dimension(3) :: a_sun
     real(wp),dimension(3) :: a_jupiter
-    real(wp),dimension(3) :: a_third_body
+    real(wp),dimension(3) :: a_third_body  !! total third-body acc
     real(wp) :: et !! ephemeris time of `t`
     logical :: status_ok
 
@@ -1654,35 +1673,22 @@
 
         ! third-body state vectors (wrt the central body, which is the moon in this case):
         ! [inertial frame]
-        associate (eph => me%eph)
-            a_earth  = zero
-            a_sun = zero
-            a_jupiter = zero
-            select type (eph)
-            type is (jpl_ephemeris)
-                if (me%include_pointmass_earth)   call get_r(eph,et,body_earth,  body_moon,r_earth_wrt_moon,  status_ok)
-                if (me%include_pointmass_sun)     call get_r(eph,et,body_sun,    body_moon,r_sun_wrt_moon,    status_ok)
-                if (me%include_pointmass_jupiter) call get_r(eph,et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
-            type is (jpl_ephemeris_splined)
-                ! for this, we can just get position vector only
-                if (me%include_pointmass_earth)   call eph%get_r(et,body_earth,  body_moon,r_earth_wrt_moon,  status_ok)
-                if (me%include_pointmass_sun)     call eph%get_r(et,body_sun,    body_moon,r_sun_wrt_moon,    status_ok)
-                if (me%include_pointmass_jupiter) call eph%get_r(et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
-            class default
-                error stop 'invalid eph class'
-            end select
-        end associate
-        ! third-body perturbation (earth, sun, jupiter):
-        if (use_battin_gravity) then
-            if (me%include_pointmass_earth)   call third_body_gravity_alt(r,r_earth_wrt_moon,  mu_earth,   a_earth)
-            if (me%include_pointmass_sun)     call third_body_gravity_alt(r,r_sun_wrt_moon,    mu_sun,     a_sun)
-            if (me%include_pointmass_jupiter) call third_body_gravity_alt(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
-        else
-            if (me%include_pointmass_earth)   call third_body_gravity(r,r_earth_wrt_moon,  mu_earth,   a_earth)
-            if (me%include_pointmass_sun)     call third_body_gravity(r,r_sun_wrt_moon,    mu_sun,     a_sun)
-            if (me%include_pointmass_jupiter) call third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+        a_third_body  = zero
+        if (me%include_pointmass_earth) then
+            call me%eph%get_r(et,body_earth,body_moon,r_earth_wrt_moon,status_ok)
+            call me%third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
+            a_third_body = a_third_body + a_earth
         end if
-        a_third_body = a_earth + a_sun + a_jupiter
+        if (me%include_pointmass_sun) then
+            call me%eph%get_r(et,body_sun,body_moon,r_sun_wrt_moon,status_ok)
+            call me%third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
+            a_third_body = a_third_body + a_sun
+        end if
+        if (me%include_pointmass_jupiter) then
+            call me%eph%get_r(et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
+            call me%third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
+            a_third_body = a_third_body + a_jupiter
+        end if
 
         !total derivative vector:
         xdot(1:3) = v
@@ -1693,21 +1699,6 @@
         error stop 'invalid class in ballistic_derivs'
 
     end select
-
-    contains
-
-        subroutine get_r(eph,et,targ,obs,r,status_ok)
-            !! wrapper just to get r from the ephemeris
-            type(jpl_ephemeris),intent(inout) :: eph
-            real(wp), intent(in) :: et
-            type(celestial_body), intent(in) :: targ
-            type(celestial_body), intent(in) :: obs
-            real(wp), dimension(3), intent(out) :: r
-            logical, intent(out) :: status_ok
-            real(wp), dimension(6) :: rv
-            call eph%get_rv(et,targ,obs,rv,status_ok)
-            r = rv(1:3)
-        end subroutine get_r
 
     end subroutine ballistic_derivs
 !*****************************************************************************************
@@ -3309,12 +3300,12 @@
     case(1)
         ! compute reference epoch from the date (TDB):
         ! save this in the mission class
-        me%et_ref = jd_to_et(julian_date(me%year,&
-                                         me%month,&
-                                         me%day,&
-                                         me%hour,&
-                                         me%minute,&
-                                         me%sec))
+        me%et_ref = calendar_date_to_et(me%year,&
+                                        me%month,&
+                                        me%day,&
+                                        me%hour,&
+                                        me%minute,&
+                                        me%sec)
     case(2)
         ! then compute calendar from et
         call julian_date_to_calendar_date(et_to_jd(me%et_ref),&

@@ -58,8 +58,6 @@
         type,extends(jpl_ephemeris),public :: jpl_ephemeris_splined
             !! make this an extension of the [[jpl_ephemeris]],
             !! since it is also needed in tranformations.
-            !! also, has the extra feature of a `get_r` method,
-            !! since we don't need velocity for the gravity calculation.
             type(body_eph_interface) :: earth_eph_interface !! splined version of earth ephemeris
             type(body_eph_interface) :: sun_eph_interface !! splined version of sun ephemeris
             type(body_eph_interface) :: ssb_eph_interface !! splined version of ssb ephemeris
