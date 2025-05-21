@@ -303,7 +303,7 @@
     character(len=:),allocatable :: message  !! Text status message from solver
     integer :: n_segs, iseg
     real(wp),dimension(6) :: x_rotating
-    character(len=:),allocatable :: mkspk_input, bsp_output, mkspk_setup  !! filenames for mkspk
+    character(len=:),allocatable :: mkspk_input, bsp_output, mkspk_setup, pck_output  !! filenames for mkspk
 !$  integer :: tid, nthreads
 
 !$OMP PARALLEL PRIVATE(NTHREADS, TID)
@@ -435,11 +435,13 @@
             mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
             bsp_output  = 'solution_'//solver%mission%get_case_name()//'.bsp'
             mkspk_setup = 'mkspk_'//solver%mission%get_case_name()//'.txt'
+            pck_output  = 'solution_'//solver%mission%get_case_name()//'.tpc.json'
 
             !note: have to delete the kernel if it is already there or mkspk will fail.
             call delete_file(bsp_output)
 
             call generate_mkspk_setup_file(mkspk_setup)
+            call generate_pck_file(pck_output)
             call execute_command_line(mkspk_path//' -setup '//mkspk_setup//' -input '//mkspk_input//' -output '//bsp_output)
         end if
     end if
@@ -455,7 +457,7 @@
 
     if (solver%mission%generate_defect_file) then
         write(*,'(A)') ' * Generate defect file'
-        call solver%mission%print_constraint_defects('solution_defects_'//&
+        call solver%mission%print_constraint_defects('defects_'//&
                                                      solver%mission%get_case_name()//&
                                                      '.csv')
     end if
@@ -499,6 +501,30 @@
     end if
 
     end subroutine delete_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Generate a PCK (JSON version) to go with the BSP file.
+!  Note: this kernel can be read by `jsonspice` + `SpiceyPy`.
+!
+!### Reference
+!  * [NAIF Integer ID codes](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/req/naif_ids.html)
+
+    subroutine generate_pck_file(filename)
+
+    character(len=*),intent(in) :: filename
+
+    type(json_file) :: json
+
+    call json%initialize(compress_vectors=.true.)
+    call json%add('+NAIF_BODY_NAME', object_name)
+    call json%add('+NAIF_BODY_CODE', object_id)
+    call json%add('BODY'//int_to_string(object_id)//'_RADII', [0.001_wp, 0.001_wp, 0.001_wp])
+    call json%print(filename)
+    call json%destroy()
+
+    end subroutine generate_pck_file
 !*****************************************************************************************
 
 !*****************************************************************************************

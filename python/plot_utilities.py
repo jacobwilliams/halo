@@ -473,7 +473,7 @@ if __name__ == "__main__":
         if iplot==0:
             ############
             # add defect plot:
-            defect_filename = file_to_plot_.replace('solution', 'solution_defects')
+            defect_filename = file_to_plot_.replace('solution', 'defects')
             defect_filename = os.path.splitext(defect_filename)[0] + '.csv'
             f = generate_defect_plot(defect_filename, save = False, ylabel='Defect', showtitle=False)
             h_chart = pv.ChartMPL(f, size=(1.0, 0.2), loc=(0.0, 0.0)) #, loc=(0.02, 0.06))
