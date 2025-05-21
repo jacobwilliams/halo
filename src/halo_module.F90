@@ -306,6 +306,9 @@
     character(len=:),allocatable :: mkspk_input, bsp_output, mkspk_setup, pck_output  !! filenames for mkspk
 !$  integer :: tid, nthreads
 
+    write(*,'(A)') ''
+    write(*,'(A)') ' * HALO start'
+
 !$OMP PARALLEL PRIVATE(NTHREADS, TID)
 !$
 !$  tid = omp_get_thread_num()
@@ -317,9 +320,6 @@
 !$
 !$OMP END PARALLEL
 
-    write(*,'(A)') ''
-    write(*,'(A)') ' * HALO start'
-
     if (debug) then
         write(*,*) ''
         write(*,*) '----------------------'
@@ -329,15 +329,6 @@
     end if
 
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
-
-    if (allocated(solver%mission%initial_guess_from_file)) then
-        if (solver%mission%initial_guess_from_file /= '') then
-            !TODO: add some error checking here !
-            if (debug) write(*,*) 'Reading initial guess from file: '//solver%mission%initial_guess_from_file
-            call solver%mission%get_x_from_json_file(x) ! get solution from the file
-            call solver%mission%put_x_in_segments(x) ! populate segs with solution
-        end if
-    end if
 
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
@@ -411,16 +402,15 @@
     write(*,'(A)') ' * Status: '//message
     write(*,'(A,1x,F10.3,1x,a)') ' * Elapsed cpu_time: ', (tend_cpu-tstart_cpu), 'sec'
 !$  write(*,'(A,1x,F10.3,1x,a)') ' * OMP wall time   : ', (tend-tstart), 'sec'
-    write(*,*) ''
 
     if (solver%mission%generate_guess_and_solution_files) then
-        if (debug) write(*,*) 'generate solution file'
+        write(*,'(A)') ' * Generate solution file'
         call solver%mission%write_optvars_to_file('solution',x) ! write solution to a file
     end if
 
     ! export solution to plot or trajectory file
     if (solver%mission%generate_trajectory_files .or. solver%mission%generate_plots) then
-        if (debug) write(*,*) 'export solution trajectory'
+        write(*,'(A)') ' * Export solution trajectory'
         call solver%mission%plot('solution',&
                 draw_trajectory=solver%mission%generate_plots, &
                 export_trajectory=solver%mission%generate_trajectory_files)
@@ -428,7 +418,7 @@
 
     if (solver%mission%generate_kernel) then
         if (.not. solver%mission%generate_trajectory_files) then
-            write(*,*) 'error: kernel generation requires the trajectory file to be exported'
+            error stop 'error: kernel generation requires the trajectory file to be exported'
         else
             write(*,*) '* Generate BSP kernel'
 
@@ -496,7 +486,7 @@
 
     open(file=name,newunit=iunit,status='OLD',iostat=istat)
     if (istat==0) then
-        write(*,'(A)') ' * deleting existing file: '//trim(name)
+        write(*,'(A)') ' * Deleting existing file: '//trim(name)
         close(iunit,status='DELETE',iostat=istat)
     end if
 
@@ -821,6 +811,15 @@
     if (.not. status_ok) then
         write(*,*) 'istat = ', istat
         error stop 'error in initialize_the_solver'
+    end if
+
+    if (allocated(me%mission%initial_guess_from_file)) then
+        if (me%mission%initial_guess_from_file /= '') then
+            !TODO: add some error checking here !
+            write(*,'(A)') ' * Reading initial guess from file: '//me%mission%initial_guess_from_file
+            call me%mission%get_x_from_json_file(x) ! get solution from the file
+            call me%mission%put_x_in_segments(x) ! populate segs with solution
+        end if
     end if
 
     end subroutine initialize_the_solver
