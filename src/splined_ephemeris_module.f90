@@ -1,7 +1,6 @@
 !*****************************************************************************************
 !>
 !  Simple splined ephemeris model for Earth/Sun wrt Moon.
-
     module splined_ephemeris_module
 
     use fortran_astrodynamics_toolkit
@@ -40,7 +39,6 @@
         type(body_eph),target :: sun_eph
         type(body_eph),target :: ssb_eph
         type(body_eph),target :: jupiter_eph
-
         type :: body_eph_interface
             !! the interface to a splined ephemeris for a body
             !! used for calls to `db1val`.
@@ -54,7 +52,6 @@
             procedure,public :: destroy => destroy_body_eph_interface
             procedure,public :: initialize => initialize_body_eph_interface
         end type body_eph_interface
-
         type,extends(jpl_ephemeris),public :: jpl_ephemeris_splined
             !! make this an extension of the [[jpl_ephemeris]],
             !! since it is also needed in tranformations.
@@ -367,6 +364,113 @@
         end do
 
     end function get_r
+
+
+    ! notes:
+    !
+    ! can we also spline the frame.
+    ! maybe as a quaternion?
+    !
+    ! use M2Q to convert matrix to quaternion -> interpolate -> Q2M to convert back to matrix
+
+! ! Interpolates between two 3x3 rotation matrices R1 and R2 by fraction t (0 <= t <= 1)
+! ! Uses quaternion SLERP for smooth interpolation.
+! function interpolate_rotation_matrix(R1, R2, t) result(Rout)
+!     use, intrinsic :: iso_fortran_env, only: wp => real64
+!     implicit none
+!     real(wp), intent(in) :: R1(3,3), R2(3,3)
+!     real(wp), intent(in) :: t
+!     real(wp) :: Rout(3,3)
+!     real(wp) :: q1(4), q2(4), q_interp(4)
+
+!     ! Convert rotation matrices to quaternions
+!     call rotmat_to_quat(R1, q1)
+!     call rotmat_to_quat(R2, q2)
+
+!     ! Spherical linear interpolation (SLERP) between quaternions
+!     call slerp_quat(q1, q2, t, q_interp)
+
+!     ! Convert interpolated quaternion back to rotation matrix
+!     call quat_to_rotmat(q_interp, Rout)
+! end function interpolate_rotation_matrix
+
+! ! Convert 3x3 rotation matrix to quaternion (w,x,y,z)
+! subroutine rotmat_to_quat(R, q)
+!     real(wp), intent(in) :: R(3,3)
+!     real(wp), intent(out) :: q(4)
+!     real(wp) :: tr, S
+
+!     tr = R(1,1) + R(2,2) + R(3,3)
+!     if (tr > 0.0_wp) then
+!         S = sqrt(tr + 1.0_wp) * 2.0_wp
+!         q(1) = 0.25_wp * S
+!         q(2) = (R(3,2) - R(2,3)) / S
+!         q(3) = (R(1,3) - R(3,1)) / S
+!         q(4) = (R(2,1) - R(1,2)) / S
+!     else if ((R(1,1) > R(2,2)) .and. (R(1,1) > R(3,3))) then
+!         S = sqrt(1.0_wp + R(1,1) - R(2,2) - R(3,3)) * 2.0_wp
+!         q(1) = (R(3,2) - R(2,3)) / S
+!         q(2) = 0.25_wp * S
+!         q(3) = (R(1,2) + R(2,1)) / S
+!         q(4) = (R(1,3) + R(3,1)) / S
+!     else if (R(2,2) > R(3,3)) then
+!         S = sqrt(1.0_wp + R(2,2) - R(1,1) - R(3,3)) * 2.0_wp
+!         q(1) = (R(1,3) - R(3,1)) / S
+!         q(2) = (R(1,2) + R(2,1)) / S
+!         q(3) = 0.25_wp * S
+!         q(4) = (R(2,3) + R(3,2)) / S
+!     else
+!         S = sqrt(1.0_wp + R(3,3) - R(1,1) - R(2,2)) * 2.0_wp
+!         q(1) = (R(2,1) - R(1,2)) / S
+!         q(2) = (R(1,3) + R(3,1)) / S
+!         q(3) = (R(2,3) + R(3,2)) / S
+!         q(4) = 0.25_wp * S
+!     end if
+! end subroutine rotmat_to_quat
+
+! ! Spherical linear interpolation between two quaternions
+! subroutine slerp_quat(q1, q2, t, qout)
+!     real(wp), intent(in) :: q1(4), q2(4)
+!     real(wp), intent(in) :: t
+!     real(wp), intent(out) :: qout(4)
+!     real(wp) :: cos_theta, theta, sin_theta, w1, w2
+
+!     cos_theta = sum(q1 * q2)
+!     if (cos_theta < 0.0_wp) then
+!         cos_theta = -cos_theta
+!         q2 = -q2
+!     end if
+
+!     if (cos_theta > 0.9995_wp) then
+!         qout = (1.0_wp - t) * q1 + t * q2
+!         qout = qout / sqrt(sum(qout**2))
+!         return
+!     end if
+
+!     theta = acos(cos_theta)
+!     sin_theta = sin(theta)
+!     w1 = sin((1.0_wp - t) * theta) / sin_theta
+!     w2 = sin(t * theta) / sin_theta
+!     qout = w1 * q1 + w2 * q2
+! end subroutine slerp_quat
+
+! ! Convert quaternion (w,x,y,z) to 3x3 rotation matrix
+! subroutine quat_to_rotmat(q, R)
+!     real(wp), intent(in) :: q(4)
+!     real(wp), intent(out) :: R(3,3)
+!     real(wp) :: w, x, y, z
+
+!     w = q(1); x = q(2); y = q(3); z = q(4)
+!     R(1,1) = 1.0_wp - 2.0_wp*(y*y + z*z)
+!     R(1,2) = 2.0_wp*(x*y - z*w)
+!     R(1,3) = 2.0_wp*(x*z + y*w)
+!     R(2,1) = 2.0_wp*(x*y + z*w)
+!     R(2,2) = 1.0_wp - 2.0_wp*(x*x + z*z)
+!     R(2,3) = 2.0_wp*(y*z - x*w)
+!     R(3,1) = 2.0_wp*(x*z - y*w)
+!     R(3,2) = 2.0_wp*(y*z + x*w)
+!     R(3,3) = 1.0_wp - 2.0_wp*(x*x + y*y)
+! end subroutine quat_to_rotmat
 
     end module splined_ephemeris_module
 !*****************************************************************************************

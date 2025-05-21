@@ -303,7 +303,7 @@
     character(len=:),allocatable :: message  !! Text status message from solver
     integer :: n_segs, iseg
     real(wp),dimension(6) :: x_rotating
-    character(len=:),allocatable :: mkspk_input, bsp_output  !! filenames for mkspk
+    character(len=:),allocatable :: mkspk_input, bsp_output, mkspk_setup  !! filenames for mkspk
 !$  integer :: tid, nthreads
 
 !$OMP PARALLEL PRIVATE(NTHREADS, TID)
@@ -316,6 +316,9 @@
 !$  end if
 !$
 !$OMP END PARALLEL
+
+    write(*,'(A)') ''
+    write(*,'(A)') ' * HALO start'
 
     if (debug) then
         write(*,*) ''
@@ -427,10 +430,17 @@
         if (.not. solver%mission%generate_trajectory_files) then
             write(*,*) 'error: kernel generation requires the trajectory file to be exported'
         else
-            if (debug) write(*,*) 'generate kernel'
+            write(*,*) '* Generate BSP kernel'
+
             mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
             bsp_output  = 'solution_'//solver%mission%get_case_name()//'.bsp'
-            call execute_command_line('kernel/mkspk -setup kernel/setup.txt -input '//mkspk_input//' -output '//bsp_output)
+            mkspk_setup = 'mkspk_'//solver%mission%get_case_name()//'.txt'
+
+            !note: have to delete the kernel if it is already there or mkspk will fail.
+            call delete_file(bsp_output)
+
+            call generate_mkspk_setup_file(mkspk_setup)
+            call execute_command_line(mkspk_path//' -setup '//mkspk_setup//' -input '//mkspk_input//' -output '//bsp_output)
         end if
     end if
 
@@ -444,31 +454,88 @@
     end if
 
     if (solver%mission%generate_defect_file) then
-        if (debug) write(*,*) 'generate defect file'
+        write(*,'(A)') ' * Generate defect file'
         call solver%mission%print_constraint_defects('solution_defects_'//&
                                                      solver%mission%get_case_name()//&
                                                      '.csv')
     end if
 
     if (solver%mission%generate_json_trajectory_file) then
-        if (debug) write(*,*) 'export JSON trajectory file'
         call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
     end if
 
     if (solver%mission%generate_eclipse_files) then
-        if (debug) write(*,*) 'generate eclipse file'
         call solver%mission%generate_eclipse_data('eclipse', &
                                                   filetype = solver%mission%eclipse_filetype)
     end if
 
     if (solver%mission%run_pyvista_script) then
-        if (debug) write(*,*) 'run pyvista script'
+        write(*,'(A)') ' * Run PyVista script'
         !mkspk_input = 'solution_'//solver%mission%get_case_name()//'.txt'
         mkspk_input = 'traj_'//solver%mission%get_case_name()//'.json'
         call execute_command_line('python ./python/plot_utilities.py '//mkspk_input, wait=.false.)
     end if
 
+    write(*,'(A)') ' * HALO done'
+    write(*,'(A)') ''
+
     end subroutine halo_solver_main
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Delete a file if it exists
+
+    subroutine delete_file(name)
+
+    character(len=*),intent(in) :: name
+
+    integer :: istat, iunit
+
+    open(file=name,newunit=iunit,status='OLD',iostat=istat)
+    if (istat==0) then
+        write(*,'(A)') ' * deleting existing file: '//trim(name)
+        close(iunit,status='DELETE',iostat=istat)
+    end if
+
+    end subroutine delete_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Generate the mkspk setup file. See `kernel/mkspk` for an example.
+!
+!  See also: [MKSPK User's Guide](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/ug/mkspk.html)
+
+    subroutine generate_mkspk_setup_file(filename)
+
+    character(len=*),intent(in) :: filename
+
+    integer :: iunit, istat
+
+    open(newunit=iunit, file=trim(filename), status='REPLACE', iostat=istat)
+    if (istat/=0) error stop 'error opening file: '//trim(filename)
+
+    write(iunit, '(A)') "\begindata"
+    write(iunit, '(A)') ""
+    write(iunit, '(A)') "INPUT_DATA_TYPE   = 'STATES'"
+    write(iunit, '(A)') "DATA_ORDER        = 'EPOCH X Y Z VX VY VZ'"
+    write(iunit, '(A)') "DATA_DELIMITER    = ';'"
+    write(iunit, '(A)') "TIME_WRAPPER      = '# ETSECONDS'"
+    write(iunit, '(A)') "CENTER_ID         = 301"
+    write(iunit, '(A)') "CENTER_NAME       = 'MOON'"
+    write(iunit, '(A)') "REF_FRAME_NAME    = 'J2000'"
+    write(iunit, '(A)') "INPUT_DATA_UNITS  = ('ANGLES=DEGREES' 'DISTANCES=km')"
+    write(iunit, '(A)') "PRODUCER_ID       = 'HALO'"
+    write(iunit, '(A)') "OUTPUT_SPK_TYPE   = "//int_to_string(output_spk_type)
+    write(iunit, '(A)') "POLYNOM_DEGREE    = "//int_to_string(polynom_degree)
+    write(iunit, '(A)') "SEGMENT_ID        = '"//segment_id//"'"
+    write(iunit, '(A)') "OBJECT_ID         = "//int_to_string(object_id)
+    write(iunit, '(A)') "OBJECT_NAME       = '"//trim(object_name)//"'"
+    write(iunit, '(A)') "LEAPSECONDS_FILE  = '"//leapseconds_file//"'"
+    close(iunit, iostat=istat)
+
+    end subroutine generate_mkspk_setup_file
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3090,6 +3157,9 @@
     call f%get('run_pyvista_script',                me%mission%run_pyvista_script,        found)
     call f%get('generate_rp_ra_file',               me%mission%generate_rp_ra_file,       found)
 
+    ! if generating the kernel: have to generate the trajectory files
+    if (me%mission%generate_kernel) me%mission%generate_trajectory_files = .true.
+
     call f%get('constrain_initial_rdot', me%mission%constrain_initial_rdot, found)
 
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
@@ -3129,6 +3199,14 @@
     call f%get('fscale_rdot' , fscale_rdot, found) ! rdot function scale value
 
     call f%get('use_battin_gravity', use_battin_gravity, found)
+
+    call f%get('object_id', object_id, found)
+    call f%get('object_name', object_name, found); if (.not. found) object_name = 'HALO'
+    call f%get('leapseconds_file', leapseconds_file, found); if (.not. found) leapseconds_file = 'kernel/naif0012.tls'
+    call f%get('mkspk_path', mkspk_path, found); if (.not. found) mkspk_path = 'kernel/mkspk'
+    call f%get('polynom_degree', polynom_degree, found)
+    call f%get('output_spk_type', output_spk_type, found)
+    call f%get('segment_id', segment_id, found); if (.not. found) segment_id = 'SPK_STATES_09'
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
@@ -3225,7 +3303,7 @@
                                                                           me%mission%hour,':',&
                                                                           me%mission%minute,':',&
                                                                           me%mission%sec, ')'
-    write(*,'(a30,1x,f30.17)') '   Orbit period (days): ', me%mission%period
+    write(*,'(a30,1x,f21.17)') '   Orbit period (days): ', me%mission%period
 
     contains
 !*****************************************************************************************
@@ -3486,32 +3564,33 @@
                 int_to_string(me%minute,2)//int_to_string(int(me%sec),2)//&
                 '_'//me%L1_or_L2//'_'//me%N_or_S//'_NREVS='//int_to_string(me%n_revs)
 
-    contains
-
-    !*************************************************
-        function int_to_string(i,ipad) result(str)
-        !! integer to string with zero padding
-        implicit none
-        integer,intent(in) :: i
-        character(len=:),allocatable :: str
-        integer,intent(in),optional :: ipad !! number of digits to pad with zeros
-        character(len=100) :: istr
-        integer :: istat
-        write(istr,'(I100)',iostat=istat) i
-        if (istat==0) then
-            str = trim(adjustl(istr))
-            if (present(ipad)) then
-                if (len(str)<ipad) then
-                    str = repeat('0',ipad-len(str))//str
-                end if
-            end if
-        else
-            str ='****'
-        end if
-        end function int_to_string
-    !*************************************************
-
     end function get_case_name
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  integer to string with optional zero padding
+
+    function int_to_string(i,ipad) result(str)
+    implicit none
+    integer,intent(in) :: i
+    character(len=:),allocatable :: str
+    integer,intent(in),optional :: ipad !! number of digits to pad with zeros
+    character(len=100) :: istr
+    integer :: istat
+    write(istr,'(I100)',iostat=istat) i
+    if (istat==0) then
+        str = trim(adjustl(istr))
+        if (present(ipad)) then
+            if (len(str)<ipad) then
+                str = repeat('0',ipad-len(str))//str
+            end if
+        end if
+    else
+        str ='****'
+    end if
+
+    end function int_to_string
 !*****************************************************************************************
 
 !*****************************************************************************************

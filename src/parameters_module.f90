@@ -26,6 +26,13 @@
     real(wp),dimension(:),allocatable,public :: fscale_xf ! scale values for constraints [must be size 6]
     real(wp),public :: fscale_rdot = 1.0_wp  !! scale value for the rdot=0 constraint
     logical,public :: use_battin_gravity = .false. !! use Battin gravity formulation
+    character(len=:),allocatable,public :: mkspk_path  !! for mkspk: path to mkspk executable. e.g. `kernel/mkspk`
+    integer,public :: object_id = -50000                            !! for mkspk: OBJECT_ID
+    character(len=:),allocatable,public :: object_name       !! for mkspk: OBJECT_NAME
+    character(len=:),allocatable,public :: leapseconds_file  !! for mkspk: LEAPSECONDS_FILE
+    character(len=:),allocatable,public :: segment_id        !! for mkspk: SEGMENT_ID
+    integer,public :: polynom_degree = 9                     !! for mkspk: POLYNOM_DEGREE
+    integer,public :: output_spk_type = 9                    !! for mkspk: OUTPUT_SPK_TYPE
 
     type,public :: patch_point
         !! a CR3BP Halo state, to be used as

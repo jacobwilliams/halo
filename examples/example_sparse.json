@@ -67,7 +67,7 @@
     //  lunar synodic period.
 
     //---------------------- test 2 - with 200 revs
-    // "et_ref": 818877600.000000,
+    // "et_ref": 820317600.000000,
     "year": 2025,
     "month": 12,
     "day": 29,     // no eclipses for 1000 revs !
@@ -76,7 +76,7 @@
     "sec": 0,
 
     // "period": 1.499,
-    "period": 1.5112,
+   "period": 1.5112,   // 9-2 NRHO
     // "sa_lb": [1.49, 818704800.0], // 818877600 - 2 days
     // "sa_ub": [1.51, 819050400.0], // 818877600 + 2 days
     // "vm":    [0.01, 172800.0],    // +/- 2 days
@@ -84,6 +84,8 @@
     // "sa_nt":   5,      // number of iterations before temperature reduction.
     // "sa_neps": 5,      // number of final function values used to decide upon termination.
     //---------------------- test
+
+    // "period": 1.4805,   ///try to find 9-2 for jpl database
 
     // optional inputs:
     "fix_initial_time": false,  // do not allow the initial epoch to vary
@@ -116,9 +118,9 @@
   // number of revs:
   //"n_revs": 2,
   //"n_revs": 10,
-  //"n_revs": 5,
-   "n_revs": 20,
-  //"n_revs": 100,  //689 days
+  // "n_revs": 5,
+  "n_revs": 20,
+  //  "n_revs": 100,  //689 days
   // "n_revs": 200,
   //"n_revs": 1000,   // tests above
   //"n_revs": 1120,   // 20 years <--- now try this
@@ -127,8 +129,16 @@
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
     "dt_spline_sec": 3600,
     "ephemeris_file": "data/eph/JPLEPH.421",
-    "gravfile": "data/grav/gggrx_0020pm_sha.tab",
+
+    // https://pds-geosciences.wustl.edu/grail/grail-l-lgrs-5-rdr-v1/grail_1001/shadr/
+    // [note they are not formatted the same way and have to be modifed.]
+    "gravfile": "data/grav/gggrx_0020pm_sha.tab",       // up to 20x20
+    // "gravfile": "data/grav/gggrx_0100pm_sha.tab",    // up to 100x100
+    "grav_n": 8, // grav model n
+    "grav_m": 8, // grav model m
+
     "patch_point_file": "data/L2_halos.json",
+    // "patch_point_file": "data/L2_halos_jpl.json",  // test !
     "patch_point_file_is_periapsis": false, //true: patch points are periapsis, false: they are apoapsis
 
     "pointmass_central_body": false, // enable pointmass moon for the central body [by default, spherical harmonics is used]
@@ -149,9 +159,18 @@
     // "initial_guess_from_file": "./solution_20251213060000_L2_S_NREVS=100.json",
 
     "generate_plots": false,
-    "generate_trajectory_files": false,
+    "generate_trajectory_files": true,
+
+    "generate_kernel": true,   // make the spk kernel
+    "object_id": -50000,
+    "object_name": "HALO",
+    "leapseconds_file": "kernel/naif0012.tls",
+    "mkspk_path": "kernel/mkspk",
+    "polynom_degree": 9,
+    "output_spk_type": 9,
+    "segment_id": "SPK_STATES_09",
+
     "generate_guess_and_solution_files": true,
-    "generate_kernel": false,
     "generate_defect_file": true,
     "generate_json_trajectory_file": true,
 
