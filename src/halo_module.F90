@@ -1498,11 +1498,10 @@
         allocate(me%grav)
         call me%grav%initialize(me%gravfile,grav_n,grav_m,status_ok)
         if (.not. status_ok) error stop 'error initializing gravity model'
-    end if
-
-    if (grav_frame==2) then ! using the splined moon_pa frame for the gravity model
-        allocate(me%moon_pa)
-        call me%moon_pa%initialize(me%moon_pa_file, et0=et0, etf=etf)
+        if (grav_frame==2) then ! using the splined moon_pa frame for the gravity model
+            allocate(me%moon_pa)
+            call me%moon_pa%initialize(me%moon_pa_file, et0=et0, etf=etf)
+        end if
     end if
 
     ! now, we set up the segment structure for the problem we are solving:
@@ -1523,14 +1522,18 @@
 
         if (use_openmp) then
             ! make a copy for each segment, so they can run in parallel
-            if (.not. me%pointmass_central_body) allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
+            if (.not. me%pointmass_central_body) then
+                allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
+                if (grav_frame==2) allocate(me%segs(i)%moon_pa, source = me%moon_pa)
+            end if
             allocate(me%segs(i)%eph,  source = me%eph)
-            if (grav_frame==2) allocate(me%segs(i)%moon_pa, source = me%moon_pa)
         else
             ! for serial use, each seg just points to the global ones for the whole mission
-            if (.not. me%pointmass_central_body) me%segs(i)%grav => me%grav
+            if (.not. me%pointmass_central_body) then
+                me%segs(i)%grav => me%grav
+                if (grav_frame==2) me%segs(i)%moon_pa  => me%moon_pa
+            end if
             me%segs(i)%eph  => me%eph
-            if (grav_frame==2) me%segs(i)%moon_pa  => me%moon_pa
         end if
         me%segs(i)%pointmass_central_body = me%pointmass_central_body
         me%segs(i)%include_pointmass_earth   =  me%include_pointmass_earth
