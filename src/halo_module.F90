@@ -1464,13 +1464,16 @@
     call me%get_sparsity_pattern(irow,icol)
     call me%set_sparsity_pattern(irow,icol)
 
+    if (me%use_splined_ephemeris .or. grav_frame==2) then
+        ! for splinting, have to compute et0, etf based on mission range.
+        ! use a 2 period buffer.
+        et0 = me%et_ref - 2.0*me%period*day2sec
+        etf = me%et_ref + (me%period*day2sec * me%n_revs) + 2.0*me%period*day2sec
+    end if
+
     ! set up the ephemeris:
     !write(*,*) 'loading ephemeris file: '//trim(me%ephemeris_file)
     if (me%use_splined_ephemeris) then
-        ! have to compute et0, etf based on mission range.
-        ! use a 2 period buffer
-        et0 = me%et_ref - 2.0*me%period*day2sec
-        etf = me%et_ref + (me%period*day2sec * me%n_revs) + 2.0*me%period*day2sec
         allocate(jpl_ephemeris_splined :: me%eph)
         associate (eph => me%eph)
             select type(eph)
@@ -1499,7 +1502,7 @@
 
     if (grav_frame==2) then ! using the splined moon_pa frame for the gravity model
         allocate(me%moon_pa)
-        call me%moon_pa%initialize(me%moon_pa_file)
+        call me%moon_pa%initialize(me%moon_pa_file, et0=et0, etf=etf)
     end if
 
     ! now, we set up the segment structure for the problem we are solving:
