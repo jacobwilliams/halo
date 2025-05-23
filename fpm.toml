@@ -26,6 +26,7 @@ argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1
 simulated-annealing = { git = "https://github.com/jacobwilliams/simulated-annealing", tag = "1.2.0" }
 roots-fortran = { git = "https://github.com/jacobwilliams/roots-fortran", tag = "1.5.0" }
 moonframe = { git="https://github.com/jacobwilliams/moonframe.git", tag = "0.1" }
+moonframe = { git="https://github.com/jacobwilliams/moonframe.git", tag = "0.2" }
 
 [library]
 source-dir = "src"
