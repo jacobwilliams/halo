@@ -15,6 +15,7 @@
     use config_file_module
     use splined_ephemeris_module
     use halo_utilities_module
+    use moon_frame_module
 
     implicit none
 
@@ -79,8 +80,9 @@
 
         ! These can be pointers that are pointing to the global ones in the mission,
         ! Or, when using OpenMP, they are allocated in each segment.
-        type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
-        class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris [global]
+        type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model
+        class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris
+        type(moon_frame_interpolater),pointer :: moon_pa => null() !! the moon_pa frame interpolater
         logical :: pointmass_central_body = .false.
         logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
         logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
@@ -120,6 +122,7 @@
                                                    !! otherwise, the `grav` model is used.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
+        type(moon_frame_interpolater),pointer :: moon_pa => null() !! the moon_pa frame interpolater [global]
         logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
         logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
         logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model
@@ -187,6 +190,9 @@
 
         character(len=:),allocatable :: gravfile  !! spherical harmonic gravity coeff file (Moon)
         !! example: 'data/grav/gggrx_0020pm_sha.tab'
+
+        character(len=:),allocatable ::  moon_pa_file !! file for moon_pa frame.
+        !! example: `data/moon_pa_2000_2100.csv`
 
         character(len=:),allocatable :: patch_point_file   !! Halo CR3BP patch point solution file
         !! example: 'data/L2_halos.json'
@@ -1491,6 +1497,11 @@
         if (.not. status_ok) error stop 'error initializing gravity model'
     end if
 
+    if (grav_frame==2) then ! using the splined moon_pa frame for the gravity model
+        allocate(me%moon_pa)
+        call me%moon_pa%initialize(me%moon_pa_file)
+    end if
+
     ! now, we set up the segment structure for the problem we are solving:
     ! This is for the "forward-backward" method from the paper (see Figure 2b):
     allocate(me%segs(n_segs))
@@ -1511,10 +1522,12 @@
             ! make a copy for each segment, so they can run in parallel
             if (.not. me%pointmass_central_body) allocate(me%segs(i)%grav, source = me%grav)  ! maybe not necessary? (is this threadsafe?)
             allocate(me%segs(i)%eph,  source = me%eph)
+            if (grav_frame==2) allocate(me%segs(i)%moon_pa, source = me%moon_pa)
         else
             ! for serial use, each seg just points to the global ones for the whole mission
             if (.not. me%pointmass_central_body) me%segs(i)%grav => me%grav
             me%segs(i)%eph  => me%eph
+            if (grav_frame==2) me%segs(i)%moon_pa  => me%moon_pa
         end if
         me%segs(i)%pointmass_central_body = me%pointmass_central_body
         me%segs(i)%include_pointmass_earth   =  me%include_pointmass_earth
@@ -1757,7 +1770,12 @@
             a_geopot = -mu_moon / norm2(r)**3 * r
         else
             ! geopotential gravity:
-            rotmat = icrf_to_iau_moon(et)   ! rotation matrix from inertial to body-fixed Moon frame
+            ! first get the rotation matrix from inertial to body-fixed Moon frame
+            select case (grav_frame)
+            case (1); rotmat = icrf_to_iau_moon(et) ! iau_moon
+            case (2); rotmat = me%moon_pa%j2000_to_frame(et) ! moon_pa (splined)
+            case default; error stop 'invalid grav_frame in ballistic_derivs'
+            end select
             rb = matmul(rotmat,r)           ! r in body-fixed frame
             call me%grav%get_acc(rb,grav_n,grav_m,a_geopot)  ! get the acc due to the geopotential
             a_geopot = matmul(transpose(rotmat),a_geopot)    ! convert acc back to inertial frame
@@ -2678,10 +2696,13 @@
     type(my_solver) :: solver
     type(bspline_1d) :: rdot_spline, rmag_spline
     type(json_file) :: json
+    logical :: finished !! to indicate the arrays are done
+    integer :: n_rp, n_ra, n_rp_et, n_ra_et !! counters for array sizes
 
     integer,parameter :: kx = 4  !! spline order (cubic bspline)
     integer,parameter :: idx = 0 !! interpolate value only
     real(wp),parameter :: et_step = 3600.0_wp * 24.0_wp !! et step size [should be an input] (sec)
+    integer,parameter :: chunk_size = 1000 !! chunk size for expanding the arrays
 
     write(*,'(A)') ' * Generating ra/rp file.'
 
@@ -2706,26 +2727,32 @@
     initial_et = et(1)
     final_et = et(n)
     et0 = initial_et
+    n_rp = 0; n_ra = 0; n_rp_et = 0; n_ra_et = 0
     do
         etf = min(final_et, et0+et_step)
         ! if there is a root on this interval (change of sign of rdot):
         rdot0 = rdot_func(solver, et0)
         rdotf = rdot_func(solver, etf)
+        finished = etf==et(n) ! the last step
         if (rdot0*rdotf<=zero) then  ! there is a root on this interval
             ! find the root:
             call solver%solve(et0,etf,et_root,rdot_root,iflag)
             rmag_root = rmag_func(et_root)  ! get corresponding rmag at the root
             if (rdotf>rdot0) then
                 ! increasing - periapsis
-                et_for_rp = [et_for_rp, et_root]
-                rp_vec    = [rp_vec, rmag_root]
+                ! et_for_rp = [et_for_rp, et_root]
+                ! rp_vec    = [rp_vec, rmag_root]
+                call add_to(et_for_rp, et_root, n_rp_et, chunk_size, finished)
+                call add_to(rp_vec, rmag_root, n_rp, chunk_size, finished)
             else
                 ! decreasing - apoapsis
-                et_for_ra = [et_for_ra, et_root]
-                ra_vec    = [ra_vec, rmag_root]
+                !et_for_ra = [et_for_ra, et_root]
+                !ra_vec    = [ra_vec, rmag_root]
+                call add_to(et_for_ra, et_root, n_ra_et, chunk_size, finished)
+                call add_to(ra_vec, rmag_root, n_ra, chunk_size, finished)
             end if
         end if
-        if (etf==et(n)) exit
+        if (finished) exit
         et0 = etf ! set up for next step
     end do
 
@@ -2739,6 +2766,51 @@
     call json%destroy()
 
     contains
+
+        pure subroutine add_to(vec, val, n, chunk_size, finished)
+            !! resize an array in chunks
+
+            real(wp), dimension(:), allocatable, intent(inout) :: vec
+                !! the vector to add to
+            real(wp), intent(in) :: val
+                !! the value to add
+            integer, intent(inout) :: n
+                !! counter for last element added to vec.
+                !! must be initialized to size(vec)
+                !! (or 0 if not allocated) before first call
+            integer, intent(in) :: chunk_size
+                !! allocate vec in blocks of this size (>0)
+            logical, intent(in) :: finished
+                !! set to true to return vec
+                !! as its correct size (n)
+
+            real(wp), dimension(:), allocatable :: tmp
+
+            if (allocated(vec)) then
+                if (n == size(vec)) then
+                    ! have to add another chunk:
+                    allocate (tmp(size(vec) + chunk_size))
+                    tmp(1:size(vec)) = vec
+                    call move_alloc(tmp, vec)
+                end if
+                n = n + 1
+            else
+                ! the first element:
+                allocate (vec(chunk_size))
+                n = 1
+            end if
+
+            vec(n) = val
+
+            if (finished) then
+                ! set vec to actual size (n):
+                if (allocated(tmp)) deallocate (tmp)
+                allocate (tmp(n))
+                tmp = vec(1:n)
+                call move_alloc(tmp, vec)
+            end if
+
+        end subroutine add_to
 
         subroutine check_spline(case) !! error checking for splines
             character(len=*),intent(in) :: case !! case name
@@ -3215,6 +3287,7 @@
     call f%get('maxnum'    , maxnum,    found)
     call f%get('grav_n'    , grav_n,    found)
     call f%get('grav_m'    , grav_m,    found)
+    call f%get('grav_frame', grav_frame,found)
     call f%get('xscale_x0' , xscale_x0, found) ! scale values (defaults are good values for the 4500 Rp case)
     if (.not. found) xscale_x0 = [1.0e+05_wp,1.0e+05_wp,1.0e+05_wp,2.0e+00_wp,2.0e+00_wp,2.0e+00_wp]
     if (size(xscale_x0) /= 6) error stop 'error: xscale_x0 must be a 6 element vector'
@@ -3261,7 +3334,11 @@
     call f%get('gravfile',        me%mission%gravfile         )
     call f%get('patch_point_file',me%mission%patch_point_file )
     call f%get('patch_point_file_is_periapsis',me%mission%patch_point_file_is_periapsis, found )
-    call f%close() ! cleanup
+
+    call f%get('moon_pa_file', me%mission%moon_pa_file, found)
+    if (.not. found) me%mission%moon_pa_file = 'data/moon_pa_2000_2100.csv'
+
+    call f%close() ! cleanup ---------------------------------------------------
 
     use_json_file = index(me%mission%patch_point_file, '.json') > 0
     if (.not. use_json_file) error stop 'error: patch point file must be a JSON file.'

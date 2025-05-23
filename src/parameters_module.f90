@@ -22,6 +22,7 @@
     integer ,public :: maxnum     = 10000          !! integrator max steps
     integer ,public :: grav_n     = 8              !! max grav degree
     integer ,public :: grav_m     = 8              !! max grav order
+    integer, public :: grav_frame = 1 !! 1: iau_moon, 2: moon_pa (splined)
     real(wp),dimension(:),allocatable,public :: xscale_x0 ! scale values for opt vars [must be size 6]
     real(wp),dimension(:),allocatable,public :: fscale_xf ! scale values for constraints [must be size 6]
     real(wp),public :: fscale_rdot = 1.0_wp  !! scale value for the rdot=0 constraint
