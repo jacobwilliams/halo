@@ -1,4 +1,4 @@
-![NumDiff](media/logo.jpg)
+![halo](media/logo.jpg)
 ============
 
 ## Description
