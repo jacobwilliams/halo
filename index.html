@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="./favicon.png">
+
+    <title> halo </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="./css/fontawesome.min.css" rel="stylesheet">
+    <link href="./css/brands.min.css" rel="stylesheet">
+    <link href="./css/regular.min.css" rel="stylesheet">
+    <link href="./css/solid.min.css" rel="stylesheet">
+    <link href="./css/v4-font-face.min.css" rel="stylesheet">
+    <link href="./css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="./css/local.css" rel="stylesheet">
+    <link href="./css/pygments.css" rel="stylesheet">
+    <script src="./js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="./index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="./lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="./lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="./search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <!-- Main component for a primary marketing message or call to action -->
+    <div class="p-5 mb-4 bg-light border rounded-3" id="jumbotron">
+      <p>Halo orbit solver with modern Fortran</p>
+        <p> Find us on&hellip;</p>
+      <p>
+        <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams/halo" role="button">GitHub</a>
+        
+        
+        
+        
+      </p>
+    </div>
+
+      <div class="row" id='text'>
+        <div class=col-md-8>
+          <h1>halo</h1>
+          <h1><img alt="halo" src="media/logo.jpg"></h1>
+<h2>Description</h2>
+<p>Halo orbit solver with modern Fortran</p>
+<p>This application can be used to generate long-duration Earth-Moon halo orbits in the ephemeris model. A work in progress.</p>
+<h2>Build</h2>
+<p>The application is built using the <a href="https://github.com/fortran-lang/fpm">Fortran Package Manager</a> (FPM). FPM will download all the required dependencies and compile the program, and can also be used to run the tests.</p>
+<div class="codehilite"><pre><span></span><code>fpm build --profile release
+</code></pre></div>
+
+<p>To run an example:</p>
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release -- examples/example.json
+</code></pre></div>
+
+<p>OpenMP can also be employed to speed up the process.
+Another example, using the Intel Fortran Compiler with OpenMP:</p>
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release --compiler ifort --flag &quot;-qopenmp&quot; -- examples/example.json
+</code></pre></div>
+
+<p>Or with Gfortran:</p>
+<div class="codehilite"><pre><span></span><code>fpm run halo_solver --profile release --flag &quot;-fopenmp&quot; -- examples/example.json
+</code></pre></div>
+
+<h3>Using qr_mumps</h3>
+<p>The <a href="https://gitlab.com/qr_mumps/qr_mumps">qr_mumps</a> solver can also be used, which will run much faster than the default LAPACK solver for very large problems. For this, the code must be compiled with the <code>WITH_QRMUMPS</code> preprocessor directive. See the <code>build.sh</code> and <code>run.sh</code> scripts for details.</p>
+<h3>Building On Windows</h3>
+<p>Work in progress....</p>
+<p>Example:</p>
+<div class="codehilite"><pre><span></span><code><span class="s2">&quot;&lt;intel install dir&gt;\windows</span><span class="se">\b</span><span class="s2">in\ifortvars.bat&quot;</span><span class="w"> </span><span class="n">intel64</span>
+<span class="s2">&quot;&lt;intel install dir&gt;\windows\mkl</span><span class="se">\b</span><span class="s2">in\mklvars.bat&quot;</span><span class="w"> </span><span class="n">intel64</span>
+
+<span class="n">set</span><span class="w"> </span><span class="n">OMP_NUM_THREADS</span><span class="o">=</span><span class="mi">12</span>
+
+<span class="n">fpm</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">halo_solver</span><span class="w"> </span><span class="o">--</span><span class="n">profile</span><span class="w"> </span><span class="n">release</span><span class="w"> </span><span class="o">--</span><span class="n">compiler</span><span class="w"> </span><span class="n">ifort</span><span class="w"> </span><span class="o">--</span><span class="n">flag</span><span class="w"> </span><span class="s2">&quot;/fpp /Qmkl:parallel /Qopenmp&quot;</span><span class="w"> </span><span class="o">--</span><span class="w"> </span><span class="n">examples</span><span class="o">/</span><span class="n">example</span><span class="o">.</span><span class="n">json</span>
+</code></pre></div>
+
+<p>Result is:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">LINK</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">fatal</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="n">LNK1181</span><span class="o">:</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="n">open</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="s1">&#39;lapack.lib&#39;</span>
+</code></pre></div>
+
+<p>It's because <code>fmin</code> and <code>nlsolver-fortran</code> both have explicit <code>lapack</code> and <code>blas</code> dependencies specified in their <code>fpm.toml</code> files (<code>link = ["lapack", "blas"]</code>). If i delete those it compiles.</p>
+<h3>Other notes</h3>
+<p>Another source of CR3BP halos that can be used as initial guesses for this tool can be found here: https://ssd.jpl.nasa.gov/tools/periodic_orbits.html</p>
+<h3>Documentation</h3>
+<p>The latest API documentation can be found <a href="https://jacobwilliams.github.io/halo/">here</a>. This was generated from the source code using <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>.</p>
+<h3>See also</h3>
+<ul>
+<li>J. Williams, <a href="https://degenerateconic.com/near-rectilinear-halo-orbits.html">Near Rectilinear Halo Orbits</a>, July 31, 2022 [degenerateconic.com]</li>
+<li><a href="https://gitlab.com/qr_mumps/qr_mumps">qr_mumps</a> -- a software package for the solution of sparse, linear
+  systems on multicore computers.</li>
+</ul>
+<h3>Reference</h3>
+<ul>
+<li>J. Williams, D. E. Lee, R. J. Whitley, K. A. Bokelmann, D. C. Davis, C. F. Berry, "<a href="https://www.researchgate.net/publication/322526659_Targeting_Cislunar_Near_Rectilinear_Halo_Orbits_for_Human_Space_Exploration">Targeting Cislunar Near Rectilinear Halo Orbits for Human Space Exploration</a>", 27th AAS/AIAA Space Flight Mechanics Meeting, Feb. 2017</li>
+<li>J. Williams, R. D. Falck, and I. B. Beekman, "<a href="https://ntrs.nasa.gov/api/citations/20180000413/downloads/20180000413.pdf">Application of Modern Fortran to Spacecraft Trajectory Design and Optimization</a>", 2018 Space Flight Mechanics Meeting, 8–12 January 2018, AIAA 2018-145.</li>
+<li>E. M. Z. Spreen, "<a href="https://hammer.purdue.edu/articles/thesis/Trajectory_Design_and_Targeting_For_Applications_to_the_Exploration_Program_in_Cislunar_Space/14445717">Trajectory Design and Targeting For Applications to the Exploration Program in Cislunar Space</a>", PhD Dissertation, Purdue University School of Aeronautics and Astronautics, May 2021</li>
+</ul>
+        </div>
+          <div class="col-md-4">
+            <div class="card card-body bg-light">
+              <h2 class="card-title">Developer Info</h2>
+              <h4 class="card-text">Jacob Williams</h4>
+              <p class="card-text"></p>
+                <div class="text-center"><div class="btn-group" role="group">
+                    
+                    <a class="btn btn-lg btn-primary" href="https://github.com/jacobwilliams"><i class="fa fa-github fa-lg"></i></a>
+                    
+                    
+                    
+                    
+                    
+                    
+                </div></div>
+            </div>
+          </div>
+      </div>
+        <div class="row">
+          <hr>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Source Files</h3>
+              <ul><li><a href='sourcefile/config_file_module.f90.html'>config_file_module.f90</a></li><li><a href='sourcefile/halo_kinds_module.f90.html'>halo_kinds_module.F90</a></li><li><a href='sourcefile/halo_module.f90.html'>halo_module.F90</a></li><li><a href='sourcefile/halo_utilities_module.f90.html'>halo_utilities_module.f90</a></li><li><a href='sourcefile/parameters_module.f90.html'>parameters_module.f90</a></li><li><a href='sourcefile/splined_ephemeris_module.f90.html'>splined_ephemeris_module.f90</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/files.html"><em>All source files&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Modules</h3>
+              <ul><li><a href='module/config_file_module.html'>config_file_module</a></li><li><a href='module/halo_kinds_module.html'>halo_kinds_module</a></li><li><a href='module/halo_module.html'>halo_module</a></li><li><a href='module/halo_utilities_module.html'>halo_utilities_module</a></li><li><a href='module/parameters_module.html'>parameters_module</a></li><li><a href='module/splined_ephemeris_module.html'>splined_ephemeris_module</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/modules.html"><em>All modules&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Procedures</h3>
+              <ul><li><a href='proc/add_point_to_trajectory.html'>add_point_to_trajectory</a></li><li><a href='proc/allocate_body_eph.html'>allocate_body_eph</a></li><li><a href='proc/apparent_position.html'>apparent_position</a></li><li><a href='proc/ballistic_derivs.html'>ballistic_derivs</a></li><li><a href='proc/cache.html'>cache</a></li><li><a href='proc/close_config_file.html'>close_config_file</a></li><li><a href='proc/compute_rdot.html'>compute_rdot</a></li><li><a href='proc/compute_rdot_vecs.html'>compute_rdot_vecs</a></li><li><a href='proc/constraint_violations.html'>constraint_violations</a></li><li><a href='proc/cubic_shadow_model.html'>cubic_shadow_model</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/procedures.html"><em>All procedures&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3">
+            <div>
+              <h3>Derived Types</h3>
+              <ul><li><a href='type/body_eph.html'>body_eph</a></li><li><a href='type/body_eph_interface.html'>body_eph_interface</a></li><li><a href='type/config_file.html'>config_file</a></li><li><a href='type/jpl_ephemeris_splined.html'>jpl_ephemeris_splined</a></li><li><a href='type/mission_type.html'>mission_type</a></li><li><a href='type/my_solver_type.html'>my_solver_type</a></li><li><a href='type/patch_point.html'>patch_point</a></li><li><a href='type/segment.html'>segment</a></li><li><a href='type/segment_data.html'>segment_data</a></li><li><a href='type/trajectory.html'>trajectory</a></li></ul>
+            </div>
+            <div>
+              <ul>
+                <li><a href="./lists/types.html"><em>All derived types&hellip;</em></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
