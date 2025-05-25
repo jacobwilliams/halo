@@ -35,7 +35,7 @@ PYTHON_DIR = os.path.dirname(__file__)  # directory containing this script and o
 # things to test:
 save_as_html = True
 plot_starmap = False
-subplot_test = True
+# subplot_test = True
 link_views = False # for subplot_test
 center_camera_on_body = False
 
@@ -374,21 +374,7 @@ def read_trajectory_solution_file(filename : str, traj : int = 1):
 
 ##########################################################################################################
 
-if __name__ == "__main__":
-
-    # the first argument in the file to plot (can be the .txt or .json output file)
-    #
-    # examples:
-    # file_to_plot = '../100-rev-solution/solution_20220704131413_L2_S_NREVS=100.txt'
-    # file_to_plot = '../solution_20220704131413_L2_S_NREVS=10.txt'
-    # file_to_plot = '../solution_20220704131413_L2_S_NREVS=5.txt'
-    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=100.txt'
-    # file_to_plot = '../solution_20220627172948_L2_S_NREVS=100.txt'  # 100 rev with no eclipses
-    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=20.txt'
-    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=100.txt'
-    # file_to_plot = '../solution_20240101120000_L2_S_NREVS=100.txt'
-
-    file_to_plot = sys.argv[1]
+def get_pyvista_plotter(file_to_plot: str, p = None, subplot_test = False):
 
     if subplot_test:
         n_plots=3
@@ -399,7 +385,8 @@ if __name__ == "__main__":
 
         if iplot==0:
             # rotating plot
-            p = pv.Plotter(notebook=False, shape=(1, n_plots))
+            if p is None:
+                p = pv.Plotter(notebook=False, shape=(1, n_plots))
             p.subplot(0, 0)
             # p.add_text('Moon Texturemap', name='banner1', position='upper_left', color=font_color)
             # plot_body( p, name = 'moon', r = 1737.4, texturemap = os.path.join(PYTHON_DIR,'lroc_color_poles_1k.jpg') )
@@ -503,6 +490,26 @@ if __name__ == "__main__":
         # note: background is white here, so would need to change the fonts above to black
         html_filename = os.path.splitext(file_to_plot)[0] + '.html'
         p.export_html(html_filename)
+
+    return p
+
+if __name__ == "__main__":
+
+    # the first argument in the file to plot (can be the .txt or .json output file)
+    #
+    # examples:
+    # file_to_plot = '../100-rev-solution/solution_20220704131413_L2_S_NREVS=100.txt'
+    # file_to_plot = '../solution_20220704131413_L2_S_NREVS=10.txt'
+    # file_to_plot = '../solution_20220704131413_L2_S_NREVS=5.txt'
+    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=100.txt'
+    # file_to_plot = '../solution_20220627172948_L2_S_NREVS=100.txt'  # 100 rev with no eclipses
+    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=20.txt'
+    # file_to_plot = '../solution_20220704131415_L2_S_NREVS=100.txt'
+    # file_to_plot = '../solution_20240101120000_L2_S_NREVS=100.txt'
+
+    file_to_plot = sys.argv[1]
+
+    p = get_pyvista_plotter(file_to_plot, subplot_test=True)
 
     p.show()
 
