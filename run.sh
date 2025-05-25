@@ -15,6 +15,7 @@ shopt -s expand_aliases
 export PYTHON_DIR=$PWD/python
 export CONDA_ENV_DIR=$PYTHON_DIR/env
 export HALO_CONFIG_FILE=examples/example_sparse.json
+# export HALO_CONFIG_FILE=examples/example.json
 
 # conda garbage:
 CONDA_BASE=$(conda info --base)
