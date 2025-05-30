@@ -1,0 +1,718 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>get_problem_arrays &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>get_problem_arrays
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.1% of total for procedures.">75 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">get_problem_arrays</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/get_problem_arrays.html#src">get_problem_arrays</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine get_problem_arrays(me, x, f)  
+</h2>
+    
+
+    <p>Get the arrays for the problem</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~8"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>opt var vector [scaled]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>constraint violations</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~get_problem_arrays~~CallsGraph Pages: 1 -->
+<svg id="procget_problem_arraysCallsGraph" width="328pt" height="74pt"
+ viewBox="0.00 0.00 328.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~get_problem_arrays~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70)">
+<title>proc~~get_problem_arrays~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-70 324,-70 324,4 -4,4"/>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~get_problem_arrays~~CallsGraph_node1" class="node">
+<title>proc~get_problem_arrays</title>
+<polygon fill="none" stroke="black" points="197,-45 0,-45 0,-21 197,-21 197,-45"/>
+<text text-anchor="middle" x="98.5" y="-30.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%get_problem_arrays</text>
+</g>
+<!-- fill_vector -->
+<g id="proc~~get_problem_arrays~~CallsGraph_node2" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="308.5,-66 244.5,-66 244.5,-42 308.5,-42 308.5,-66"/>
+<text text-anchor="middle" x="276.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~get_problem_arrays~~CallsGraph_edge1" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M197.02,-44.64C210.14,-46.2 222.97,-47.73 234.33,-49.09"/>
+<polygon fill="#000000" stroke="#000000" points="233.97,-52.57 244.32,-50.28 234.8,-45.62 233.97,-52.57"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~get_problem_arrays~~CallsGraph_node3" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~get_problem_arrays~~CallsGraph_node3"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="320,-24 233,-24 233,0 320,0 320,-24"/>
+<text text-anchor="middle" x="276.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~get_problem_arrays~~CallsGraph_edge2" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M197.02,-21.36C205.83,-20.31 214.52,-19.28 222.71,-18.3"/>
+<polygon fill="#000000" stroke="#000000" points="223.29,-21.75 232.8,-17.09 222.46,-14.8 223.29,-21.75"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~get_problem_arrays~~CalledByGraph Pages: 1 -->
+<svg id="procget_problem_arraysCalledByGraph" width="641pt" height="87pt"
+ viewBox="0.00 0.00 641.00 86.79" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~get_problem_arrays~~CalledByGraph" class="graph" transform="scale(0.76 0.76) rotate(0) translate(4 110)">
+<title>proc~~get_problem_arrays~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-110 838,-110 838,4 -4,4"/>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node1" class="node">
+<title>proc~get_problem_arrays</title>
+<polygon fill="none" stroke="black" points="834,-66 637,-66 637,-42 834,-42 834,-66"/>
+<text text-anchor="middle" x="735.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%get_problem_arrays</text>
+</g>
+<!-- proc~constraint_violations -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node2" class="node">
+<title>proc~constraint_violations</title>
+<g id="a_proc~~get_problem_arrays~~CalledByGraph_node2"><a xlink:href="../proc/constraint_violations.html" xlink:title="mission_type%constraint_violations">
+<polygon fill="#d9534f" stroke="#d9534f" points="599.5,-106 398.5,-106 398.5,-82 599.5,-82 599.5,-106"/>
+<text text-anchor="middle" x="499" y="-91.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%constraint_violations</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge1" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M570.36,-82C596.67,-77.51 626.76,-72.38 653.92,-67.74"/>
+<polygon fill="#000000" stroke="#000000" points="654.52,-71.19 663.79,-66.06 653.34,-64.29 654.52,-71.19"/>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node3" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~get_problem_arrays~~CalledByGraph_node3"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="601,-25 397,-25 397,-1 601,-1 601,-25"/>
+<text text-anchor="middle" x="499" y="-10.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge2" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M568.77,-25.02C595.98,-29.78 627.4,-35.28 655.53,-40.19"/>
+<polygon fill="#000000" stroke="#000000" points="655.27,-43.7 665.73,-41.98 656.48,-36.81 655.27,-43.7"/>
+</g>
+<!-- proc~print_constraint_defects -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node4" class="node">
+<title>proc~print_constraint_defects</title>
+<g id="a_proc~~get_problem_arrays~~CalledByGraph_node4"><a xlink:href="../proc/print_constraint_defects.html" xlink:title="mission_type%print_constraint_defects">
+<polygon fill="#d9534f" stroke="#d9534f" points="361,-66 142,-66 142,-42 361,-42 361,-66"/>
+<text text-anchor="middle" x="251.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%print_constraint_defects</text>
+</a>
+</g>
+</g>
+<!-- proc~print_constraint_defects&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge3" class="edge">
+<title>proc~print_constraint_defects&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M361.27,-54C440.46,-54 547.23,-54 626.29,-54"/>
+<polygon fill="#000000" stroke="#000000" points="626.76,-57.5 636.76,-54 626.76,-50.5 626.76,-57.5"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node5" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~get_problem_arrays~~CalledByGraph_node5"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="106,-66 0,-66 0,-42 106,-42 106,-66"/>
+<text text-anchor="middle" x="53" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~constraint_violations -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge4" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M97.56,-66.04C111.64,-69.49 127.39,-72.88 142,-75 223.88,-86.86 317.32,-91.51 387.92,-93.25"/>
+<polygon fill="#000000" stroke="#000000" points="388.09,-96.76 398.16,-93.49 388.25,-89.76 388.09,-96.76"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~print_constraint_defects -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge6" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~print_constraint_defects</title>
+<path fill="none" stroke="#000000" d="M106.14,-54C114.24,-54 122.87,-54 131.74,-54"/>
+<polygon fill="#000000" stroke="#000000" points="131.84,-57.5 141.84,-54 131.84,-50.5 131.84,-57.5"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_node6" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~get_problem_arrays~~CalledByGraph_node6"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="356,-24 147,-24 147,0 356,0 356,-24"/>
+<text text-anchor="middle" x="251.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge7" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M102.79,-41.96C115.53,-38.93 129.26,-35.75 142,-33 152.95,-30.63 164.55,-28.26 175.94,-25.99"/>
+<polygon fill="#000000" stroke="#000000" points="176.73,-29.4 185.86,-24.04 175.37,-22.54 176.73,-29.4"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~get_problem_arrays~~CalledByGraph_edge5" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M356.26,-12.42C366.37,-12.46 376.65,-12.51 386.83,-12.55"/>
+<polygon fill="#000000" stroke="#000000" points="386.95,-16.05 396.96,-12.59 386.98,-9.05 386.95,-16.05"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocget_problem_arraysCalledByGraph = svgPanZoom('#procget_problem_arraysCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">get_problem_arrays</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="c">!! opt var vector [scaled]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="c">!! constraint violations</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="w">          </span><span class="c">!! counter for index in `x`</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irev</span><span class="w">       </span><span class="c">!! counter for number of revs</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">       </span><span class="c">!! segment number counter</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rdot</span><span class="w">      </span><span class="c">!! initial d(rmag)/dt (km/s) in moon-centered rotating frame</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+
+<span class="k">        </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="nb">huge</span><span class="p">(</span><span class="mf">1.0_wp</span><span class="p">)</span><span class="w"> </span><span class="c">! just in case we miss one</span>
+
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">! initialize the index. will be updated by fill_vector</span>
+<span class="w">        </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">do </span><span class="n">irev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">irev</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">                </span><span class="c">! the first one has an extra opt point at the initial periapsis passage</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">fix_initial_time</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                    </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_initial_r</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">(</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="c">! v only</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="c">! r,v</span>
+<span class="w">                </span><span class="k">end if</span>
+
+<span class="k">                call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">2</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">2</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">4</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">4</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">6</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">6</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_ry_at_end_of_rev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end if</span>
+
+<span class="w">                </span><span class="c">! for next rev:</span>
+<span class="w">                </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span>
+
+<span class="w">            </span><span class="k">else</span>
+
+<span class="k">                call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">2</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">2</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">4</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">4</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">6</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">6</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_ry_at_end_of_rev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">irev</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">elseif</span><span class="w"> </span><span class="p">(</span><span class="n">irev</span><span class="o">==</span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">fix_final_ry_and_vx</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="k">                    call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end if</span>
+
+<span class="w">                </span><span class="c">! for next rev:</span>
+<span class="w">                </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span>
+
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">        end do</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="nb">huge</span><span class="p">(</span><span class="mf">1.0_wp</span><span class="p">)))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            error stop</span><span class="w"> </span><span class="s1">&#39;error: not all x values were set&#39;</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="w">        </span><span class="c">! scale the x vector:</span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span>
+
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">f</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">        </span><span class="c">! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ... ]</span>
+
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="k">do </span><span class="n">irev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span>
+
+<span class="w">            </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">2</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">3</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">4</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">5</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">6</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">7</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">8</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
+
+<span class="w">            </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span>
+
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">constrain_initial_rdot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">rdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compute_rdot</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">fill_vector</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">rdot</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w">  </span><span class="c">! last one is the rdot=0 constraint</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fscale</span><span class="p">))</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error: f and fscale are not the same size&#39;</span>
+
+<span class="w">        </span><span class="c">!scale the f vector:</span>
+<span class="w">        </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">fscale</span>
+
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    end subroutine </span><span class="n">get_problem_arrays</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

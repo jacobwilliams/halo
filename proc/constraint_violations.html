@@ -1,0 +1,780 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>constraint_violations &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>constraint_violations
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.7% of total for procedures.">16 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">constraint_violations</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/constraint_violations.html#src">constraint_violations</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine constraint_violations(me, x, f, funcs_to_compute)  
+</h2>
+    
+
+    <p>Computes the constraint violation vector for the mission.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~22"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~11"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>opt var vector for the mission [n]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>constraint violation vector for the mission [m]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-funcs_to_compute~2"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>funcs_to_compute</strong></td>
+            <td>
+                <p>the indices of f to compute</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~constraint_violations~~CallsGraph Pages: 1 -->
+<svg id="procconstraint_violationsCallsGraph" width="641pt" height="173pt"
+ viewBox="0.00 0.00 641.00 173.32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~constraint_violations~~CallsGraph" class="graph" transform="scale(0.72 0.72) rotate(0) translate(4 238)">
+<title>proc~~constraint_violations~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-238 891,-238 891,4 -4,4"/>
+<!-- proc~constraint_violations -->
+<g id="proc~~constraint_violations~~CallsGraph_node1" class="node">
+<title>proc~constraint_violations</title>
+<polygon fill="none" stroke="black" points="201,-118 0,-118 0,-94 201,-94 201,-118"/>
+<text text-anchor="middle" x="100.5" y="-103.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%constraint_violations</text>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~constraint_violations~~CallsGraph_node2" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node2"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="434,-192 237,-192 237,-168 434,-168 434,-192"/>
+<text text-anchor="middle" x="335.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~constraint_violations~~CallsGraph_edge1" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M139.45,-118.05C179.65,-130.82 243.2,-151 286.77,-164.84"/>
+<polygon fill="#000000" stroke="#000000" points="285.97,-168.26 296.56,-167.95 288.09,-161.59 285.97,-168.26"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~constraint_violations~~CallsGraph_node3" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node3"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="657.5,-150 482.5,-150 482.5,-126 657.5,-126 657.5,-150"/>
+<text text-anchor="middle" x="570" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~propagate_segment -->
+<g id="proc~~constraint_violations~~CallsGraph_edge2" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M201.22,-112.83C281.32,-118.31 393.15,-125.96 472.42,-131.39"/>
+<polygon fill="#000000" stroke="#000000" points="472.19,-134.88 482.4,-132.07 472.66,-127.9 472.19,-134.88"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~constraint_violations~~CallsGraph_node4" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node4"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="431.5,-87 239.5,-87 239.5,-63 431.5,-63 431.5,-87"/>
+<text text-anchor="middle" x="335.5" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~constraint_violations~~CallsGraph_edge3" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M191.92,-93.97C205.71,-92.14 220.02,-90.23 234.01,-88.37"/>
+<polygon fill="#000000" stroke="#000000" points="234.68,-91.81 244.13,-87.02 233.76,-84.87 234.68,-91.81"/>
+</g>
+<!-- proc~segs_to_propagate -->
+<g id="proc~~constraint_violations~~CallsGraph_node5" class="node">
+<title>proc~segs_to_propagate</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node5"><a xlink:href="../proc/segs_to_propagate.html" xlink:title="mission_type%segs_to_propagate">
+<polygon fill="#d9534f" stroke="#d9534f" points="431,-35 240,-35 240,-11 431,-11 431,-35"/>
+<text text-anchor="middle" x="335.5" y="-20.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%segs_to_propagate</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~segs_to_propagate -->
+<g id="proc~~constraint_violations~~CallsGraph_edge4" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~segs_to_propagate</title>
+<path fill="none" stroke="#000000" d="M131.45,-93.93C158.78,-83.05 200.38,-66.84 237,-54 252.4,-48.6 269.3,-43.09 284.65,-38.23"/>
+<polygon fill="#000000" stroke="#000000" points="285.99,-41.48 294.48,-35.14 283.89,-34.8 285.99,-41.48"/>
+</g>
+<!-- fill_vector -->
+<g id="proc~~constraint_violations~~CallsGraph_node7" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="602,-234 538,-234 538,-210 602,-210 602,-234"/>
+<text text-anchor="middle" x="570" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~constraint_violations~~CallsGraph_edge5" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M403.13,-192.04C443.26,-199.28 493.1,-208.29 527.62,-214.52"/>
+<polygon fill="#000000" stroke="#000000" points="527.35,-218.03 537.81,-216.37 528.59,-211.14 527.35,-218.03"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~constraint_violations~~CallsGraph_node11" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node11"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="613.5,-192 526.5,-192 526.5,-168 613.5,-168 613.5,-192"/>
+<text text-anchor="middle" x="570" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~constraint_violations~~CallsGraph_edge6" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M434.09,-180C462.25,-180 491.92,-180 516.23,-180"/>
+<polygon fill="#000000" stroke="#000000" points="516.31,-183.5 526.31,-180 516.31,-176.5 516.31,-183.5"/>
+</g>
+<!-- first_call -->
+<g id="proc~~constraint_violations~~CallsGraph_node8" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="825,-234 768,-234 768,-210 825,-210 825,-234"/>
+<text text-anchor="middle" x="796.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~constraint_violations~~CallsGraph_edge7" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M650.85,-150.05C657.55,-152.51 664.03,-155.46 670,-159 691.14,-171.55 684.99,-188.23 706,-201 721.58,-210.48 741.09,-215.68 757.91,-218.53"/>
+<polygon fill="#000000" stroke="#000000" points="757.57,-222.02 767.98,-220.02 758.6,-215.09 757.57,-222.02"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_node9" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="830,-108 763,-108 763,-84 830,-84 830,-108"/>
+<text text-anchor="middle" x="796.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_edge8" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M635.33,-125.96C673.14,-118.89 719.88,-110.15 753.09,-103.93"/>
+<polygon fill="#000000" stroke="#000000" points="753.75,-107.37 762.94,-102.09 752.46,-100.49 753.75,-107.37"/>
+</g>
+<!-- integrate -->
+<g id="proc~~constraint_violations~~CallsGraph_node10" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="827,-192 766,-192 766,-168 827,-168 827,-192"/>
+<text text-anchor="middle" x="796.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~constraint_violations~~CallsGraph_edge9" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M635.33,-150.04C674.32,-157.33 722.79,-166.4 756.14,-172.64"/>
+<polygon fill="#000000" stroke="#000000" points="755.51,-176.08 765.98,-174.48 756.8,-169.2 755.51,-176.08"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~constraint_violations~~CallsGraph_node14" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node14"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="887,-150 706,-150 706,-126 887,-126 887,-150"/>
+<text text-anchor="middle" x="796.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~constraint_violations~~CallsGraph_edge10" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M657.8,-138C670.26,-138 683.16,-138 695.85,-138"/>
+<polygon fill="#000000" stroke="#000000" points="695.97,-141.5 705.97,-138 695.97,-134.5 695.97,-141.5"/>
+</g>
+<!-- transform -->
+<g id="proc~~constraint_violations~~CallsGraph_node15" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="829,-66 764,-66 764,-42 829,-42 829,-66"/>
+<text text-anchor="middle" x="796.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~constraint_violations~~CallsGraph_edge11" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M650.85,-125.95C657.55,-123.49 664.03,-120.54 670,-117 691.14,-104.45 684.99,-87.77 706,-75 720.32,-66.29 737.95,-61.2 753.76,-58.21"/>
+<polygon fill="#000000" stroke="#000000" points="754.55,-61.63 763.84,-56.54 753.4,-54.72 754.55,-61.63"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_node16" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="870,-24 723,-24 723,0 870,0 870,-24"/>
+<text text-anchor="middle" x="796.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_edge12" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M656.24,-125.86C661.15,-123.38 665.79,-120.46 670,-117 701.39,-91.23 674.89,-59.11 706,-33 708.43,-30.96 711.02,-29.11 713.73,-27.44"/>
+<polygon fill="#000000" stroke="#000000" points="715.56,-30.43 722.76,-22.66 712.28,-24.25 715.56,-30.43"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~constraint_violations~~CallsGraph_node6" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="614,-108 526,-108 526,-84 614,-84 614,-108"/>
+<text text-anchor="middle" x="570" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~constraint_violations~~CallsGraph_edge13" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M431.74,-83.6C460.51,-86.2 491.05,-88.96 516,-91.21"/>
+<polygon fill="#000000" stroke="#000000" points="515.7,-94.7 525.98,-92.11 516.33,-87.73 515.7,-94.7"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~constraint_violations~~CallsGraph_node12" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node12"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="670,-24 470,-24 470,0 670,0 670,-24"/>
+<text text-anchor="middle" x="570" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~constraint_violations~~CallsGraph_edge14" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M374.66,-62.9C412.4,-50.94 465.21,-34.26 470,-33 479.02,-30.63 488.55,-28.34 498,-26.2"/>
+<polygon fill="#000000" stroke="#000000" points="498.78,-29.61 507.79,-24.03 497.27,-22.78 498.78,-29.61"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~constraint_violations~~CallsGraph_node13" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~constraint_violations~~CallsGraph_node13"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="657,-66 483,-66 483,-42 657,-42 657,-66"/>
+<text text-anchor="middle" x="570" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~constraint_violations~~CallsGraph_edge15" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M431.74,-66.4C445.23,-65.18 459.11,-63.93 472.62,-62.71"/>
+<polygon fill="#000000" stroke="#000000" points="473.23,-66.16 482.87,-61.78 472.6,-59.19 473.23,-66.16"/>
+</g>
+<!-- proc~segs_to_propagate&#45;&gt;proc~define_problem_size -->
+<g id="proc~~constraint_violations~~CallsGraph_edge16" class="edge">
+<title>proc~segs_to_propagate&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M431.07,-18.53C440.58,-18.08 450.3,-17.62 459.95,-17.16"/>
+<polygon fill="#000000" stroke="#000000" points="460.15,-20.65 469.98,-16.68 459.82,-13.66 460.15,-20.65"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_edge17" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M635.33,-66.04C673.14,-73.11 719.88,-81.85 753.09,-88.07"/>
+<polygon fill="#000000" stroke="#000000" points="752.46,-91.51 762.94,-89.91 753.75,-84.63 752.46,-91.51"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~constraint_violations~~CallsGraph_edge18" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M657.16,-54C690.23,-54 726.51,-54 753.61,-54"/>
+<polygon fill="#000000" stroke="#000000" points="753.89,-57.5 763.89,-54 753.89,-50.5 753.89,-57.5"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~constraint_violations~~CallsGraph_edge19" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M635.33,-41.96C662.1,-36.96 693.35,-31.11 721.11,-25.92"/>
+<polygon fill="#000000" stroke="#000000" points="721.97,-29.32 731.16,-24.04 720.68,-22.44 721.97,-29.32"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocconstraint_violationsCallsGraph = svgPanZoom('#procconstraint_violationsCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~constraint_violations~~CalledByGraph Pages: 1 -->
+<svg id="procconstraint_violationsCalledByGraph" width="351pt" height="32pt"
+ viewBox="0.00 0.00 351.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~constraint_violations~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~constraint_violations~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 347,-28 347,4 -4,4"/>
+<!-- proc~constraint_violations -->
+<g id="proc~~constraint_violations~~CalledByGraph_node1" class="node">
+<title>proc~constraint_violations</title>
+<polygon fill="none" stroke="black" points="343,-24 142,-24 142,0 343,0 343,-24"/>
+<text text-anchor="middle" x="242.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%constraint_violations</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~constraint_violations~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~constraint_violations~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="106,-24 0,-24 0,0 106,0 106,-24"/>
+<text text-anchor="middle" x="53" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~constraint_violations -->
+<g id="proc~~constraint_violations~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M106.23,-12C114.34,-12 122.97,-12 131.79,-12"/>
+<polygon fill="#000000" stroke="#000000" points="131.82,-15.5 141.82,-12 131.82,-8.5 131.82,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">constraint_violations</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">funcs_to_compute</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">     </span><span class="c">!! opt var vector for the mission [n]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">f</span><span class="w">     </span><span class="c">!! constraint violation vector for the mission [m]</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">funcs_to_compute</span><span class="w"> </span><span class="c">!! the indices of f to compute</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="w">  </span><span class="c">!! counters</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">isegs</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">))</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error: segs is not allocated&#39;</span>
+
+<span class="w">    </span><span class="c">! first extract data from the opt var vector</span>
+<span class="w">    </span><span class="c">! and put it into all the segments:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">! get the list of segments that needs to be propagated:</span>
+<span class="w">    </span><span class="c">! this depends on the functions that are being computed,</span>
+<span class="w">    </span><span class="c">! and the sparsity pattern</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs_to_propagate</span><span class="p">(</span><span class="n">funcs_to_compute</span><span class="p">,</span><span class="n">isegs</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">!====================================</span>
+<span class="w">    </span><span class="c">! now propagate the segments:</span>
+<span class="c">!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">isegs</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">isegs</span><span class="p">(</span><span class="n">i</span><span class="p">))%</span><span class="n">propagate</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="c">!$OMP END PARALLEL DO</span>
+<span class="w">    </span><span class="c">!====================================</span>
+
+<span class="w">    </span><span class="c">! now that all the segments are propagated, we</span>
+<span class="w">    </span><span class="c">! compute the function (constraint violations for the</span>
+<span class="w">    </span><span class="c">! final states of segment segment)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">get_problem_arrays</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">constraint_violations</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

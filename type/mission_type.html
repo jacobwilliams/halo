@@ -1,0 +1,3451 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>mission_type &ndash; halo </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>mission_type
+      <small>Derived Type</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p>42.8% of total for derived types.</p>Including implementation: 1251 statements, 62.0% of total for derived types.">80 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">mission_type</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/mission_type.html#variable-initial_guess_from_file">initial_guess_from_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-use_splined_ephemeris">use_splined_ephemeris</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-dt_spline_sec">dt_spline_sec</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-pointmass_central_body~2">pointmass_central_body</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-grav~2">grav</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-eph~2">eph</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-moon_pa~2">moon_pa</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-include_pointmass_earth~2">include_pointmass_earth</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-include_pointmass_sun~2">include_pointmass_sun</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-include_pointmass_jupiter~2">include_pointmass_jupiter</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-segs">segs</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-xscale">xscale</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-dpert_">dpert_</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-fscale">fscale</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-xname">xname</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-n_or_s">N_or_S</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-l1_or_l2">L1_or_L2</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-solve">solve</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_plots">generate_plots</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_trajectory_files">generate_trajectory_files</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_json_trajectory_file">generate_json_trajectory_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_guess_and_solution_files">generate_guess_and_solution_files</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_kernel">generate_kernel</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_defect_file">generate_defect_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_eclipse_files">generate_eclipse_files</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-run_pyvista_script">run_pyvista_script</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-generate_rp_ra_file">generate_rp_ra_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-r_eclipse_bubble">r_eclipse_bubble</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-eclipse_dt_step">eclipse_dt_step</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-eclipse_filetype">eclipse_filetype</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-epoch_mode">epoch_mode</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-year">year</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-month">month</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-day">day</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-hour">hour</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-minute">minute</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-sec">sec</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-et_ref~2">et_ref</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-n_revs">n_revs</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-rtol">rtol</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-atol">atol</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-nlesolver_tol">nlesolver_tol</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-initial_r">initial_r</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-ephemeris_file">ephemeris_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-gravfile">gravfile</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-moon_pa_file">moon_pa_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-patch_point_file">patch_point_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-patch_point_file_is_periapsis">patch_point_file_is_periapsis</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-periapsis">periapsis</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-quarter">quarter</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-apoapsis">apoapsis</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-period">period</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-period8">period8</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_time">fix_initial_time</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-fix_initial_r">fix_initial_r</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-fix_ry_at_end_of_rev">fix_ry_at_end_of_rev</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-fix_final_ry_and_vx">fix_final_ry_and_vx</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-constrain_initial_rdot">constrain_initial_rdot</a>
+            <a class="list-group-item" href="../type/mission_type.html#variable-solver_mode">solver_mode</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-init">init</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-plot">plot</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-export_trajectory_json_file">export_trajectory_json_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-write_optvars_to_file">write_optvars_to_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-constraint_violations">constraint_violations</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-print_constraint_defects">print_constraint_defects</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-generate_eclipse_data">generate_eclipse_data</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-get_problem_arrays">get_problem_arrays</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-put_x_in_segments">put_x_in_segments</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-get_x_from_json_file">get_x_from_json_file</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-get_scales_from_segs">get_scales_from_segs</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-segs_to_propagate">segs_to_propagate</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-get_sparsity_pattern">get_sparsity_pattern</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-define_problem_size">define_problem_size</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-get_case_name">get_case_name</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-generate_patch_points">generate_patch_points</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-update_epoch">update_epoch</a>
+            <a class="list-group-item" href="../type/mission_type.html#boundprocedure-export_rp_ra_json_file">export_rp_ra_json_file</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../type/mission_type.html#src">mission_type</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2 id="type-def-statement">
+        type, public, extends(numdiff_type) :: mission_type</h2>
+    <p>the mission [this is a <code>numdiff_type</code> for
+organizational purposes.... rethink this maybe ...</p>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherits</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: type~~mission_type~~InheritsGraph Pages: 1 -->
+<svg id="typemission_typeInheritsGraph" width="641pt" height="353pt"
+ viewBox="0.00 0.00 641.00 353.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~mission_type~~InheritsGraph" class="graph" transform="scale(0.87 0.87) rotate(0) translate(4 401)">
+<title>type~~mission_type~~InheritsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-401 731,-401 731,4 -4,4"/>
+<!-- type~mission_type -->
+<g id="type~~mission_type~~InheritsGraph_node1" class="node">
+<title>type~mission_type</title>
+<polygon fill="none" stroke="black" points="727,-159 645,-159 645,-135 727,-135 727,-159"/>
+<text text-anchor="middle" x="686" y="-144.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type</text>
+</g>
+<!-- geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_node2" class="node">
+<title>geopotential_model_pines</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="153,-363 0,-363 0,-339 153,-339 153,-363"/>
+<text text-anchor="middle" x="76.5" y="-348.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">geopotential_model_pines</text>
+</g>
+<!-- type~mission_type&#45;&gt;geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_edge1" class="edge">
+<title>type~mission_type&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-340C421.56,-418.47 225.32,-387.27 131.47,-365.42"/>
+<polygon fill="#000000" stroke="#000000" points="132.17,-361.99 121.63,-363.07 130.55,-368.8 132.17,-361.99"/>
+<text text-anchor="middle" x="432" y="-389.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- jpl_ephemeris -->
+<g id="type~~mission_type~~InheritsGraph_node3" class="node">
+<title>jpl_ephemeris</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-309 32.5,-309 32.5,-285 120.5,-285 120.5,-309"/>
+<text text-anchor="middle" x="76.5" y="-294.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jpl_ephemeris</text>
+</g>
+<!-- type~mission_type&#45;&gt;jpl_ephemeris -->
+<g id="type~~mission_type~~InheritsGraph_edge2" class="edge">
+<title>type~mission_type&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M681.64,-159.09C670.98,-194.84 634.15,-300.03 560,-340"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-340C524.56,-358.03 510.82,-334.63 473,-331 350.64,-319.26 206.8,-307.38 130.8,-301.25"/>
+<polygon fill="#000000" stroke="#000000" points="130.79,-297.73 120.54,-300.42 130.23,-304.71 130.79,-297.73"/>
+<text text-anchor="middle" x="432" y="-333.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- moon_frame_interpolater -->
+<g id="type~~mission_type~~InheritsGraph_node4" class="node">
+<title>moon_frame_interpolater</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="151,-118 2,-118 2,-94 151,-94 151,-118"/>
+<text text-anchor="middle" x="76.5" y="-103.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">moon_frame_interpolater</text>
+</g>
+<!-- type~mission_type&#45;&gt;moon_frame_interpolater -->
+<g id="type~~mission_type~~InheritsGraph_edge3" class="edge">
+<title>type~mission_type&#45;&gt;moon_frame_interpolater</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-102C420.71,-64.94 253.2,-79.01 156.59,-92.55"/>
+<polygon fill="#000000" stroke="#000000" points="156.01,-89.1 146.61,-93.98 157,-96.02 156.01,-89.1"/>
+<text text-anchor="middle" x="432" y="-86.4" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- numdiff_type -->
+<g id="type~~mission_type~~InheritsGraph_node5" class="node">
+<title>numdiff_type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="473,-66 391,-66 391,-42 473,-42 473,-66"/>
+<text text-anchor="middle" x="432" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
+</g>
+<!-- type~mission_type&#45;&gt;numdiff_type -->
+<g id="type~~mission_type~~InheritsGraph_edge6" class="edge">
+<title>type~mission_type&#45;&gt;numdiff_type</title>
+<path fill="none" stroke="#000000" d="M655.63,-134.88C630.58,-124.92 593.4,-111.02 560,-102"/>
+<path fill="none" stroke="#000000" d="M558,-102C527.29,-93.71 493.7,-80.57 469.08,-70.13"/>
+<polygon fill="#000000" stroke="#000000" points="470.34,-66.87 459.77,-66.13 467.58,-73.3 470.34,-66.87"/>
+</g>
+<!-- type~patch_point -->
+<g id="type~~mission_type~~InheritsGraph_node6" class="node">
+<title>type~patch_point</title>
+<g id="a_type~~mission_type~~InheritsGraph_node6"><a xlink:href="../type/patch_point.html" xlink:title="patch_point">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="469.5,-24 394.5,-24 394.5,0 469.5,0 469.5,-24"/>
+<text text-anchor="middle" x="432" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~patch_point -->
+<g id="type~~mission_type~~InheritsGraph_edge5" class="edge">
+<title>type~mission_type&#45;&gt;type~patch_point</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M677.71,-134.76C667.98,-119.42 649.35,-93.28 627,-78 581.83,-47.11 520.9,-29.51 479.46,-20.39"/>
+<polygon fill="#000000" stroke="#000000" points="480.14,-16.95 469.63,-18.3 478.68,-23.8 480.14,-16.95"/>
+<text text-anchor="middle" x="559" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
+</g>
+<!-- type~segment -->
+<g id="type~~mission_type~~InheritsGraph_node7" class="node">
+<title>type~segment</title>
+<g id="a_type~~mission_type~~InheritsGraph_node7"><a xlink:href="../type/segment.html" xlink:title="segment">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="461.5,-205 402.5,-205 402.5,-181 461.5,-181 461.5,-205"/>
+<text text-anchor="middle" x="432" y="-190.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~segment -->
+<g id="type~~mission_type~~InheritsGraph_edge4" class="edge">
+<title>type~mission_type&#45;&gt;type~segment</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M644.79,-154.34C597.25,-163.02 518.68,-177.36 471.77,-185.92"/>
+<polygon fill="#000000" stroke="#000000" points="470.91,-182.52 461.7,-187.76 472.17,-189.41 470.91,-182.52"/>
+<text text-anchor="middle" x="559" y="-183.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+</g>
+<!-- type~segment&#45;&gt;geopotential_model_pines -->
+<g id="type~~mission_type~~InheritsGraph_edge8" class="edge">
+<title>type~segment&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M425.14,-205.14C416.27,-222.23 397.79,-253.17 373,-270 336.67,-294.66 224.31,-321.2 149.09,-336.94"/>
+<polygon fill="#000000" stroke="#000000" points="148.27,-333.54 139.19,-338.99 149.69,-340.39 148.27,-333.54"/>
+<text text-anchor="middle" x="272" y="-333.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- type~segment&#45;&gt;jpl_ephemeris -->
+<g id="type~~mission_type~~InheritsGraph_edge9" class="edge">
+<title>type~segment&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M418.89,-205.35C407.94,-215.68 390.83,-229.85 373,-237 289.13,-270.61 258.66,-238.07 171,-260 150.85,-265.04 129.24,-273.39 111.87,-280.88"/>
+<polygon fill="#000000" stroke="#000000" points="110.43,-277.69 102.7,-284.92 113.26,-284.09 110.43,-277.69"/>
+<text text-anchor="middle" x="272" y="-262.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- type~segment&#45;&gt;moon_frame_interpolater -->
+<g id="type~~mission_type~~InheritsGraph_edge10" class="edge">
+<title>type~segment&#45;&gt;moon_frame_interpolater</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M420.91,-180.56C410.34,-168.5 392.58,-150.77 373,-142 354,-133.49 241.88,-121.43 161.37,-113.66"/>
+<polygon fill="#000000" stroke="#000000" points="161.51,-110.16 151.22,-112.69 160.85,-117.13 161.51,-110.16"/>
+<text text-anchor="middle" x="272" y="-144.4" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- ddeabm_class -->
+<g id="type~~mission_type~~InheritsGraph_node8" class="node">
+<title>ddeabm_class</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-205 32.5,-205 32.5,-181 120.5,-181 120.5,-205"/>
+<text text-anchor="middle" x="76.5" y="-190.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_class</text>
+</g>
+<!-- type~segment&#45;&gt;ddeabm_class -->
+<g id="type~~mission_type~~InheritsGraph_edge12" class="edge">
+<title>type~segment&#45;&gt;ddeabm_class</title>
+<path fill="none" stroke="#000000" d="M402.37,-193C343.27,-193 206.94,-193 131.01,-193"/>
+<polygon fill="#000000" stroke="#000000" points="130.71,-189.5 120.71,-193 130.71,-196.5 130.71,-189.5"/>
+</g>
+<!-- type~segment_data -->
+<g id="type~~mission_type~~InheritsGraph_node9" class="node">
+<title>type~segment_data</title>
+<g id="a_type~~mission_type~~InheritsGraph_node9"><a xlink:href="../type/segment_data.html" xlink:title="segment_data">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-163 32.5,-163 32.5,-139 120.5,-139 120.5,-163"/>
+<text text-anchor="middle" x="76.5" y="-148.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment_data</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~segment_data -->
+<g id="type~~mission_type~~InheritsGraph_edge7" class="edge">
+<title>type~segment&#45;&gt;type~segment_data</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M402.25,-185.21C392.97,-182.92 382.6,-180.61 373,-179 289.09,-164.97 190.52,-157.39 131.09,-153.78"/>
+<polygon fill="#000000" stroke="#000000" points="131,-150.27 120.82,-153.17 130.59,-157.25 131,-150.27"/>
+<text text-anchor="middle" x="272" y="-181.4" font-family="Helvetica,sans-Serif" font-size="9.50">data, cached_data</text>
+</g>
+<!-- type~trajectory -->
+<g id="type~~mission_type~~InheritsGraph_node10" class="node">
+<title>type~trajectory</title>
+<g id="a_type~~mission_type~~InheritsGraph_node10"><a xlink:href="../type/trajectory.html" xlink:title="trajectory">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="108.5,-247 44.5,-247 44.5,-223 108.5,-223 108.5,-247"/>
+<text text-anchor="middle" x="76.5" y="-232.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~trajectory -->
+<g id="type~~mission_type~~InheritsGraph_edge11" class="edge">
+<title>type~segment&#45;&gt;type~trajectory</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M402.46,-198.9C393.1,-200.7 382.63,-202.58 373,-204 325.06,-211.05 188.36,-224.44 118.98,-231.08"/>
+<polygon fill="#000000" stroke="#000000" points="118.47,-227.61 108.85,-232.04 119.13,-234.58 118.47,-227.61"/>
+<text text-anchor="middle" x="272" y="-227.4" font-family="Helvetica,sans-Serif" font-size="9.50">traj_inertial, traj_rotating, traj_se_rotating</text>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var pantypemission_typeInheritsGraph = svgPanZoom('#typemission_typeInheritsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="186pt" height="32pt"
+ viewBox="0.00 0.00 185.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 181.5,-28 181.5,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="177.5,-24 72.5,-24 72.5,0 177.5,0 177.5,-24"/>
+<text text-anchor="middle" x="125" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherited by</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: type~~mission_type~~InheritedByGraph Pages: 1 -->
+<svg id="typemission_typeInheritedByGraph" width="259pt" height="32pt"
+ viewBox="0.00 0.00 259.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~mission_type~~InheritedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>type~~mission_type~~InheritedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 255,-28 255,4 -4,4"/>
+<!-- type~mission_type -->
+<g id="type~~mission_type~~InheritedByGraph_node1" class="node">
+<title>type~mission_type</title>
+<polygon fill="none" stroke="black" points="82,-24 0,-24 0,0 82,0 82,-24"/>
+<text text-anchor="middle" x="41" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type</text>
+</g>
+<!-- type~my_solver_type -->
+<g id="type~~mission_type~~InheritedByGraph_node2" class="node">
+<title>type~my_solver_type</title>
+<g id="a_type~~mission_type~~InheritedByGraph_node2"><a xlink:href="../type/my_solver_type.html" xlink:title="my_solver_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="251,-24 156,-24 156,0 251,0 251,-24"/>
+<text text-anchor="middle" x="203.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type</text>
+</a>
+</g>
+</g>
+<!-- type~my_solver_type&#45;&gt;type~mission_type -->
+<g id="type~~mission_type~~InheritedByGraph_edge1" class="edge">
+<title>type~my_solver_type&#45;&gt;type~mission_type</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M155.65,-12C135.79,-12 112.61,-12 92.39,-12"/>
+<polygon fill="#000000" stroke="#000000" points="92.12,-8.5 82.12,-12 92.12,-15.5 92.12,-8.5"/>
+<text text-anchor="middle" x="119" y="-14.4" font-family="Helvetica,sans-Serif" font-size="9.50">mission</text>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="186pt" height="32pt"
+ viewBox="0.00 0.00 185.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 181.5,-28 181.5,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="177.5,-24 72.5,-24 72.5,0 177.5,0 177.5,-24"/>
+<text text-anchor="middle" x="125" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    <br>
+
+    <section>
+    <h2>Components</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-initial_guess_from_file"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>initial_guess_from_file</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>to read the initial guess from a JSOn file</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-use_splined_ephemeris"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>use_splined_ephemeris</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>if true, the ephemeris is splined</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dt_spline_sec"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dt_spline_sec</strong></td>
+<td> =</td>
+                <td>3600.0_wp</td>
+            <td>
+                <p>time step in seconds for spline step [1 hr]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pointmass_central_body~2"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pointmass_central_body</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>if true, the central body is a pointmass (moon).
+otherwise, the <code>grav</code> model is used.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-grav~2"></span>
+              type(geopotential_model_pines),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>grav</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>central body geopotential model [global]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eph~2"></span>
+              class(jpl_ephemeris),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>eph</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>the ephemeris [global]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-moon_pa~2"></span>
+              type(moon_frame_interpolater),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>moon_pa</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>the moon_pa frame interpolater [global]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_earth~2"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_earth</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>if true, earth is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_sun~2"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_sun</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>if true, sun is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_jupiter~2"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_jupiter</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>if true, jupiter is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-segs"></span>
+              type(<a href='segment.html'>segment</a>),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>segs</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>the list of segments</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xscale"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>xscale</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>opt var scale factors</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dpert_"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>dpert_</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>opt var dpert factors [rename because already in base class]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fscale"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>fscale</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>function scale factors</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xname"></span>
+              character(len=20),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>xname</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>opt var names</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_or_s"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>N_or_S</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>'N' or 'S'</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-l1_or_l2"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>L1_or_L2</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>'L1' or 'L2'</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-solve"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>solve</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>run the nle solver to solve the problem</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_plots"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_plots</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>to generate the python plots</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_trajectory_files"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_trajectory_files</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>to export the txt trajectory files.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_json_trajectory_file"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_json_trajectory_file</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>to export the JSON trajectory file for the solution
+(contains inertial and rotating data). This one is used
+by the PyVista python script for plotting</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_guess_and_solution_files"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_guess_and_solution_files</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>to export the json guess and solution files.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_kernel"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_kernel</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>to generate a spice kernel (bsp) of the solution
+[this requires the external mkspk SPICE tool]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_defect_file"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_defect_file</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>generate the file that shows the pos/vel
+constraint defects for the solution</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_eclipse_files"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_eclipse_files</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>generate the eclipse data file for the solution</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-run_pyvista_script"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>run_pyvista_script</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>run the pyvista script to generate the interacdtive 3d plot</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-generate_rp_ra_file"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>generate_rp_ra_file</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>to generate the rp_ra file</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-r_eclipse_bubble"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>r_eclipse_bubble</strong></td>
+<td> =</td>
+                <td>0.0_wp</td>
+            <td>
+                <p>radius of the "eclipse bubble" [km]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eclipse_dt_step"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>eclipse_dt_step</strong></td>
+<td> =</td>
+                <td>3600.0_wp</td>
+            <td>
+                <p>dense time step output for eclipse calculations in sec [1 hour]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eclipse_filetype"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>eclipse_filetype</strong></td>
+<td> =</td>
+                <td>1</td>
+            <td>
+                <p>type of eclipse file: 1=csv or 2=json</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-epoch_mode"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>epoch_mode</strong></td>
+<td> =</td>
+                <td>1</td>
+            <td>
+                <p>1 - calendar date was specified, 2 - ephemeris time was specified</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-year"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>year</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-month"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>month</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-day"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>day</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-hour"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>hour</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-minute"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>minute</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sec"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>sec</strong></td>
+<td> =</td>
+                <td>zero</td>
+            <td>
+                <p>epoch of first point (first periapsis crossing)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-et_ref~2"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et_ref</strong></td>
+<td> =</td>
+                <td>zero</td>
+            <td>
+                <p>ephemeris time reference epoch [sec]
+(all times relative to this).
+this is computed from the year,month,day,hour,minute,sec values
+if <code>epoch_mode=1</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n_revs"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_revs</strong></td>
+<td> =</td>
+                <td>10</td>
+            <td>
+                <p>Number of revs in the Halo.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rtol"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rtol</strong></td>
+<td> =</td>
+                <td>1.0e-12_wp</td>
+            <td>
+                <p>integrator rtol</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-atol"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>atol</strong></td>
+<td> =</td>
+                <td>1.0e-12_wp</td>
+            <td>
+                <p>integrator atol</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nlesolver_tol"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nlesolver_tol</strong></td>
+<td> =</td>
+                <td>1.0e-6_wp</td>
+            <td>
+                <p>nlesolver tol</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-initial_r"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>initial_r</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>if <code>fix_initial_r</code> is True, this can be used
+to specify the initial <code>r</code> (moon-centered earth-moon rotating frame)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ephemeris_file"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>ephemeris_file</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>the JPL ephemeris file to load</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-gravfile"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>gravfile</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>spherical harmonic gravity coeff file (Moon)
+example: 'data/grav/gggrx_0020pm_sha.tab'</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-moon_pa_file"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>moon_pa_file</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>file for moon_pa frame.
+example: <code>data/moon_pa_2000_2100.csv</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-patch_point_file"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>patch_point_file</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>Halo CR3BP patch point solution file
+example: 'data/L2_halos.json'</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-patch_point_file_is_periapsis"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>patch_point_file_is_periapsis</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>if the state in the patch point file are periapsis states
+(false means they are apoapsis states.
+the ones in L2_halos.json are apoapsis states)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-periapsis"></span>
+              type(<a href='patch_point.html'>patch_point</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>periapsis</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>Patchpoint Periapse State</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-quarter"></span>
+              type(<a href='patch_point.html'>patch_point</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>quarter</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>Patchpoint 1/4 Rev State</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-apoapsis"></span>
+              type(<a href='patch_point.html'>patch_point</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>apoapsis</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>Patchpoint 1/2 Rev State</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-period"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>period</strong></td>
+<td> =</td>
+                <td>0.0_wp</td>
+            <td>
+                <p>Halo period [days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-period8"></span>
+              real(kind=wp),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>period8</strong></td>
+<td> =</td>
+                <td>0.0_wp</td>
+            <td>
+                <p>1/8 of Halo period [days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fix_initial_time"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fix_initial_time</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>to fix the initial epoch in the mission</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fix_initial_r"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fix_initial_r</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>fix the initial periapsis position vector (x,y,z)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fix_ry_at_end_of_rev"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fix_ry_at_end_of_rev</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+                <p>fix ry at the end of the specified rev (at periapsis)
+not used if <code>&lt;= 0</code>.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fix_final_ry_and_vx"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fix_final_ry_and_vx</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>fix ry and vx at the end of the last rev (at periapsis)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-constrain_initial_rdot"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>constrain_initial_rdot</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>impose an rdot=0 constraint on the initial point</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-solver_mode"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>solver_mode</strong></td>
+<td> =</td>
+                <td>1</td>
+            <td>
+                <p>use sparse or dense solver:</p>
+<ul>
+<li>1 - dense (LAPACK)</li>
+<li>2 - sparse (LSQR)</li>
+<li>3 - sparse (LUSOL)</li>
+<li>4 - sparse (LMSR)</li>
+<li>5 - sparse (qr_mumps)</li>
+</ul>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+
+
+      <section>
+        <h2>Type-Bound Procedures</h2>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-init"></span>
+      <h3>
+          procedure, public ::
+  <strong>init</strong> => <a href='/home/runner/work/halo/halo/doc/proc/initialize_the_mission.html'>initialize_the_mission</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/initialize_the_mission.html'>initialize_the_mission</a>(me, x)  
+</h3>
+    
+
+  <p>Initialize the mission.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>initial guess</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-plot"></span>
+      <h3>
+          procedure, public ::
+  <strong>plot</strong> => <a href='/home/runner/work/halo/halo/doc/proc/plot_trajectory.html'>plot_trajectory</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/plot_trajectory.html'>plot_trajectory</a>(me, filename, export_trajectory, draw_trajectory, only_first_rev)  
+</h3>
+    
+
+  <p>Plot the trajectory using matplotlib and/or generate a text file (for MKSPK)</p><a href="../proc/plot_trajectory.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>plot file name [without extension]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>export_trajectory</strong></td>
+            <td>
+<p>if true, a text trajectory
+file is also produced
+(that can be read by MKSPK)
+[default is False]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>draw_trajectory</strong></td>
+            <td>
+<p>if true [Default], a matplotlib
+plot is generated</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>only_first_rev</strong></td>
+            <td>
+<p>to only do the first rev [Default is False]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-export_trajectory_json_file"></span>
+      <h3>
+          procedure, public ::
+  <strong>export_trajectory_json_file</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/export_trajectory_json_file.html'>export_trajectory_json_file</a>(me, filename, only_first_rev)  
+</h3>
+    
+
+  <p>Export the trajectory JSON file.</p><a href="../proc/export_trajectory_json_file.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>plot file name [without extension]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>only_first_rev</strong></td>
+            <td>
+<p>to only do the first rev [Default is False]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-write_optvars_to_file"></span>
+      <h3>
+          procedure, public ::
+  <strong>write_optvars_to_file</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/write_optvars_to_file.html'>write_optvars_to_file</a>(me, filename, x)  
+</h3>
+    
+
+  <p>Write the current <code>x</code> variables to a file (compatible with the Copernicus optvar file).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>file name [without extension]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>solver opt vars vector</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-constraint_violations"></span>
+      <h3>
+          procedure, public ::
+  <strong>constraint_violations</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/constraint_violations.html'>constraint_violations</a>(me, x, f, funcs_to_compute)  
+</h3>
+    
+
+  <p>Computes the constraint violation vector for the mission.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>opt var vector for the mission [n]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+<p>constraint violation vector for the mission [m]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>funcs_to_compute</strong></td>
+            <td>
+<p>the indices of f to compute</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-print_constraint_defects"></span>
+      <h3>
+          procedure, public ::
+  <strong>print_constraint_defects</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/print_constraint_defects.html'>print_constraint_defects</a>(me, filename)  
+</h3>
+    
+
+  <p>Print the <code>r</code> and <code>v</code> constraint defect norms for each segment constraint.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>csv file to write to</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-generate_eclipse_data"></span>
+      <h3>
+          procedure, public ::
+  <strong>generate_eclipse_data</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/generate_eclipse_data.html'>generate_eclipse_data</a>(me, fileprefix, filetype)  
+</h3>
+    
+
+  <p>Propagate all the segments with a dense time step and export the
+Eclipsing data w.r.t. Earth. In this file, any point &lt;0 is in eclipse.</p><a href="../proc/generate_eclipse_data.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fileprefix</strong></td>
+            <td>
+<p>file prefix for the csv file (case name will be added)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filetype</strong></td>
+            <td>
+<p>type of output file: 1=csv [default] or 2=json</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_problem_arrays"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_problem_arrays</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_problem_arrays.html'>get_problem_arrays</a>(me, x, f)  
+</h3>
+    
+
+  <p>Get the arrays for the problem</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>opt var vector [scaled]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+<p>constraint violations</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-put_x_in_segments"></span>
+      <h3>
+          procedure, public ::
+  <strong>put_x_in_segments</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/put_x_in_segments.html'>put_x_in_segments</a>(me, x_scaled)  
+</h3>
+    
+
+  <p>Take the <code>x</code> vector from the solver, and use it to populate all the segments</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x_scaled</strong></td>
+            <td>
+<p>opt var vector (scaled)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_x_from_json_file"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_x_from_json_file</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_x_from_json_file.html'>get_x_from_json_file</a>(me, x)  
+</h3>
+    
+
+  <p>Read the JSON solution file and put the <code>x</code> vector in the mission.
+  Can be used to restart a solution from a previous run
+  (e.g., with different settings, as long as the fundamental problem isn't changed).</p><a href="../proc/get_x_from_json_file.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>scaled <code>x</code> vector</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_scales_from_segs"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_scales_from_segs</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_scales_from_segs.html'>get_scales_from_segs</a>(me)  
+</h3>
+    
+
+  <p>Populate the <code>xscale</code> and <code>fscale</code> problem arrays from the segment data.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-segs_to_propagate"></span>
+      <h3>
+          procedure, public ::
+  <strong>segs_to_propagate</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/segs_to_propagate.html'>segs_to_propagate</a>(me, funcs_to_compute, isegs_to_propagate)  
+</h3>
+    
+
+  <p>Given the functions to be computed, returns the segments that need to be propagated.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>funcs_to_compute</strong></td>
+            <td>
+<p>the indices of f to compute</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>isegs_to_propagate</strong></td>
+            <td>
+<p>segment numbers</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_sparsity_pattern"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_sparsity_pattern</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_sparsity_pattern.html'>get_sparsity_pattern</a>(me, irow, icol, linear_irow, linear_icol, linear_vals, maxgrp, ngrp)  
+</h3>
+    
+
+  <p>Returns the sparsity pattern for the "forward-backward" Halo problem.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>irow</strong></td>
+            <td>
+<p>sparsity pattern nonzero elements row indices</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>icol</strong></td>
+            <td>
+<p>sparsity pattern nonzero elements column indices</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>linear_irow</strong></td>
+            <td>
+<p>linear sparsity pattern
+nonzero elements row indices</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>linear_icol</strong></td>
+            <td>
+<p>linear sparsity pattern nonzero
+elements column indices</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>linear_vals</strong></td>
+            <td>
+<p>linear sparsity values (constant
+elements of the Jacobian)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>maxgrp</strong></td>
+            <td>
+<p>DSM sparsity partition</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>ngrp</strong></td>
+            <td>
+<p>DSM sparsity partition</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-define_problem_size"></span>
+      <h3>
+          procedure, public ::
+  <strong>define_problem_size</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public pure subroutine <a href='../proc/define_problem_size.html'>define_problem_size</a>(me, n, m, n_segs, n_nonzero, full_problem)  
+</h3>
+    
+
+  <p>Returns the size variables for the "forward-backward" formulation of the problem.</p><a href="../proc/define_problem_size.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+<p>number of opt vars for the solver</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+<p>number of equality constraints for the solver</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_segs</strong></td>
+            <td>
+<p>number of segments</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n_nonzero</strong></td>
+            <td>
+<p>number of nonzero elements in the Jacobian</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>full_problem</strong></td>
+            <td>
+<p>if true (default) always return the results for the full problem
+(i.e., without fixing any of the variables)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_case_name"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_case_name</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  function <a href='../proc/get_case_name.html'>get_case_name</a>(me) result(case_name)  
+</h3>
+    
+
+  <p>Returns a string that can be used for file names, etc.
+  (read the values of the global variables).</p><a href="../proc/get_case_name.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>character(len=:), allocatable</small>
+    </h4>
+    
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-generate_patch_points"></span>
+      <h3>
+          procedure, public ::
+  <strong>generate_patch_points</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/generate_patch_points.html'>generate_patch_points</a>(me, lstar, tstar, period, x0, z0, ydot0, pp)  
+</h3>
+    
+
+  <p>Generates the patch points (unnormalized, moon-centered) from the CR3BP normalized guess.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lstar</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tstar</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>period</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>z0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ydot0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(<a href='patch_point.html'>patch_point</a>),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(3)
+            </td>
+            <td>::</td>
+            <td><strong>pp</strong></td>
+            <td>
+<p>periapsis, quarter, apoapsis patch points</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-update_epoch"></span>
+      <h3>
+          procedure, public ::
+  <strong>update_epoch</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/update_epoch.html'>update_epoch</a>(me)  
+</h3>
+    
+
+  <p>Update the variables for the reference epoch in the mission class.
+Either computes the et from the calendar state, or vice versa.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-export_rp_ra_json_file"></span>
+      <h3>
+          procedure, public ::
+  <strong>export_rp_ra_json_file</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/export_rp_ra_json_file.html'>export_rp_ra_json_file</a>(me, et, rmag, rdot, filename)  
+</h3>
+    
+
+  <p>Export the rp/ra file.</p><a href="../proc/export_rp_ra_json_file.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>rmag</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>rdot</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>file name [without extension]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+      </section>
+
+    <section>
+    <h3><span class="anchor" id="src"></span>Source Code</h3>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">numdiff_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mission_type</span>
+
+<span class="w">        </span><span class="c">!! the mission [this is a `numdiff_type` for</span>
+<span class="w">        </span><span class="c">!! organizational purposes.... rethink this maybe ...</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initial_guess_from_file</span><span class="w"> </span><span class="c">!! to read the initial guess from a JSOn file</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">use_splined_ephemeris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, the ephemeris is splined</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dt_spline_sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">360</span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! time step in seconds for spline step [1 hr]</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pointmass_central_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, the central body is a pointmass (moon).</span>
+<span class="w">                                                   </span><span class="c">!! otherwise, the `grav` model is used.</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">geopotential_model_pines</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">grav</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w"> </span><span class="c">!! central body geopotential model [global]</span>
+<span class="w">        </span><span class="k">class</span><span class="p">(</span><span class="n">jpl_ephemeris</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">eph</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w">            </span><span class="c">!! the ephemeris [global]</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">moon_frame_interpolater</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">moon_pa</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w"> </span><span class="c">!! the moon_pa frame interpolater [global]</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_earth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, earth is included as a pointmass in the force model</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_sun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, sun is included as a pointmass in the force model</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_jupiter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, jupiter is included as a pointmass in the force model</span>
+
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">segs</span><span class="w">  </span><span class="c">!! the list of segments</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xscale</span><span class="w">  </span><span class="c">!! opt var scale factors</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dpert_</span><span class="w">  </span><span class="c">!! opt var dpert factors [rename because already in base class]</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fscale</span><span class="w">  </span><span class="c">!! function scale factors</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">20</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xname</span><span class="w"> </span><span class="c">!! opt var names</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">N_or_S</span><span class="w">      </span><span class="c">!! &#39;N&#39; or &#39;S&#39;</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">L1_or_L2</span><span class="w">    </span><span class="c">!! &#39;L1&#39; or &#39;L2&#39;</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">solve</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"> </span><span class="c">!! run the nle solver to solve the problem</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_plots</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">!! to generate the python plots</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_trajectory_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">!! to export the txt trajectory files.</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_json_trajectory_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! to export the JSON trajectory file for the solution</span>
+<span class="w">                                                           </span><span class="c">!! (contains inertial and rotating data). This one is used</span>
+<span class="w">                                                           </span><span class="c">!! by the PyVista python script for plotting</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_guess_and_solution_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">!! to export the json guess and solution files.</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_kernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w">  </span><span class="c">!! to generate a spice kernel (bsp) of the solution</span>
+<span class="w">                                              </span><span class="c">!! [this requires the external mkspk SPICE tool]</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_defect_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! generate the file that shows the pos/vel</span>
+<span class="w">                                                  </span><span class="c">!! constraint defects for the solution</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_eclipse_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! generate the eclipse data file for the solution</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">run_pyvista_script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! run the pyvista script to generate the interacdtive 3d plot</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_rp_ra_file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! to generate the rp_ra file</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r_eclipse_bubble</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! radius of the &quot;eclipse bubble&quot; [km]</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">eclipse_dt_step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">360</span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! dense time step output for eclipse calculations in sec [1 hour]</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">eclipse_filetype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c">!! type of eclipse file: 1=csv or 2=json</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">epoch_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="c">!! 1 - calendar date was specified, 2 - ephemeris time was specified</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">year</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">month</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">day</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">hour</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">minute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sec</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="c">!! epoch of first point (first periapsis crossing)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w">  </span><span class="c">!! ephemeris time reference epoch [sec]</span>
+<span class="w">                                   </span><span class="c">!! (all times relative to this).</span>
+<span class="w">                                   </span><span class="c">!! this is computed from the year,month,day,hour,minute,sec values</span>
+<span class="w">                                   </span><span class="c">!! if `epoch_mode=1`</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_revs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w">  </span><span class="c">!! Number of revs in the Halo.</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rtol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="w"> </span><span class="c">!! integrator rtol</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">atol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="w"> </span><span class="c">!! integrator atol</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nlesolver_tol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-6_wp</span><span class="w"> </span><span class="c">!! nlesolver tol</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initial_r</span>
+<span class="w">            </span><span class="c">!! if `fix_initial_r` is True, this can be used</span>
+<span class="w">            </span><span class="c">!! to specify the initial `r` (moon-centered earth-moon rotating frame)</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ephemeris_file</span><span class="w"> </span><span class="c">!! the JPL ephemeris file to load</span>
+<span class="w">        </span><span class="c">! [note: these are build using the get_third_party script in FAT.</span>
+<span class="w">        </span><span class="c">!  the files are platform (and maybe compiler specific)</span>
+<span class="w">        </span><span class="c">!  &#39;data/eph/JPLEPH.421&#39;               !! JPL DE421 ephemeris file [mac,gfortran]</span>
+<span class="w">        </span><span class="c">!  &#39;data/eph/JPLEPH_intel_mac.421&#39;     !! [mac,ifort]</span>
+<span class="w">        </span><span class="c">!  &#39;data/eph/JPLEPH_windows_ifort.421&#39; !! [windows,ifort]</span>
+
+<span class="w">        </span><span class="c">! environment and integrator parameters:</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">gravfile</span><span class="w">  </span><span class="c">!! spherical harmonic gravity coeff file (Moon)</span>
+<span class="w">        </span><span class="c">!! example: &#39;data/grav/gggrx_0020pm_sha.tab&#39;</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w">  </span><span class="n">moon_pa_file</span><span class="w"> </span><span class="c">!! file for moon_pa frame.</span>
+<span class="w">        </span><span class="c">!! example: `data/moon_pa_2000_2100.csv`</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">patch_point_file</span><span class="w">   </span><span class="c">!! Halo CR3BP patch point solution file</span>
+<span class="w">        </span><span class="c">!! example: &#39;data/L2_halos.json&#39;</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">patch_point_file_is_periapsis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! if the state in the patch point file are periapsis states</span>
+<span class="w">                                                           </span><span class="c">!! (false means they are apoapsis states.</span>
+<span class="w">                                                           </span><span class="c">!! the ones in L2_halos.json are apoapsis states)</span>
+
+<span class="w">        </span><span class="c">! the initial guess for the Halo:</span>
+<span class="w">        </span><span class="c">! This is for the &quot;forward/backward&quot; version of the transcription from the paper.</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">periapsis</span><span class="w">    </span><span class="c">!! Patchpoint Periapse State</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">quarter</span><span class="w">      </span><span class="c">!! Patchpoint 1/4 Rev State</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">patch_point</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">apoapsis</span><span class="w">     </span><span class="c">!! Patchpoint 1/2 Rev State</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">period</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! Halo period [days]</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">period8</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w"> </span><span class="c">!! 1/8 of Halo period [days]</span>
+
+<span class="w">        </span><span class="c">! optional problem inputs</span>
+<span class="w">        </span><span class="c">! [can remove some of the variables from the optimization problem]</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_initial_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! to fix the initial epoch in the mission</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_initial_r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! fix the initial periapsis position vector (x,y,z)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_ry_at_end_of_rev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! fix ry at the end of the specified rev (at periapsis)</span>
+<span class="w">                                            </span><span class="c">!! not used if `&lt;= 0`.</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fix_final_ry_and_vx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! fix ry and vx at the end of the last rev (at periapsis)</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">constrain_initial_rdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! impose an rdot=0 constraint on the initial point</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">solver_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="c">!! use sparse or dense solver:</span>
+<span class="w">                                    </span><span class="c">!!</span>
+<span class="w">                                    </span><span class="c">!! * 1 - dense (LAPACK)</span>
+<span class="w">                                    </span><span class="c">!! * 2 - sparse (LSQR)</span>
+<span class="w">                                    </span><span class="c">!! * 3 - sparse (LUSOL)</span>
+<span class="w">                                    </span><span class="c">!! * 4 - sparse (LMSR)</span>
+<span class="w">                                    </span><span class="c">!! * 5 - sparse (qr_mumps)</span>
+
+<span class="w">    </span><span class="k">contains</span>
+
+<span class="k">        procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">initialize_the_mission</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">plot_trajectory</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export_trajectory_json_file</span>
+
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">write_optvars_to_file</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">constraint_violations</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">print_constraint_defects</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_eclipse_data</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_problem_arrays</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">put_x_in_segments</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_x_from_json_file</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_scales_from_segs</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">segs_to_propagate</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_sparsity_pattern</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">define_problem_size</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_case_name</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">generate_patch_points</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">update_epoch</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export_rp_ra_json_file</span>
+
+<span class="w">    </span><span class="k">end type </span><span class="n">mission_type</span>
+</pre></div>
+
+    </section>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

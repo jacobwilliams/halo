@@ -1,0 +1,1438 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>segment &ndash; halo </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>segment
+      <small>Derived Type</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p>13.4% of total for derived types.</p>Including implementation: 138 statements,  6.8% of total for derived types.">25 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">segment</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/segment.html#variable-name">name</a>
+            <a class="list-group-item" href="../type/segment.html#variable-data">data</a>
+            <a class="list-group-item" href="../type/segment.html#variable-cached_data">cached_data</a>
+            <a class="list-group-item" href="../type/segment.html#variable-grav">grav</a>
+            <a class="list-group-item" href="../type/segment.html#variable-eph">eph</a>
+            <a class="list-group-item" href="../type/segment.html#variable-moon_pa">moon_pa</a>
+            <a class="list-group-item" href="../type/segment.html#variable-pointmass_central_body">pointmass_central_body</a>
+            <a class="list-group-item" href="../type/segment.html#variable-include_pointmass_earth">include_pointmass_earth</a>
+            <a class="list-group-item" href="../type/segment.html#variable-include_pointmass_sun">include_pointmass_sun</a>
+            <a class="list-group-item" href="../type/segment.html#variable-include_pointmass_jupiter">include_pointmass_jupiter</a>
+            <a class="list-group-item" href="../type/segment.html#variable-third_body_gravity">third_body_gravity</a>
+            <a class="list-group-item" href="../type/segment.html#variable-traj_inertial">traj_inertial</a>
+            <a class="list-group-item" href="../type/segment.html#variable-traj_rotating">traj_rotating</a>
+            <a class="list-group-item" href="../type/segment.html#variable-traj_se_rotating">traj_se_rotating</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-set_input">set_input</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-get_inputs">get_inputs</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-get_outputs">get_outputs</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-set_outputs">set_outputs</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-propagate">propagate</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-cache">cache</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-uncache">uncache</a>
+            <a class="list-group-item" href="../type/segment.html#boundprocedure-put_data_in_segment">put_data_in_segment</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../type/segment.html#src">segment</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2 id="type-def-statement">
+        type, public, extends(ddeabm_class) :: segment</h2>
+    <p>a ballistic segment in the mission</p>
+<ul>
+<li>central body is the Moon (8x8 gravity),
+  with Earth and Sun as third-bodies.</li>
+<li>Inputs are: <code>t0</code>, <code>tf', and</code>x0_rotating`.</li>
+<li>Output are: <code>xf</code>, <code>xf_rotating</code></li>
+</ul>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherits</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: type~~segment~~InheritsGraph Pages: 1 -->
+<svg id="typesegmentInheritsGraph" width="458pt" height="247pt"
+ viewBox="0.00 0.00 458.00 246.95" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~segment~~InheritsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 242.95)">
+<title>type~~segment~~InheritsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-242.95 454,-242.95 454,4 -4,4"/>
+<!-- type~segment -->
+<g id="type~~segment~~InheritsGraph_node1" class="node">
+<title>type~segment</title>
+<polygon fill="none" stroke="black" points="450,-133.95 391,-133.95 391,-109.95 450,-109.95 450,-133.95"/>
+<text text-anchor="middle" x="420.5" y="-119.55" font-family="Helvetica,sans-Serif" font-size="10.50">segment</text>
+</g>
+<!-- ddeabm_class -->
+<g id="type~~segment~~InheritsGraph_node2" class="node">
+<title>ddeabm_class</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-238.95 32.5,-238.95 32.5,-214.95 120.5,-214.95 120.5,-238.95"/>
+<text text-anchor="middle" x="76.5" y="-224.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_class</text>
+</g>
+<!-- type~segment&#45;&gt;ddeabm_class -->
+<g id="type~~segment~~InheritsGraph_edge6" class="edge">
+<title>type~segment&#45;&gt;ddeabm_class</title>
+<path fill="none" stroke="#000000" d="M415.82,-133.99C409.87,-151.2 396.39,-182.34 373,-196.95 298.95,-243.22 193.58,-241.41 130.72,-234.88"/>
+<polygon fill="#000000" stroke="#000000" points="130.96,-231.38 120.63,-233.75 130.18,-238.34 130.96,-231.38"/>
+</g>
+<!-- geopotential_model_pines -->
+<g id="type~~segment~~InheritsGraph_node3" class="node">
+<title>geopotential_model_pines</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="153,-196.95 0,-196.95 0,-172.95 153,-172.95 153,-196.95"/>
+<text text-anchor="middle" x="76.5" y="-182.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">geopotential_model_pines</text>
+</g>
+<!-- type~segment&#45;&gt;geopotential_model_pines -->
+<g id="type~~segment~~InheritsGraph_edge2" class="edge">
+<title>type~segment&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M403.13,-134.16C394.58,-139.91 383.7,-146.29 373,-149.95 304.97,-173.25 223.55,-181.56 163.42,-184.29"/>
+<polygon fill="#000000" stroke="#000000" points="163.06,-180.8 153.21,-184.71 163.35,-187.8 163.06,-180.8"/>
+<text text-anchor="middle" x="272" y="-185.35" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- jpl_ephemeris -->
+<g id="type~~segment~~InheritsGraph_node4" class="node">
+<title>jpl_ephemeris</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-154.95 32.5,-154.95 32.5,-130.95 120.5,-130.95 120.5,-154.95"/>
+<text text-anchor="middle" x="76.5" y="-140.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jpl_ephemeris</text>
+</g>
+<!-- type~segment&#45;&gt;jpl_ephemeris -->
+<g id="type~~segment~~InheritsGraph_edge3" class="edge">
+<title>type~segment&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M390.93,-123.71C333.78,-127.22 204.58,-135.15 131.15,-139.66"/>
+<polygon fill="#000000" stroke="#000000" points="130.5,-136.19 120.73,-140.3 130.93,-143.18 130.5,-136.19"/>
+<text text-anchor="middle" x="272" y="-138.35" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- moon_frame_interpolater -->
+<g id="type~~segment~~InheritsGraph_node5" class="node">
+<title>moon_frame_interpolater</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="151,-112.95 2,-112.95 2,-88.95 151,-88.95 151,-112.95"/>
+<text text-anchor="middle" x="76.5" y="-98.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">moon_frame_interpolater</text>
+</g>
+<!-- type~segment&#45;&gt;moon_frame_interpolater -->
+<g id="type~~segment~~InheritsGraph_edge4" class="edge">
+<title>type~segment&#45;&gt;moon_frame_interpolater</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M390.64,-114.19C384.84,-112.89 378.76,-111.72 373,-110.95 301.94,-101.44 220.46,-99.33 161.08,-99.38"/>
+<polygon fill="#000000" stroke="#000000" points="160.99,-95.88 151,-99.41 161.01,-102.88 160.99,-95.88"/>
+<text text-anchor="middle" x="272" y="-113.35" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- type~segment_data -->
+<g id="type~~segment~~InheritsGraph_node6" class="node">
+<title>type~segment_data</title>
+<g id="a_type~~segment~~InheritsGraph_node6"><a xlink:href="../type/segment_data.html" xlink:title="segment_data">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-70.95 32.5,-70.95 32.5,-46.95 120.5,-46.95 120.5,-70.95"/>
+<text text-anchor="middle" x="76.5" y="-56.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment_data</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~segment_data -->
+<g id="type~~segment~~InheritsGraph_edge1" class="edge">
+<title>type~segment&#45;&gt;type~segment_data</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M408.14,-109.71C399.42,-101.18 386.61,-90.39 373,-84.95 293.09,-53.04 191.61,-51.71 130.76,-54.63"/>
+<polygon fill="#000000" stroke="#000000" points="130.42,-51.15 120.62,-55.18 130.79,-58.14 130.42,-51.15"/>
+<text text-anchor="middle" x="272" y="-87.35" font-family="Helvetica,sans-Serif" font-size="9.50">data, cached_data</text>
+</g>
+<!-- type~trajectory -->
+<g id="type~~segment~~InheritsGraph_node7" class="node">
+<title>type~trajectory</title>
+<g id="a_type~~segment~~InheritsGraph_node7"><a xlink:href="../type/trajectory.html" xlink:title="trajectory">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="108.5,-28.95 44.5,-28.95 44.5,-4.95 108.5,-4.95 108.5,-28.95"/>
+<text text-anchor="middle" x="76.5" y="-14.55" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~trajectory -->
+<g id="type~~segment~~InheritsGraph_edge5" class="edge">
+<title>type~segment&#45;&gt;type~trajectory</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M416.62,-109.82C411.44,-91.02 398.63,-55.28 373,-38.95 294.66,10.95 179.83,1.41 118.96,-8.55"/>
+<polygon fill="#000000" stroke="#000000" points="118.21,-5.13 108.95,-10.28 119.4,-12.03 118.21,-5.13"/>
+<text text-anchor="middle" x="272" y="-41.35" font-family="Helvetica,sans-Serif" font-size="9.50">traj_inertial, traj_rotating, traj_se_rotating</text>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="186pt" height="32pt"
+ viewBox="0.00 0.00 185.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 181.5,-28 181.5,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="177.5,-24 72.5,-24 72.5,0 177.5,0 177.5,-24"/>
+<text text-anchor="middle" x="125" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherited by</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: type~~segment~~InheritedByGraph Pages: 1 -->
+<svg id="typesegmentInheritedByGraph" width="377pt" height="32pt"
+ viewBox="0.00 0.00 377.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~segment~~InheritedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>type~~segment~~InheritedByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 373,-28 373,4 -4,4"/>
+<!-- type~segment -->
+<g id="type~~segment~~InheritedByGraph_node1" class="node">
+<title>type~segment</title>
+<polygon fill="none" stroke="black" points="59,-24 0,-24 0,0 59,0 59,-24"/>
+<text text-anchor="middle" x="29.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">segment</text>
+</g>
+<!-- type~mission_type -->
+<g id="type~~segment~~InheritedByGraph_node2" class="node">
+<title>type~mission_type</title>
+<g id="a_type~~segment~~InheritedByGraph_node2"><a xlink:href="../type/mission_type.html" xlink:title="mission_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="200,-24 118,-24 118,0 200,0 200,-24"/>
+<text text-anchor="middle" x="159" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~segment -->
+<g id="type~~segment~~InheritedByGraph_edge1" class="edge">
+<title>type~mission_type&#45;&gt;type~segment</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M117.66,-12C102.25,-12 84.71,-12 69.44,-12"/>
+<polygon fill="#000000" stroke="#000000" points="69.27,-8.5 59.27,-12 69.27,-15.5 69.27,-8.5"/>
+<text text-anchor="middle" x="88.5" y="-14.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+</g>
+<!-- type~my_solver_type -->
+<g id="type~~segment~~InheritedByGraph_node3" class="node">
+<title>type~my_solver_type</title>
+<g id="a_type~~segment~~InheritedByGraph_node3"><a xlink:href="../type/my_solver_type.html" xlink:title="my_solver_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="369,-24 274,-24 274,0 369,0 369,-24"/>
+<text text-anchor="middle" x="321.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type</text>
+</a>
+</g>
+</g>
+<!-- type~my_solver_type&#45;&gt;type~mission_type -->
+<g id="type~~segment~~InheritedByGraph_edge2" class="edge">
+<title>type~my_solver_type&#45;&gt;type~mission_type</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M273.65,-12C253.79,-12 230.61,-12 210.39,-12"/>
+<polygon fill="#000000" stroke="#000000" points="210.12,-8.5 200.12,-12 210.12,-15.5 210.12,-8.5"/>
+<text text-anchor="middle" x="237" y="-14.4" font-family="Helvetica,sans-Serif" font-size="9.50">mission</text>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="186pt" height="32pt"
+ viewBox="0.00 0.00 185.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 181.5,-28 181.5,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="177.5,-24 72.5,-24 72.5,0 177.5,0 177.5,-24"/>
+<text text-anchor="middle" x="125" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    <br>
+
+    <section>
+    <h2>Components</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-name"></span>
+              character(len=:),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>name</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>the segment name</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data"></span>
+              type(<a href='segment_data.html'>segment_data</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>data</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-cached_data"></span>
+              type(<a href='segment_data.html'>segment_data</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>cached_data</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>used when computing gradients</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-grav"></span>
+              type(geopotential_model_pines),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>grav</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>central body geopotential model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eph"></span>
+              class(jpl_ephemeris),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>eph</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>the ephemeris</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-moon_pa"></span>
+              type(moon_frame_interpolater),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>moon_pa</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>the moon_pa frame interpolater</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-pointmass_central_body"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>pointmass_central_body</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_earth"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_earth</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>if true, earth is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_sun"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_sun</strong></td>
+<td> =</td>
+                <td>.true.</td>
+            <td>
+                <p>if true, sun is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-include_pointmass_jupiter"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>include_pointmass_jupiter</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+                <p>if true, jupiter is included as a pointmass in the force model</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-third_body_gravity"></span>
+              procedure(<a href='../interface/third_body_grav_f.html'>third_body_grav_f</a>),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer, nopass
+            </td>
+            <td>::</td>
+            <td><strong>third_body_gravity</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+                <p>procedure used to compute 3rd body gravity</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-traj_inertial"></span>
+              type(<a href='trajectory.html'>trajectory</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>traj_inertial</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>in the inertial frame (j2000-moon)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-traj_rotating"></span>
+              type(<a href='trajectory.html'>trajectory</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>traj_rotating</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>in the rotating frame (moon-earth, moon-centered)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-traj_se_rotating"></span>
+              type(<a href='trajectory.html'>trajectory</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>traj_se_rotating</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>in the rotating frame (sun-earth, earth-centered)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+
+
+      <section>
+        <h2>Type-Bound Procedures</h2>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-set_input"></span>
+      <h3>
+          procedure, public ::
+  <strong>set_input</strong> => <a href='/home/runner/work/halo/halo/doc/proc/set_segment_inputs.html'>set_segment_inputs</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/set_segment_inputs.html'>set_segment_inputs</a>(me, t0, tf, x0_rotating)  
+</h3>
+    
+
+  <p>Sets all the info in a segment for it to be propagated.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t0</strong></td>
+            <td>
+<p>[days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tf</strong></td>
+            <td>
+<p>[days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating</strong></td>
+            <td>
+<p>state in rotating frame</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_inputs"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_inputs</strong> => <a href='/home/runner/work/halo/halo/doc/proc/get_segment_inputs.html'>get_segment_inputs</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_segment_inputs.html'>get_segment_inputs</a>(me, t0, x0_rotating)  
+</h3>
+    
+
+  <p>Gets the initial states of a segment</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating</strong></td>
+            <td>
+<p>rotating frame</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-get_outputs"></span>
+      <h3>
+          procedure, public ::
+  <strong>get_outputs</strong> => <a href='/home/runner/work/halo/halo/doc/proc/get_segment_outputs.html'>get_segment_outputs</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/get_segment_outputs.html'>get_segment_outputs</a>(me, xf, xf_rotating, x0_rotating)  
+</h3>
+    
+
+  <p>After propagating a segment, this gets the outputs.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>xf</strong></td>
+            <td>
+<p>inertial frame</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>xf_rotating</strong></td>
+            <td>
+<p>rotating frame</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-set_outputs"></span>
+      <h3>
+          procedure, public ::
+  <strong>set_outputs</strong> => <a href='/home/runner/work/halo/halo/doc/proc/set_segment_outputs.html'>set_segment_outputs</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/set_segment_outputs.html'>set_segment_outputs</a>(me, xf, xf_rotating)  
+</h3>
+    
+
+  <p>Set the outputs of a segment, assuming it has been propagated elsewhere</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>xf</strong></td>
+            <td>
+<p>inertial frame</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>xf_rotating</strong></td>
+            <td>
+<p>inertial frame</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-propagate"></span>
+      <h3>
+          procedure, public ::
+  <strong>propagate</strong> => <a href='/home/runner/work/halo/halo/doc/proc/propagate_segment.html'>propagate_segment</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/propagate_segment.html'>propagate_segment</a>(me, mode, tstep)  
+</h3>
+    
+
+  <p>Propagate a segment (assumes the inputs have already been populated)</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mode</strong></td>
+            <td>
+<p>1 - don't report steps, 2 - report steps (for plotting)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tstep</strong></td>
+            <td>
+<p>fixed time step for mode=2</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-cache"></span>
+      <h3>
+          procedure, public ::
+  <strong>cache</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/cache.html'>cache</a>(me)  
+</h3>
+    
+
+  <p>Cache all the data in a segment.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-uncache"></span>
+      <h3>
+          procedure, public ::
+  <strong>uncache</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/uncache.html'>uncache</a>(me)  
+</h3>
+    
+
+  <p>Restore all the segment data form the cache.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-put_data_in_segment"></span>
+      <h3>
+          procedure, public ::
+  <strong>put_data_in_segment</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/put_data_in_segment.html'>put_data_in_segment</a>(me, d)  
+</h3>
+    
+
+  <p>Set <em>all</em> the data in a segment.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(<a href='segment_data.html'>segment_data</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+      </section>
+
+    <section>
+    <h3><span class="anchor" id="src"></span>Source Code</h3>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">ddeabm_class</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">segment</span>
+
+<span class="w">        </span><span class="c">!! a ballistic segment in the mission</span>
+<span class="w">        </span><span class="c">!!</span>
+<span class="w">        </span><span class="c">!! * central body is the Moon (8x8 gravity),</span>
+<span class="w">        </span><span class="c">!!   with Earth and Sun as third-bodies.</span>
+<span class="w">        </span><span class="c">!! * Inputs are: `t0`, `tf&#39;, and `x0_rotating`.</span>
+<span class="w">        </span><span class="c">!! * Output are: `xf`, `xf_rotating`</span>
+
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">name</span><span class="w">  </span><span class="c">!! the segment name</span>
+
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">segment_data</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">data</span>
+<span class="k">        type</span><span class="p">(</span><span class="n">segment_data</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cached_data</span><span class="w">  </span><span class="c">!! used when computing gradients</span>
+
+<span class="w">        </span><span class="c">! These can be pointers that are pointing to the global ones in the mission,</span>
+<span class="w">        </span><span class="c">! Or, when using OpenMP, they are allocated in each segment.</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">geopotential_model_pines</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">grav</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w"> </span><span class="c">!! central body geopotential model</span>
+<span class="w">        </span><span class="k">class</span><span class="p">(</span><span class="n">jpl_ephemeris</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">eph</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w">  </span><span class="c">!! the ephemeris</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">moon_frame_interpolater</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">moon_pa</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w"> </span><span class="c">!! the moon_pa frame interpolater</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">pointmass_central_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_earth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, earth is included as a pointmass in the force model</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_sun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, sun is included as a pointmass in the force model</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">include_pointmass_jupiter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w"> </span><span class="c">!! if true, jupiter is included as a pointmass in the force model</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">(</span><span class="n">third_body_grav_f</span><span class="p">),</span><span class="k">pointer</span><span class="p">,</span><span class="k">nopass</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">third_body_gravity</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span><span class="w"> </span><span class="c">!! procedure used to compute 3rd body gravity</span>
+
+<span class="w">        </span><span class="c">! for saving the trajectory for plotting:</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">traj_inertial</span><span class="w">  </span><span class="c">!! in the inertial frame (j2000-moon)</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">traj_rotating</span><span class="w">  </span><span class="c">!! in the rotating frame (moon-earth, moon-centered)</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">trajectory</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">traj_se_rotating</span><span class="w">  </span><span class="c">!! in the rotating frame (sun-earth, earth-centered)</span>
+
+<span class="w">        </span><span class="k">contains</span>
+
+<span class="k">        procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">set_input</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">set_segment_inputs</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_inputs</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">get_segment_inputs</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">get_outputs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">get_segment_outputs</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">set_outputs</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">set_segment_outputs</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">propagate</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">propagate_segment</span>
+
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cache</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">uncache</span>
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">put_data_in_segment</span>
+
+<span class="w">    </span><span class="k">end type </span><span class="n">segment</span>
+</pre></div>
+
+    </section>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

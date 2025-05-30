@@ -1,0 +1,982 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>initialize_the_mission &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>initialize_the_mission
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 6.6% of total for procedures.">157 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">initialize_the_mission</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/initialize_the_mission.html#src">initialize_the_mission</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine initialize_the_mission(me, x)  
+</h2>
+    
+
+    <p>Initialize the mission.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~13"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~8"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>initial guess</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~initialize_the_mission~~CallsGraph Pages: 1 -->
+<svg id="procinitialize_the_missionCallsGraph" width="641pt" height="416pt"
+ viewBox="0.00 0.00 641.00 416.19" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_the_mission~~CallsGraph" class="graph" transform="scale(0.93 0.93) rotate(0) translate(4 444)">
+<title>proc~~initialize_the_mission~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-444 686,-444 686,4 -4,4"/>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node1" class="node">
+<title>proc~initialize_the_mission</title>
+<polygon fill="none" stroke="black" points="204,-234 0,-234 0,-210 204,-210 204,-234"/>
+<text text-anchor="middle" x="102" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%initialize_the_mission</text>
+</g>
+<!-- destroy -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node2" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="370,-440 316,-440 316,-416 370,-416 370,-440"/>
+<text text-anchor="middle" x="343" y="-425.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;destroy -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge1" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M108.25,-234.35C123.28,-268.1 169.93,-362.27 240,-407 259.55,-419.48 285.13,-424.73 305.78,-426.86"/>
+<polygon fill="#000000" stroke="#000000" points="305.52,-430.35 315.78,-427.69 306.1,-423.37 305.52,-430.35"/>
+</g>
+<!-- initialize -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node3" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="371.5,-398 314.5,-398 314.5,-374 371.5,-374 371.5,-398"/>
+<text text-anchor="middle" x="343" y="-383.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge2" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M110.88,-234.34C129.56,-262.48 179.52,-331.57 240,-365 259.67,-375.87 284.3,-381.14 304.42,-383.68"/>
+<polygon fill="#000000" stroke="#000000" points="304.16,-387.17 314.48,-384.77 304.92,-380.21 304.16,-387.17"/>
+</g>
+<!-- initialize_splinded_ephemeris -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node4" class="node">
+<title>initialize_splinded_ephemeris</title>
+<polygon fill="#777777" stroke="#777777" points="427.5,-356 258.5,-356 258.5,-332 427.5,-332 427.5,-356"/>
+<text text-anchor="middle" x="343" y="-341.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_splinded_ephemeris</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge3" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris</title>
+<path fill="none" stroke="#000000" d="M115.4,-234.12C138.09,-255.58 188.72,-300.15 240,-323 244.95,-325.21 250.15,-327.19 255.46,-328.96"/>
+<polygon fill="#000000" stroke="#000000" points="254.53,-332.33 265.11,-331.93 256.59,-325.64 254.53,-332.33"/>
+</g>
+<!-- magnitude -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node5" class="node">
+<title>magnitude</title>
+<polygon fill="#777777" stroke="#777777" points="378,-314 308,-314 308,-290 378,-290 378,-314"/>
+<text text-anchor="middle" x="343" y="-299.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">magnitude</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;magnitude -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge4" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;magnitude</title>
+<path fill="none" stroke="#000000" d="M130.44,-234C157.84,-245.7 201.32,-263.5 240,-276 258.69,-282.04 279.67,-287.59 297.72,-292"/>
+<polygon fill="#000000" stroke="#000000" points="297.15,-295.46 307.69,-294.39 298.79,-288.66 297.15,-295.46"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node6" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node6"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="682,-234 482,-234 482,-210 682,-210 682,-234"/>
+<text text-anchor="middle" x="582" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge5" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M167.93,-234.02C190.64,-237.68 216.37,-241.2 240,-243 331.29,-249.96 354.72,-250.06 446,-243 465.84,-241.47 487.17,-238.68 506.88,-235.63"/>
+<polygon fill="#000000" stroke="#000000" points="507.7,-239.05 517.03,-234.02 506.6,-232.13 507.7,-239.05"/>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node7" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node7"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="441.5,-150 244.5,-150 244.5,-126 441.5,-126 441.5,-150"/>
+<text text-anchor="middle" x="343" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge6" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M125.15,-209.9C151.72,-195.83 197.96,-172.79 240,-159 247.37,-156.58 255.13,-154.39 262.95,-152.4"/>
+<polygon fill="#000000" stroke="#000000" points="263.96,-155.76 272.85,-150.01 262.31,-148.96 263.96,-155.76"/>
+</g>
+<!-- proc~get_scales_from_segs -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node8" class="node">
+<title>proc~get_scales_from_segs</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node8"><a xlink:href="../proc/get_scales_from_segs.html" xlink:title="mission_type%get_scales_from_segs">
+<polygon fill="#d9534f" stroke="#d9534f" points="446,-192 240,-192 240,-168 446,-168 446,-192"/>
+<text text-anchor="middle" x="343" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_scales_from_segs</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge7" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs</title>
+<path fill="none" stroke="#000000" d="M171.49,-209.96C200.24,-204.91 233.84,-199.01 263.58,-193.78"/>
+<polygon fill="#000000" stroke="#000000" points="264.26,-197.22 273.5,-192.04 263.05,-190.32 264.26,-197.22"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node9" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node9"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="442.5,-234 243.5,-234 243.5,-210 442.5,-210 442.5,-234"/>
+<text text-anchor="middle" x="343" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge8" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M204.01,-222C213.66,-222 223.46,-222 233.18,-222"/>
+<polygon fill="#000000" stroke="#000000" points="233.26,-225.5 243.26,-222 233.26,-218.5 233.26,-225.5"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node10" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node10"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="430,-108 256,-108 256,-84 430,-84 430,-108"/>
+<text text-anchor="middle" x="343" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge9" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M114.94,-209.73C137.3,-187.53 187.94,-140.78 240,-117 244.71,-114.85 249.64,-112.92 254.69,-111.18"/>
+<polygon fill="#000000" stroke="#000000" points="256.03,-114.43 264.51,-108.08 253.92,-107.75 256.03,-114.43"/>
+</g>
+<!-- set_dpert -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node11" class="node">
+<title>set_dpert</title>
+<polygon fill="#777777" stroke="#777777" points="374,-66 312,-66 312,-42 374,-42 374,-66"/>
+<text text-anchor="middle" x="343" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_dpert</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_dpert -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge10" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_dpert</title>
+<path fill="none" stroke="#000000" d="M110.51,-209.74C128.78,-181.09 178.56,-109.51 240,-75 258.71,-64.49 281.99,-59.21 301.58,-56.57"/>
+<polygon fill="#000000" stroke="#000000" points="302.22,-60.02 311.74,-55.39 301.41,-53.07 302.22,-60.02"/>
+</g>
+<!-- set_sparsity_pattern -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node12" class="node">
+<title>set_sparsity_pattern</title>
+<polygon fill="#777777" stroke="#777777" points="402.5,-24 283.5,-24 283.5,0 402.5,0 402.5,-24"/>
+<text text-anchor="middle" x="343" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_sparsity_pattern</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_sparsity_pattern -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge11" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M107.96,-209.87C122.56,-175.84 168.84,-78.94 240,-33 250.03,-26.53 261.67,-21.99 273.42,-18.83"/>
+<polygon fill="#000000" stroke="#000000" points="274.36,-22.21 283.28,-16.49 272.74,-15.4 274.36,-22.21"/>
+</g>
+<!-- fill_vector -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node13" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="614,-192 550,-192 550,-168 614,-168 614,-192"/>
+<text text-anchor="middle" x="582" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge12" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M411.91,-150.04C453.25,-157.36 504.69,-166.48 539.91,-172.72"/>
+<polygon fill="#000000" stroke="#000000" points="539.38,-176.18 549.84,-174.48 540.6,-169.29 539.38,-176.18"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node15" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~initialize_the_mission~~CallsGraph_node15"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="625.5,-150 538.5,-150 538.5,-126 625.5,-126 625.5,-150"/>
+<text text-anchor="middle" x="582" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge13" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M441.77,-138C471.35,-138 502.72,-138 528.17,-138"/>
+<polygon fill="#000000" stroke="#000000" points="528.34,-141.5 538.34,-138 528.34,-134.5 528.34,-141.5"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge15" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M411.91,-192.04C440.3,-197.07 473.46,-202.94 502.85,-208.15"/>
+<polygon fill="#000000" stroke="#000000" points="502.62,-211.66 513.08,-209.96 503.84,-204.77 502.62,-211.66"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;fill_vector -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge14" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M446.23,-180C479.15,-180 513.78,-180 539.7,-180"/>
+<polygon fill="#000000" stroke="#000000" points="539.88,-183.5 549.88,-180 539.88,-176.5 539.88,-183.5"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge16" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M442.79,-222C452.41,-222 462.2,-222 471.91,-222"/>
+<polygon fill="#000000" stroke="#000000" points="471.99,-225.5 481.99,-222 471.99,-218.5 471.99,-225.5"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node14" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="615.5,-108 548.5,-108 548.5,-84 615.5,-84 615.5,-108"/>
+<text text-anchor="middle" x="582" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge17" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M430.23,-96C466.93,-96 508.11,-96 538.14,-96"/>
+<polygon fill="#000000" stroke="#000000" points="538.27,-99.5 548.27,-96 538.27,-92.5 538.27,-99.5"/>
+</g>
+<!-- transform -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node16" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="614.5,-66 549.5,-66 549.5,-42 614.5,-42 614.5,-66"/>
+<text text-anchor="middle" x="582" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge18" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M411.91,-83.96C453,-76.68 504.07,-67.63 539.27,-61.4"/>
+<polygon fill="#000000" stroke="#000000" points="539.97,-64.83 549.2,-59.63 538.75,-57.93 539.97,-64.83"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~initialize_the_mission~~CallsGraph_node17" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="655.5,-24 508.5,-24 508.5,0 655.5,0 655.5,-24"/>
+<text text-anchor="middle" x="582" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~initialize_the_mission~~CallsGraph_edge19" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M426.79,-83.94C433.5,-81.48 440,-78.53 446,-75 467.18,-62.52 460.86,-45.55 482,-33 487.18,-29.93 492.74,-27.3 498.5,-25.06"/>
+<polygon fill="#000000" stroke="#000000" points="500.05,-28.22 508.34,-21.63 497.74,-21.61 500.05,-28.22"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocinitialize_the_missionCallsGraph = svgPanZoom('#procinitialize_the_missionCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~initialize_the_mission~~CalledByGraph Pages: 1 -->
+<svg id="procinitialize_the_missionCalledByGraph" width="599pt" height="32pt"
+ viewBox="0.00 0.00 599.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_the_mission~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~initialize_the_mission~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 595,-28 595,4 -4,4"/>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~initialize_the_mission~~CalledByGraph_node1" class="node">
+<title>proc~initialize_the_mission</title>
+<polygon fill="none" stroke="black" points="591,-24 387,-24 387,0 591,0 591,-24"/>
+<text text-anchor="middle" x="489" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%initialize_the_mission</text>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~initialize_the_mission~~CalledByGraph_node2" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~initialize_the_mission~~CalledByGraph_node2"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="351,-24 142,-24 142,0 351,0 351,-24"/>
+<text text-anchor="middle" x="246.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~initialize_the_mission~~CalledByGraph_edge1" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M351.24,-12C359.64,-12 368.16,-12 376.62,-12"/>
+<polygon fill="#000000" stroke="#000000" points="376.89,-15.5 386.89,-12 376.89,-8.5 376.89,-15.5"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~initialize_the_mission~~CalledByGraph_node3" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~initialize_the_mission~~CalledByGraph_node3"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="106,-24 0,-24 0,0 106,0 106,-24"/>
+<text text-anchor="middle" x="53" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~initialize_the_mission~~CalledByGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M106.08,-12C114.2,-12 122.86,-12 131.74,-12"/>
+<polygon fill="#000000" stroke="#000000" points="131.84,-15.5 141.84,-12 131.84,-8.5 131.84,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">initialize_the_mission</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="c">!! initial guess</span>
+
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span><span class="w">                        </span><span class="c">!! status flag</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="w">                              </span><span class="c">!! counter</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_segs</span><span class="w">                           </span><span class="c">!! number of segments</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">                             </span><span class="c">!! segment counter</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w">                     </span><span class="c">!! time of last periapsis crossing (in days from ref epoch)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irev</span><span class="w">                             </span><span class="c">!! rev counter</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t0</span><span class="w">                 </span><span class="c">!! [days]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tf</span><span class="w">                 </span><span class="c">!! [days]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_rotating</span><span class="w">      </span><span class="c">!! rotating frame</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">                                </span><span class="c">!! number of opt vars</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="w">                                </span><span class="c">!! number of constraints</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_nonzero</span><span class="w">                        </span><span class="c">!! number of nonzero elements in the jacobian</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dpert</span><span class="w">  </span><span class="c">!! perturbation step size array</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xlow</span><span class="w">   </span><span class="c">!! lower bounds array</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xhigh</span><span class="w">  </span><span class="c">!! upper bounds</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg_name</span><span class="w">               </span><span class="c">!! segment name</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="w">    </span><span class="c">!! sparsity pattern nonzero elements row indices</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">icol</span><span class="w">    </span><span class="c">!! sparsity pattern nonzero elements column indices</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">use_openmp</span><span class="w"> </span><span class="c">!! if OpenMP is being used</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et0</span><span class="w"> </span><span class="c">!! initial et for splined ephemeris</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">etf</span><span class="w"> </span><span class="c">!! final et for splined ephemeirs</span>
+
+<span class="w">    </span><span class="n">use_openmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="c">!$  use_openmp = .true.</span>
+
+<span class="w">    </span><span class="c">! problem size:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">,</span><span class="n">n_segs</span><span class="o">=</span><span class="n">n_segs</span><span class="p">,</span><span class="n">n_nonzero</span><span class="o">=</span><span class="n">n_nonzero</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    n:                                     &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    m:                                     &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">m</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    total number of elements in Jacobian:  &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">*</span><span class="n">m</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    number of nonzero elements in Jacobian:&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">n_nonzero</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    number of segments:                    &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">&#39;(A,1X,I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;    number of revs:                        &#39;</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">&#39;&#39;</span>
+
+<span class="w">    </span><span class="c">! arrays for the gradient computations:</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">dpert</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">xlow</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">xhigh</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="n">dpert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-06_wp</span>
+
+<span class="w">    </span><span class="c">! need to construct some bounds so the sparsity can be computed.</span>
+<span class="w">    </span><span class="c">! [note: these are not used since we are inputing the sparsity below]</span>
+<span class="w">    </span><span class="n">xlow</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="mf">0.0_wp</span>
+<span class="w">    </span><span class="n">xhigh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="mf">0.0_wp</span>
+
+<span class="w">    </span><span class="c">! first set up the gradient computation in the base class:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                       </span><span class="n">xlow</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="n">xlow</span><span class="p">,&amp;</span>
+<span class="w">                       </span><span class="n">xhigh</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="n">xhigh</span><span class="p">,&amp;</span>
+<span class="w">                       </span><span class="n">dpert</span><span class="w">                      </span><span class="o">=</span><span class="w"> </span><span class="n">dpert</span><span class="p">,&amp;</span>
+<span class="w">                       </span><span class="n">problem_func</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="n">my_func</span><span class="p">,&amp;</span>
+<span class="w">                       </span><span class="n">info</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="n">halo_grad_info</span><span class="p">,&amp;</span>
+<span class="w">                       </span><span class="n">sparsity_mode</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,&amp;</span><span class="w">        </span><span class="c">! specified below</span>
+<span class="w">                       </span><span class="n">jacobian_method</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,&amp;</span><span class="w">        </span><span class="c">! standard central diff</span>
+<span class="w">                       </span><span class="n">perturb_mode</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,&amp;</span><span class="w">        </span><span class="c">! absolute mode</span>
+<span class="w">                       </span><span class="n">partition_sparsity_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span><span class="w">   </span><span class="c">! partition the pattern</span>
+<span class="w">                       </span><span class="n">cache_size</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">! generate and set the sparsity pattern for this problem:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">set_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">use_splined_ephemeris</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">grav_frame</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! for splinting, have to compute et0, etf based on mission range.</span>
+<span class="w">        </span><span class="c">! use a 2 period buffer.</span>
+<span class="w">        </span><span class="n">et0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.0</span><span class="o">*</span><span class="n">me</span><span class="p">%</span><span class="n">period</span><span class="o">*</span><span class="n">day2sec</span>
+<span class="w">        </span><span class="n">etf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">period</span><span class="o">*</span><span class="n">day2sec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">2.0</span><span class="o">*</span><span class="n">me</span><span class="p">%</span><span class="n">period</span><span class="o">*</span><span class="n">day2sec</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! set up the ephemeris:</span>
+<span class="w">    </span><span class="c">!write(*,*) &#39;loading ephemeris file: &#39;//trim(me%ephemeris_file)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">use_splined_ephemeris</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        allocate</span><span class="p">(</span><span class="n">jpl_ephemeris_splined</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">)</span>
+<span class="w">        </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">eph</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">)</span>
+<span class="w">            </span><span class="k">select type</span><span class="p">(</span><span class="n">eph</span><span class="p">)</span>
+<span class="w">            </span><span class="k">class is</span><span class="w"> </span><span class="p">(</span><span class="n">jpl_ephemeris_splined</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">eph</span><span class="p">%</span><span class="n">initialize_splinded_ephemeris</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">ephemeris_file</span><span class="p">,&amp;</span>
+<span class="w">                                                       </span><span class="n">status_ok</span><span class="o">=</span><span class="n">status_ok</span><span class="p">,&amp;</span>
+<span class="w">                                                       </span><span class="n">et0</span><span class="o">=</span><span class="n">et0</span><span class="p">,</span><span class="n">dt</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">dt_spline_sec</span><span class="p">,</span><span class="n">etf</span><span class="o">=</span><span class="n">etf</span><span class="p">)</span>
+<span class="w">                </span><span class="c">! If not using jupiter, destroy it here</span>
+<span class="w">                </span><span class="c">! (note: inefficient but it&#39;s pretty fast so not a big deal)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">include_pointmass_jupiter</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">eph</span><span class="p">%</span><span class="n">jupiter_eph_interface</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">end select</span>
+<span class="k">        end associate</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error initializing splined ephemeris&#39;</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        allocate</span><span class="p">(</span><span class="n">jpl_ephemeris</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">ephemeris_file</span><span class="p">,</span><span class="n">status_ok</span><span class="o">=</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error initializing ephemeris&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">pointmass_central_body</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! set up the force model [main body is moon]:</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">grav</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">grav</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">gravfile</span><span class="p">,</span><span class="n">grav_n</span><span class="p">,</span><span class="n">grav_m</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error initializing gravity model&#39;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">grav_frame</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="c">! using the splined moon_pa frame for the gravity model</span>
+<span class="w">            </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">moon_pa</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">moon_pa</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">moon_pa_file</span><span class="p">,</span><span class="w"> </span><span class="n">et0</span><span class="o">=</span><span class="n">et0</span><span class="p">,</span><span class="w"> </span><span class="n">etf</span><span class="o">=</span><span class="n">etf</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end if</span>
+
+<span class="w">    </span><span class="c">! now, we set up the segment structure for the problem we are solving:</span>
+<span class="w">    </span><span class="c">! This is for the &quot;forward-backward&quot; method from the paper (see Figure 2b):</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">n_segs</span><span class="p">))</span>
+
+<span class="w">    </span><span class="c">! set up the integrators:</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">initialize</span><span class="p">(</span><span class="n">n_eoms</span><span class="p">,</span><span class="n">maxnum</span><span class="p">,</span><span class="n">ballistic_derivs</span><span class="p">,&amp;</span>
+<span class="w">                                   </span><span class="p">[</span><span class="n">me</span><span class="p">%</span><span class="n">rtol</span><span class="p">],[</span><span class="n">me</span><span class="p">%</span><span class="n">atol</span><span class="p">],&amp;</span>
+<span class="w">                                   </span><span class="n">report</span><span class="o">=</span><span class="n">trajectory_export_func</span><span class="p">)</span>
+
+<span class="w">        </span><span class="c">! make a copy of this global variable in the segment.</span>
+<span class="w">        </span><span class="c">! [this was set in read_config_file]</span>
+<span class="w">        </span><span class="c">! [figure out a way to avoid this..]</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">et_ref</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">use_openmp</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="c">! make a copy for each segment, so they can run in parallel</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">pointmass_central_body</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">grav</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">grav</span><span class="p">)</span><span class="w">  </span><span class="c">! maybe not necessary? (is this threadsafe?)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">grav_frame</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">moon_pa</span><span class="p">,</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">moon_pa</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">eph</span><span class="p">,</span><span class="w">  </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="c">! for serial use, each seg just points to the global ones for the whole mission</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">pointmass_central_body</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">grav</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">grav</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">grav_frame</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">moon_pa</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">moon_pa</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">eph</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">eph</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">pointmass_central_body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">pointmass_central_body</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">include_pointmass_earth</span><span class="w">   </span><span class="o">=</span><span class="w">  </span><span class="n">me</span><span class="p">%</span><span class="n">include_pointmass_earth</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">include_pointmass_sun</span><span class="w">     </span><span class="o">=</span><span class="w">  </span><span class="n">me</span><span class="p">%</span><span class="n">include_pointmass_sun</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">include_pointmass_jupiter</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">me</span><span class="p">%</span><span class="n">include_pointmass_jupiter</span>
+
+<span class="w">        </span><span class="c">! set 3rd body grav routine:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">use_battin_gravity</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">third_body_gravity</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">third_body_gravity_alt</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">third_body_gravity</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">third_body_gravity</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="w">        </span><span class="c">! name all the segments:</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="n">seg_name</span><span class="p">,</span><span class="s1">&#39;(I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">i</span>
+<span class="w">        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">seg_name</span><span class="p">))</span>
+
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">! load the initial guess from the patch point file:</span>
+<span class="w">    </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span>
+<span class="w">    </span><span class="k">do </span><span class="n">irev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span>
+
+<span class="w">        </span><span class="c">! these are all unscaled values:</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">periapsis</span><span class="p">%</span><span class="n">t</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_initial_r</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">initial_r</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">x0_rotating</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">initial_r</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="c">! use the user-specified r vector</span>
+<span class="w">            </span><span class="n">x0_rotating</span><span class="p">(</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">periapsis</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">periapsis</span><span class="p">%</span><span class="n">rv</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="k">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period8</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">t</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">apoapsis</span><span class="p">%</span><span class="n">t</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">apoapsis</span><span class="p">%</span><span class="n">rv</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period8</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">4</span><span class="p">)</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period8</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">apoapsis</span><span class="p">%</span><span class="n">t</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">t</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="o">-</span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">3</span><span class="p">),&amp;</span>
+<span class="w">                            </span><span class="o">-</span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span><span class="o">-</span><span class="n">me</span><span class="p">%</span><span class="n">quarter</span><span class="p">%</span><span class="n">rv</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">periapsis</span><span class="p">%</span><span class="n">rv</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period8</span>
+
+<span class="w">        </span><span class="n">t0</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">        </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">        </span><span class="n">tf</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">do </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span>
+
+<span class="w">            </span><span class="c">! put the data for this rev into the segments:</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="n">set_input</span><span class="p">(</span><span class="n">t0</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="n">tf</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="n">x0_rotating</span><span class="p">(:,</span><span class="n">j</span><span class="p">))</span>
+
+<span class="w">            </span><span class="c">! also set the scales:</span>
+<span class="w">            </span><span class="c">! the t0 gradually grows larger so use the initial value for each segment.</span>
+<span class="w">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">magnitude</span><span class="p">(</span><span class="mf">2.0_wp</span><span class="o">*</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">))</span><span class="w">    </span><span class="c">! magic number</span>
+
+<span class="w">            </span><span class="c">! do the same for the states, but just in case, specify the min values:</span>
+<span class="w">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">magnitude</span><span class="p">(</span><span class="mf">2.0_wp</span><span class="o">*</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="p">,</span><span class="w"> </span><span class="n">xscale_x0</span><span class="p">))</span>
+
+<span class="w">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">xf_rotating_scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fscale_xf</span><span class="w">  </span><span class="c">! these are all the same for the constraints</span>
+
+<span class="w">            </span><span class="c">! scale the dperts</span>
+<span class="w">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating_dpert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating_dpert</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating_scale</span>
+<span class="w">            </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0_dpert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0_dpert</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="n">j</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0_scale</span>
+
+<span class="w">        </span><span class="k">end do</span>
+
+<span class="w">        </span><span class="c">! for next rev:</span>
+<span class="w">        </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">35</span>
+<span class="w">        </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span>
+<span class="w">        </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t_periapsis</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">period</span><span class="w"> </span><span class="c">! add another period</span>
+
+<span class="w">    </span><span class="k">end do</span>
+
+
+<span class="k">    allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">xname</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">dpert_</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fscale</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+
+<span class="w">    </span><span class="c">! also set the scale factors:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">get_scales_from_segs</span><span class="p">()</span>
+
+<span class="w">    </span><span class="c">! update with the new dperts:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">set_dpert</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">dpert_</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! get the initial guess from the mission:</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w">    </span><span class="c">! size the opt var vector</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">get_problem_arrays</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    end subroutine </span><span class="n">initialize_the_mission</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

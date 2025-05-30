@@ -1,0 +1,883 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>plot_trajectory &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>plot_trajectory
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.7% of total for procedures.">89 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">plot_trajectory</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/plot_trajectory.html#src">plot_trajectory</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine plot_trajectory(me, filename, export_trajectory, draw_trajectory, only_first_rev)  
+</h2>
+    
+
+    <p>Plot the trajectory using matplotlib and/or generate a text file (for MKSPK)</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>It is assumed that all the data is present in the segments needed to propagate.</p>
+</div>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~29"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~4"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+                <p>plot file name [without extension]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-export_trajectory"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>export_trajectory</strong></td>
+            <td>
+                <p>if true, a text trajectory
+file is also produced
+(that can be read by MKSPK)
+[default is False]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-draw_trajectory"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>draw_trajectory</strong></td>
+            <td>
+                <p>if true [Default], a matplotlib
+plot is generated</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-only_first_rev"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>only_first_rev</strong></td>
+            <td>
+                <p>to only do the first rev [Default is False]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~plot_trajectory~~CallsGraph Pages: 1 -->
+<svg id="procplot_trajectoryCallsGraph" width="605pt" height="368pt"
+ viewBox="0.00 0.00 605.00 368.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~plot_trajectory~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 364)">
+<title>proc~~plot_trajectory~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-364 601,-364 601,4 -4,4"/>
+<!-- proc~plot_trajectory -->
+<g id="proc~~plot_trajectory~~CallsGraph_node1" class="node">
+<title>proc~plot_trajectory</title>
+<polygon fill="none" stroke="black" points="169,-234 0,-234 0,-210 169,-210 169,-234"/>
+<text text-anchor="middle" x="84.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%plot_trajectory</text>
+</g>
+<!-- add_3d_plot -->
+<g id="proc~~plot_trajectory~~CallsGraph_node2" class="node">
+<title>add_3d_plot</title>
+<polygon fill="#777777" stroke="#777777" points="331,-360 254,-360 254,-336 331,-336 331,-360"/>
+<text text-anchor="middle" x="292.5" y="-345.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_3d_plot</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;add_3d_plot -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge1" class="edge">
+<title>proc~plot_trajectory&#45;&gt;add_3d_plot</title>
+<path fill="none" stroke="#000000" d="M95.65,-234.16C114.71,-256.19 158.2,-302.66 205,-327 217.02,-333.25 230.95,-337.68 244.07,-340.81"/>
+<polygon fill="#000000" stroke="#000000" points="243.39,-344.24 253.9,-342.95 244.88,-337.4 243.39,-344.24"/>
+</g>
+<!-- add_sphere -->
+<g id="proc~~plot_trajectory~~CallsGraph_node3" class="node">
+<title>add_sphere</title>
+<polygon fill="#777777" stroke="#777777" points="329.5,-318 255.5,-318 255.5,-294 329.5,-294 329.5,-318"/>
+<text text-anchor="middle" x="292.5" y="-303.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_sphere</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;add_sphere -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge2" class="edge">
+<title>proc~plot_trajectory&#45;&gt;add_sphere</title>
+<path fill="none" stroke="#000000" d="M104.68,-234.02C127.72,-248.01 167.93,-270.98 205,-285 217.78,-289.84 232.06,-293.84 245.27,-297"/>
+<polygon fill="#000000" stroke="#000000" points="244.6,-300.44 255.13,-299.26 246.16,-293.62 244.6,-300.44"/>
+</g>
+<!-- initialize -->
+<g id="proc~~plot_trajectory~~CallsGraph_node4" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="321,-276 264,-276 264,-252 321,-252 321,-276"/>
+<text text-anchor="middle" x="292.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;initialize -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge3" class="edge">
+<title>proc~plot_trajectory&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M144.53,-234.04C179.78,-241.22 223.49,-250.13 254.04,-256.36"/>
+<polygon fill="#000000" stroke="#000000" points="253.37,-259.8 263.86,-258.37 254.76,-252.94 253.37,-259.8"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~plot_trajectory~~CallsGraph_node5" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~plot_trajectory~~CallsGraph_node5"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="377.5,-234 207.5,-234 207.5,-210 377.5,-210 377.5,-234"/>
+<text text-anchor="middle" x="292.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge4" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M169.29,-222C178.53,-222 187.99,-222 197.35,-222"/>
+<polygon fill="#000000" stroke="#000000" points="197.45,-225.5 207.45,-222 197.45,-218.5 197.45,-225.5"/>
+</g>
+<!-- proc~get_case_name -->
+<g id="proc~~plot_trajectory~~CallsGraph_node6" class="node">
+<title>proc~get_case_name</title>
+<g id="a_proc~~plot_trajectory~~CallsGraph_node6"><a xlink:href="../proc/get_case_name.html" xlink:title="mission_type%get_case_name">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="380,-192 205,-192 205,-168 380,-168 380,-192"/>
+<text text-anchor="middle" x="292.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_case_name</text>
+</a>
+</g>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~get_case_name -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge5" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M144.53,-209.96C168.88,-205 197.27,-199.21 222.57,-194.05"/>
+<polygon fill="#000000" stroke="#000000" points="223.36,-197.46 232.46,-192.04 221.96,-190.61 223.36,-197.46"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~plot_trajectory~~CallsGraph_node7" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~plot_trajectory~~CallsGraph_node7"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="380,-150 205,-150 205,-126 380,-126 380,-150"/>
+<text text-anchor="middle" x="292.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~propagate_segment -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge6" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M104.68,-209.98C127.72,-195.99 167.93,-173.02 205,-159 210.88,-156.78 217.08,-154.73 223.34,-152.86"/>
+<polygon fill="#000000" stroke="#000000" points="224.54,-156.16 233.2,-150.06 222.63,-149.42 224.54,-156.16"/>
+</g>
+<!-- savefig -->
+<g id="proc~~plot_trajectory~~CallsGraph_node8" class="node">
+<title>savefig</title>
+<polygon fill="#777777" stroke="#777777" points="319.5,-108 265.5,-108 265.5,-84 319.5,-84 319.5,-108"/>
+<text text-anchor="middle" x="292.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">savefig</text>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;savefig -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge7" class="edge">
+<title>proc~plot_trajectory&#45;&gt;savefig</title>
+<path fill="none" stroke="#000000" d="M95.65,-209.84C114.71,-187.81 158.2,-141.34 205,-117 220.52,-108.93 239.23,-103.89 255.27,-100.78"/>
+<polygon fill="#000000" stroke="#000000" points="256.13,-104.18 265.37,-99 254.91,-97.29 256.13,-104.18"/>
+</g>
+<!-- proc~int_to_string -->
+<g id="proc~~plot_trajectory~~CallsGraph_node12" class="node">
+<title>proc~int_to_string</title>
+<g id="a_proc~~plot_trajectory~~CallsGraph_node12"><a xlink:href="../proc/int_to_string.html" xlink:title="int_to_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="545,-276 468,-276 468,-252 545,-252 545,-276"/>
+<text text-anchor="middle" x="506.5" y="-261.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">int_to_string</text>
+</a>
+</g>
+</g>
+<!-- proc~get_case_name&#45;&gt;proc~int_to_string -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge8" class="edge">
+<title>proc~get_case_name&#45;&gt;proc~int_to_string</title>
+<path fill="none" stroke="#000000" d="M361.29,-192.04C367.84,-194.49 374.2,-197.44 380,-201 400.96,-213.85 394.99,-230.23 416,-243 428.51,-250.61 443.55,-255.46 457.69,-258.55"/>
+<polygon fill="#000000" stroke="#000000" points="457.3,-262.04 467.79,-260.51 458.64,-255.17 457.3,-262.04"/>
+</g>
+<!-- first_call -->
+<g id="proc~~plot_trajectory~~CallsGraph_node9" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="535,-234 478,-234 478,-210 535,-210 535,-234"/>
+<text text-anchor="middle" x="506.5" y="-219.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge9" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M361.29,-150.04C367.84,-152.49 374.2,-155.44 380,-159 400.96,-171.85 394.99,-188.23 416,-201 431.58,-210.48 451.09,-215.68 467.91,-218.53"/>
+<polygon fill="#000000" stroke="#000000" points="467.57,-222.02 477.98,-220.02 468.6,-215.09 467.57,-222.02"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~plot_trajectory~~CallsGraph_node10" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="540,-192 473,-192 473,-168 540,-168 540,-192"/>
+<text text-anchor="middle" x="506.5" y="-177.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge10" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M354.25,-150.04C388.99,-156.92 431.71,-165.38 462.87,-171.56"/>
+<polygon fill="#000000" stroke="#000000" points="462.48,-175.05 472.97,-173.56 463.84,-168.18 462.48,-175.05"/>
+</g>
+<!-- integrate -->
+<g id="proc~~plot_trajectory~~CallsGraph_node11" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="537,-150 476,-150 476,-126 537,-126 537,-150"/>
+<text text-anchor="middle" x="506.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge11" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M380.03,-138C409.75,-138 441.59,-138 465.76,-138"/>
+<polygon fill="#000000" stroke="#000000" points="465.95,-141.5 475.95,-138 465.95,-134.5 465.95,-141.5"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~plot_trajectory~~CallsGraph_node13" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~plot_trajectory~~CallsGraph_node13"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="597,-108 416,-108 416,-84 597,-84 597,-108"/>
+<text text-anchor="middle" x="506.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge12" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M354.25,-125.96C379.42,-120.98 408.78,-115.16 434.9,-109.99"/>
+<polygon fill="#000000" stroke="#000000" points="435.61,-113.41 444.74,-108.04 434.25,-106.55 435.61,-113.41"/>
+</g>
+<!-- transform -->
+<g id="proc~~plot_trajectory~~CallsGraph_node14" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="539,-66 474,-66 474,-42 539,-42 539,-66"/>
+<text text-anchor="middle" x="506.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge13" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M361.29,-125.96C367.84,-123.51 374.2,-120.56 380,-117 400.96,-104.15 394.99,-87.77 416,-75 430.32,-66.29 447.95,-61.2 463.76,-58.21"/>
+<polygon fill="#000000" stroke="#000000" points="464.55,-61.63 473.84,-56.54 463.4,-54.72 464.55,-61.63"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~plot_trajectory~~CallsGraph_node15" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="580,-24 433,-24 433,0 580,0 580,-24"/>
+<text text-anchor="middle" x="506.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~plot_trajectory~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M366.36,-125.88C371.25,-123.42 375.87,-120.49 380,-117 411.01,-90.77 384.89,-59.11 416,-33 418.43,-30.96 421.02,-29.11 423.73,-27.44"/>
+<polygon fill="#000000" stroke="#000000" points="425.56,-30.43 432.76,-22.66 422.28,-24.25 425.56,-30.43"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~plot_trajectory~~CalledByGraph Pages: 1 -->
+<svg id="procplot_trajectoryCalledByGraph" width="319pt" height="32pt"
+ viewBox="0.00 0.00 319.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~plot_trajectory~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>proc~~plot_trajectory~~CalledByGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 315,-28 315,4 -4,4"/>
+<!-- proc~plot_trajectory -->
+<g id="proc~~plot_trajectory~~CalledByGraph_node1" class="node">
+<title>proc~plot_trajectory</title>
+<polygon fill="none" stroke="black" points="311,-24 142,-24 142,0 311,0 311,-24"/>
+<text text-anchor="middle" x="226.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%plot_trajectory</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~plot_trajectory~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~plot_trajectory~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="106,-24 0,-24 0,0 106,0 106,-24"/>
+<text text-anchor="middle" x="53" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~plot_trajectory -->
+<g id="proc~~plot_trajectory~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~plot_trajectory</title>
+<path fill="none" stroke="#000000" d="M106.39,-12C114.46,-12 123,-12 131.65,-12"/>
+<polygon fill="#000000" stroke="#000000" points="131.83,-15.5 141.83,-12 131.83,-8.5 131.83,-15.5"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">plot_trajectory</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">export_trajectory</span><span class="p">,</span><span class="n">draw_trajectory</span><span class="p">,</span><span class="n">only_first_rev</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! plot file name [without extension]</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export_trajectory</span><span class="w">    </span><span class="c">!! if true, a text trajectory</span>
+<span class="w">                                                        </span><span class="c">!! file is also produced</span>
+<span class="w">                                                        </span><span class="c">!! (that can be read by MKSPK)</span>
+<span class="w">                                                        </span><span class="c">!! [default is False]</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">draw_trajectory</span><span class="w">      </span><span class="c">!! if true [Default], a matplotlib</span>
+<span class="w">                                                        </span><span class="c">!! plot is generated</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">only_first_rev</span><span class="w">       </span><span class="c">!! to only do the first rev [Default is False]</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">pyplot</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plt</span><span class="w">  </span><span class="c">!! for generating the plots</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">  </span><span class="c">!! segment number counter</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istat</span><span class="w"> </span><span class="c">!! pyplot status code</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg_str</span><span class="w"> </span><span class="c">!! string version of segment number</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">export</span><span class="w">  </span><span class="c">!! if the txt file is to be produced</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plot</span><span class="w">    </span><span class="c">!! if the py file is to be produced</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iunit</span><span class="w"> </span><span class="c">!! file unit for the txt file</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="c">!! counter for txt file write</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istart</span><span class="p">,</span><span class="n">iend</span><span class="p">,</span><span class="n">istep</span><span class="w">  </span><span class="c">!! index counters</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="c">!! number of segments to plot</span>
+<span class="w">    </span><span class="c">!integer :: iendprev</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">last_et_written</span><span class="w"> </span><span class="c">!! to keep track of the last et written to the file</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">first</span><span class="w"> </span><span class="c">!! the first point has been written to the file</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">figsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span><span class="w"> </span><span class="c">!! figure size for plotting</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">plot_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">!! if true, the rotating state is plotted.</span>
+<span class="w">                                                 </span><span class="c">!! if false, the inertial state is plotted.</span>
+
+<span class="w">    </span><span class="c">! optional arguments:</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">export_trajectory</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">export</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">export_trajectory</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        </span><span class="n">export</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">draw_trajectory</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">draw_trajectory</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        </span><span class="n">plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span><span class="w"> </span><span class="c">! default export all the segments</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">)</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="c">! only the first rev (8 segments)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">plot</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="c">! nothing to do</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! initialize the plot:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">grid</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span>
+<span class="w">                            </span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nx (km)&#39;</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;\n\n\ny (km)&#39;</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">zlabel</span><span class="o">=</span><span class="s1">&#39;\n\n\nz (km)&#39;</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">figsize</span><span class="w">         </span><span class="o">=</span><span class="n">figsize</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">font_size</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">axes_labelsize</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">25</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">xtick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">ytick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">ztick_labelsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">,&amp;</span>
+<span class="w">                            </span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Halo Trajectory: &#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">),&amp;</span>
+<span class="w">                            </span><span class="n">legend</span><span class="o">=</span><span class="p">.</span><span class="n">false</span><span class="p">.,&amp;</span>
+<span class="w">                            </span><span class="n">axis_equal</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.,&amp;</span>
+<span class="w">                            </span><span class="n">mplot3d</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        open</span><span class="p">(</span><span class="n">newunit</span><span class="o">=</span><span class="n">iunit</span><span class="p">,</span><span class="k">file</span><span class="o">=</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;REPLACE&#39;</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">istat</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;error opening trajectory file.&#39;</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! destroy all trajectories:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="k">    </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span><span class="w">  </span><span class="c">! to flag when the first point has been written</span>
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span>
+
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">,</span><span class="s1">&#39;(I10)&#39;</span><span class="p">)</span><span class="w"> </span><span class="n">iseg</span>
+
+<span class="w">        </span><span class="c">! generate the trajectory for this segment:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">propagate</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">    </span><span class="c">! [export points]</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="c">! export to plot:</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">plot_rotating</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span>
+<span class="w">                                     </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="k">                call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_3d_plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">y</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">z</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span>
+<span class="w">                                     </span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;seg&#39;</span><span class="o">//</span><span class="nb">trim</span><span class="p">(</span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)),&amp;</span>
+<span class="w">                                     </span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;r-&#39;</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">        end if</span>
+
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="w">            </span><span class="c">! write the trajectory data:     ! Note: THIS HAS TO BE THE INERTIAL FRAME FOR THE SPK FILE</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! forward propagated</span>
+<span class="w">                </span><span class="n">istart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="n">iend</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">                </span><span class="n">istep</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c">! backward propagated</span>
+<span class="w">                </span><span class="n">istart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">                </span><span class="n">iend</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="n">istep</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="w">            </span><span class="c">! note: MKSPK does not allow duplicate time tags and we also want to avoid points</span>
+<span class="w">            </span><span class="c">! too close together since that may cause interpolation artifacts. so we have the</span>
+<span class="w">            </span><span class="c">! user-specified min_export_time_step. we don&#39;t allow points to be sent to the</span>
+<span class="w">            </span><span class="c">! bsp file where the time delta is &lt;= this value.</span>
+
+<span class="w">            </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="n">istart</span><span class="p">,</span><span class="n">iend</span><span class="p">,</span><span class="n">istep</span>
+<span class="w">                </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">et</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">first</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                        if</span><span class="w"> </span><span class="p">((</span><span class="n">et</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">last_et_written</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">min_export_time_step</span><span class="p">)</span><span class="w"> </span><span class="k">cycle</span>
+<span class="k">                    else</span>
+<span class="k">                        </span><span class="n">first</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">                    </span><span class="k">end if</span>
+<span class="k">                    </span><span class="n">last_et_written</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">et</span><span class="w"> </span><span class="c">! save this so we can track this delta</span>
+<span class="w">                    </span><span class="c">! inertial trajectory for SPK:</span>
+<span class="w">                    </span><span class="k">write</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="s1">&#39;(*(E30.16E3,A,1X))&#39;</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                        </span><span class="n">et</span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">,</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;;&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s1">&#39;&#39;</span>
+<span class="w">                </span><span class="k">end associate</span>
+<span class="k">            end do</span>
+<span class="k">        end if</span>
+
+<span class="k">    end do</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">plot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! add the moon as a sphere:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">add_sphere</span><span class="p">(</span><span class="n">r</span><span class="o">=</span><span class="n">rad_moon</span><span class="p">,</span><span class="n">xc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">yc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">zc</span><span class="o">=</span><span class="n">zero</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;Grey&#39;</span><span class="p">)</span>
+
+<span class="w">        </span><span class="c">! save the plot:</span>
+<span class="w">        </span><span class="c">! call plt%showfig(pyfile=trim(filename)//&#39;.py&#39;,istat=istat)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">savefig</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.png&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">pyfile</span><span class="o">=</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">&#39;_&#39;</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="n">dpi</span><span class="o">=</span><span class="s1">&#39;300&#39;</span><span class="p">,&amp;</span>
+<span class="w">                        </span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+
+<span class="w">        </span><span class="c">! cleanup:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">plt</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">export</span><span class="p">)</span><span class="w"> </span><span class="k">close</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">plot_trajectory</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,478 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>trajectory_export_func &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>trajectory_export_func
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.2% of total for procedures.">29 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">trajectory_export_func</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/trajectory_export_func.html#src">trajectory_export_func</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine trajectory_export_func(me, t, x)  
+</h2>
+    
+
+    <p>Export a trajectory point during propagation.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>It saves both the inertial and rotating trajectory
+      for plotting and exporting later.</p>
+</div>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~35"></span>
+              class(ddeabm_class),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>time from integrator (sec from sim epoch)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~23"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>state [moon-centered inertial frame]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: proc~~trajectory_export_func~~CallsGraph Pages: 1 -->
+<svg id="proctrajectory_export_funcCallsGraph" width="323pt" height="158pt"
+ viewBox="0.00 0.00 323.00 158.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~trajectory_export_func~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 154)">
+<title>proc~~trajectory_export_func~~CallsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-154 319,-154 319,4 -4,4"/>
+<!-- proc~trajectory_export_func -->
+<g id="proc~~trajectory_export_func~~CallsGraph_node1" class="node">
+<title>proc~trajectory_export_func</title>
+<polygon fill="none" stroke="black" points="132,-87 0,-87 0,-63 132,-63 132,-87"/>
+<text text-anchor="middle" x="66" y="-72.6" font-family="Helvetica,sans-Serif" font-size="10.50">trajectory_export_func</text>
+</g>
+<!-- add -->
+<g id="proc~~trajectory_export_func~~CallsGraph_node2" class="node">
+<title>add</title>
+<polygon fill="#777777" stroke="#777777" points="268.5,-150 214.5,-150 214.5,-126 268.5,-126 268.5,-150"/>
+<text text-anchor="middle" x="241.5" y="-135.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add</text>
+</g>
+<!-- proc~trajectory_export_func&#45;&gt;add -->
+<g id="proc~~trajectory_export_func~~CallsGraph_edge1" class="edge">
+<title>proc~trajectory_export_func&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M93.69,-87.06C113.87,-95.94 142.38,-107.99 168,-117 179.76,-121.13 192.79,-125.1 204.53,-128.44"/>
+<polygon fill="#000000" stroke="#000000" points="203.87,-131.89 214.44,-131.21 205.75,-125.15 203.87,-131.89"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~trajectory_export_func~~CallsGraph_node3" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="275,-108 208,-108 208,-84 275,-84 275,-108"/>
+<text text-anchor="middle" x="241.5" y="-93.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~trajectory_export_func&#45;&gt;icrf_frame -->
+<g id="proc~~trajectory_export_func~~CallsGraph_edge2" class="edge">
+<title>proc~trajectory_export_func&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M132.1,-82.88C154.04,-85.54 177.96,-88.43 197.74,-90.82"/>
+<polygon fill="#000000" stroke="#000000" points="197.32,-94.3 207.67,-92.03 198.16,-87.35 197.32,-94.3"/>
+</g>
+<!-- transform -->
+<g id="proc~~trajectory_export_func~~CallsGraph_node4" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="274,-66 209,-66 209,-42 274,-42 274,-66"/>
+<text text-anchor="middle" x="241.5" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~trajectory_export_func&#45;&gt;transform -->
+<g id="proc~~trajectory_export_func~~CallsGraph_edge3" class="edge">
+<title>proc~trajectory_export_func&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M132.1,-67.12C154.37,-64.42 178.68,-61.48 198.62,-59.07"/>
+<polygon fill="#000000" stroke="#000000" points="199.11,-62.54 208.61,-57.86 198.27,-55.59 199.11,-62.54"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~trajectory_export_func~~CallsGraph_node5" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="315,-24 168,-24 168,0 315,0 315,-24"/>
+<text text-anchor="middle" x="241.5" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~trajectory_export_func&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~trajectory_export_func~~CallsGraph_edge4" class="edge">
+<title>proc~trajectory_export_func&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M93.69,-62.94C113.87,-54.06 142.38,-42.01 168,-33 173.84,-30.95 180,-28.94 186.15,-27.02"/>
+<polygon fill="#000000" stroke="#000000" points="187.22,-30.35 195.77,-24.1 185.19,-23.66 187.22,-30.35"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 27.51" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.86 0.86) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 741.5,-28 741.5,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="70,-24 0,-24 0,0 70,0 70,-24"/>
+<text text-anchor="middle" x="35" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="146,-24 88,-24 88,0 146,0 146,-24"/>
+<text text-anchor="middle" x="117" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="225.5,-24 164.5,-24 164.5,0 225.5,0 225.5,-24"/>
+<text text-anchor="middle" x="195" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="374,-24 244,-24 244,0 374,0 374,-24"/>
+<text text-anchor="middle" x="309" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="537.5,-24 392.5,-24 392.5,0 537.5,0 537.5,-24"/>
+<text text-anchor="middle" x="465" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="614,-24 556,-24 556,0 614,0 614,-24"/>
+<text text-anchor="middle" x="585" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="737.5,-24 632.5,-24 632.5,0 737.5,0 737.5,-24"/>
+<text text-anchor="middle" x="685" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">trajectory_export_func</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">ddeabm_class</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="w">    </span><span class="c">!! time from integrator (sec from sim epoch)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">    </span><span class="c">!! state [moon-centered inertial frame]</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et</span><span class="w"> </span><span class="c">!! ephemeris time [sec]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_rotating</span><span class="w"> </span><span class="c">!! the state to export</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_se_rotating</span><span class="w"> </span><span class="c">!! the state to export</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">icrf_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inertial</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">two_body_rotating_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rotating</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">two_body_rotating_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">se_rotating</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span><span class="w"> </span><span class="c">!! transformation status flag</span>
+
+<span class="w">    </span><span class="k">select type</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
+<span class="w">    </span><span class="k">class is</span><span class="w"> </span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
+
+<span class="w">        </span><span class="n">et</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t</span><span class="w">  </span><span class="c">! convert to ephemeris time [sec]</span>
+
+<span class="w">        </span><span class="c">! convert state to the moon-centered rotating frame</span>
+<span class="w">        </span><span class="n">inertial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icrf_frame</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">body_moon</span><span class="p">)</span>
+<span class="w">        </span><span class="n">rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two_body_rotating_frame</span><span class="p">(</span><span class="n">primary_body</span><span class="o">=</span><span class="n">body_earth</span><span class="p">,&amp;</span>
+<span class="w">                                           </span><span class="n">secondary_body</span><span class="o">=</span><span class="n">body_moon</span><span class="p">,&amp;</span>
+<span class="w">                                           </span><span class="n">center</span><span class="o">=</span><span class="n">center_at_secondary_body</span><span class="p">,&amp;</span>
+<span class="w">                                           </span><span class="n">et</span><span class="o">=</span><span class="n">et</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! from inertial to rotating:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">inertial</span><span class="p">%</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">rotating</span><span class="p">,</span><span class="n">et</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="n">x_rotating</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;transformation error in propagate_segment&#39;</span>
+
+<span class="w">        </span><span class="c">! also convert to sun-earth rotating for plotting: -- really should only do when when exporting the json traj file</span>
+<span class="w">        </span><span class="n">se_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two_body_rotating_frame</span><span class="p">(</span><span class="n">primary_body</span><span class="o">=</span><span class="n">body_sun</span><span class="p">,&amp;</span>
+<span class="w">                                              </span><span class="n">secondary_body</span><span class="o">=</span><span class="n">body_earth</span><span class="p">,&amp;</span>
+<span class="w">                                              </span><span class="n">center</span><span class="o">=</span><span class="n">center_at_secondary_body</span><span class="p">,&amp;</span>
+<span class="w">                                              </span><span class="n">et</span><span class="o">=</span><span class="n">et</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! from inertial to rotating:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">inertial</span><span class="p">%</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">se_rotating</span><span class="p">,</span><span class="n">et</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="n">x_se_rotating</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;transformation error in propagate_segment&#39;</span>
+
+<span class="w">        </span><span class="c">! save both the inertial and rotating trajectories:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">et</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">et</span><span class="p">,</span><span class="n">x_rotating</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">et</span><span class="p">,</span><span class="n">x_se_rotating</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">class </span><span class="n">default</span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">&#39;invalid class in trajectory_export_func&#39;</span>
+<span class="w">    </span><span class="k">end select</span>
+
+<span class="k">    end subroutine </span><span class="n">trajectory_export_func</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

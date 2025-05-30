@@ -1,0 +1,685 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>my_solver_type &ndash; halo </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>my_solver_type
+      <small>Derived Type</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 3.2% of total for derived types.</p>Including implementation: 213 statements, 10.6% of total for derived types.">6 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">my_solver_type</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/my_solver_type.html#variable-mission">mission</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/my_solver_type.html#boundprocedure-init~2">init</a>
+            <a class="list-group-item" href="../type/my_solver_type.html#boundprocedure-read_config_file">read_config_file</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../type/my_solver_type.html#src">my_solver_type</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2 id="type-def-statement">
+        type, public, extends(nlesolver_type) :: my_solver_type</h2>
+    <p>the solver class, which contains
+an instance of the mission</p>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherits</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: type~~my_solver_type~~InheritsGraph Pages: 1 -->
+<svg id="typemy_solver_typeInheritsGraph" width="641pt" height="284pt"
+ viewBox="0.00 0.00 641.00 283.95" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~my_solver_type~~InheritsGraph" class="graph" transform="scale(0.7 0.7) rotate(0) translate(4 400)">
+<title>type~~my_solver_type~~InheritsGraph</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-400 908,-400 908,4 -4,4"/>
+<!-- type~my_solver_type -->
+<g id="type~~my_solver_type~~InheritsGraph_node1" class="node">
+<title>type~my_solver_type</title>
+<polygon fill="none" stroke="black" points="904,-180 809,-180 809,-156 904,-156 904,-180"/>
+<text text-anchor="middle" x="856.5" y="-165.6" font-family="Helvetica,sans-Serif" font-size="10.50">my_solver_type</text>
+</g>
+<!-- nlesolver_type -->
+<g id="type~~my_solver_type~~InheritsGraph_node2" class="node">
+<title>nlesolver_type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="735,-201 645,-201 645,-177 735,-177 735,-201"/>
+<text text-anchor="middle" x="690" y="-186.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">nlesolver_type</text>
+</g>
+<!-- type~my_solver_type&#45;&gt;nlesolver_type -->
+<g id="type~~my_solver_type~~InheritsGraph_edge2" class="edge">
+<title>type~my_solver_type&#45;&gt;nlesolver_type</title>
+<path fill="none" stroke="#000000" d="M808.8,-173.96C789.06,-176.48 765.92,-179.44 745.41,-182.05"/>
+<polygon fill="#000000" stroke="#000000" points="744.75,-178.61 735.27,-183.35 745.63,-185.55 744.75,-178.61"/>
+</g>
+<!-- type~mission_type -->
+<g id="type~~my_solver_type~~InheritsGraph_node3" class="node">
+<title>type~mission_type</title>
+<g id="a_type~~my_solver_type~~InheritsGraph_node3"><a xlink:href="../type/mission_type.html" xlink:title="mission_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="731,-159 649,-159 649,-135 731,-135 731,-159"/>
+<text text-anchor="middle" x="690" y="-144.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type</text>
+</a>
+</g>
+</g>
+<!-- type~my_solver_type&#45;&gt;type~mission_type -->
+<g id="type~~my_solver_type~~InheritsGraph_edge1" class="edge">
+<title>type~my_solver_type&#45;&gt;type~mission_type</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M808.8,-162.04C787.64,-159.34 762.6,-156.14 741.06,-153.39"/>
+<polygon fill="#000000" stroke="#000000" points="741.48,-149.92 731.12,-152.12 740.59,-156.86 741.48,-149.92"/>
+<text text-anchor="middle" x="772" y="-161.4" font-family="Helvetica,sans-Serif" font-size="9.50">mission</text>
+</g>
+<!-- geopotential_model_pines -->
+<g id="type~~my_solver_type~~InheritsGraph_node4" class="node">
+<title>geopotential_model_pines</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="153,-363 0,-363 0,-339 153,-339 153,-363"/>
+<text text-anchor="middle" x="76.5" y="-348.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">geopotential_model_pines</text>
+</g>
+<!-- type~mission_type&#45;&gt;geopotential_model_pines -->
+<g id="type~~my_solver_type~~InheritsGraph_edge3" class="edge">
+<title>type~mission_type&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-340C421.35,-417.29 226.03,-386.92 132.08,-365.38"/>
+<polygon fill="#000000" stroke="#000000" points="132.76,-361.95 122.22,-363.07 131.16,-368.76 132.76,-361.95"/>
+<text text-anchor="middle" x="432" y="-388.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- jpl_ephemeris -->
+<g id="type~~my_solver_type~~InheritsGraph_node5" class="node">
+<title>jpl_ephemeris</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-309 32.5,-309 32.5,-285 120.5,-285 120.5,-309"/>
+<text text-anchor="middle" x="76.5" y="-294.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jpl_ephemeris</text>
+</g>
+<!-- type~mission_type&#45;&gt;jpl_ephemeris -->
+<g id="type~~my_solver_type~~InheritsGraph_edge4" class="edge">
+<title>type~mission_type&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M657.02,-159.07C652.66,-161.59 648.5,-164.55 645,-168 614.65,-197.94 597.67,-320.04 560,-340"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-340C524.43,-357.79 510.82,-334.63 473,-331 350.64,-319.26 206.8,-307.38 130.8,-301.25"/>
+<polygon fill="#000000" stroke="#000000" points="130.79,-297.73 120.54,-300.42 130.23,-304.71 130.79,-297.73"/>
+<text text-anchor="middle" x="432" y="-333.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- moon_frame_interpolater -->
+<g id="type~~my_solver_type~~InheritsGraph_node6" class="node">
+<title>moon_frame_interpolater</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="151,-118 2,-118 2,-94 151,-94 151,-118"/>
+<text text-anchor="middle" x="76.5" y="-103.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">moon_frame_interpolater</text>
+</g>
+<!-- type~mission_type&#45;&gt;moon_frame_interpolater -->
+<g id="type~~my_solver_type~~InheritsGraph_edge5" class="edge">
+<title>type~mission_type&#45;&gt;moon_frame_interpolater</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M558,-102C421.31,-65.81 254.98,-79.3 158.18,-92.54"/>
+<polygon fill="#000000" stroke="#000000" points="157.59,-89.09 148.17,-93.95 158.56,-96.02 157.59,-89.09"/>
+<text text-anchor="middle" x="432" y="-87.4" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- numdiff_type -->
+<g id="type~~my_solver_type~~InheritsGraph_node7" class="node">
+<title>numdiff_type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="473,-66 391,-66 391,-42 473,-42 473,-66"/>
+<text text-anchor="middle" x="432" y="-51.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numdiff_type</text>
+</g>
+<!-- type~mission_type&#45;&gt;numdiff_type -->
+<g id="type~~my_solver_type~~InheritsGraph_edge8" class="edge">
+<title>type~mission_type&#45;&gt;numdiff_type</title>
+<path fill="none" stroke="#000000" d="M658.66,-134.93C632.77,-124.99 594.39,-111.11 560,-102"/>
+<path fill="none" stroke="#000000" d="M558,-102C527.05,-93.81 493.23,-80.54 468.58,-70.02"/>
+<polygon fill="#000000" stroke="#000000" points="469.84,-66.76 459.27,-66 467.06,-73.18 469.84,-66.76"/>
+</g>
+<!-- type~patch_point -->
+<g id="type~~my_solver_type~~InheritsGraph_node8" class="node">
+<title>type~patch_point</title>
+<g id="a_type~~my_solver_type~~InheritsGraph_node8"><a xlink:href="../type/patch_point.html" xlink:title="patch_point">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="469.5,-24 394.5,-24 394.5,0 469.5,0 469.5,-24"/>
+<text text-anchor="middle" x="432" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">patch_point</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~patch_point -->
+<g id="type~~my_solver_type~~InheritsGraph_edge7" class="edge">
+<title>type~mission_type&#45;&gt;type~patch_point</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M681.01,-134.78C670.39,-119.46 650.25,-93.35 627,-78 581.46,-47.95 520.87,-30.22 479.59,-20.83"/>
+<polygon fill="#000000" stroke="#000000" points="480.32,-17.4 469.8,-18.67 478.81,-24.24 480.32,-17.4"/>
+<text text-anchor="middle" x="559" y="-80.4" font-family="Helvetica,sans-Serif" font-size="9.50">periapsis, quarter, apoapsis</text>
+</g>
+<!-- type~segment -->
+<g id="type~~my_solver_type~~InheritsGraph_node9" class="node">
+<title>type~segment</title>
+<g id="a_type~~my_solver_type~~InheritsGraph_node9"><a xlink:href="../type/segment.html" xlink:title="segment">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="461.5,-205 402.5,-205 402.5,-181 461.5,-181 461.5,-205"/>
+<text text-anchor="middle" x="432" y="-190.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~segment -->
+<g id="type~~my_solver_type~~InheritsGraph_edge6" class="edge">
+<title>type~mission_type&#45;&gt;type~segment</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M648.72,-154.24C600.18,-162.96 519.22,-177.51 471.5,-186.08"/>
+<polygon fill="#000000" stroke="#000000" points="470.78,-182.66 461.55,-187.87 472.01,-189.55 470.78,-182.66"/>
+<text text-anchor="middle" x="559" y="-183.4" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+</g>
+<!-- type~segment&#45;&gt;geopotential_model_pines -->
+<g id="type~~my_solver_type~~InheritsGraph_edge10" class="edge">
+<title>type~segment&#45;&gt;geopotential_model_pines</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M425.14,-205.14C416.27,-222.23 397.79,-253.17 373,-270 336.67,-294.66 224.31,-321.2 149.09,-336.94"/>
+<polygon fill="#000000" stroke="#000000" points="148.27,-333.54 139.19,-338.99 149.69,-340.39 148.27,-333.54"/>
+<text text-anchor="middle" x="272" y="-333.4" font-family="Helvetica,sans-Serif" font-size="9.50">grav</text>
+</g>
+<!-- type~segment&#45;&gt;jpl_ephemeris -->
+<g id="type~~my_solver_type~~InheritsGraph_edge11" class="edge">
+<title>type~segment&#45;&gt;jpl_ephemeris</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M418.89,-205.35C407.94,-215.68 390.83,-229.85 373,-237 289.13,-270.61 258.66,-238.07 171,-260 150.85,-265.04 129.24,-273.39 111.87,-280.88"/>
+<polygon fill="#000000" stroke="#000000" points="110.43,-277.69 102.7,-284.92 113.26,-284.09 110.43,-277.69"/>
+<text text-anchor="middle" x="272" y="-262.4" font-family="Helvetica,sans-Serif" font-size="9.50">eph</text>
+</g>
+<!-- type~segment&#45;&gt;moon_frame_interpolater -->
+<g id="type~~my_solver_type~~InheritsGraph_edge12" class="edge">
+<title>type~segment&#45;&gt;moon_frame_interpolater</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M420.91,-180.56C410.34,-168.5 392.58,-150.77 373,-142 354,-133.49 241.88,-121.43 161.37,-113.66"/>
+<polygon fill="#000000" stroke="#000000" points="161.51,-110.16 151.22,-112.69 160.85,-117.13 161.51,-110.16"/>
+<text text-anchor="middle" x="272" y="-144.4" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- ddeabm_class -->
+<g id="type~~my_solver_type~~InheritsGraph_node10" class="node">
+<title>ddeabm_class</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-205 32.5,-205 32.5,-181 120.5,-181 120.5,-205"/>
+<text text-anchor="middle" x="76.5" y="-190.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_class</text>
+</g>
+<!-- type~segment&#45;&gt;ddeabm_class -->
+<g id="type~~my_solver_type~~InheritsGraph_edge14" class="edge">
+<title>type~segment&#45;&gt;ddeabm_class</title>
+<path fill="none" stroke="#000000" d="M402.37,-193C343.27,-193 206.94,-193 131.01,-193"/>
+<polygon fill="#000000" stroke="#000000" points="130.71,-189.5 120.71,-193 130.71,-196.5 130.71,-189.5"/>
+</g>
+<!-- type~segment_data -->
+<g id="type~~my_solver_type~~InheritsGraph_node11" class="node">
+<title>type~segment_data</title>
+<g id="a_type~~my_solver_type~~InheritsGraph_node11"><a xlink:href="../type/segment_data.html" xlink:title="segment_data">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="120.5,-163 32.5,-163 32.5,-139 120.5,-139 120.5,-163"/>
+<text text-anchor="middle" x="76.5" y="-148.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment_data</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~segment_data -->
+<g id="type~~my_solver_type~~InheritsGraph_edge9" class="edge">
+<title>type~segment&#45;&gt;type~segment_data</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M402.25,-185.21C392.97,-182.92 382.6,-180.61 373,-179 289.09,-164.97 190.52,-157.39 131.09,-153.78"/>
+<polygon fill="#000000" stroke="#000000" points="131,-150.27 120.82,-153.17 130.59,-157.25 131,-150.27"/>
+<text text-anchor="middle" x="272" y="-181.4" font-family="Helvetica,sans-Serif" font-size="9.50">data, cached_data</text>
+</g>
+<!-- type~trajectory -->
+<g id="type~~my_solver_type~~InheritsGraph_node12" class="node">
+<title>type~trajectory</title>
+<g id="a_type~~my_solver_type~~InheritsGraph_node12"><a xlink:href="../type/trajectory.html" xlink:title="trajectory">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="108.5,-247 44.5,-247 44.5,-223 108.5,-223 108.5,-247"/>
+<text text-anchor="middle" x="76.5" y="-232.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory</text>
+</a>
+</g>
+</g>
+<!-- type~segment&#45;&gt;type~trajectory -->
+<g id="type~~my_solver_type~~InheritsGraph_edge13" class="edge">
+<title>type~segment&#45;&gt;type~trajectory</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M402.46,-198.9C393.1,-200.7 382.63,-202.58 373,-204 325.06,-211.05 188.36,-224.44 118.98,-231.08"/>
+<polygon fill="#000000" stroke="#000000" points="118.47,-227.61 108.85,-232.04 119.13,-234.58 118.47,-227.61"/>
+<text text-anchor="middle" x="272" y="-227.4" font-family="Helvetica,sans-Serif" font-size="9.50">traj_inertial, traj_rotating, traj_se_rotating</text>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var pantypemy_solver_typeInheritsGraph = svgPanZoom('#typemy_solver_typeInheritsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="186pt" height="32pt"
+ viewBox="0.00 0.00 185.50 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-28 181.5,-28 181.5,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24 0,-24 0,0 54,0 54,-24"/>
+<text text-anchor="middle" x="27" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="177.5,-24 72.5,-24 72.5,0 177.5,0 177.5,-24"/>
+<text text-anchor="middle" x="125" y="-9.6" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    <br>
+
+    <section>
+    <h2>Components</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission"></span>
+              type(<a href='mission_type.html'>mission_type</a>),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>the Halo mission</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+
+
+      <section>
+        <h2>Type-Bound Procedures</h2>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-init~2"></span>
+      <h3>
+          procedure, public ::
+  <strong>init</strong> => <a href='/home/runner/work/halo/halo/doc/proc/initialize_the_solver.html'>initialize_the_solver</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/initialize_the_solver.html'>initialize_the_solver</a>(me, config_file_name, x)  
+</h3>
+    
+
+  <p>Initialize the mission.</p><a href="../proc/initialize_the_solver.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>config_file_name</strong></td>
+            <td>
+<p>the config file to read</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>initial guess</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-read_config_file"></span>
+      <h3>
+          procedure, public ::
+  <strong>read_config_file</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    public  subroutine <a href='../proc/read_config_file.html'>read_config_file</a>(me, filename)  
+</h3>
+    
+
+  <p>Read the config file that defines the problem
+  to be solved and set all the global variables.</p><a href="../proc/read_config_file.html" class="pull-right"><emph>Read more&hellip;</emph></a>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>the JSON config file to read</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+      </section>
+
+    <section>
+    <h3><span class="anchor" id="src"></span>Source Code</h3>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">nlesolver_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">my_solver_type</span>
+
+<span class="w">        </span><span class="c">!! the solver class, which contains</span>
+<span class="w">        </span><span class="c">!! an instance of the mission</span>
+
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">mission_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mission</span><span class="w"> </span><span class="c">!! the Halo mission</span>
+
+<span class="w">    </span><span class="k">contains</span>
+
+<span class="k">        procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">initialize_the_solver</span>
+
+<span class="w">        </span><span class="k">procedure</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">read_config_file</span>
+
+<span class="w">    </span><span class="k">end type </span><span class="n">my_solver_type</span>
+</pre></div>
+
+    </section>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2025 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
