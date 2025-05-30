@@ -2472,6 +2472,10 @@
 
             do i=istart,iend,istep
                 ! inertial trajectory for SPK:
+                if (min_export_time_step>0.0_wp .and. i/=istart) then
+                    ! if using this feature, we skip points that violate the min step size
+                    if (abs(me%segs(iseg)%traj_inertial%et(i) - me%segs(iseg)%traj_inertial%et(i-istep))<min_export_time_step) cycle
+                end if
                 write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) &
                         me%segs(iseg)%traj_inertial%et(i),';',&
                         me%segs(iseg)%traj_inertial%x(i) ,';',&
@@ -2480,8 +2484,8 @@
                         me%segs(iseg)%traj_inertial%vx(i),';',&
                         me%segs(iseg)%traj_inertial%vy(i),';',&
                         me%segs(iseg)%traj_inertial%vz(i),''
+                iendprev = i   ! when loop is done this is the last one written
             end do
-            iendprev = iend
         end if
 
     end do
@@ -3311,6 +3315,7 @@
     call f%get('polynom_degree', polynom_degree, found)
     call f%get('output_spk_type', output_spk_type, found)
     call f%get('segment_id', segment_id, found); if (.not. found) segment_id = 'SPK_STATES_09'
+    call f%get('min_export_time_step', min_export_time_step, found)
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
