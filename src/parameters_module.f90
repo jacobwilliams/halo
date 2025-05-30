@@ -36,7 +36,6 @@
     integer,public :: output_spk_type = 9                    !! for mkspk: OUTPUT_SPK_TYPE
     real(wp),public :: min_export_time_step = 0.0_wp         !! minimum time (sec) step for exporting to mkspk file
                                                              !! [to try and avoid spice interpolation issues for very small time steps]
-                                                             !! <=0.0 means to disable this and use all points.
 
     type,public :: patch_point
         !! a CR3BP Halo state, to be used as
