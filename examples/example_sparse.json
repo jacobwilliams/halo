@@ -176,6 +176,7 @@
     "polynom_degree": 9,
     "output_spk_type": 9,
     "segment_id": "SPK_STATES_09",
+    "min_export_time_step": 0.0,  // minimum time step for exporting (sec) [set to 0 to disable]
 
     "generate_guess_and_solution_files": true,
     "generate_defect_file": true,

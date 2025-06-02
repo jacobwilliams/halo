@@ -2365,8 +2365,11 @@
     logical :: plot    !! if the py file is to be produced
     integer :: iunit !! file unit for the txt file
     integer :: i !! counter for txt file write
-    integer :: istart,iend,istep,iendprev  !! index counters
+    integer :: istart,iend,istep  !! index counters
     integer :: nsegs_to_plot !! number of segments to plot
+    !integer :: iendprev
+    real(wp) :: last_et_written !! to keep track of the last et written to the file
+    logical :: first !! the first point has been written to the file
 
     integer,dimension(2),parameter :: figsize = [20,20] !! figure size for plotting
     logical,parameter :: plot_rotating = .true.  !! if true, the rotating state is plotted.
@@ -2421,6 +2424,7 @@
         call me%segs(iseg)%traj_se_rotating%destroy()
     end do
 
+    first = .false.  ! to flag when the first point has been written
     do iseg = 1, nsegs_to_plot
 
         write(iseg_str,'(I10)') iseg
@@ -2461,27 +2465,30 @@
                 istep  = -1
             end if
 
-            if (iseg>1) then
-                ! if the last one written is the same as the first one here, don't write it
-                ! [MKSPK does not allow duplicate time tags]
-                if (me%segs(iseg-1)%traj_inertial%et(iendprev) >= me%segs(iseg)%traj_inertial%et(istart)) then
-                    !write(*,*) 'duplicate point: ', me%segs(iseg-1)%traj_inertial%et(iendprev)
-                    istart = istart + istep
-                end if
-            end if
+            ! note: MKSPK does not allow duplicate time tags and we also want to avoid points
+            ! too close together since that may cause interpolation artifacts. so we have the
+            ! user-specified min_export_time_step. we don't allow points to be sent to the
+            ! bsp file where the time delta is <= this value.
 
             do i=istart,iend,istep
-                ! inertial trajectory for SPK:
-                write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) &
-                        me%segs(iseg)%traj_inertial%et(i),';',&
+                associate (et => me%segs(iseg)%traj_inertial%et(i))
+                    if (.not. first) then
+                        if ((et - last_et_written) <= min_export_time_step) cycle
+                    else
+                        first = .true.
+                    end if
+                    last_et_written = et ! save this so we can track this delta
+                    ! inertial trajectory for SPK:
+                    write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) &
+                        et,';',&
                         me%segs(iseg)%traj_inertial%x(i) ,';',&
                         me%segs(iseg)%traj_inertial%y(i) ,';',&
                         me%segs(iseg)%traj_inertial%z(i) ,';',&
                         me%segs(iseg)%traj_inertial%vx(i),';',&
                         me%segs(iseg)%traj_inertial%vy(i),';',&
                         me%segs(iseg)%traj_inertial%vz(i),''
+                end associate
             end do
-            iendprev = iend
         end if
 
     end do
@@ -3311,6 +3318,8 @@
     call f%get('polynom_degree', polynom_degree, found)
     call f%get('output_spk_type', output_spk_type, found)
     call f%get('segment_id', segment_id, found); if (.not. found) segment_id = 'SPK_STATES_09'
+    call f%get('min_export_time_step', min_export_time_step, found)
+    min_export_time_step = abs(min_export_time_step) ! only non-negative values allowed
 
     ! required inputs:
     call f%get('N_or_S',   me%mission%N_or_S   )
