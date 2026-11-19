@@ -1,0 +1,579 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>All Modules &ndash; halo
+</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12" id='text'>
+			 <h1>Modules</h1>
+			 <table class="table">
+			 <thead><tr><th>Module</th><th>Source File</th><th>Description</th></tr></thead>
+			 <tbody>
+			   <tr class="active">
+                 <td><a href='../module/config_file_module.html'>config_file_module</a></td>
+                 <td><a href='../sourcefile/config_file_module.f90.html'>config_file_module.f90</a></td>
+                 <td><p>For handling JSON config files</p></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/halo_kinds_module.html'>halo_kinds_module</a></td>
+                 <td><a href='../sourcefile/halo_kinds_module.f90.html'>halo_kinds_module.F90</a></td>
+                 <td><p>Numeric kind definitions.</p></td>
+               </tr>
+<!---->			   <tr class="active">
+                 <td><a href='../module/halo_module.html'>halo_module</a></td>
+                 <td><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></td>
+                 <td><p>Main module with all the stuff to solve the Halo problem.</p><a href="../module/halo_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/halo_utilities_module.html'>halo_utilities_module</a></td>
+                 <td><a href='../sourcefile/halo_utilities_module.f90.html'>halo_utilities_module.f90</a></td>
+                 <td><p>Various astrodynamics utilities.</p><a href="../module/halo_utilities_module.html" class="pull-right"><emph>Read more&hellip;</emph></a></td>
+               </tr>
+<!---->			   <tr class="active">
+                 <td><a href='../module/parameters_module.html'>parameters_module</a></td>
+                 <td><a href='../sourcefile/parameters_module.f90.html'>parameters_module.f90</a></td>
+                 <td></td>
+               </tr>
+<!--active-->			   <tr class="">
+                 <td><a href='../module/splined_ephemeris_module.html'>splined_ephemeris_module</a></td>
+                 <td><a href='../sourcefile/splined_ephemeris_module.f90.html'>splined_ephemeris_module.f90</a></td>
+                 <td><p>Simple splined ephemeris model for Earth/Sun wrt Moon.</p></td>
+               </tr>
+<!---->			 </tbody></table>
+             <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: module~~graph~~ModuleGraph Pages: 1 -->
+<svg id="modulegraphModuleGraph" width="855pt" height="422pt"
+ viewBox="0.00 0.00 855.00 422.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~graph~~ModuleGraph" class="graph" transform="scale(0.958413 0.958413) rotate(0) translate(4 436.27)">
+<title>module~~graph~~ModuleGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-436.27 888.1,-436.27 888.1,4 -4,4"/>
+<!-- module~config_file_module -->
+<g id="module~~graph~~ModuleGraph_node1" class="node">
+<title>module~config_file_module</title>
+<g id="a_module~~graph~~ModuleGraph_node1"><a xlink:href="../module/config_file_module.html" xlink:title="config_file_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="727.83,-188.27 615.81,-188.27 615.81,-164 727.83,-164 727.83,-188.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-172.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file_module</text>
+</a>
+</g>
+</g>
+<!-- module~parameters_module -->
+<g id="module~~graph~~ModuleGraph_node5" class="node">
+<title>module~parameters_module</title>
+<g id="a_module~~graph~~ModuleGraph_node5"><a xlink:href="../module/parameters_module.html" xlink:title="parameters_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="496.94,-230.27 377.42,-230.27 377.42,-206 496.94,-206 496.94,-230.27"/>
+<text xml:space="preserve" text-anchor="middle" x="437.18" y="-214.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parameters_module</text>
+</a>
+</g>
+</g>
+<!-- module~config_file_module&#45;&gt;module~parameters_module -->
+<g id="module~~graph~~ModuleGraph_edge2" class="edge">
+<title>module~config_file_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M615.39,-186.14C583.25,-191.94 542.48,-199.3 508.15,-205.5"/>
+<polygon fill="#000000" stroke="#000000" points="507.95,-201.98 498.74,-207.2 509.2,-208.87 507.95,-201.98"/>
+</g>
+<!-- json_module -->
+<g id="module~~graph~~ModuleGraph_node14" class="node">
+<title>json_module</title>
+<g id="a_module~~graph~~ModuleGraph_node14"><a xlink:href="https://jacobwilliams.github.io/json-fortran/" xlink:title="json_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="476.69,-146.27 397.67,-146.27 397.67,-122 476.69,-122 476.69,-146.27"/>
+<text xml:space="preserve" text-anchor="middle" x="437.18" y="-130.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">json_module</text>
+</a>
+</g>
+</g>
+<!-- module~config_file_module&#45;&gt;json_module -->
+<g id="module~~graph~~ModuleGraph_edge1" class="edge">
+<title>module~config_file_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M615.39,-166.13C576.78,-159.16 525.71,-149.94 488.31,-143.19"/>
+<polygon fill="#000000" stroke="#000000" points="489.12,-139.78 478.66,-141.44 487.88,-146.67 489.12,-139.78"/>
+</g>
+<!-- module~halo_kinds_module -->
+<g id="module~~graph~~ModuleGraph_node2" class="node">
+<title>module~halo_kinds_module</title>
+<g id="a_module~~graph~~ModuleGraph_node2"><a xlink:href="../module/halo_kinds_module.html" xlink:title="halo_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="270.54,-188.27 157.02,-188.27 157.02,-164 270.54,-164 270.54,-188.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-172.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_kinds_module</text>
+</a>
+</g>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_node13" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~graph~~ModuleGraph_node13"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="93.27,-209.27 0,-209.27 0,-185 93.27,-185 93.27,-209.27"/>
+<text xml:space="preserve" text-anchor="middle" x="46.63" y="-193.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~halo_kinds_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge3" class="edge">
+<title>module~halo_kinds_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M156.87,-183.24C140.14,-185.37 121.78,-187.71 104.97,-189.84"/>
+<polygon fill="#000000" stroke="#000000" points="104.59,-186.36 95.11,-191.1 105.47,-193.31 104.59,-186.36"/>
+</g>
+<!-- module~halo_module -->
+<g id="module~~graph~~ModuleGraph_node3" class="node">
+<title>module~halo_module</title>
+<g id="a_module~~graph~~ModuleGraph_node3"><a xlink:href="../module/halo_module.html" xlink:title="halo_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="884.1,-208.27 803.58,-208.27 803.58,-184 884.1,-184 884.1,-208.27"/>
+<text xml:space="preserve" text-anchor="middle" x="843.84" y="-192.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~config_file_module -->
+<g id="module~~graph~~ModuleGraph_edge8" class="edge">
+<title>module~halo_module&#45;&gt;module~config_file_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M803.41,-191.5C784.36,-189.26 760.98,-186.51 739.29,-183.95"/>
+<polygon fill="#000000" stroke="#000000" points="739.98,-180.51 729.64,-182.82 739.16,-187.46 739.98,-180.51"/>
+</g>
+<!-- module~halo_utilities_module -->
+<g id="module~~graph~~ModuleGraph_node4" class="node">
+<title>module~halo_utilities_module</title>
+<g id="a_module~~graph~~ModuleGraph_node4"><a xlink:href="../module/halo_utilities_module.html" xlink:title="halo_utilities_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="733.83,-310.27 609.81,-310.27 609.81,-286 733.83,-286 733.83,-310.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-294.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_utilities_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~halo_utilities_module -->
+<g id="module~~graph~~ModuleGraph_edge9" class="edge">
+<title>module~halo_module&#45;&gt;module~halo_utilities_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M835.01,-208.47C822.87,-226.53 797.73,-259.87 767.58,-277.13 760.54,-281.17 752.8,-284.42 744.87,-287.05"/>
+<polygon fill="#000000" stroke="#000000" points="744.04,-283.65 735.44,-289.84 746.02,-290.36 744.04,-283.65"/>
+</g>
+<!-- module~halo_module&#45;&gt;module~parameters_module -->
+<g id="module~~graph~~ModuleGraph_edge10" class="edge">
+<title>module~halo_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M670.82,-216.13C616.28,-217.09 554.54,-217.59 508.37,-217.86"/>
+<polygon fill="#000000" stroke="#000000" points="508.48,-214.36 498.49,-217.91 508.51,-221.36 508.48,-214.36"/>
+</g>
+<!-- module~splined_ephemeris_module -->
+<g id="module~~graph~~ModuleGraph_node6" class="node">
+<title>module~splined_ephemeris_module</title>
+<g id="a_module~~graph~~ModuleGraph_node6"><a xlink:href="../module/splined_ephemeris_module.html" xlink:title="splined_ephemeris_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="516.06,-188.27 358.29,-188.27 358.29,-164 516.06,-164 516.06,-188.27"/>
+<text xml:space="preserve" text-anchor="middle" x="437.18" y="-172.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splined_ephemeris_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~splined_ephemeris_module -->
+<g id="module~~graph~~ModuleGraph_edge11" class="edge">
+<title>module~halo_module&#45;&gt;module~splined_ephemeris_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M803.14,-203.07C768.78,-208.53 717.69,-215.35 672.82,-216.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M670.82,-216.13C655.32,-216.41 576.85,-202.38 515.27,-190.86"/>
+<polygon fill="#000000" stroke="#000000" points="515.95,-187.43 505.48,-189.03 514.66,-194.31 515.95,-187.43"/>
+</g>
+<!-- bspline_module -->
+<g id="module~~graph~~ModuleGraph_node10" class="node">
+<title>bspline_module</title>
+<g id="a_module~~graph~~ModuleGraph_node10"><a xlink:href="https://jacobwilliams.github.io/bspline-fortran/" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="261.54,-107.27 166.02,-107.27 166.02,-83 261.54,-83 261.54,-107.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-91.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;bspline_module -->
+<g id="module~~graph~~ModuleGraph_edge4" class="edge">
+<title>module~halo_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M835.33,-183.72C823.42,-165.19 798.37,-130.6 767.58,-113.13 730.22,-91.94 714.69,-103.72 672.82,-94.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M670.82,-94.13C531.04,-62.13 360.78,-75.91 273.13,-86.71"/>
+<polygon fill="#000000" stroke="#000000" points="272.82,-83.22 263.34,-87.95 273.7,-90.17 272.82,-83.22"/>
+</g>
+<!-- ddeabm_module -->
+<g id="module~~graph~~ModuleGraph_node11" class="node">
+<title>ddeabm_module</title>
+<g id="a_module~~graph~~ModuleGraph_node11"><a xlink:href="https://jacobwilliams.github.io/ddeabm/" xlink:title="ddeabm_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="722.58,-146.27 621.06,-146.27 621.06,-122 722.58,-122 722.58,-146.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-130.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;ddeabm_module -->
+<g id="module~~graph~~ModuleGraph_edge5" class="edge">
+<title>module~halo_module&#45;&gt;ddeabm_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M823.44,-183.59C808.65,-174.52 787.5,-162.6 767.58,-155.13 756.93,-151.14 745.31,-147.8 733.97,-145.03"/>
+<polygon fill="#000000" stroke="#000000" points="734.77,-141.63 724.24,-142.8 733.2,-148.45 734.77,-141.63"/>
+</g>
+<!-- fortran_astrodynamics_toolkit -->
+<g id="module~~graph~~ModuleGraph_node12" class="node">
+<title>fortran_astrodynamics_toolkit</title>
+<g id="a_module~~graph~~ModuleGraph_node12"><a xlink:href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/" xlink:title="fortran_astrodynamics_toolkit">
+<polygon fill="#337ab7" stroke="#337ab7" points="298.29,-272.27 129.27,-272.27 129.27,-248 298.29,-248 298.29,-272.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-256.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fortran_astrodynamics_toolkit</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~graph~~ModuleGraph_edge6" class="edge">
+<title>module~halo_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M839.66,-208.48C832.19,-234.57 810.82,-294.9 767.58,-319.13 747.55,-330.36 359.68,-319.88 334.29,-314.13 302.52,-306.95 268.93,-290.92 245.48,-278.19"/>
+<polygon fill="#000000" stroke="#000000" points="247.22,-275.15 236.78,-273.35 243.82,-281.27 247.22,-275.15"/>
+</g>
+<!-- module~halo_module&#45;&gt;json_module -->
+<g id="module~~graph~~ModuleGraph_edge7" class="edge">
+<title>module~halo_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M670.82,-94.13C636.93,-86.37 545.75,-106.48 488.12,-120.91"/>
+<polygon fill="#000000" stroke="#000000" points="487.37,-117.49 478.54,-123.34 489.09,-124.28 487.37,-117.49"/>
+</g>
+<!-- moon_frame_module -->
+<g id="module~~graph~~ModuleGraph_node15" class="node">
+<title>moon_frame_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="734.58,-66.27 609.06,-66.27 609.06,-42 734.58,-42 734.58,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">moon_frame_module</text>
+</g>
+<!-- module~halo_module&#45;&gt;moon_frame_module -->
+<g id="module~~graph~~ModuleGraph_edge12" class="edge">
+<title>module~halo_module&#45;&gt;moon_frame_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M838.35,-183.86C829.01,-160.07 805.17,-107.63 767.58,-80.13 760.95,-75.29 753.47,-71.34 745.69,-68.14"/>
+<polygon fill="#000000" stroke="#000000" points="746.95,-64.87 736.36,-64.72 744.54,-71.45 746.95,-64.87"/>
+</g>
+<!-- nlesolver_module -->
+<g id="module~~graph~~ModuleGraph_node16" class="node">
+<title>nlesolver_module</title>
+<g id="a_module~~graph~~ModuleGraph_node16"><a xlink:href="https://jacobwilliams.github.io/nlesolver-fortran/" xlink:title="nlesolver_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="724.83,-24.27 618.81,-24.27 618.81,0 724.83,0 724.83,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">nlesolver_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;nlesolver_module -->
+<g id="module~~graph~~ModuleGraph_edge13" class="edge">
+<title>module~halo_module&#45;&gt;nlesolver_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M840.91,-183.63C835.49,-152.85 817.1,-73.03 767.58,-33.13 758.53,-25.84 747.48,-20.96 736.16,-17.71"/>
+<polygon fill="#000000" stroke="#000000" points="737.3,-14.38 726.76,-15.43 735.65,-21.19 737.3,-14.38"/>
+</g>
+<!-- numerical_differentiation_module -->
+<g id="module~~graph~~ModuleGraph_node17" class="node">
+<title>numerical_differentiation_module</title>
+<g id="a_module~~graph~~ModuleGraph_node17"><a xlink:href="https://jacobwilliams.github.io/NumDiff/" xlink:title="numerical_differentiation_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="767.58,-432.27 576.06,-432.27 576.06,-408 767.58,-408 767.58,-432.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-416.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numerical_differentiation_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;numerical_differentiation_module -->
+<g id="module~~graph~~ModuleGraph_edge14" class="edge">
+<title>module~halo_module&#45;&gt;numerical_differentiation_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M842.17,-208.67C839.55,-244.39 826.94,-347.39 767.58,-399.13 766.63,-399.97 765.65,-400.77 764.65,-401.54"/>
+<polygon fill="#000000" stroke="#000000" points="762.86,-398.52 756.34,-406.88 766.65,-404.41 762.86,-398.52"/>
+</g>
+<!-- pyplot_module -->
+<g id="module~~graph~~ModuleGraph_node18" class="node">
+<title>pyplot_module</title>
+<g id="a_module~~graph~~ModuleGraph_node18"><a xlink:href="https://jacobwilliams.github.io/pyplot-fortran/" xlink:title="pyplot_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="716.96,-390.27 626.69,-390.27 626.69,-366 716.96,-366 716.96,-390.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-374.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pyplot_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;pyplot_module -->
+<g id="module~~graph~~ModuleGraph_edge15" class="edge">
+<title>module~halo_module&#45;&gt;pyplot_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M840.53,-208.4C834.32,-237.87 814.48,-313.07 767.58,-352.13 756.41,-361.44 742.18,-367.43 728.16,-371.28"/>
+<polygon fill="#000000" stroke="#000000" points="727.41,-367.86 718.49,-373.59 729.03,-374.67 727.41,-367.86"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge18" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M609.37,-302.81C562.34,-305.38 495.95,-306.85 438.18,-300.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M436.18,-300.13C383.75,-294.04 374.63,-273.17 334.29,-239.13 315.5,-223.28 319.19,-210.07 298.29,-197.13 293.05,-193.89 287.32,-191.14 281.41,-188.82"/>
+<polygon fill="#000000" stroke="#000000" points="282.66,-185.55 272.07,-185.58 280.37,-192.16 282.66,-185.55"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~parameters_module -->
+<g id="module~~graph~~ModuleGraph_edge19" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M609.46,-286.29C598.25,-283.63 586.73,-280.57 576.06,-277.13 540.39,-265.66 501.26,-248.45 473.82,-235.57"/>
+<polygon fill="#000000" stroke="#000000" points="475.45,-232.47 464.92,-231.34 472.45,-238.79 475.45,-232.47"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module -->
+<g id="module~~graph~~ModuleGraph_edge20" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M609.41,-293.19C597.41,-289.94 585.6,-284.9 576.06,-277.13 545.82,-252.53 570.48,-221.52 540.06,-197.13 536.03,-193.9 531.62,-191.13 526.98,-188.76"/>
+<polygon fill="#000000" stroke="#000000" points="528.44,-185.58 517.87,-184.78 525.64,-191.99 528.44,-185.58"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~graph~~ModuleGraph_edge16" class="edge">
+<title>module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M436.18,-300.13C384.78,-294.16 327.29,-283.66 283.78,-274.91"/>
+<polygon fill="#000000" stroke="#000000" points="284.73,-271.54 274.23,-272.98 283.34,-278.4 284.73,-271.54"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge17" class="edge">
+<title>module~halo_utilities_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M436.18,-300.13C300.43,-284.35 253.45,-338.2 129.27,-281.13 100.18,-267.77 76,-239.08 61.69,-218.97"/>
+<polygon fill="#000000" stroke="#000000" points="64.69,-217.16 56.16,-210.87 58.91,-221.1 64.69,-217.16"/>
+</g>
+<!-- module~parameters_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge22" class="edge">
+<title>module~parameters_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M377.14,-206.93C347.82,-201.37 312.26,-194.63 281.91,-188.87"/>
+<polygon fill="#000000" stroke="#000000" points="282.95,-185.5 272.47,-187.08 281.64,-192.38 282.95,-185.5"/>
+</g>
+<!-- module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~graph~~ModuleGraph_edge21" class="edge">
+<title>module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M377.14,-229.34C351.13,-234.27 320.22,-240.13 292.38,-245.41"/>
+<polygon fill="#000000" stroke="#000000" points="291.73,-241.97 282.56,-247.28 293.04,-248.85 291.73,-241.97"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~graph~~ModuleGraph_edge26" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357.81,-176.13C333.11,-176.13 306.07,-176.13 282.21,-176.13"/>
+<polygon fill="#000000" stroke="#000000" points="282.28,-172.64 272.28,-176.14 282.28,-179.64 282.28,-172.64"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;bspline_module -->
+<g id="module~~graph~~ModuleGraph_edge23" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357.91,-164.56C349.72,-162.02 341.69,-158.92 334.29,-155.13 314.96,-145.25 317.05,-133.06 298.29,-122.13 290.33,-117.5 281.48,-113.55 272.6,-110.22"/>
+<polygon fill="#000000" stroke="#000000" points="273.83,-106.94 263.23,-106.96 271.52,-113.55 273.83,-106.94"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~graph~~ModuleGraph_edge24" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357.95,-186.65C349.66,-189.39 341.6,-192.82 334.29,-197.13 313.11,-209.62 319.19,-226.2 298.29,-239.13 296.12,-240.48 293.87,-241.73 291.56,-242.91"/>
+<polygon fill="#000000" stroke="#000000" points="290.19,-239.69 282.47,-246.96 293.03,-246.09 290.19,-239.69"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge25" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M366.97,-163.5C345.08,-160.07 320.75,-156.84 298.29,-155.13 223.38,-149.46 202.28,-137.46 129.27,-155.13 110.26,-159.74 90.73,-169.57 75.53,-178.57"/>
+<polygon fill="#000000" stroke="#000000" points="73.73,-175.57 67.05,-183.8 77.4,-181.53 73.73,-175.57"/>
+</g>
+<!-- proc~export_rp_ra_json_file -->
+<g id="module~~graph~~ModuleGraph_node7" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<g id="a_module~~graph~~ModuleGraph_node7"><a xlink:href="../proc/export_rp_ra_json_file.html" xlink:title="mission_type%export_rp_ra_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="540.06,-65.27 334.29,-65.27 334.29,-41 540.06,-41 540.06,-65.27"/>
+<text xml:space="preserve" text-anchor="middle" x="437.18" y="-49.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_rp_ra_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;bspline_module -->
+<g id="module~~graph~~ModuleGraph_edge27" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M369.75,-65.74C338.92,-71.59 302.6,-78.48 272.87,-84.11"/>
+<polygon fill="#000000" stroke="#000000" points="272.49,-80.63 263.31,-85.93 273.79,-87.5 272.49,-80.63"/>
+</g>
+<!-- root_module -->
+<g id="module~~graph~~ModuleGraph_node19" class="node">
+<title>root_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="252.91,-65.27 174.65,-65.27 174.65,-41 252.91,-41 252.91,-65.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-49.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">root_module</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;root_module -->
+<g id="module~~graph~~ModuleGraph_edge28" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;root_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.9,-53.13C309.83,-53.13 285.22,-53.13 264.67,-53.13"/>
+<polygon fill="#000000" stroke="#000000" points="264.9,-49.64 254.9,-53.14 264.9,-56.64 264.9,-49.64"/>
+</g>
+<!-- proc~halo_export -->
+<g id="module~~graph~~ModuleGraph_node8" class="node">
+<title>proc~halo_export</title>
+<g id="a_module~~graph~~ModuleGraph_node8"><a xlink:href="../proc/halo_export.html" xlink:title="halo_export">
+<polygon fill="#d9534f" stroke="#d9534f" points="250.66,-230.27 176.9,-230.27 176.9,-206 250.66,-206 250.66,-230.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-214.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_export</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_export&#45;&gt;iso_fortran_env -->
+<g id="module~~graph~~ModuleGraph_edge29" class="edge">
+<title>proc~halo_export&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M176.54,-213.53C155.57,-210.86 128.7,-207.44 104.93,-204.42"/>
+<polygon fill="#000000" stroke="#000000" points="105.41,-200.95 95.05,-203.16 104.53,-207.9 105.41,-200.95"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="module~~graph~~ModuleGraph_node9" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_module~~graph~~ModuleGraph_node9"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="724.08,-268.27 619.56,-268.27 619.56,-244 724.08,-244 724.08,-268.27"/>
+<text xml:space="preserve" text-anchor="middle" x="671.82" y="-252.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;module~parameters_module -->
+<g id="module~~graph~~ModuleGraph_edge30" class="edge">
+<title>proc~halo_solver_main&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M619.19,-247.7C586.57,-242.37 544.01,-235.42 508.35,-229.6"/>
+<polygon fill="#000000" stroke="#000000" points="508.97,-226.15 498.53,-227.99 507.84,-233.06 508.97,-226.15"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulegraphModuleGraph = svgPanZoom('#modulegraphModuleGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#ModuleGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="ModuleGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 511.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

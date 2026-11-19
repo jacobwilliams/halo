@@ -1,0 +1,912 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>export_trajectory_json_file &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>export_trajectory_json_file
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.9% of total for procedures.">94 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">export_trajectory_json_file</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/export_trajectory_json_file.html#src">export_trajectory_json_file</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine export_trajectory_json_file(me, filename, only_first_rev)  
+</h2>
+    
+
+    <p>Export the trajectory JSON file.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>It is assumed that all the data is present in the segments needed to propagate.</p>
+</div>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~37"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~6"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+                <p>plot file name [without extension]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-only_first_rev~2"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>only_first_rev</strong></td>
+            <td>
+                <p>to only do the first rev [Default is False]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~export_trajectory_json_file~~CallsGraph Pages: 1 -->
+<svg id="procexport_trajectory_json_fileCallsGraph" width="641pt" height="470pt"
+ viewBox="0.00 0.00 641.00 470.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~export_trajectory_json_file~~CallsGraph" class="graph" transform="scale(0.921228 0.921228) rotate(0) translate(4 506.27)">
+<title>proc~~export_trajectory_json_file~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-506.27 691.81,-506.27 691.81,4 -4,4"/>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node1" class="node">
+<title>proc~export_trajectory_json_file</title>
+<polygon fill="none" stroke="black" points="229.77,-318.27 0,-318.27 0,-294 229.77,-294 229.77,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="114.88" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%export_trajectory_json_file</text>
+</g>
+<!-- add -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node2" class="node">
+<title>add</title>
+<polygon fill="#777777" stroke="#777777" points="624.68,-502.27 570.68,-502.27 570.68,-478 624.68,-478 624.68,-502.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-486.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;add -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge1" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M123.79,-318.73C143.49,-348.84 198.07,-424.91 265.77,-457.13 363.43,-503.62 495.36,-499.74 559.11,-494.32"/>
+<polygon fill="#000000" stroke="#000000" points="559.05,-497.84 568.69,-493.44 558.41,-490.87 559.05,-497.84"/>
+</g>
+<!-- create_array -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node3" class="node">
+<title>create_array</title>
+<polygon fill="#777777" stroke="#777777" points="408.17,-339.27 329.15,-339.27 329.15,-315 408.17,-315 408.17,-339.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-323.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">create_array</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;create_array -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge2" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;create_array</title>
+<path fill="none" stroke="#000000" d="M229.98,-315.65C260.65,-318.21 292.25,-320.85 317.43,-322.95"/>
+<polygon fill="#000000" stroke="#000000" points="317.12,-326.43 327.38,-323.78 317.7,-319.46 317.12,-326.43"/>
+</g>
+<!-- create_object -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node4" class="node">
+<title>create_object</title>
+<polygon fill="#777777" stroke="#777777" points="410.42,-297.27 326.9,-297.27 326.9,-273 410.42,-273 410.42,-297.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-281.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">create_object</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;create_object -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge3" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;create_object</title>
+<path fill="none" stroke="#000000" d="M229.98,-296.62C259.75,-294.14 290.4,-291.58 315.2,-289.51"/>
+<polygon fill="#000000" stroke="#000000" points="315.34,-293.01 325.01,-288.69 314.76,-286.04 315.34,-293.01"/>
+</g>
+<!-- destroy -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node5" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="624.68,-460.27 570.68,-460.27 570.68,-436 624.68,-436 624.68,-460.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-444.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;destroy -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge4" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M126.29,-318.76C148.63,-344.82 204.19,-404.12 265.77,-428.13 365.76,-467.12 495.67,-459.92 558.84,-453.14"/>
+<polygon fill="#000000" stroke="#000000" points="559.16,-456.62 568.7,-452.01 558.37,-449.67 559.16,-456.62"/>
+</g>
+<!-- initialize -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node6" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="625.56,-334.27 569.79,-334.27 569.79,-310 625.56,-310 625.56,-334.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;initialize -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge5" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M150.44,-318.73C180.46,-328.96 225.34,-342.58 265.77,-348.13 356.37,-360.59 380.57,-357.49 471.54,-348.13 501.07,-345.1 533.92,-338.13 558.55,-332.18"/>
+<polygon fill="#000000" stroke="#000000" points="559.25,-335.61 568.12,-329.8 557.57,-328.81 559.25,-335.61"/>
+</g>
+<!-- insert_after -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node7" class="node">
+<title>insert_after</title>
+<polygon fill="#777777" stroke="#777777" points="404.79,-255.27 332.52,-255.27 332.52,-231 404.79,-231 404.79,-255.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-239.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">insert_after</text>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;insert_after -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge6" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;insert_after</title>
+<path fill="none" stroke="#000000" d="M157.67,-293.58C187.63,-284.79 229,-273.06 265.77,-264.13 283.77,-259.76 303.69,-255.53 321.11,-252.02"/>
+<polygon fill="#000000" stroke="#000000" points="321.55,-255.5 330.67,-250.11 320.18,-248.63 321.55,-255.5"/>
+</g>
+<!-- proc~compute_rdot_vecs -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node8" class="node">
+<title>proc~compute_rdot_vecs</title>
+<g id="a_proc~~export_trajectory_json_file~~CallsGraph_node8"><a xlink:href="../proc/compute_rdot_vecs.html" xlink:title="compute_rdot_vecs">
+<polygon fill="#d9534f" stroke="#d9534f" points="426.17,-213.27 311.15,-213.27 311.15,-189 426.17,-189 426.17,-213.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-197.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot_vecs</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~compute_rdot_vecs -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge7" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~compute_rdot_vecs</title>
+<path fill="none" stroke="#000000" d="M133.92,-293.59C161.2,-275.18 215.18,-241.01 265.77,-222.13 276.54,-218.12 288.26,-214.8 299.78,-212.08"/>
+<polygon fill="#000000" stroke="#000000" points="300.24,-215.56 309.25,-209.98 298.73,-208.73 300.24,-215.56"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node9" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~export_trajectory_json_file~~CallsGraph_node9"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="453.17,-171.27 284.15,-171.27 284.15,-147 453.17,-147 453.17,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge8" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M126.5,-293.79C149.23,-268.21 205.5,-209.33 265.77,-180.13 269.29,-178.43 272.94,-176.86 276.68,-175.42"/>
+<polygon fill="#000000" stroke="#000000" points="277.68,-178.78 285.98,-172.19 275.38,-172.17 277.68,-178.78"/>
+</g>
+<!-- proc~export_rp_ra_json_file -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node10" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<g id="a_proc~~export_trajectory_json_file~~CallsGraph_node10"><a xlink:href="../proc/export_rp_ra_json_file.html" xlink:title="mission_type%export_rp_ra_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="471.54,-419.27 265.77,-419.27 265.77,-395 471.54,-395 471.54,-419.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-403.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_rp_ra_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge9" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file</title>
+<path fill="none" stroke="#000000" d="M137.08,-318.57C165.54,-334.83 218.06,-363.34 265.77,-381.13 276.16,-385.01 287.36,-388.51 298.39,-391.59"/>
+<polygon fill="#000000" stroke="#000000" points="297.31,-394.93 307.88,-394.15 299.13,-388.17 297.31,-394.93"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node11" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~export_trajectory_json_file~~CallsGraph_node11"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="455.79,-129.27 281.52,-129.27 281.52,-105 455.79,-105 455.79,-129.27"/>
+<text xml:space="preserve" text-anchor="middle" x="368.66" y="-113.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~propagate_segment -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge10" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M123.09,-293.55C141.99,-261.81 196.34,-178.14 265.77,-138.13 268.27,-136.7 270.85,-135.35 273.5,-134.1"/>
+<polygon fill="#000000" stroke="#000000" points="274.72,-137.39 282.59,-130.3 272.02,-130.93 274.72,-137.39"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;add -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge11" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M393.5,-419.55C420.55,-433.23 466.28,-455.14 507.54,-469.13 524.26,-474.81 543.25,-479.51 559.39,-483.01"/>
+<polygon fill="#000000" stroke="#000000" points="558.58,-486.42 569.08,-485.04 560.01,-479.57 558.58,-486.42"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;destroy -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge12" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M439.31,-419.71C478.78,-426.84 526.61,-435.48 559.1,-441.35"/>
+<polygon fill="#000000" stroke="#000000" points="558.38,-444.78 568.84,-443.11 559.62,-437.89 558.38,-444.78"/>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;initialize -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge14" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M440.77,-394.51C451.48,-391.06 462.1,-386.68 471.54,-381.13 491.6,-369.35 487.37,-354.73 507.54,-343.13 522.99,-334.25 542.01,-329.12 558.5,-326.16"/>
+<polygon fill="#000000" stroke="#000000" points="558.61,-329.68 567.95,-324.67 557.52,-322.77 558.61,-329.68"/>
+</g>
+<!-- evaluate -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node12" class="node">
+<title>evaluate</title>
+<polygon fill="#777777" stroke="#777777" points="626.69,-376.27 568.67,-376.27 568.67,-352 626.69,-352 626.69,-376.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-360.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;evaluate -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge13" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;evaluate</title>
+<path fill="none" stroke="#000000" d="M436.23,-394.52C475.56,-387.08 524,-377.9 557.31,-371.59"/>
+<polygon fill="#000000" stroke="#000000" points="557.76,-375.07 566.93,-369.77 556.45,-368.19 557.76,-375.07"/>
+</g>
+<!-- solve -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node17" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="624.68,-418.27 570.68,-418.27 570.68,-394 624.68,-394 624.68,-418.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-402.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;solve -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge15" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M471.87,-406.68C502.88,-406.55 535.03,-406.41 558.93,-406.3"/>
+<polygon fill="#000000" stroke="#000000" points="558.79,-409.8 568.78,-406.26 558.76,-402.8 558.79,-409.8"/>
+</g>
+<!-- first_call -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node13" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="625.56,-108.27 569.79,-108.27 569.79,-84 625.56,-84 625.56,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge16" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M456.13,-109.14C491.32,-105.88 530.2,-102.28 558.13,-99.7"/>
+<polygon fill="#000000" stroke="#000000" points="558.24,-103.21 567.88,-98.8 557.6,-96.24 558.24,-103.21"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node14" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="630.81,-66.27 564.54,-66.27 564.54,-42 630.81,-42 630.81,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-50.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge17" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M408.69,-104.51C436.19,-95.8 473.96,-84.2 507.54,-75.14 522.46,-71.11 538.91,-67.11 553.56,-63.7"/>
+<polygon fill="#000000" stroke="#000000" points="553.93,-67.21 562.89,-61.56 552.36,-60.39 553.93,-67.21"/>
+</g>
+<!-- integrate -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node15" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="627.81,-24.27 567.54,-24.27 567.54,0 627.81,0 627.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-8.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge18" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M386.14,-104.69C411.11,-86.41 460.6,-52.39 507.54,-33.14 522.93,-26.82 540.62,-22.16 556.17,-18.86"/>
+<polygon fill="#000000" stroke="#000000" points="556.44,-22.37 565.56,-16.98 555.07,-15.51 556.44,-22.37"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node16" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~export_trajectory_json_file~~CallsGraph_node16"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="687.81,-234.27 507.54,-234.27 507.54,-210 687.81,-210 687.81,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge19" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M456.17,-129.33C461.6,-131.78 466.79,-134.69 471.54,-138.13 497.65,-157.07 481.7,-181.84 507.54,-201.13 509.07,-202.28 510.66,-203.36 512.29,-204.39"/>
+<polygon fill="#000000" stroke="#000000" points="510.25,-207.27 520.72,-208.93 513.58,-201.11 510.25,-207.27"/>
+</g>
+<!-- transform -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node18" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="629.69,-192.27 565.67,-192.27 565.67,-168 629.69,-168 629.69,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge20" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M444.74,-129.7C453.9,-132.08 463.02,-134.87 471.54,-138.13 488.84,-144.76 490.34,-152.27 507.54,-159.13 522.37,-165.05 539.27,-169.56 554.35,-172.85"/>
+<polygon fill="#000000" stroke="#000000" points="553.47,-176.24 563.97,-174.83 554.88,-169.39 553.47,-176.24"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_node19" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="670.56,-150.27 524.79,-150.27 524.79,-126 670.56,-126 670.56,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="597.68" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~export_trajectory_json_file~~CallsGraph_edge21" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M456.13,-125.13C474.81,-126.86 494.52,-128.69 513.09,-130.4"/>
+<polygon fill="#000000" stroke="#000000" points="512.69,-133.88 522.97,-131.32 513.34,-126.91 512.69,-133.88"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocexport_trajectory_json_fileCallsGraph = svgPanZoom('#procexport_trajectory_json_fileCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~export_trajectory_json_file~~CalledByGraph Pages: 1 -->
+<svg id="procexport_trajectory_json_fileCalledByGraph" width="378pt" height="32pt"
+ viewBox="0.00 0.00 378.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~export_trajectory_json_file~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~export_trajectory_json_file~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 374.29,-28.27 374.29,4 -4,4"/>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~export_trajectory_json_file~~CalledByGraph_node1" class="node">
+<title>proc~export_trajectory_json_file</title>
+<polygon fill="none" stroke="black" points="370.29,-24.27 140.52,-24.27 140.52,0 370.29,0 370.29,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="255.41" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%export_trajectory_json_file</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~export_trajectory_json_file~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~export_trajectory_json_file~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~export_trajectory_json_file~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M104.8,-12.13C112.4,-12.13 120.5,-12.13 128.84,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.83,-15.64 138.83,-12.14 128.83,-8.64 128.83,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">export_trajectory_json_file</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">only_first_rev</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! plot file name [without extension]</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">only_first_rev</span><span class="w">  </span><span class="c">!! to only do the first rev [Default is False]</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">  </span><span class="c">!! segment number counter</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="c">!! number of segments to plot</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">json_core</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">json</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">json_value</span><span class="p">),</span><span class="k">pointer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p_root</span><span class="p">,</span><span class="w"> </span><span class="n">p_segs</span><span class="p">,</span><span class="w"> </span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="n">p_current</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rdot</span><span class="p">,</span><span class="w"> </span><span class="n">rmag</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">accumulate_rdot</span><span class="w"> </span><span class="c">!! to generate the rdot/rp/ra file</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cumulative_et</span><span class="p">,</span><span class="n">cumulative_rdot</span><span class="p">,</span><span class="n">cumulative_r</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Export the trajectory JSON file.'</span>
+
+<span class="w">    </span><span class="c">! optional arguments:</span>
+<span class="w">    </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span><span class="w"> </span><span class="c">! default export all the segments</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">only_first_rev</span><span class="p">)</span><span class="w"> </span><span class="n">nsegs_to_plot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="c">! only the first rev (8 segments)</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    </span><span class="n">accumulate_rdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">generate_rp_ra_file</span>
+
+<span class="w">    </span><span class="c">! the JSON file will contain an array of segments:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">compress_vectors</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">create_object</span><span class="p">(</span><span class="n">p_root</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">create_array</span><span class="p">(</span><span class="n">p_segs</span><span class="p">,</span><span class="w"> </span><span class="s1">'segs'</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_root</span><span class="p">,</span><span class="w"> </span><span class="n">p_segs</span><span class="p">)</span>
+<span class="w">    </span><span class="n">p_current</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="nb">null</span><span class="p">()</span>
+
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span>
+<span class="w">        </span><span class="k">call </span><span class="n">destroy_traj</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">!====================================</span>
+<span class="w">    </span><span class="c">! now propagate the segments:</span>
+<span class="c">!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)</span>
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">propagate</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">  </span><span class="c">! [export points]</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="c">!$OMP END PARALLEL DO</span>
+<span class="w">    </span><span class="c">!====================================</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate_rdot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        allocate</span><span class="p">(</span><span class="n">cumulative_et</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">cumulative_rdot</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">cumulative_r</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span>
+
+<span class="w">        </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">seg</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">))</span>
+<span class="w">            </span><span class="c">! generate the trajectory for this segment:</span>
+<span class="w">            </span><span class="c">!call destroy_traj(iseg)</span>
+<span class="w">            </span><span class="c">!call seg%propagate(mode=2)  ! [export points]</span>
+
+<span class="w">            </span><span class="c">! create the segment object for exporting the trajectory:</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">create_object</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">associated</span><span class="p">(</span><span class="n">p_current</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                call </span><span class="n">json</span><span class="p">%</span><span class="n">insert_after</span><span class="p">(</span><span class="n">p_current</span><span class="p">,</span><span class="w"> </span><span class="n">p_seg</span><span class="p">)</span><span class="w"> </span><span class="c">! next one</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="k">                call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_segs</span><span class="p">,</span><span class="w"> </span><span class="n">p_seg</span><span class="p">)</span><span class="w"> </span><span class="c">! first one</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            </span><span class="n">p_current</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">p_seg</span><span class="w"> </span><span class="c">! update for next seg</span>
+
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'iseg'</span><span class="p">,</span><span class="w"> </span><span class="n">iseg</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'et'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'x_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'y_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'z_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'vx_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'vy_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'vz_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">)</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate_rdot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                call </span><span class="n">compute_rdot_vecs</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">,</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">,</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">,&amp;</span>
+<span class="w">                                       </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">,</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">,</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">,&amp;</span>
+<span class="w">                                       </span><span class="n">rmag</span><span class="p">,</span><span class="w"> </span><span class="n">rdot</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">append_traj_to_arrays</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+<span class="w">                </span><span class="c">!call json%add(p_seg, 'rdot_inertial', rdot)</span>
+<span class="w">                </span><span class="c">! don't include the last time step since that will overlap the next segment</span>
+<span class="w">                </span><span class="c">! n = size(seg%traj_inertial%x)</span>
+<span class="w">                </span><span class="c">! cumulative_et   = [cumulative_et,   seg%traj_inertial%et]</span>
+<span class="w">                </span><span class="c">! cumulative_rdot = [cumulative_rdot, rdot]</span>
+<span class="w">                </span><span class="c">! cumulative_r    = [cumulative_r,    rmag]</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">            call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'x_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'y_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'z_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vx_rotating', seg%traj_rotating%vx)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vy_rotating', seg%traj_rotating%vy)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vz_rotating', seg%traj_rotating%vz)</span>
+<span class="w">            </span><span class="c">! call compute_rdot_vecs(seg%traj_rotating%x,seg%traj_rotating%y,seg%traj_rotating%z,&amp;</span>
+<span class="w">            </span><span class="c">!                        seg%traj_rotating%vx,seg%traj_rotating%vy,seg%traj_rotating%vz,&amp;</span>
+<span class="w">            </span><span class="c">!                        rdot)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'rdot_rotating', rdot)</span>
+
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'x_se_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'y_se_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="n">p_seg</span><span class="p">,</span><span class="w"> </span><span class="s1">'z_se_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vx_se_rotating', seg%traj_se_rotating%vx) ! don't need these</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vy_se_rotating', seg%traj_se_rotating%vy)</span>
+<span class="w">            </span><span class="c">! call json%add(p_seg, 'vz_se_rotating', seg%traj_se_rotating%vz)</span>
+
+<span class="w">            </span><span class="c">!TODO:</span>
+<span class="w">            </span><span class="c">!  - maybe also earth &amp; sun ephemeris for plotting</span>
+<span class="w">            </span><span class="c">!  - solar fraction to color the trajectory [but really that should go in the eclipse file?]</span>
+
+<span class="w">            </span><span class="c">!call destroy_traj(iseg) ! keep them for the eclipse file generation ...</span>
+
+<span class="w">        </span><span class="k">end associate</span>
+<span class="k">    end do</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate_rdot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        call </span><span class="n">me</span><span class="p">%</span><span class="n">export_rp_ra_json_file</span><span class="p">(</span><span class="n">cumulative_et</span><span class="p">,</span><span class="w"> </span><span class="n">cumulative_r</span><span class="p">,</span><span class="w"> </span><span class="n">cumulative_rdot</span><span class="p">,</span><span class="w"> </span><span class="n">filename</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nsegs_to_plot</span>
+<span class="w">        </span><span class="k">call </span><span class="n">destroy_traj</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="k">    call </span><span class="n">json</span><span class="p">%</span><span class="k">print</span><span class="p">(</span><span class="n">p_root</span><span class="p">,</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">'.json'</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">destroy</span><span class="p">(</span><span class="n">p_root</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">contains</span>
+
+<span class="k">        subroutine </span><span class="n">destroy_traj</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span>
+<span class="w">            </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="c">!! segment number</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">end subroutine </span><span class="n">destroy_traj</span>
+
+<span class="w">        </span><span class="k">subroutine </span><span class="n">append_traj_to_arrays</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
+<span class="w">            </span><span class="k">type</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg</span>
+
+<span class="w">            </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">i</span>
+
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! forward propagated segment</span>
+<span class="w">                </span><span class="n">cumulative_et</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_et</span><span class="p">,</span><span class="w">   </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">                </span><span class="n">cumulative_rdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_rdot</span><span class="p">,</span><span class="w"> </span><span class="n">rdot</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">                </span><span class="n">cumulative_r</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_r</span><span class="p">,</span><span class="w">    </span><span class="n">rmag</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c">! some of the segments are propagated backwards, so we have to reverse them</span>
+<span class="w">                </span><span class="c">! [note this is very inefficient... need to fix this]  -TODO</span>
+<span class="w">                </span><span class="n">cumulative_et</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_et</span><span class="p">,</span><span class="w">   </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">                </span><span class="n">cumulative_rdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_rdot</span><span class="p">,</span><span class="w"> </span><span class="n">rdot</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">                </span><span class="n">cumulative_r</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cumulative_r</span><span class="p">,</span><span class="w">    </span><span class="n">rmag</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">        end subroutine </span><span class="n">append_traj_to_arrays</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">export_trajectory_json_file</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

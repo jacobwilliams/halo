@@ -1,0 +1,1013 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>generate_eclipse_data &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>generate_eclipse_data
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 5.0% of total for procedures.">120 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">generate_eclipse_data</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/generate_eclipse_data.html#src">generate_eclipse_data</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine generate_eclipse_data(me, fileprefix, filetype)  
+</h2>
+    
+
+    <p>Propagate all the segments with a dense time step and export the
+Eclipsing data w.r.t. Earth. In this file, any point &lt;0 is in eclipse.</p>
+<p>Based on <a href="../proc/plot_trajectory.html">plot_trajectory</a></p>
+<p>TODO: use the data from <a href="../proc/export_trajectory_json_file.html">export_trajectory_json_file</a>, so that should be run first</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~40"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fileprefix"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fileprefix</strong></td>
+            <td>
+                <p>file prefix for the csv file (case name will be added)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filetype"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filetype</strong></td>
+            <td>
+                <p>type of output file: 1=csv [default] or 2=json</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~generate_eclipse_data~~CallsGraph Pages: 1 -->
+<svg id="procgenerate_eclipse_dataCallsGraph" width="641pt" height="573pt"
+ viewBox="0.00 0.00 641.00 573.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~generate_eclipse_data~~CallsGraph" class="graph" transform="scale(0.805448 0.805448) rotate(0) translate(4 707.27)">
+<title>proc~~generate_eclipse_data~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-707.27 791.83,-707.27 791.83,4 -4,4"/>
+<!-- proc~generate_eclipse_data -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node1" class="node">
+<title>proc~generate_eclipse_data</title>
+<polygon fill="none" stroke="black" points="211.02,-187.27 0,-187.27 0,-163 211.02,-163 211.02,-187.27"/>
+<text xml:space="preserve" text-anchor="middle" x="105.51" y="-171.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%generate_eclipse_data</text>
+</g>
+<!-- add -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node2" class="node">
+<title>add</title>
+<polygon fill="#777777" stroke="#777777" points="361.15,-511.27 307.15,-511.27 307.15,-487 361.15,-487 361.15,-511.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-495.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;add -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge1" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M108.37,-187.56C115.98,-233.84 149.13,-397.7 247.02,-478.13 260.64,-489.33 279.32,-494.71 295.81,-497.24"/>
+<polygon fill="#000000" stroke="#000000" points="294.93,-500.66 305.27,-498.39 295.77,-493.71 294.93,-500.66"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node3" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="763.83,-409.27 697.56,-409.27 697.56,-385 763.83,-385 763.83,-409.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-393.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;icrf_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge2" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M119.76,-187.63C163.5,-227.87 308.96,-353.64 457.29,-392.13 535.77,-412.5 631.29,-407.83 685.84,-402.53"/>
+<polygon fill="#000000" stroke="#000000" points="686.07,-406.02 695.66,-401.51 685.35,-399.06 686.07,-406.02"/>
+</g>
+<!-- initialize -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node4" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="362.04,-108.27 306.27,-108.27 306.27,-84 362.04,-84 362.04,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;initialize -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge3" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M138.1,-162.52C166.43,-151.37 209.24,-134.94 247.02,-122.14 262.58,-116.86 279.9,-111.53 294.9,-107.08"/>
+<polygon fill="#000000" stroke="#000000" points="295.79,-110.47 304.4,-104.29 293.82,-103.75 295.79,-110.47"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node5" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node5"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="418.66,-66.27 249.64,-66.27 249.64,-42 418.66,-42 418.66,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge4" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M120.15,-162.67C144.05,-141.5 195.83,-98.54 247.02,-75.14 250.81,-73.4 254.77,-71.8 258.81,-70.32"/>
+<polygon fill="#000000" stroke="#000000" points="259.84,-73.66 268.21,-67.17 257.62,-67.03 259.84,-73.66"/>
+</g>
+<!-- proc~get_case_name -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node6" class="node">
+<title>proc~get_case_name</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node6"><a xlink:href="../proc/get_case_name.html" xlink:title="mission_type%get_case_name">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="420.91,-24.27 247.39,-24.27 247.39,0 420.91,0 420.91,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_case_name</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~get_case_name -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge5" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~get_case_name</title>
+<path fill="none" stroke="#000000" d="M115.07,-162.63C134.85,-134.75 186.65,-67.29 247.02,-33.13 249.69,-31.62 252.47,-30.22 255.32,-28.92"/>
+<polygon fill="#000000" stroke="#000000" points="256.55,-32.2 264.5,-25.19 253.92,-25.71 256.55,-32.2"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node7" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node7"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="383.79,-469.27 284.52,-469.27 284.52,-445 383.79,-445 383.79,-469.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-453.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge6" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M109.73,-187.74C120.98,-229.21 162.53,-362.67 247.02,-431.13 254.78,-437.42 264.04,-442.19 273.56,-445.81"/>
+<polygon fill="#000000" stroke="#000000" points="272.33,-449.09 282.92,-448.94 274.55,-442.45 272.33,-449.09"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node8" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node8"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="421.29,-271.27 247.02,-271.27 247.02,-247 421.29,-247 421.29,-271.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-255.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~propagate_segment -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge7" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M140.44,-187.71C179.94,-202.35 245.31,-226.58 288.81,-242.7"/>
+<polygon fill="#000000" stroke="#000000" points="287.35,-245.89 297.94,-246.08 289.78,-239.33 287.35,-245.89"/>
+</g>
+<!-- transform -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node9" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="762.7,-311.27 698.68,-311.27 698.68,-287 762.7,-287 762.7,-311.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-295.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;transform -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge8" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M183.69,-162.52C311.78,-143.15 561.7,-112.46 637.56,-154.13 685.03,-180.21 711.51,-242.25 722.9,-276.11"/>
+<polygon fill="#000000" stroke="#000000" points="719.48,-276.9 725.85,-285.37 726.15,-274.78 719.48,-276.9"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node10" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="620.31,-187.27 474.54,-187.27 474.54,-163 620.31,-163 620.31,-187.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-171.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge9" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M211.32,-175.13C288.39,-175.13 391.74,-175.13 463.18,-175.13"/>
+<polygon fill="#000000" stroke="#000000" points="462.86,-178.64 472.86,-175.14 462.86,-171.64 462.86,-178.64"/>
+</g>
+<!-- proc~int_to_string -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node16" class="node">
+<title>proc~int_to_string</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node16"><a xlink:href="../proc/int_to_string.html" xlink:title="int_to_string">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="585.43,-24.27 509.41,-24.27 509.41,0 585.43,0 585.43,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">int_to_string</text>
+</a>
+</g>
+</g>
+<!-- proc~get_case_name&#45;&gt;proc~int_to_string -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge10" class="edge">
+<title>proc~get_case_name&#45;&gt;proc~int_to_string</title>
+<path fill="none" stroke="#000000" d="M421.39,-12.13C447.43,-12.13 475.1,-12.13 497.77,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="497.62,-15.64 507.62,-12.14 497.62,-8.64 497.62,-15.64"/>
+</g>
+<!-- proc~apparent_position -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node13" class="node">
+<title>proc~apparent_position</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node13"><a xlink:href="../proc/apparent_position.html" xlink:title="apparent_position">
+<polygon fill="#d9534f" stroke="#d9534f" points="600.81,-511.27 494.04,-511.27 494.04,-487 600.81,-487 600.81,-511.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-495.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~apparent_position -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge11" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~apparent_position</title>
+<path fill="none" stroke="#000000" d="M384.16,-466.88C413.49,-472.71 451.09,-480.18 482.71,-486.47"/>
+<polygon fill="#000000" stroke="#000000" points="481.65,-489.83 492.14,-488.34 483.01,-482.96 481.65,-489.83"/>
+</g>
+<!-- proc~cubic_shadow_model -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node14" class="node">
+<title>proc~cubic_shadow_model</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node14"><a xlink:href="../proc/cubic_shadow_model.html" xlink:title="cubic_shadow_model">
+<polygon fill="#d9534f" stroke="#d9534f" points="609.81,-619.27 485.04,-619.27 485.04,-595 609.81,-595 609.81,-619.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-603.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge12" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M384.18,-463.56C396.9,-466.67 410.14,-471.29 421.29,-478.13 442.24,-491 440.48,-502.2 457.29,-520.13 479.4,-543.73 506.09,-569.44 524.47,-586.75"/>
+<polygon fill="#000000" stroke="#000000" points="521.97,-589.21 531.66,-593.49 526.76,-584.1 521.97,-589.21"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node15" class="node">
+<title>proc~from_j2000moon_to_j2000ssb</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node15"><a xlink:href="../proc/from_j2000moon_to_j2000ssb.html" xlink:title="from_j2000moon_to_j2000ssb">
+<polygon fill="#d9534f" stroke="#d9534f" points="632.68,-469.27 462.16,-469.27 462.16,-445 632.68,-445 632.68,-469.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-453.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000moon_to_j2000ssb</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge13" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M384.16,-457.13C403.86,-457.13 427.31,-457.13 450.16,-457.13"/>
+<polygon fill="#000000" stroke="#000000" points="450.16,-460.64 460.16,-457.14 450.16,-453.64 450.16,-460.64"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge15" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M345.78,-271.63C365.32,-293.68 409.41,-339.15 457.29,-360.13 532.79,-393.22 630.41,-398.5 685.93,-398.44"/>
+<polygon fill="#000000" stroke="#000000" points="685.63,-401.94 695.61,-398.36 685.58,-394.94 685.63,-401.94"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge18" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M401.22,-271.74C419.34,-274.86 439.03,-277.93 457.29,-280.13 538.24,-289.89 633.38,-295.12 687.1,-297.49"/>
+<polygon fill="#000000" stroke="#000000" points="686.9,-300.99 697.04,-297.92 687.2,-293.99 686.9,-300.99"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge19" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M355.62,-246.59C379.33,-232.54 419.91,-209.94 457.29,-196.13 462.56,-194.19 468.08,-192.38 473.67,-190.71"/>
+<polygon fill="#000000" stroke="#000000" points="474.34,-194.15 483.01,-188.07 472.43,-187.42 474.34,-194.15"/>
+</g>
+<!-- first_call -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node11" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="575.31,-351.27 519.54,-351.27 519.54,-327 575.31,-327 575.31,-351.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-335.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M360.95,-271.74C385.39,-283.39 423.32,-300.73 457.29,-313.13 473.74,-319.14 492.28,-324.73 508.17,-329.18"/>
+<polygon fill="#000000" stroke="#000000" points="507.18,-332.53 517.75,-331.8 509.03,-325.78 507.18,-332.53"/>
+</g>
+<!-- integrate -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node12" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="577.56,-271.27 517.29,-271.27 517.29,-247 577.56,-247 577.56,-271.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-255.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge16" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M421.7,-259.13C450.75,-259.13 481.79,-259.13 505.64,-259.13"/>
+<polygon fill="#000000" stroke="#000000" points="505.55,-262.64 515.55,-259.14 505.55,-255.64 505.55,-262.64"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node17" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~generate_eclipse_data~~CallsGraph_node17"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="637.56,-229.27 457.29,-229.27 457.29,-205 637.56,-205 637.56,-229.27"/>
+<text xml:space="preserve" text-anchor="middle" x="547.42" y="-213.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge17" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M398.54,-246.53C421.63,-241.94 447.93,-236.71 471.9,-231.95"/>
+<polygon fill="#000000" stroke="#000000" points="472.47,-235.41 481.6,-230.02 471.11,-228.54 472.47,-235.41"/>
+</g>
+<!-- axis_angle_rotation -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node20" class="node">
+<title>axis_angle_rotation</title>
+<polygon fill="#777777" stroke="#777777" points="787.83,-451.27 673.56,-451.27 673.56,-427 787.83,-427 787.83,-451.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-435.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">axis_angle_rotation</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;axis_angle_rotation -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge20" class="edge">
+<title>proc~apparent_position&#45;&gt;axis_angle_rotation</title>
+<path fill="none" stroke="#000000" d="M600.87,-488.92C613.07,-485.96 625.9,-482.36 637.56,-478.13 654.38,-472.04 657.16,-467.28 673.56,-460.13 676.9,-458.68 680.37,-457.23 683.89,-455.81"/>
+<polygon fill="#000000" stroke="#000000" points="684.99,-459.14 693.02,-452.23 682.43,-452.62 684.99,-459.14"/>
+</g>
+<!-- cross -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node21" class="node">
+<title>cross</title>
+<polygon fill="#777777" stroke="#777777" points="757.69,-535.27 703.69,-535.27 703.69,-511 757.69,-511 757.69,-535.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-519.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;cross -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge21" class="edge">
+<title>proc~apparent_position&#45;&gt;cross</title>
+<path fill="none" stroke="#000000" d="M600.86,-506.08C630.18,-509.96 666.05,-514.71 692.48,-518.21"/>
+<polygon fill="#000000" stroke="#000000" points="691.67,-521.63 702.05,-519.47 692.59,-514.69 691.67,-521.63"/>
+</g>
+<!-- get_r -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node22" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="757.69,-493.27 703.69,-493.27 703.69,-469 757.69,-469 757.69,-493.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-477.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;get_r -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge22" class="edge">
+<title>proc~apparent_position&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M600.86,-493.93C630.05,-491.03 665.73,-487.49 692.12,-484.87"/>
+<polygon fill="#000000" stroke="#000000" points="692.43,-488.35 702.04,-483.88 691.74,-481.39 692.43,-488.35"/>
+</g>
+<!-- unit -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node23" class="node">
+<title>unit</title>
+<polygon fill="#777777" stroke="#777777" points="757.69,-577.27 703.69,-577.27 703.69,-553 757.69,-553 757.69,-577.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-561.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">unit</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;unit -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge23" class="edge">
+<title>proc~apparent_position&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M582.95,-511.7C614.28,-523.11 660.37,-539.89 692.5,-551.59"/>
+<polygon fill="#000000" stroke="#000000" points="691.23,-554.85 701.82,-554.99 693.62,-548.28 691.23,-554.85"/>
+</g>
+<!-- acosd -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node18" class="node">
+<title>acosd</title>
+<polygon fill="#777777" stroke="#777777" points="757.69,-703.27 703.69,-703.27 703.69,-679 757.69,-679 757.69,-703.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-687.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">acosd</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;acosd -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge24" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;acosd</title>
+<path fill="none" stroke="#000000" d="M571.59,-619.75C596.44,-633.05 637.23,-654.25 673.56,-670.13 679.73,-672.83 686.37,-675.51 692.84,-678"/>
+<polygon fill="#000000" stroke="#000000" points="691.46,-681.22 702.05,-681.46 693.92,-674.67 691.46,-681.22"/>
+</g>
+<!-- asind -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node19" class="node">
+<title>asind</title>
+<polygon fill="#777777" stroke="#777777" points="757.69,-661.27 703.69,-661.27 703.69,-637 757.69,-637 757.69,-661.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-645.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">asind</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;asind -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge25" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;asind</title>
+<path fill="none" stroke="#000000" d="M602.81,-619.74C631.75,-626.44 666.59,-634.51 692.44,-640.5"/>
+<polygon fill="#000000" stroke="#000000" points="691.62,-643.91 702.15,-642.75 693.2,-637.09 691.62,-643.91"/>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;unit -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge26" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M602.81,-594.53C631.75,-587.83 666.59,-579.76 692.44,-573.77"/>
+<polygon fill="#000000" stroke="#000000" points="693.2,-577.18 702.15,-571.52 691.62,-570.36 693.2,-577.18"/>
+</g>
+<!-- wrap_angle -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_node24" class="node">
+<title>wrap_angle</title>
+<polygon fill="#777777" stroke="#777777" points="767.2,-619.27 694.18,-619.27 694.18,-595 767.2,-595 767.2,-619.27"/>
+<text xml:space="preserve" text-anchor="middle" x="730.69" y="-603.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">wrap_angle</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;wrap_angle -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge27" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;wrap_angle</title>
+<path fill="none" stroke="#000000" d="M610.3,-607.13C633.86,-607.13 660.31,-607.13 682.32,-607.13"/>
+<polygon fill="#000000" stroke="#000000" points="682.2,-610.64 692.2,-607.14 682.2,-603.64 682.2,-610.64"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge28" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M593.96,-444.52C608,-440.45 623.48,-435.78 637.56,-431.13 642.69,-429.44 665.28,-421.11 686.8,-413.12"/>
+<polygon fill="#000000" stroke="#000000" points="687.96,-416.42 696.12,-409.66 685.52,-409.86 687.96,-416.42"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;transform -->
+<g id="proc~~generate_eclipse_data~~CallsGraph_edge29" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M562.65,-444.74C593.94,-417.46 668.99,-352.05 706.92,-318.99"/>
+<polygon fill="#000000" stroke="#000000" points="708.91,-321.9 714.15,-312.69 704.31,-316.62 708.91,-321.9"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocgenerate_eclipse_dataCallsGraph = svgPanZoom('#procgenerate_eclipse_dataCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~generate_eclipse_data~~CalledByGraph Pages: 1 -->
+<svg id="procgenerate_eclipse_dataCalledByGraph" width="360pt" height="32pt"
+ viewBox="0.00 0.00 360.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~generate_eclipse_data~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~generate_eclipse_data~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 355.54,-28.27 355.54,4 -4,4"/>
+<!-- proc~generate_eclipse_data -->
+<g id="proc~~generate_eclipse_data~~CalledByGraph_node1" class="node">
+<title>proc~generate_eclipse_data</title>
+<polygon fill="none" stroke="black" points="351.54,-24.27 140.52,-24.27 140.52,0 351.54,0 351.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="246.03" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%generate_eclipse_data</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~generate_eclipse_data~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~generate_eclipse_data~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data -->
+<g id="proc~~generate_eclipse_data~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data</title>
+<path fill="none" stroke="#000000" d="M104.9,-12.13C112.45,-12.13 120.47,-12.13 128.7,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.52,-15.64 138.52,-12.14 128.52,-8.64 128.52,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">generate_eclipse_data</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">fileprefix</span><span class="p">,</span><span class="n">filetype</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fileprefix</span><span class="w"> </span><span class="c">!! file prefix for the csv file (case name will be added)</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filetype</span><span class="w"> </span><span class="c">!! type of output file: 1=csv [default] or 2=json</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">iunit</span><span class="p">,</span><span class="n">iseg</span><span class="p">,</span><span class="n">istat</span><span class="p">,</span><span class="n">istart</span><span class="p">,</span><span class="n">istep</span><span class="p">,</span><span class="n">iend</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phi</span><span class="w"> </span><span class="c">!! sunfrac value</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">p</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ifiletype</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">json</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg_str</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">full_filename</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phi_vec</span><span class="w"> </span><span class="c">!! vector of `phi` values from a segment (for JSON file)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et_vec</span><span class="w"> </span><span class="c">!! vector of `et` values from a segment (for JSON file)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phi_vec_total</span><span class="p">,</span><span class="w"> </span><span class="n">et_vec_total</span><span class="w"> </span><span class="c">!! cumulative for all segments</span>
+
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_se</span><span class="p">,</span><span class="w"> </span><span class="n">y_se</span><span class="p">,</span><span class="w"> </span><span class="n">z_se</span><span class="p">,</span><span class="w"> </span><span class="n">vx_se</span><span class="p">,</span><span class="w"> </span><span class="n">vy_se</span><span class="p">,</span><span class="w"> </span><span class="n">vz_se</span><span class="p">,</span><span class="w"> </span><span class="n">et_se</span><span class="p">,</span><span class="w"> </span><span class="n">phi_se</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">icrf_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inertial</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">two_body_rotating_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">se_rotating</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_se_rotating</span>
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span>
+
+<span class="w">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">FILETYPE_CSV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">FILETYPE_JSON</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">file_ext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">'.csv '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                                               </span><span class="s1">'.json'</span><span class="p">]</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">filetype</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">ifiletype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">filetype</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">ifiletype</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FILETYPE_JSON</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        </span><span class="n">full_filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">trim</span><span class="p">(</span><span class="n">fileprefix</span><span class="p">)</span><span class="o">//</span><span class="s1">'_'</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">get_case_name</span><span class="p">()</span><span class="o">//</span><span class="p">&amp;</span>
+<span class="w">                        </span><span class="nb">trim</span><span class="p">(</span><span class="n">file_ext</span><span class="p">(</span><span class="n">ifiletype</span><span class="p">))</span>
+
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Generating eclipse file: '</span><span class="o">//</span><span class="n">full_filename</span>
+
+<span class="w">        </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">ifiletype</span><span class="p">)</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_CSV</span><span class="p">)</span>
+<span class="w">            </span><span class="k">open</span><span class="p">(</span><span class="n">newunit</span><span class="o">=</span><span class="n">iunit</span><span class="p">,</span><span class="k">file</span><span class="o">=</span><span class="n">full_filename</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="s1">'REPLACE'</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">istat</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'error opening eclipse csv file.'</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="s1">'(A30,A,1X,A30)'</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"> </span><span class="s1">'ET (sec)'</span><span class="p">,</span><span class="w"> </span><span class="s1">','</span><span class="p">,</span><span class="w"> </span><span class="s1">'PHI'</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">compress_vectors</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="w">        </span><span class="k">case </span><span class="n">default</span>
+<span class="w">            </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'invalid filetype for eclipse file'</span>
+<span class="w">        </span><span class="k">end select</span>
+
+<span class="k">        allocate</span><span class="p">(</span><span class="n">x_se</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="k">allocate</span><span class="p">(</span><span class="n">y_se</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="k">allocate</span><span class="p">(</span><span class="n">z_se</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">vx_se</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="k">allocate</span><span class="p">(</span><span class="n">vy_se</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="k">allocate</span><span class="p">(</span><span class="n">vz_se</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">et_se</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">phi_se</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">phi_vec_total</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">et_vec_total</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="w">        </span><span class="c">! destroy all trajectories first:</span>
+<span class="w">        </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">end do</span>
+
+<span class="w">        </span><span class="c">!====================================</span>
+<span class="w">        </span><span class="c">! now propagate the segments:</span>
+<span class="w">        </span><span class="c">! [export points at a fixed time step]</span>
+<span class="c">!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)</span>
+<span class="w">        </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">propagate</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tstep</span><span class="o">=</span><span class="n">me</span><span class="p">%</span><span class="n">eclipse_dt_step</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="c">!$OMP END PARALLEL DO</span>
+<span class="w">        </span><span class="c">!====================================</span>
+
+<span class="w">        </span><span class="c">! TODO: could also try to do this stuff in parallel too...</span>
+<span class="w">        </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ifiletype</span><span class="o">==</span><span class="n">FILETYPE_JSON</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">phi_vec</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">phi_vec</span><span class="p">);</span><span class="w"> </span><span class="k">allocate</span><span class="p">(</span><span class="n">phi_vec</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">et_vec</span><span class="p">))</span><span class="w">  </span><span class="k">deallocate</span><span class="p">(</span><span class="n">et_vec</span><span class="p">);</span><span class="w">  </span><span class="k">allocate</span><span class="p">(</span><span class="n">et_vec</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            write</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">,</span><span class="s1">'(I10)'</span><span class="p">)</span><span class="w"> </span><span class="n">iseg</span><span class="w">    </span><span class="c">! segment number as string</span>
+<span class="w">            </span><span class="n">iseg_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">adjustl</span><span class="p">(</span><span class="n">iseg_str</span><span class="p">)</span>
+
+<span class="w">            </span><span class="c">! destroy all trajectories first:</span>
+<span class="w">            </span><span class="c">! call me%segs(iseg)%traj_inertial%destroy()</span>
+<span class="w">            </span><span class="c">! call me%segs(iseg)%traj_rotating%destroy()</span>
+<span class="w">            </span><span class="c">! call me%segs(iseg)%traj_se_rotating%destroy()</span>
+<span class="w">            </span><span class="c">! generate the trajectory for this segment:</span>
+<span class="w">            </span><span class="c">! [export points at a fixed time step]</span>
+<span class="w">            </span><span class="c">!call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! forward propagated</span>
+<span class="w">                </span><span class="n">istart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="n">iend</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">                </span><span class="n">istep</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c">! backward propagated</span>
+<span class="w">                </span><span class="n">istart</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">                </span><span class="n">iend</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="n">istep</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">            do </span><span class="n">i</span><span class="o">=</span><span class="n">istart</span><span class="p">,</span><span class="n">iend</span><span class="p">,</span><span class="n">istep</span>
+<span class="w">                </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">et</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                            </span><span class="n">rv_moon</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">(</span><span class="n">i</span><span class="p">),&amp;</span>
+<span class="w">                                        </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">])</span>
+
+<span class="w">                    </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_sun_fraction</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">rv_moon</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">r_eclipse_bubble</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">phi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="mf">0.0_wp</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="c">! phi &gt;0 mean the spacecraft is in sunlight</span>
+
+<span class="w">                    </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">ifiletype</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_CSV</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">write</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="s1">'(*(E30.16E3,A,1X))'</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span><span class="w"> </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="s1">','</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span>
+<span class="w">                    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_JSON</span><span class="p">)</span>
+<span class="w">                        </span><span class="c">! for this we accumulate the data for the whole</span>
+<span class="w">                        </span><span class="c">! segment and write all at once at the end</span>
+<span class="w">                        </span><span class="n">phi_vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">phi_vec</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">]</span><span class="w"> </span><span class="c">! TODO: could use expand routines to make this more efficient</span>
+<span class="w">                        </span><span class="n">phi_se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">phi_se</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">]</span><span class="w"> </span><span class="c">! save the actual value</span>
+<span class="w">                        </span><span class="n">et_se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">et_se</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">]</span>
+
+<span class="w">                        </span><span class="c">! also convert to sun-earth rotating</span>
+<span class="w">                        </span><span class="n">se_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two_body_rotating_frame</span><span class="p">(</span><span class="n">primary_body</span><span class="o">=</span><span class="n">body_sun</span><span class="p">,&amp;</span>
+<span class="w">                                                              </span><span class="n">secondary_body</span><span class="o">=</span><span class="n">body_earth</span><span class="p">,&amp;</span>
+<span class="w">                                                              </span><span class="n">center</span><span class="o">=</span><span class="n">center_at_secondary_body</span><span class="p">,&amp;</span>
+<span class="w">                                                              </span><span class="n">et</span><span class="o">=</span><span class="n">et</span><span class="p">)</span>
+<span class="w">                        </span><span class="c">! from inertial to rotating:</span>
+<span class="w">                        </span><span class="n">inertial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icrf_frame</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">body_moon</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">call </span><span class="n">inertial</span><span class="p">%</span><span class="n">transform</span><span class="p">(</span><span class="n">rv_moon</span><span class="p">,</span><span class="n">se_rotating</span><span class="p">,</span><span class="n">et</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">eph</span><span class="p">,</span><span class="n">x_se_rotating</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'transformation error in propagate_segment'</span>
+<span class="w">                        </span><span class="n">x_se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">x_se</span><span class="p">,</span><span class="w"> </span><span class="n">x_se_rotating</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="w">                        </span><span class="n">y_se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">y_se</span><span class="p">,</span><span class="w"> </span><span class="n">x_se_rotating</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="w">                        </span><span class="n">z_se</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">z_se</span><span class="p">,</span><span class="w"> </span><span class="n">x_se_rotating</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+<span class="w">                    </span><span class="k">end select</span>
+
+<span class="k">                end associate</span>
+<span class="k">            end do</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">ifiletype</span><span class="o">==</span><span class="n">FILETYPE_JSON</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! accumulate only the points where phi &lt; 0 (in shadow)</span>
+<span class="w">                </span><span class="n">et_vec</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">pack</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">)%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">mask</span><span class="o">=</span><span class="n">phi_vec</span><span class="o">&lt;</span><span class="mf">0.0_wp</span><span class="p">)</span>
+<span class="w">                </span><span class="n">phi_vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pack</span><span class="p">(</span><span class="n">phi_vec</span><span class="p">,</span><span class="w"> </span><span class="n">mask</span><span class="o">=</span><span class="n">phi_vec</span><span class="o">&lt;</span><span class="mf">0.0_wp</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">et_vec</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">et_vec_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">et_vec_total</span><span class="p">,</span><span class="w"> </span><span class="n">et_vec</span><span class="p">]</span>
+<span class="w">                    </span><span class="n">phi_vec_total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">phi_vec_total</span><span class="p">,</span><span class="w"> </span><span class="n">phi_vec</span><span class="p">]</span>
+<span class="w">                </span><span class="k">end if</span>
+<span class="k">            end if</span>
+
+<span class="k">        end do</span>
+
+<span class="w">        </span><span class="c">! save file:</span>
+<span class="w">        </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">ifiletype</span><span class="p">)</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_CSV</span><span class="p">)</span>
+<span class="w">            </span><span class="k">close</span><span class="p">(</span><span class="n">iunit</span><span class="p">,</span><span class="n">iostat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="n">FILETYPE_JSON</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'et'</span><span class="p">,</span><span class="w">  </span><span class="n">et_vec_total</span><span class="p">)</span><span class="w">     </span><span class="c">! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'phi'</span><span class="p">,</span><span class="w"> </span><span class="n">phi_vec_total</span><span class="p">)</span>
+
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'phi_se'</span><span class="p">,</span><span class="w"> </span><span class="n">phi_se</span><span class="p">)</span><span class="w"> </span><span class="c">! also the full S-E trajectory data for plotting</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'et_se'</span><span class="p">,</span><span class="w"> </span><span class="n">et_se</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'x_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">x_se</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'y_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">y_se</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'z_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">z_se</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="k">print</span><span class="p">(</span><span class="n">full_filename</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end select</span>
+<span class="k">        call </span><span class="n">json</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">generate_eclipse_data</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

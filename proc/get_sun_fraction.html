@@ -1,0 +1,721 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>get_sun_fraction &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>get_sun_fraction
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.6% of total for procedures.">15 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_utilities_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_utilities_module.f90.html'>halo_utilities_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_utilities_module.html'>halo_utilities_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">get_sun_fraction</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/get_sun_fraction.html#src">get_sun_fraction</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  function get_sun_fraction(eph, et, rv, rbubble) result(phi)  
+</h2>
+    
+
+    <p>Compute the "sun fraction" using the circular cubic shadow model.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eph~8"></span>
+              class(jpl_ephemeris),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>eph</strong></td>
+            <td>
+                <p>the ephemeris</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-et~15"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+                <p>observer ephemeris time (sec)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rv~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>rv</strong></td>
+            <td>
+                <p>state of the spacecraft !! (j2000-moon frame)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rbubble"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rbubble</strong></td>
+            <td>
+                <p>eclipse bubble [km]. see the reference.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-phi~3"></span>
+          real(kind=wp)
+        </small>
+      </h3>
+      <p>circular cubic sun frac value.</p>
+<ul>
+<li>
+<blockquote>
+<p>0 no eclipse,</p>
+</blockquote>
+</li>
+<li>&lt;0 eclipse,</li>
+<li>=0 on the eclipse line</li>
+</ul>
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~get_sun_fraction~~CallsGraph Pages: 1 -->
+<svg id="procget_sun_fractionCallsGraph" width="464pt" height="368pt"
+ viewBox="0.00 0.00 464.00 368.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~get_sun_fraction~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 364.27)">
+<title>proc~~get_sun_fraction~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-364.27 460.06,-364.27 460.06,4 -4,4"/>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node1" class="node">
+<title>proc~get_sun_fraction</title>
+<polygon fill="none" stroke="black" points="99.27,-171.27 0,-171.27 0,-147 99.27,-147 99.27,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="49.63" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50">get_sun_fraction</text>
+</g>
+<!-- proc~apparent_position -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node2" class="node">
+<title>proc~apparent_position</title>
+<g id="a_proc~~get_sun_fraction~~CallsGraph_node2"><a xlink:href="../proc/apparent_position.html" xlink:title="apparent_position">
+<polygon fill="#d9534f" stroke="#d9534f" points="273.91,-276.27 167.14,-276.27 167.14,-252 273.91,-252 273.91,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="220.53" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~apparent_position -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge1" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~apparent_position</title>
+<path fill="none" stroke="#000000" d="M70.67,-171.59C100.18,-189.94 155.51,-224.34 189.77,-245.63"/>
+<polygon fill="#000000" stroke="#000000" points="187.63,-248.42 197.97,-250.73 191.33,-242.48 187.63,-248.42"/>
+</g>
+<!-- proc~cubic_shadow_model -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node3" class="node">
+<title>proc~cubic_shadow_model</title>
+<g id="a_proc~~get_sun_fraction~~CallsGraph_node3"><a xlink:href="../proc/cubic_shadow_model.html" xlink:title="cubic_shadow_model">
+<polygon fill="#d9534f" stroke="#d9534f" points="282.91,-171.27 158.14,-171.27 158.14,-147 282.91,-147 282.91,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="220.53" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge2" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M99.49,-159.13C114.15,-159.13 130.56,-159.13 146.43,-159.13"/>
+<polygon fill="#000000" stroke="#000000" points="146.34,-162.64 156.34,-159.14 146.34,-155.64 146.34,-162.64"/>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node4" class="node">
+<title>proc~from_j2000moon_to_j2000ssb</title>
+<g id="a_proc~~get_sun_fraction~~CallsGraph_node4"><a xlink:href="../proc/from_j2000moon_to_j2000ssb.html" xlink:title="from_j2000moon_to_j2000ssb">
+<polygon fill="#d9534f" stroke="#d9534f" points="305.79,-66.27 135.27,-66.27 135.27,-42 305.79,-42 305.79,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="220.53" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000moon_to_j2000ssb</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge3" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;proc~from_j2000moon_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M70.67,-146.68C100.18,-128.33 155.51,-93.93 189.77,-72.64"/>
+<polygon fill="#000000" stroke="#000000" points="191.33,-75.79 197.97,-67.54 187.63,-69.85 191.33,-75.79"/>
+</g>
+<!-- axis_angle_rotation -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node7" class="node">
+<title>axis_angle_rotation</title>
+<polygon fill="#777777" stroke="#777777" points="456.06,-360.27 341.79,-360.27 341.79,-336 456.06,-336 456.06,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">axis_angle_rotation</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;axis_angle_rotation -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge4" class="edge">
+<title>proc~apparent_position&#45;&gt;axis_angle_rotation</title>
+<path fill="none" stroke="#000000" d="M243.29,-276.59C267.07,-289.94 306.5,-311.36 341.79,-327.13 345.07,-328.6 348.48,-330.05 351.93,-331.47"/>
+<polygon fill="#000000" stroke="#000000" points="350.33,-334.59 360.91,-335.02 352.9,-328.08 350.33,-334.59"/>
+</g>
+<!-- cross -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node8" class="node">
+<title>cross</title>
+<polygon fill="#777777" stroke="#777777" points="425.92,-318.27 371.92,-318.27 371.92,-294 425.92,-294 425.92,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;cross -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge5" class="edge">
+<title>proc~apparent_position&#45;&gt;cross</title>
+<path fill="none" stroke="#000000" d="M273.98,-276.62C301.81,-283.25 335.35,-291.24 360.52,-297.23"/>
+<polygon fill="#000000" stroke="#000000" points="359.44,-300.57 369.98,-299.48 361.06,-293.76 359.44,-300.57"/>
+</g>
+<!-- get_r -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node9" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="425.92,-276.27 371.92,-276.27 371.92,-252 425.92,-252 425.92,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;get_r -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge6" class="edge">
+<title>proc~apparent_position&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M273.98,-264.13C301.68,-264.13 335.05,-264.13 360.18,-264.13"/>
+<polygon fill="#000000" stroke="#000000" points="359.93,-267.64 369.93,-264.14 359.93,-260.64 359.93,-267.64"/>
+</g>
+<!-- unit -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node12" class="node">
+<title>unit</title>
+<polygon fill="#777777" stroke="#777777" points="425.92,-234.27 371.92,-234.27 371.92,-210 425.92,-210 425.92,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">unit</text>
+</g>
+<!-- proc~apparent_position&#45;&gt;unit -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge7" class="edge">
+<title>proc~apparent_position&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M273.98,-251.65C301.81,-245.02 335.35,-237.03 360.52,-231.04"/>
+<polygon fill="#000000" stroke="#000000" points="361.06,-234.51 369.98,-228.79 359.44,-227.7 361.06,-234.51"/>
+</g>
+<!-- acosd -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node5" class="node">
+<title>acosd</title>
+<polygon fill="#777777" stroke="#777777" points="425.92,-192.27 371.92,-192.27 371.92,-168 425.92,-168 425.92,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">acosd</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;acosd -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge8" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;acosd</title>
+<path fill="none" stroke="#000000" d="M283.22,-166.48C308.83,-169.53 337.71,-172.97 360.09,-175.63"/>
+<polygon fill="#000000" stroke="#000000" points="359.62,-179.1 369.97,-176.81 360.45,-172.15 359.62,-179.1"/>
+</g>
+<!-- asind -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node6" class="node">
+<title>asind</title>
+<polygon fill="#777777" stroke="#777777" points="425.92,-150.27 371.92,-150.27 371.92,-126 425.92,-126 425.92,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">asind</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;asind -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge9" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;asind</title>
+<path fill="none" stroke="#000000" d="M283.22,-151.79C308.83,-148.74 337.71,-145.3 360.09,-142.64"/>
+<polygon fill="#000000" stroke="#000000" points="360.45,-146.12 369.97,-141.46 359.62,-139.17 360.45,-146.12"/>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;unit -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge10" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;unit</title>
+<path fill="none" stroke="#000000" d="M256.8,-171.73C286.98,-182.51 330.27,-197.97 360.93,-208.92"/>
+<polygon fill="#000000" stroke="#000000" points="359.59,-212.16 370.18,-212.23 361.94,-205.57 359.59,-212.16"/>
+</g>
+<!-- wrap_angle -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node13" class="node">
+<title>wrap_angle</title>
+<polygon fill="#777777" stroke="#777777" points="435.43,-108.27 362.41,-108.27 362.41,-84 435.43,-84 435.43,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">wrap_angle</text>
+</g>
+<!-- proc~cubic_shadow_model&#45;&gt;wrap_angle -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge11" class="edge">
+<title>proc~cubic_shadow_model&#45;&gt;wrap_angle</title>
+<path fill="none" stroke="#000000" d="M256.8,-146.54C284.2,-136.75 322.42,-123.1 352.17,-112.48"/>
+<polygon fill="#000000" stroke="#000000" points="353.05,-115.88 361.29,-109.22 350.69,-109.29 353.05,-115.88"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node10" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="432.06,-66.27 365.79,-66.27 365.79,-42 432.06,-42 432.06,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge12" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M306.11,-54.13C322.86,-54.13 339.77,-54.13 354.45,-54.13"/>
+<polygon fill="#000000" stroke="#000000" points="354.17,-57.64 364.17,-54.14 354.17,-50.64 354.17,-57.64"/>
+</g>
+<!-- transform -->
+<g id="proc~~get_sun_fraction~~CallsGraph_node11" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="430.93,-24.27 366.91,-24.27 366.91,0 430.93,0 430.93,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="398.92" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~from_j2000moon_to_j2000ssb&#45;&gt;transform -->
+<g id="proc~~get_sun_fraction~~CallsGraph_edge13" class="edge">
+<title>proc~from_j2000moon_to_j2000ssb&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M274.45,-41.53C300.39,-35.36 331.19,-28.03 355.54,-22.23"/>
+<polygon fill="#000000" stroke="#000000" points="356.19,-25.67 365.11,-19.95 354.57,-18.86 356.19,-25.67"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~get_sun_fraction~~CalledByGraph Pages: 1 -->
+<svg id="procget_sun_fractionCalledByGraph" width="495pt" height="32pt"
+ viewBox="0.00 0.00 495.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~get_sun_fraction~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~get_sun_fraction~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 490.81,-28.27 490.81,4 -4,4"/>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~get_sun_fraction~~CalledByGraph_node1" class="node">
+<title>proc~get_sun_fraction</title>
+<polygon fill="none" stroke="black" points="486.81,-24.27 387.54,-24.27 387.54,0 486.81,0 486.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="437.18" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">get_sun_fraction</text>
+</g>
+<!-- proc~generate_eclipse_data -->
+<g id="proc~~get_sun_fraction~~CalledByGraph_node2" class="node">
+<title>proc~generate_eclipse_data</title>
+<g id="a_proc~~get_sun_fraction~~CalledByGraph_node2"><a xlink:href="../proc/generate_eclipse_data.html" xlink:title="mission_type%generate_eclipse_data">
+<polygon fill="#d9534f" stroke="#d9534f" points="351.54,-24.27 140.52,-24.27 140.52,0 351.54,0 351.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="246.03" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%generate_eclipse_data</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~get_sun_fraction~~CalledByGraph_edge1" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M351.84,-12.13C359.99,-12.13 368.03,-12.13 375.73,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="375.61,-15.64 385.61,-12.14 375.61,-8.64 375.61,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~get_sun_fraction~~CalledByGraph_node3" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~get_sun_fraction~~CalledByGraph_node3"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data -->
+<g id="proc~~get_sun_fraction~~CalledByGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data</title>
+<path fill="none" stroke="#000000" d="M104.9,-12.13C112.45,-12.13 120.47,-12.13 128.7,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.52,-15.64 138.52,-12.14 128.52,-8.64 128.52,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">function </span><span class="n">get_sun_fraction</span><span class="p">(</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">rv</span><span class="p">,</span><span class="w"> </span><span class="n">rbubble</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="w"> </span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">class</span><span class="p">(</span><span class="n">jpl_ephemeris</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">eph</span><span class="w"> </span><span class="c">!! the ephemeris</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rv</span><span class="w"> </span><span class="c">!! state of the spacecraft !! (j2000-moon frame)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et</span><span class="w"> </span><span class="c">!! observer ephemeris time (sec)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rbubble</span><span class="w"> </span><span class="c">!! eclipse bubble [km]. see the reference.</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phi</span><span class="w"> </span><span class="c">!! circular cubic sun frac value.</span>
+<span class="w">                        </span><span class="c">!!</span>
+<span class="w">                        </span><span class="c">!!  * &gt;0 no eclipse,</span>
+<span class="w">                        </span><span class="c">!!  * &lt;0 eclipse,</span>
+<span class="w">                        </span><span class="c">!!  * =0 on the eclipse line</span>
+
+<span class="w">        </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span><span class="w"> </span><span class="c">!! true if no problems</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r_sun</span><span class="w"> </span><span class="c">!! apparent state of the sun (j2000-ssb frame)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r_earth</span><span class="w"> </span><span class="c">!! apparent state of the earth (j2000-ssb frame)</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rv_ssb</span><span class="w"> </span><span class="c">!! state of the spacecraft !! (j2000-ssb frame)</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">from_j2000moon_to_j2000ssb</span><span class="p">(</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">rv</span><span class="p">,</span><span class="w"> </span><span class="n">rv_ssb</span><span class="p">)</span><span class="w"> </span><span class="c">! state of spacecraft in j2000-ssb</span>
+<span class="w">        </span><span class="k">call </span><span class="n">apparent_position</span><span class="p">(</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">body_sun</span><span class="p">,</span><span class="w">   </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">rv_ssb</span><span class="p">,</span><span class="w"> </span><span class="n">r_sun</span><span class="p">,</span><span class="w">   </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="c">! apparent position of sun in j2000</span>
+<span class="w">        </span><span class="k">call </span><span class="n">apparent_position</span><span class="p">(</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">body_earth</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">,</span><span class="w"> </span><span class="n">rv_ssb</span><span class="p">,</span><span class="w"> </span><span class="n">r_earth</span><span class="p">,</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="c">! apparent position of earth in j2000</span>
+<span class="w">        </span><span class="k">call </span><span class="n">cubic_shadow_model</span><span class="p">(</span><span class="n">r_sun</span><span class="p">,</span><span class="w"> </span><span class="n">rad_sun</span><span class="p">,</span><span class="w"> </span><span class="n">r_earth</span><span class="p">,</span><span class="w"> </span><span class="n">rad_earth</span><span class="p">,</span><span class="w"> </span><span class="n">phi</span><span class="p">,</span><span class="w"> </span><span class="n">rbubble</span><span class="p">)</span><span class="w"> </span><span class="c">! compute sun fraction value</span>
+
+<span class="w">    </span><span class="k">end function </span><span class="n">get_sun_fraction</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

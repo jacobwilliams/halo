@@ -1,0 +1,1301 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>initialize_the_solver &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>initialize_the_solver
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.6% of total for procedures.">39 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">initialize_the_solver</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/initialize_the_solver.html#src">initialize_the_solver</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine initialize_the_solver(me, config_file_name, x)  
+</h2>
+    
+
+    <p>Initialize the mission.</p>
+<p>This is the "forward-backward" formulation.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/my_solver_type.html'>my_solver_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~13"></span>
+              class(<a href='../type/my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-config_file_name~2"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>config_file_name</strong></td>
+            <td>
+                <p>the config file to read</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>initial guess</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~initialize_the_solver~~CallsGraph Pages: 1 -->
+<svg id="procinitialize_the_solverCallsGraph" width="641pt" height="586pt"
+ viewBox="0.00 0.00 641.00 586.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_the_solver~~CallsGraph" class="graph" transform="scale(0.531355 0.531355) rotate(0) translate(4 1098.03)">
+<title>proc~~initialize_the_solver~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-1098.03 1202.35,-1098.03 1202.35,4 -4,4"/>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node1" class="node">
+<title>proc~initialize_the_solver</title>
+<polygon fill="none" stroke="black" points="208.02,-603.27 0,-603.27 0,-579 208.02,-579 208.02,-603.27"/>
+<text xml:space="preserve" text-anchor="middle" x="104.01" y="-587.53" font-family="Helvetica,sans-Serif" font-size="10.50">my_solver_type%initialize_the_solver</text>
+</g>
+<!-- initialize -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node2" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="857.95,-402.27 802.18,-402.27 802.18,-378 857.95,-378 857.95,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;initialize -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge1" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M116.18,-578.73C138.48,-554.55 190.95,-500.59 244.02,-467.13 341.34,-405.78 369.99,-389.8 482.79,-367.13 592.89,-345.01 726.24,-367.3 790.61,-381.05"/>
+<polygon fill="#000000" stroke="#000000" points="789.81,-384.46 800.33,-383.18 791.31,-377.62 789.81,-384.46"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node3" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node3"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="929.58,-810.27 730.56,-810.27 730.56,-786 929.58,-786 929.58,-810.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-794.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge2" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M105.18,-603.51C106.66,-658.22 120.33,-880.34 244.02,-985.13 397.46,-1115.13 520.02,-1127.04 694.56,-1027.13 773.51,-981.95 810.66,-870.41 823.55,-821.62"/>
+<polygon fill="#000000" stroke="#000000" points="826.89,-822.67 825.94,-812.11 820.1,-820.96 826.89,-822.67"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node4" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node4"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="687.81,-892.27 489.54,-892.27 489.54,-868 687.81,-868 687.81,-892.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-876.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge3" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M118.12,-603.68C164,-646.84 323.31,-790.33 482.79,-859.13 487.06,-860.98 491.49,-862.66 496.03,-864.19"/>
+<polygon fill="#000000" stroke="#000000" points="494.7,-867.45 505.29,-867.07 496.78,-860.76 494.7,-867.45"/>
+</g>
+<!-- proc~get_x_from_json_file -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node5" class="node">
+<title>proc~get_x_from_json_file</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node5"><a xlink:href="../proc/get_x_from_json_file.html" xlink:title="mission_type%get_x_from_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="444.16,-976.27 246.64,-976.27 246.64,-952 444.16,-952 444.16,-976.27"/>
+<text xml:space="preserve" text-anchor="middle" x="345.4" y="-960.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_x_from_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~get_x_from_json_file -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge4" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~get_x_from_json_file</title>
+<path fill="none" stroke="#000000" d="M112.98,-603.55C147.62,-657.53 285.49,-872.34 330.28,-942.12"/>
+<polygon fill="#000000" stroke="#000000" points="327.25,-943.88 335.59,-950.4 333.14,-940.1 327.25,-943.88"/>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node6" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node6"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="446.79,-665.27 244.02,-665.27 244.02,-641 446.79,-641 446.79,-665.27"/>
+<text xml:space="preserve" text-anchor="middle" x="345.4" y="-649.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge5" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M153.74,-603.76C191.61,-613.56 244.3,-627.21 284.69,-637.67"/>
+<polygon fill="#000000" stroke="#000000" points="283.72,-641.03 294.27,-640.15 285.47,-634.26 283.72,-641.03"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node7" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node7"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="440.79,-500.27 250.02,-500.27 250.02,-476 440.79,-476 440.79,-500.27"/>
+<text xml:space="preserve" text-anchor="middle" x="345.4" y="-484.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge6" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M134.36,-578.51C177.2,-560.08 256.93,-525.77 304.88,-505.14"/>
+<polygon fill="#000000" stroke="#000000" points="305.99,-508.47 313.79,-501.31 303.23,-502.04 305.99,-508.47"/>
+</g>
+<!-- proc~read_config_file -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node8" class="node">
+<title>proc~read_config_file</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node8"><a xlink:href="../proc/read_config_file.html" xlink:title="my_solver_type%read_config_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="439.29,-262.27 251.52,-262.27 251.52,-238 439.29,-238 439.29,-262.27"/>
+<text xml:space="preserve" text-anchor="middle" x="345.4" y="-246.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%read_config_file</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~read_config_file -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge7" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~read_config_file</title>
+<path fill="none" stroke="#000000" d="M109.78,-578.63C125.06,-539.59 175.83,-417.62 244.02,-334.13 264.96,-308.49 294.58,-284.83 316.22,-269.2"/>
+<polygon fill="#000000" stroke="#000000" points="318.16,-272.12 324.3,-263.48 314.12,-266.4 318.16,-272.12"/>
+</g>
+<!-- status -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node9" class="node">
+<title>status</title>
+<polygon fill="#777777" stroke="#777777" points="372.4,-220.27 318.4,-220.27 318.4,-196 372.4,-196 372.4,-220.27"/>
+<text xml:space="preserve" text-anchor="middle" x="345.4" y="-204.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status</text>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;status -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge8" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M105.69,-578.8C109.25,-527.1 130.21,-326.01 244.02,-229.13 261.21,-214.5 286.01,-209.21 306.65,-207.6"/>
+<polygon fill="#000000" stroke="#000000" points="306.6,-211.11 316.42,-207.12 306.26,-204.12 306.6,-211.11"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge9" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M663.57,-867.55C674.07,-865.12 684.66,-862.32 694.56,-859.13 730.33,-847.61 769.22,-829.29 795.94,-815.73"/>
+<polygon fill="#000000" stroke="#000000" points="797.27,-818.99 804.56,-811.3 794.07,-812.76 797.27,-818.99"/>
+</g>
+<!-- get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node13" class="node">
+<title>get</title>
+<polygon fill="#777777" stroke="#777777" points="1198.35,-276.27 1144.35,-276.27 1144.35,-252 1198.35,-252 1198.35,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1171.35" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge10" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M366.22,-976.65C391.93,-992.08 438.72,-1017.45 482.79,-1027.13 574.72,-1047.34 606.55,-1060.49 694.56,-1027.13 1024.51,-902.1 1142.72,-403.06 1165.88,-287.92"/>
+<polygon fill="#000000" stroke="#000000" points="1169.31,-288.6 1167.8,-278.12 1162.44,-287.26 1169.31,-288.6"/>
+</g>
+<!-- get_child -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node14" class="node">
+<title>get_child</title>
+<polygon fill="#777777" stroke="#777777" points="618.43,-934.27 558.91,-934.27 558.91,-910 618.43,-910 618.43,-934.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-918.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_child</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;get_child -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge11" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;get_child</title>
+<path fill="none" stroke="#000000" d="M418.79,-951.53C460.94,-944.2 512.5,-935.22 547.48,-929.13"/>
+<polygon fill="#000000" stroke="#000000" points="547.93,-932.61 557.18,-927.44 546.73,-925.71 547.93,-932.61"/>
+</g>
+<!-- info -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node15" class="node">
+<title>info</title>
+<polygon fill="#777777" stroke="#777777" points="615.67,-1018.27 561.67,-1018.27 561.67,-994 615.67,-994 615.67,-1018.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-1002.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">info</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;info -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge12" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;info</title>
+<path fill="none" stroke="#000000" d="M418.79,-976.74C462.07,-984.27 515.26,-993.53 550.24,-999.62"/>
+<polygon fill="#000000" stroke="#000000" points="549.43,-1003.03 559.88,-1001.3 550.63,-996.13 549.43,-1003.03"/>
+</g>
+<!-- load -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node17" class="node">
+<title>load</title>
+<polygon fill="#777777" stroke="#777777" points="615.67,-976.27 561.67,-976.27 561.67,-952 615.67,-952 615.67,-976.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-960.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">load</text>
+</g>
+<!-- proc~get_x_from_json_file&#45;&gt;load -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge13" class="edge">
+<title>proc~get_x_from_json_file&#45;&gt;load</title>
+<path fill="none" stroke="#000000" d="M444.54,-964.13C481.64,-964.13 521.68,-964.13 549.96,-964.13"/>
+<polygon fill="#000000" stroke="#000000" points="549.8,-967.64 559.8,-964.14 549.8,-960.64 549.8,-967.64"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge15" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M355.63,-640.66C373.75,-615.98 415.01,-558.99 446.79,-509.13 463.92,-482.26 456.56,-465.23 482.79,-447.13 495.44,-438.41 703.17,-408.04 790.68,-395.56"/>
+<polygon fill="#000000" stroke="#000000" points="791.05,-399.04 800.46,-394.17 790.07,-392.11 791.05,-399.04"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge18" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M354.89,-665.37C374.07,-691.86 423.71,-754.13 482.79,-779.13 557.26,-810.65 648.91,-814.33 719.21,-810.7"/>
+<polygon fill="#000000" stroke="#000000" points="719.01,-814.22 728.8,-810.15 718.61,-807.23 719.01,-814.22"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge21" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M358.93,-665.46C379.44,-686.18 420.53,-729.97 446.79,-773.13 468.33,-808.53 450.73,-832.89 482.79,-859.13 483.92,-860.06 485.08,-860.95 486.27,-861.8"/>
+<polygon fill="#000000" stroke="#000000" points="484.21,-864.64 494.56,-866.88 487.86,-858.67 484.21,-864.64"/>
+</g>
+<!-- destroy -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node10" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="615.67,-770.27 561.67,-770.27 561.67,-746 615.67,-746 615.67,-770.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-754.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;destroy -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge14" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M362.2,-665.49C386.63,-683.97 435.69,-718.61 482.79,-737.13 504.31,-745.6 529.72,-750.8 550.14,-753.91"/>
+<polygon fill="#000000" stroke="#000000" points="549.63,-757.37 560.02,-755.29 550.6,-750.44 549.63,-757.37"/>
+</g>
+<!-- initialize_splinded_ephemeris -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node16" class="node">
+<title>initialize_splinded_ephemeris</title>
+<polygon fill="#777777" stroke="#777777" points="672.81,-728.27 504.54,-728.27 504.54,-704 672.81,-704 672.81,-728.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-712.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize_splinded_ephemeris</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge16" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;initialize_splinded_ephemeris</title>
+<path fill="none" stroke="#000000" d="M383.74,-665.75C410.99,-674.68 448.93,-686.55 482.79,-695.13 491.08,-697.24 499.78,-699.26 508.48,-701.17"/>
+<polygon fill="#000000" stroke="#000000" points="507.47,-704.53 517.98,-703.2 508.94,-697.69 507.47,-704.53"/>
+</g>
+<!-- magnitude -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node18" class="node">
+<title>magnitude</title>
+<polygon fill="#777777" stroke="#777777" points="623.31,-602.27 554.04,-602.27 554.04,-578 623.31,-578 623.31,-602.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-586.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">magnitude</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;magnitude -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge17" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;magnitude</title>
+<path fill="none" stroke="#000000" d="M383.74,-640.52C410.99,-631.59 448.93,-619.72 482.79,-611.13 502.32,-606.19 524.13,-601.66 542.79,-598.09"/>
+<polygon fill="#000000" stroke="#000000" points="543.27,-601.56 552.46,-596.27 541.98,-594.68 543.27,-601.56"/>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node21" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node21"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="686.68,-644.27 490.66,-644.27 490.66,-620 686.68,-620 686.68,-644.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-628.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge19" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M446.98,-644.38C457.52,-643.46 468.27,-642.53 478.89,-641.6"/>
+<polygon fill="#000000" stroke="#000000" points="479.19,-645.09 488.85,-640.74 478.59,-638.12 479.19,-645.09"/>
+</g>
+<!-- proc~get_scales_from_segs -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node22" class="node">
+<title>proc~get_scales_from_segs</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node22"><a xlink:href="../proc/get_scales_from_segs.html" xlink:title="mission_type%get_scales_from_segs">
+<polygon fill="#d9534f" stroke="#d9534f" points="691.18,-686.27 486.16,-686.27 486.16,-662 691.18,-662 691.18,-686.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-670.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_scales_from_segs</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge20" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_scales_from_segs</title>
+<path fill="none" stroke="#000000" d="M446.98,-661.89C456.08,-662.68 465.34,-663.49 474.53,-664.29"/>
+<polygon fill="#000000" stroke="#000000" points="473.94,-667.75 484.2,-665.13 474.55,-660.77 473.94,-667.75"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node24" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node24"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="675.06,-480.27 502.29,-480.27 502.29,-456 675.06,-456 675.06,-480.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-464.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge22" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M357.98,-640.65C380.51,-616.77 432.49,-563.74 482.79,-527.13 504.47,-511.36 530.76,-496.58 551.61,-485.75"/>
+<polygon fill="#000000" stroke="#000000" points="552.99,-488.97 560.3,-481.31 549.81,-482.74 552.99,-488.97"/>
+</g>
+<!-- set_dpert -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node26" class="node">
+<title>set_dpert</title>
+<polygon fill="#777777" stroke="#777777" points="619.18,-560.27 558.16,-560.27 558.16,-536 619.18,-536 619.18,-560.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-544.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_dpert</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_dpert -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge23" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_dpert</title>
+<path fill="none" stroke="#000000" d="M362.2,-640.78C386.63,-622.3 435.69,-587.66 482.79,-569.13 503.16,-561.12 527.01,-556.04 546.81,-552.88"/>
+<polygon fill="#000000" stroke="#000000" points="547.07,-556.38 556.45,-551.46 546.04,-549.45 547.07,-556.38"/>
+</g>
+<!-- set_sparsity_pattern -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node27" class="node">
+<title>set_sparsity_pattern</title>
+<polygon fill="#777777" stroke="#777777" points="647.68,-850.27 529.66,-850.27 529.66,-826 647.68,-826 647.68,-850.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-834.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_sparsity_pattern</text>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;set_sparsity_pattern -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge24" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;set_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M356.81,-665.68C387.27,-702.35 474.62,-807.1 482.79,-812.13 493.6,-818.8 506.02,-823.75 518.45,-827.44"/>
+<polygon fill="#000000" stroke="#000000" points="517.31,-830.76 527.87,-829.97 519.12,-824 517.31,-830.76"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge26" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M440.93,-493.09C537.55,-499.03 676.02,-510.35 694.56,-527.13 751.18,-578.38 694.82,-627.65 730.56,-695.13 748.48,-728.96 780.71,-759.51 803.41,-778.4"/>
+<polygon fill="#000000" stroke="#000000" points="801.05,-780.99 811.02,-784.57 805.46,-775.55 801.05,-780.99"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node12" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="632.31,-400.27 545.04,-400.27 545.04,-376 632.31,-376 632.31,-400.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-384.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge25" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M365.53,-475.72C391.24,-459.5 438.84,-431.19 482.79,-414.13 498.85,-407.91 516.88,-402.8 533.4,-398.81"/>
+<polygon fill="#000000" stroke="#000000" points="534.13,-402.24 543.08,-396.57 532.55,-395.42 534.13,-402.24"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge27" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M441.07,-480.29C457.37,-478.94 474.34,-477.53 490.71,-476.17"/>
+<polygon fill="#000000" stroke="#000000" points="490.74,-479.68 500.41,-475.37 490.16,-472.71 490.74,-479.68"/>
+</g>
+<!-- proc~read_config_file&#45;&gt;initialize -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge29" class="edge">
+<title>proc~read_config_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M384.94,-262.75C412.11,-271.39 449.46,-282.76 482.79,-291.13 575.94,-314.54 609.63,-289.29 694.56,-334.13 714.29,-344.55 710.88,-358.62 730.56,-369.13 748.95,-378.96 771.59,-384.19 790.52,-386.97"/>
+<polygon fill="#000000" stroke="#000000" points="789.89,-390.42 800.25,-388.22 790.78,-383.48 789.89,-390.42"/>
+</g>
+<!-- evaluate -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node11" class="node">
+<title>evaluate</title>
+<polygon fill="#777777" stroke="#777777" points="617.68,-160.27 559.66,-160.27 559.66,-136 617.68,-136 617.68,-160.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-144.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate</text>
+</g>
+<!-- proc~read_config_file&#45;&gt;evaluate -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge28" class="edge">
+<title>proc~read_config_file&#45;&gt;evaluate</title>
+<path fill="none" stroke="#000000" d="M431.81,-237.62C437.1,-235.24 442.15,-232.44 446.79,-229.13 472.13,-211.11 457.37,-187.05 482.79,-169.13 501.66,-155.84 526.93,-150.5 547.94,-148.53"/>
+<polygon fill="#000000" stroke="#000000" points="548.17,-152.02 557.91,-147.84 547.69,-145.04 548.17,-152.02"/>
+</g>
+<!-- none~get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node19" class="node">
+<title>none~get</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node19"><a xlink:href="../type/config_file.html#boundprocedure-get" xlink:title="config_file%get">
+<polygon fill="#a7506f" stroke="#a7506f" points="876.7,-234.27 783.43,-234.27 783.43,-210 876.7,-210 876.7,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;none~get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge30" class="edge">
+<title>proc~read_config_file&#45;&gt;none~get</title>
+<path fill="none" stroke="#000000" d="M439.75,-244.72C538.06,-239.02 689.74,-230.22 771.73,-225.46"/>
+<polygon fill="#000000" stroke="#000000" points="771.78,-228.96 781.56,-224.89 771.37,-221.98 771.78,-228.96"/>
+</g>
+<!-- proc~generate_patch_points -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node20" class="node">
+<title>proc~generate_patch_points</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node20"><a xlink:href="../proc/generate_patch_points.html" xlink:title="mission_type%generate_patch_points">
+<polygon fill="#d9534f" stroke="#d9534f" points="694.56,-282.27 482.79,-282.27 482.79,-258 694.56,-258 694.56,-282.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-266.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%generate_patch_points</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~generate_patch_points -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge31" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~generate_patch_points</title>
+<path fill="none" stroke="#000000" d="M439.69,-257.87C450.01,-258.72 460.61,-259.6 471.18,-260.48"/>
+<polygon fill="#000000" stroke="#000000" points="470.84,-263.96 481.1,-261.3 471.42,-256.99 470.84,-263.96"/>
+</g>
+<!-- proc~read_epoch -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node23" class="node">
+<title>proc~read_epoch</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node23"><a xlink:href="../proc/read_epoch.html" xlink:title="read_epoch">
+<polygon fill="#d9534f" stroke="#d9534f" points="625.56,-202.27 551.79,-202.27 551.79,-178 625.56,-178 625.56,-202.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-186.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">read_epoch</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~read_epoch -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge32" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~read_epoch</title>
+<path fill="none" stroke="#000000" d="M413.14,-237.54C424.44,-235.02 436,-232.2 446.79,-229.13 463.16,-224.49 466.51,-221.08 482.79,-216.13 501.43,-210.47 522.21,-205.13 540.32,-200.77"/>
+<polygon fill="#000000" stroke="#000000" points="541.1,-204.18 550.03,-198.48 539.49,-197.37 541.1,-204.18"/>
+</g>
+<!-- proc~update_epoch -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node25" class="node">
+<title>proc~update_epoch</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node25"><a xlink:href="../proc/update_epoch.html" xlink:title="mission_type%update_epoch">
+<polygon fill="#d9534f" stroke="#d9534f" points="671.68,-87.27 505.66,-87.27 505.66,-63 671.68,-63 671.68,-87.27"/>
+<text xml:space="preserve" text-anchor="middle" x="588.67" y="-71.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%update_epoch</text>
+</a>
+</g>
+</g>
+<!-- proc~read_config_file&#45;&gt;proc~update_epoch -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge33" class="edge">
+<title>proc~read_config_file&#45;&gt;proc~update_epoch</title>
+<path fill="none" stroke="#000000" d="M434.52,-237.65C438.91,-235.23 443.04,-232.42 446.79,-229.13 482.97,-197.48 450.91,-163.12 482.79,-127.13 496.6,-111.55 516.15,-100.11 534.65,-91.99"/>
+<polygon fill="#000000" stroke="#000000" points="535.75,-95.32 543.66,-88.28 533.08,-88.85 535.75,-95.32"/>
+</g>
+<!-- proc~get_char -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node39" class="node">
+<title>proc~get_char</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node39"><a xlink:href="../proc/get_char.html" xlink:title="config_file%get_char">
+<polygon fill="#d9534f" stroke="#d9534f" points="1098.22,-213.27 975.7,-213.27 975.7,-189 1098.22,-189 1098.22,-213.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1036.96" y="-197.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_char</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_char -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge34" class="edge">
+<title>none~get&#45;&gt;proc~get_char</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M877.05,-217.42C902.68,-214.8 935.15,-211.47 964.06,-208.5"/>
+<polygon fill="#000000" stroke="#000000" points="964.26,-212 973.85,-207.5 963.55,-205.04 964.26,-212"/>
+</g>
+<!-- proc~get_int -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node40" class="node">
+<title>proc~get_int</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node40"><a xlink:href="../proc/get_int.html" xlink:title="config_file%get_int">
+<polygon fill="#d9534f" stroke="#d9534f" points="1092.97,-171.27 980.95,-171.27 980.95,-147 1092.97,-147 1092.97,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1036.96" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_int</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_int -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge35" class="edge">
+<title>none~get&#45;&gt;proc~get_int</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M877.07,-215.46C893.93,-212.21 912.94,-207.57 929.58,-201.13 946.86,-194.45 948.58,-187.5 965.58,-180.13 969.37,-178.49 973.33,-176.93 977.36,-175.45"/>
+<polygon fill="#000000" stroke="#000000" points="978.35,-178.81 986.66,-172.24 976.06,-172.19 978.35,-178.81"/>
+</g>
+<!-- proc~get_logical -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node41" class="node">
+<title>proc~get_logical</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node41"><a xlink:href="../proc/get_logical.html" xlink:title="config_file%get_logical">
+<polygon fill="#d9534f" stroke="#d9534f" points="1103.85,-339.27 970.08,-339.27 970.08,-315 1103.85,-315 1103.85,-339.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1036.96" y="-323.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_logical</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_logical -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge36" class="edge">
+<title>none~get&#45;&gt;proc~get_logical</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M876.98,-223.98C894.78,-226.62 914.47,-232.1 929.58,-243.13 955.62,-262.16 940.32,-286.09 965.58,-306.13 966.89,-307.18 968.25,-308.16 969.66,-309.1"/>
+<polygon fill="#000000" stroke="#000000" points="967.69,-312.01 978.12,-313.88 971.13,-305.92 967.69,-312.01"/>
+</g>
+<!-- proc~get_real -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node42" class="node">
+<title>proc~get_real</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node42"><a xlink:href="../proc/get_real.html" xlink:title="config_file%get_real">
+<polygon fill="#d9534f" stroke="#d9534f" points="1096.35,-297.27 977.58,-297.27 977.58,-273 1096.35,-273 1096.35,-297.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1036.96" y="-281.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_real</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_real -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge37" class="edge">
+<title>none~get&#45;&gt;proc~get_real</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M877.07,-228.81C893.93,-232.06 912.94,-236.7 929.58,-243.13 946.86,-249.82 948.58,-256.77 965.58,-264.13 969.37,-265.78 973.33,-267.34 977.36,-268.82"/>
+<polygon fill="#000000" stroke="#000000" points="976.06,-272.08 986.66,-272.03 978.35,-265.46 976.06,-272.08"/>
+</g>
+<!-- proc~get_real_vec -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node43" class="node">
+<title>proc~get_real_vec</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node43"><a xlink:href="../proc/get_real_vec.html" xlink:title="config_file%get_real_vec">
+<polygon fill="#d9534f" stroke="#d9534f" points="1108.35,-255.27 965.58,-255.27 965.58,-231 1108.35,-231 1108.35,-255.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1036.96" y="-239.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file%get_real_vec</text>
+</a>
+</g>
+</g>
+<!-- none~get&#45;&gt;proc~get_real_vec -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge38" class="edge">
+<title>none~get&#45;&gt;proc~get_real_vec</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M877.05,-226.85C899.77,-229.18 927.86,-232.06 954.09,-234.74"/>
+<polygon fill="#000000" stroke="#000000" points="953.38,-238.19 963.68,-235.73 954.09,-231.23 953.38,-238.19"/>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;initialize -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge41" class="edge">
+<title>proc~generate_patch_points&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M671.25,-282.66C679.64,-286.14 687.62,-290.55 694.56,-296.13 722.74,-318.82 702.01,-346.92 730.56,-369.13 747.44,-382.27 770.68,-387.65 790.34,-389.68"/>
+<polygon fill="#000000" stroke="#000000" points="789.99,-393.17 800.23,-390.43 790.52,-386.19 789.99,-393.17"/>
+</g>
+<!-- compute_crtpb_parameter -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node29" class="node">
+<title>compute_crtpb_parameter</title>
+<polygon fill="#777777" stroke="#777777" points="907.08,-360.27 753.06,-360.27 753.06,-336 907.08,-336 907.08,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_crtpb_parameter</text>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;compute_crtpb_parameter -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge39" class="edge">
+<title>proc~generate_patch_points&#45;&gt;compute_crtpb_parameter</title>
+<path fill="none" stroke="#000000" d="M659.89,-282.69C671.82,-286.17 683.81,-290.58 694.56,-296.13 713.32,-305.83 711.64,-317.75 730.56,-327.13 734.26,-328.97 738.12,-330.65 742.08,-332.18"/>
+<polygon fill="#000000" stroke="#000000" points="740.71,-335.41 751.3,-335.4 743.01,-328.8 740.71,-335.41"/>
+</g>
+<!-- first_call -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node32" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="857.95,-318.27 802.18,-318.27 802.18,-294 857.95,-294 857.95,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;first_call -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge40" class="edge">
+<title>proc~generate_patch_points&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M673.4,-282.73C713.22,-288.71 758.88,-295.58 790.41,-300.32"/>
+<polygon fill="#000000" stroke="#000000" points="789.85,-303.78 800.26,-301.8 790.89,-296.85 789.85,-303.78"/>
+</g>
+<!-- integrate -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node34" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="860.2,-276.27 799.93,-276.27 799.93,-252 860.2,-252 860.2,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~generate_patch_points&#45;&gt;integrate -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge42" class="edge">
+<title>proc~generate_patch_points&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M695.03,-267.49C728.1,-266.67 762.65,-265.8 788.39,-265.15"/>
+<polygon fill="#000000" stroke="#000000" points="788.14,-268.66 798.04,-264.91 787.96,-261.66 788.14,-268.66"/>
+</g>
+<!-- fill_vector -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node31" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="861.7,-686.27 798.43,-686.27 798.43,-662 861.7,-662 861.7,-686.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-670.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge43" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M661.5,-644.74C702.46,-651.92 752.37,-660.68 787.01,-666.76"/>
+<polygon fill="#000000" stroke="#000000" points="786.2,-670.17 796.65,-668.45 787.41,-663.27 786.2,-670.17"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node38" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~initialize_the_solver~~CallsGraph_node38"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="872.95,-644.27 787.18,-644.27 787.18,-620 872.95,-620 872.95,-644.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-628.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge44" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M687.05,-632.13C717.38,-632.13 749.7,-632.13 775.83,-632.13"/>
+<polygon fill="#000000" stroke="#000000" points="775.48,-635.64 785.48,-632.14 775.48,-628.64 775.48,-635.64"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;proc~define_problem_size -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge46" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M671.57,-686.71C679.5,-689.06 687.29,-691.84 694.56,-695.13 739.89,-715.68 784.07,-754.07 808.81,-777.73"/>
+<polygon fill="#000000" stroke="#000000" points="806.32,-780.2 815.92,-784.67 811.2,-775.18 806.32,-780.2"/>
+</g>
+<!-- proc~get_scales_from_segs&#45;&gt;fill_vector -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge45" class="edge">
+<title>proc~get_scales_from_segs&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M691.55,-674.13C724.88,-674.13 760.09,-674.13 786.54,-674.13"/>
+<polygon fill="#000000" stroke="#000000" points="786.53,-677.64 796.53,-674.14 786.53,-670.64 786.53,-677.64"/>
+</g>
+<!-- proc~read_epoch&#45;&gt;none~get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge49" class="edge">
+<title>proc~read_epoch&#45;&gt;none~get</title>
+<path fill="none" stroke="#000000" d="M626.03,-195C664.86,-200.19 726.91,-208.48 772.21,-214.53"/>
+<polygon fill="#000000" stroke="#000000" points="771.47,-217.97 781.84,-215.82 772.39,-211.03 771.47,-217.97"/>
+</g>
+<!-- jd_to_et -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node35" class="node">
+<title>jd_to_et</title>
+<polygon fill="#777777" stroke="#777777" points="857.07,-192.27 803.07,-192.27 803.07,-168 857.07,-168 857.07,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">jd_to_et</text>
+</g>
+<!-- proc~read_epoch&#45;&gt;jd_to_et -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge47" class="edge">
+<title>proc~read_epoch&#45;&gt;jd_to_et</title>
+<path fill="none" stroke="#000000" d="M626.03,-188.62C670.7,-186.75 746.1,-183.6 791.37,-181.71"/>
+<polygon fill="#000000" stroke="#000000" points="791.39,-185.21 801.23,-181.3 791.09,-178.22 791.39,-185.21"/>
+</g>
+<!-- julian_date -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node36" class="node">
+<title>julian_date</title>
+<polygon fill="#777777" stroke="#777777" points="865.08,-150.27 795.06,-150.27 795.06,-126 865.08,-126 865.08,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julian_date</text>
+</g>
+<!-- proc~read_epoch&#45;&gt;julian_date -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge48" class="edge">
+<title>proc~read_epoch&#45;&gt;julian_date</title>
+<path fill="none" stroke="#000000" d="M625.74,-183.59C646.04,-179.74 671.8,-174.57 694.56,-169.13 710.71,-165.28 714.43,-163.09 730.56,-159.13 747.81,-154.9 766.88,-150.73 783.6,-147.22"/>
+<polygon fill="#000000" stroke="#000000" points="784.2,-150.68 793.28,-145.22 782.78,-143.82 784.2,-150.68"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node33" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="863.2,-528.27 796.93,-528.27 796.93,-504 863.2,-504 863.2,-528.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-512.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge50" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M652.57,-480.75C694.51,-489.15 748.54,-499.99 785.72,-507.44"/>
+<polygon fill="#000000" stroke="#000000" points="784.71,-510.81 795.2,-509.34 786.08,-503.95 784.71,-510.81"/>
+</g>
+<!-- transform -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node44" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="862.08,-486.27 798.06,-486.27 798.06,-462 862.08,-462 862.08,-486.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-470.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge51" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M675.43,-470.28C713.14,-471.23 755.75,-472.3 786.52,-473.07"/>
+<polygon fill="#000000" stroke="#000000" points="786.1,-476.56 796.18,-473.31 786.27,-469.56 786.1,-476.56"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node45" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="902.95,-444.27 757.18,-444.27 757.18,-420 902.95,-420 902.95,-444.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-428.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge52" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M673.4,-455.54C696.81,-452.02 722.24,-448.2 745.63,-444.68"/>
+<polygon fill="#000000" stroke="#000000" points="746.06,-448.16 755.43,-443.21 745.02,-441.23 746.06,-448.16"/>
+</g>
+<!-- calendar_date_to_et -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node28" class="node">
+<title>calendar_date_to_et</title>
+<polygon fill="#777777" stroke="#777777" points="889.83,-24.27 770.31,-24.27 770.31,0 889.83,0 889.83,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">calendar_date_to_et</text>
+</g>
+<!-- proc~update_epoch&#45;&gt;calendar_date_to_et -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge53" class="edge">
+<title>proc~update_epoch&#45;&gt;calendar_date_to_et</title>
+<path fill="none" stroke="#000000" d="M628.91,-62.52C657.05,-53.7 695.94,-41.97 730.56,-33.13 739.69,-30.8 749.35,-28.52 758.9,-26.38"/>
+<polygon fill="#000000" stroke="#000000" points="759.54,-29.82 768.55,-24.25 758.03,-22.98 759.54,-29.82"/>
+</g>
+<!-- et_to_jd -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node30" class="node">
+<title>et_to_jd</title>
+<polygon fill="#777777" stroke="#777777" points="857.07,-108.27 803.07,-108.27 803.07,-84 857.07,-84 857.07,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">et_to_jd</text>
+</g>
+<!-- proc~update_epoch&#45;&gt;et_to_jd -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge54" class="edge">
+<title>proc~update_epoch&#45;&gt;et_to_jd</title>
+<path fill="none" stroke="#000000" d="M672.06,-82.36C712.6,-85.92 759.48,-90.03 791.38,-92.83"/>
+<polygon fill="#000000" stroke="#000000" points="791.06,-96.31 801.33,-93.7 791.67,-89.34 791.06,-96.31"/>
+</g>
+<!-- julian_date_to_calendar_date -->
+<g id="proc~~initialize_the_solver~~CallsGraph_node37" class="node">
+<title>julian_date_to_calendar_date</title>
+<polygon fill="#777777" stroke="#777777" points="913.83,-66.27 746.31,-66.27 746.31,-42 913.83,-42 913.83,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="830.07" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">julian_date_to_calendar_date</text>
+</g>
+<!-- proc~update_epoch&#45;&gt;julian_date_to_calendar_date -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge55" class="edge">
+<title>proc~update_epoch&#45;&gt;julian_date_to_calendar_date</title>
+<path fill="none" stroke="#000000" d="M672.06,-67.91C692.26,-66.14 714.03,-64.23 734.75,-62.41"/>
+<polygon fill="#000000" stroke="#000000" points="734.96,-65.9 744.62,-61.54 734.35,-58.93 734.96,-65.9"/>
+</g>
+<!-- proc~get_char&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge56" class="edge">
+<title>proc~get_char&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1087.15,-213.7C1094.4,-216.16 1101.67,-218.97 1108.35,-222.13 1121.43,-228.34 1134.87,-237.09 1145.87,-245.01"/>
+<polygon fill="#000000" stroke="#000000" points="1143.51,-247.61 1153.63,-250.76 1147.68,-241.99 1143.51,-247.61"/>
+</g>
+<!-- proc~get_int&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge57" class="edge">
+<title>proc~get_int&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1093.02,-171.69C1098.44,-174.05 1103.65,-176.84 1108.35,-180.13 1130.89,-195.97 1148.53,-222.62 1159.13,-241.66"/>
+<polygon fill="#000000" stroke="#000000" points="1155.92,-243.07 1163.7,-250.25 1162.1,-239.78 1155.92,-243.07"/>
+</g>
+<!-- proc~get_logical&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge58" class="edge">
+<title>proc~get_logical&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1087.15,-314.57C1094.4,-312.11 1101.67,-309.3 1108.35,-306.13 1121.43,-299.93 1134.87,-291.18 1145.87,-283.26"/>
+<polygon fill="#000000" stroke="#000000" points="1147.68,-286.28 1153.63,-277.51 1143.51,-280.66 1147.68,-286.28"/>
+</g>
+<!-- proc~get_real&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge59" class="edge">
+<title>proc~get_real&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1096.8,-275.8C1109.1,-273.85 1121.75,-271.84 1133.01,-270.06"/>
+<polygon fill="#000000" stroke="#000000" points="1133.34,-273.55 1142.67,-268.53 1132.25,-266.64 1133.34,-273.55"/>
+</g>
+<!-- proc~get_real_vec&#45;&gt;get -->
+<g id="proc~~initialize_the_solver~~CallsGraph_edge60" class="edge">
+<title>proc~get_real_vec&#45;&gt;get</title>
+<path fill="none" stroke="#000000" d="M1108.81,-254.37C1117.04,-255.68 1125.17,-256.97 1132.7,-258.16"/>
+<polygon fill="#000000" stroke="#000000" points="1132.03,-261.6 1142.45,-259.71 1133.12,-254.69 1132.03,-261.6"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocinitialize_the_solverCallsGraph = svgPanZoom('#procinitialize_the_solverCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~initialize_the_solver~~CalledByGraph Pages: 1 -->
+<svg id="procinitialize_the_solverCalledByGraph" width="357pt" height="32pt"
+ viewBox="0.00 0.00 357.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~initialize_the_solver~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~initialize_the_solver~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 352.54,-28.27 352.54,4 -4,4"/>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~initialize_the_solver~~CalledByGraph_node1" class="node">
+<title>proc~initialize_the_solver</title>
+<polygon fill="none" stroke="black" points="348.54,-24.27 140.52,-24.27 140.52,0 348.54,0 348.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">my_solver_type%initialize_the_solver</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~initialize_the_solver~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~initialize_the_solver~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~initialize_the_solver~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M105,-12.13C112.57,-12.13 120.6,-12.13 128.83,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.65,-15.64 138.65,-12.14 128.65,-8.64 128.65,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">initialize_the_solver</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">config_file_name</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">my_solver_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">config_file_name</span><span class="w"> </span><span class="c">!! the config file to read</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="c">!! initial guess</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">          </span><span class="c">!! number of opt vars for the solver</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="w">          </span><span class="c">!! number of equality constraints for the solver</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span><span class="w">  </span><span class="c">!! status flag for solver initialization</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">istat</span><span class="w">      </span><span class="c">!! status code from solver</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="w"> </span><span class="c">!! sparsity pattern</span>
+
+<span class="w">    </span><span class="c">! note: we don't know the problem size</span>
+<span class="w">    </span><span class="c">! until we read the config file.</span>
+
+<span class="w">    </span><span class="c">! first we have to read the config file:</span>
+<span class="w">    </span><span class="c">! this will populate some of the mission variables</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">read_config_file</span><span class="p">(</span><span class="n">config_file_name</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">! initialize the mission</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">init</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">! initialize the solver:</span>
+<span class="w">    </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">solver_mode</span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! dense - uses lapack to solve the linear system</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="w">     </span><span class="n">n</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">m</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">max_iter</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! maximum number of iteration</span>
+<span class="w">                                </span><span class="n">func</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">halo_func</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">grad</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">halo_grad</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">tol</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! tolerance</span>
+<span class="w">                                </span><span class="c">! step_mode        = 4,            &amp; ! 3-point "line search" (2 intervals)</span>
+<span class="w">                                </span><span class="c">! n_intervals      = 2,            &amp; ! number of intervals for step_mode=4</span>
+<span class="w">                                </span><span class="c">! alpha_min = 0.2_wp, &amp;</span>
+<span class="w">                                </span><span class="c">! alpha_max = 0.8_wp, &amp;</span>
+<span class="w">                                </span><span class="n">step_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! backtracking "line search"</span>
+<span class="w">                                </span><span class="n">alpha_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1_wp</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">alpha_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_wp</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">use_broyden</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w">      </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! broyden update</span>
+<span class="w">                                </span><span class="c">! use_broyden=.true.,broyden_update_n=10, &amp; ! ... test ...</span>
+<span class="w">                                </span><span class="n">export_iteration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">halo_export</span><span class="w">   </span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">case</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! this is using the qr_mumps solver as a user-defined solver to nlesolver-fortran.</span>
+<span class="w">        </span><span class="c">! the solver is defined in qrm_solver. you must use the WITH_QRMUMPS preprocessor</span>
+<span class="w">        </span><span class="c">! directive to use this method and link the code with the appropriate libraries.</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span><span class="w"> </span><span class="c">! it's already been computed, but for now, just compute it again for this call</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="w">     </span><span class="n">n</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">m</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">max_iter</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! maximum number of iteration</span>
+<span class="w">                                </span><span class="n">func</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">halo_func</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">grad_sparse</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">halo_grad_sparse</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">tol</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! tolerance</span>
+<span class="w">                                </span><span class="n">step_mode</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! 3-point "line search" (2 intervals)</span>
+<span class="w">                                </span><span class="n">n_intervals</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! number of intervals for step_mode=4</span>
+<span class="w">                                </span><span class="n">alpha_min</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mf">0.2_wp</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">alpha_max</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0_wp</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="c">! step_mode = 2,  &amp; ! backtracking "line search"  seems to not work as well for large problems. why?</span>
+<span class="w">                                </span><span class="c">! alpha_min = 0.1_wp, &amp;</span>
+<span class="w">                                </span><span class="c">! alpha_max = 1.0_wp, &amp;</span>
+<span class="w">                                </span><span class="n">use_broyden</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w">      </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! broyden update</span>
+<span class="w">                                </span><span class="c">! use_broyden=.true.,broyden_update_n=4, &amp; ! ... test ...</span>
+<span class="w">                                </span><span class="n">sparsity_mode</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">solver_mode</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! use a sparse solver</span>
+<span class="w">                                </span><span class="n">custom_solver_sparse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">qrm_solver</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! the qr_mumps solver wrapper</span>
+<span class="w">                                </span><span class="n">irow</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! sparsity pattern</span>
+<span class="w">                                </span><span class="n">icol</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">icol</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">export_iteration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">halo_export</span><span class="w">   </span><span class="p">)</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">:</span><span class="mi">7</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! various sparse options available in nlesolver-fortran</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span><span class="w"> </span><span class="c">! it's already been computed, but for now, just compute it again for this call</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="w">     </span><span class="n">n</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">m</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">max_iter</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! maximum number of iteration</span>
+<span class="w">                                </span><span class="n">func</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">halo_func</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">grad_sparse</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">halo_grad_sparse</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">tol</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span><span class="p">,</span><span class="w">    </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! tolerance</span>
+<span class="w">                                </span><span class="c">! step_mode = 1,&amp; ! TEST TEST TEST</span>
+<span class="w">                                </span><span class="c">! alpha = 1.0_wp,&amp;</span>
+<span class="w">                                </span><span class="n">step_mode</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! 3-point "line search" (2 intervals)</span>
+<span class="w">                                </span><span class="n">n_intervals</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! number of intervals for step_mode=4</span>
+<span class="w">                                </span><span class="n">use_broyden</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w">      </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! broyden update</span>
+<span class="w">                                </span><span class="c">!use_broyden=.true.,broyden_update_n=10, &amp; ! ... test ...</span>
+<span class="w">                                </span><span class="n">export_iteration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">halo_export</span><span class="p">,</span><span class="w">  </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">sparsity_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">solver_mode</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! use a sparse solver</span>
+<span class="w">                                </span><span class="n">atol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="p">,&amp;</span><span class="w">  </span><span class="c">! relative error in definition of `A`</span>
+<span class="w">                                </span><span class="n">btol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="p">,&amp;</span><span class="w">  </span><span class="c">! relative error in definition of `b`</span>
+<span class="c">!                                damp          = 0.00001_wp, &amp; !  TEST: LSQR damp factor !</span>
+<span class="w">                                </span><span class="n">damp</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"> </span><span class="c">!  TEST: LSQR damp factor !</span>
+<span class="w">   </span><span class="c">!                             damp          = 0.1_wp, &amp; !  TEST: LSQR damp factor !</span>
+<span class="w">                                </span><span class="n">itnlim</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! max iterations</span>
+<span class="w">                                </span><span class="n">irow</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w">  </span><span class="c">! sparsity pattern</span>
+<span class="w">                                </span><span class="n">icol</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">icol</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">lusol_method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">     </span><span class="p">)</span><span class="w"> </span><span class="c">! test</span>
+
+<span class="w">    </span><span class="k">case </span><span class="n">default</span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'invalid solver_mode'</span>
+<span class="w">    </span><span class="k">end select</span>
+
+<span class="k">    call </span><span class="n">me</span><span class="p">%</span><span class="n">status</span><span class="p">(</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">)</span>
+<span class="w">    </span><span class="n">status_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">istat</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'istat = '</span><span class="p">,</span><span class="w"> </span><span class="n">istat</span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'error in initialize_the_solver'</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="c">!TODO: add some error checking here !</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Reading initial guess from file: '</span><span class="o">//</span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">initial_guess_from_file</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">get_x_from_json_file</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! get solution from the file</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="c">! populate segs with solution</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end if</span>
+
+<span class="k">    end subroutine </span><span class="n">initialize_the_solver</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
