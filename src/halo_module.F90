@@ -225,6 +225,8 @@
                                     !! * 3 - sparse (LUSOL)
                                     !! * 4 - sparse (LMSR)
                                     !! * 5 - sparse (qr_mumps)
+                                    !! * 6 - sparse (CRAIG)
+                                    !! * 7 - sparse (direct)
 
     contains
 
@@ -781,8 +783,8 @@
                                 irow             = irow, &  ! sparsity pattern
                                 icol             = icol, &
                                 export_iteration = halo_export   )
-    case (2:4)
-        ! varions sparse options available in nlesolver-fortran
+    case (2:4, 6:7)
+        ! various sparse options available in nlesolver-fortran
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
         call me%initialize(     n                = n,            &
                                 m                = m,            &

@@ -113,17 +113,19 @@
   //  "solver_mode": 2, // sparse solver (LSQR)
   //  "solver_mode": 3, // sparse solver (LUSOL)    <----- doesn't seem to work at all ?
   //  "solver_mode": 4, // sparse solver (LMSR)
-     "solver_mode": 5, // custom solver (QR_MUMPS)
+  //   "solver_mode": 5, // custom solver (QR_MUMPS)
+  //   "solver_mode": 6, // sparse solver (CRAIG)
+     "solver_mode": 7, // sparse solver (direct)  -- fast for large proglems!
 
   // number of revs:
   //"n_revs": 2,
   //"n_revs": 10,
   // "n_revs": 5,
-  "n_revs": 20,
-  //  "n_revs": 100,  //689 days
-  // "n_revs": 200,
-  //"n_revs": 1000,   // tests above
-  //"n_revs": 1120,   // 20 years <--- now try this
+   "n_revs": 20,
+  // "n_revs": 100,  //689 days
+  //"n_revs": 200,
+  // "n_revs": 1000,   // tests above
+  // "n_revs": 1120,   // 20 years <--- now try this
 
     // data files:
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving

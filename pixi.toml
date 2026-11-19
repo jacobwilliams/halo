@@ -1,0 +1,20 @@
+[workspace]
+authors = ["Jacob Williams <jacobwilliams@users.noreply.github.com>"]
+channels = ["conda-forge"]
+name = "halo"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+gfortran = ">=16.2.0,<16.3"
+fpm = ">=0.13.0,<0.14"
+python = ">=3.14.10,<3.15"
+pyvista = ">=0.49.2,<0.50"
+trame-pyvista = ">=0.3.6,<0.4"
+nest-asyncio = ">=1.6.0,<2"
+trame-vtk = ">=2.11.17,<3"
+trame-vuetify = ">=3.3.0,<4"
+trame = ">=4.0.0,<5"
+nest-asyncio2 = ">=1.7.4,<2"
