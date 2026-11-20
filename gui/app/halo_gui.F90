@@ -68,6 +68,7 @@
 
     public :: app, build_scene, build_ui, start_up, change_directory
     public :: COLOR_ALTITUDE, COLOR_ECLIPSE, COLOR_NONE  ! (for --color)
+    public :: CENTER_BODY, CENTER_SPACECRAFT  ! (for --center)
 
     integer,parameter :: slider_steps = 1000  !! the time slider's range
     real(wp),parameter :: moon_radius = 1737.4_wp  !! km
@@ -84,6 +85,11 @@
                                     'Earth-Moon rotating (EMR)', 'Inertial (J2000)', 'Sun-Earth rotating (SER)']
     character(len=*),parameter :: frame_centers(3) = [character(len=16) :: &
                                     'Moon-centered', 'Moon-centered', 'Earth-centered']
+
+    !> what the camera is centered on (the "Center" combo box's index + 1; the window's views, in order)
+    integer,parameter :: CENTER_BODY = 1, CENTER_SPACECRAFT = 2
+    character(len=*),parameter :: center_names(2) = [character(len=32) :: &
+                                    'Central body (Moon or Earth)', 'Spacecraft']
 
     !> how the trajectory is colored ("Color by": the combo box's index)
     integer,parameter :: COLOR_ALTITUDE = 0, COLOR_ECLIPSE = 1, COLOR_NONE = 2
@@ -233,6 +239,7 @@
         type(QCheckBox) :: plot_iterations
         type(QLabel) :: status_label, info_label
         type(QComboBox) :: frame_choice
+        type(QComboBox) :: center_choice  !! the camera's center (CENTER_*)
         type(QComboBox) :: color_mode  !! how the trajectory is colored (COLOR_*)
         type(QCheckBox) :: show_segment_markers  !! the segments' start and end markers
         type(QDoubleSpinBox) :: time_scale
@@ -278,7 +285,9 @@
         type(MarkerArtist) :: state_marker
         type(frame_t) :: frames(3)  !! rotating, inertial, Sun-Earth rotating
         integer :: current_frame = ROTATING
-        type(View) :: view
+        type(View) :: view  !! centered on the frame's central body (the Moon, or the Earth)
+        type(View) :: view_sc  !! centered on the spacecraft (the current state)
+        integer :: current_center = CENTER_BODY
         type(SkySphere) :: sky
         type(HUDText) :: hud_title, hud_frame, hud_time, hud_near, hud_far
         logical :: loaded = .false.  !! a trajectory is loaded
@@ -289,6 +298,7 @@
         logical :: iterations_at_start = .false.  !! --iterations: "Plot each iteration" checked
         integer :: frame_at_start = ROTATING  !! --frame n
         integer :: color_at_start = COLOR_ALTITUDE  !! --color altitude|eclipse|none
+        integer :: center_at_start = CENTER_BODY  !! --center body|spacecraft
         integer :: tab_at_start = 0  !! --tab n (the bottom tabs: 0 output, 1 defects, 2 eclipses)
         type(DemoOptions) :: options  !! --capture, --quit-after (for testing)
     end type app_t
@@ -459,6 +469,9 @@
 
     app%view = View(app%root, app%moon, frame_type=ABSOLUTE_FRAME)
     call app%view%set_default_view_distance(3.0e5_wp)
+    ! (the axes of the root frame, at the spacecraft: the camera moves with it, without turning)
+    app%view_sc = View(app%root, app%body, frame_type=ABSOLUTE_FRAME)
+    call app%view_sc%set_default_view_distance(2.0e4_wp)
 
     app%hud_title = HUDText('No trajectory loaded', position=[0.01_wp, 0.99_wp], &
                             alignment=ALIGN_LEFT_TOP, size=16.0_wp, color=[0.85_wp, 0.85_wp, 0.85_wp])
@@ -1200,10 +1213,16 @@
         eye = 2.0_wp * app%frames(app%current_frame)%radius * direction
     end if
     call app%view%set_default_view_parameters(eye, center, up)
+    ! centered on the spacecraft: closer (a quarter of the way: the nearby trajectory, and the Moon)
+    call app%view_sc%set_default_view_parameters(0.25_wp * eye, center, up)
     if (.not. app%proxy%is_open()) return
     v => app%proxy%current_view()
     if (.not. associated(v)) return
-    call v%set_default_view_parameters(eye, center, up)
+    if (app%current_center == CENTER_SPACECRAFT) then
+        call v%set_default_view_parameters(0.25_wp * eye, center, up)
+    else
+        call v%set_default_view_parameters(eye, center, up)
+    end if
     call v%reset_view()
 
     end subroutine reset_view
@@ -1239,8 +1258,9 @@
     call app%proxy%set_scene(app%scene)
     call app%proxy%set_background_color([0.0_wp, 0.0_wp, 0.0_wp])
     call app%proxy%set_sky(app%sky)
-    call app%proxy%add_view(app%view)
-    call app%proxy%select_view(1)
+    call app%proxy%add_view(app%view)     ! (CENTER_BODY)
+    call app%proxy%add_view(app%view_sc)  ! (CENTER_SPACECRAFT)
+    call app%proxy%select_view(app%current_center, duration=0.0_wp)
     call app%proxy%add_hud_text(app%hud_title)
     call app%proxy%add_hud_text(app%hud_frame)
     call app%proxy%add_hud_text(app%hud_time)
@@ -1777,6 +1797,13 @@
     call reset_view()
     end subroutine on_frame_choice
 
+    subroutine on_center_choice(index, data)  !! center the camera on the central body or the spacecraft
+    integer,intent(in) :: index
+    class(*),intent(inout),optional :: data
+    app%current_center = index + 1
+    if (app%proxy%is_open()) call app%proxy%select_view(app%current_center)  ! (flies there)
+    end subroutine on_center_choice
+
     subroutine on_reset_view(data)
     class(*),intent(inout),optional :: data
     call reset_view()
@@ -1978,6 +2005,15 @@
     call show_frame(app%frame_at_start)
     call app%frame_choice%currentIndexChanged%connect(on_frame_choice)
     call add_field('Frame', app%frame_choice)
+    app%center_choice = QComboBox()
+    call app%center_choice%addItems(center_names)
+    app%current_center = app%center_at_start
+    call app%center_choice%setCurrentIndex(app%current_center - 1)
+    call app%center_choice%setToolTip('What the camera is centered on (and rotates about): the frame''s '// &
+                                      'central body (the Moon; the Earth in the Sun-Earth frame), or the '// &
+                                      'spacecraft (the camera moves with it).')
+    call app%center_choice%currentIndexChanged%connect(on_center_choice)
+    call add_field('Center', app%center_choice)
     app%color_mode = QComboBox()
     call app%color_mode%addItems(color_names)
     call app%color_mode%setCurrentIndex(app%color_at_start)
@@ -2563,7 +2599,8 @@
 !  `--run` runs the solver on it at startup; `--iterations` checks "Plot each
 !  iteration"; `--traj` plots a trajectory file at startup; `--frame` the frame shown
 !  (1: Earth-Moon rotating, 2: inertial, 3: Sun-Earth rotating); `--color` the
-!  coloring; `--tab` the bottom tab (0: solver output, 1: defects, 2: eclipses).
+!  coloring; `--center body|spacecraft` what the camera is centered on; `--tab`
+!  the bottom tab (0: solver output, 1: defects, 2: eclipses).
 !  For testing: `--capture file.png` saves frame `--capture-frame n` (default 120),
 !  and `--quit-after sec` closes the program.
 
@@ -2602,6 +2639,14 @@
             call get_command_argument(i + 1, arg)
             read(arg, *) app%frame_at_start
             app%frame_at_start = max(1, min(3, app%frame_at_start))
+            i = i + 1
+        case ('--center')  ! body or spacecraft
+            call get_command_argument(i + 1, arg)
+            if (arg == 'spacecraft' .or. arg == 'sc' .or. arg == 'halo') then
+                app%center_at_start = CENTER_SPACECRAFT
+            else
+                app%center_at_start = CENTER_BODY
+            end if
             i = i + 1
         case ('--color')
             call get_command_argument(i + 1, arg)
