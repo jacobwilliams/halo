@@ -60,3 +60,5 @@ STEP=*.*
 # pixi environments
 .pixi/*
 !.pixi/config.toml
+
+/kernel/mkspk

@@ -115,17 +115,17 @@
   //  "solver_mode": 4, // sparse solver (LMSR)
   //   "solver_mode": 5, // custom solver (QR_MUMPS)
   //   "solver_mode": 6, // sparse solver (CRAIG)
-     "solver_mode": 7, // sparse solver (direct)  -- fast for large proglems!
+     "solver_mode": 7, // sparse solver (direct)  -- fast for large problems!
 
   // number of revs:
   //"n_revs": 2,
   //"n_revs": 10,
   // "n_revs": 5,
-   "n_revs": 20,
+  "n_revs": 20,
   // "n_revs": 100,  //689 days
   //"n_revs": 200,
-  // "n_revs": 1000,   // tests above
-  // "n_revs": 1120,   // 20 years <--- now try this
+  //  "n_revs": 1000,   // tests above
+  //  "n_revs": 1120,   // 20 years <--- now try this
 
     // data files:
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
@@ -170,7 +170,7 @@
     "generate_plots": false,
     "generate_trajectory_files": true,
 
-    "generate_kernel": true,   // make the spk kernel
+    "generate_kernel": false,   // make the spk kernel
     "object_id": -50000,
     "object_name": "HALO",
     "leapseconds_file": "kernel/naif0012.tls",
@@ -189,8 +189,8 @@
     "eclipse_dt_step": 3600.0,
     "eclipse_filetype": 2, // json
 
-    "run_pyvista_script": true,
+    // "run_pyvista_script": true,
 
-    "generate_rp_ra_file": true
+    "generate_rp_ra_file": false
 
 }
