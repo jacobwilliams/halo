@@ -34,6 +34,20 @@ Or with Gfortran:
 fpm run halo_solver --profile release --flag "-fopenmp" -- examples/example.json
 ```
 
+### GUI
+
+`halo_gui` is a GUI for the solver ([qt-fortran](https://github.com/jacobwilliams/qt-fortran) for the window, [vkframes](https://github.com/jacobwilliams/vkframes) for the 3D view). Choose a config file (default `examples/example_sparse.json`) and click **Run solver**: the solver runs as a separate process (`halo_solver <config> --gui`), its output is shown in the window, and the resulting trajectory is plotted in the Earth-Moon rotating or inertial frame (Moon-centered, colored by the distance from the Moon). **File > Open Trajectory** plots an existing `traj_*.json` file.
+
+Qt, VulkanSceneGraph and the C++ compiler come from the [pixi](https://pixi.sh) environment, and `tools/fpm_gui.py` gives fpm the C++ settings both libraries need (macOS needs version 26 or later, for the Vulkan driver):
+
+```
+pixi run gui-build     # build everything (release, OpenMP)
+pixi run gui           # run the GUI
+pixi run python tools/fpm_gui.py run halo_gui -- examples/example.json --run   # run the solver at startup
+```
+
+Since vkframes and qt-fortran are fpm dependencies, building `halo_solver` also requires their settings: use `python tools/fpm_gui.py run halo_solver -- examples/example.json` in the pixi environment.
+
 ### Using qr_mumps
 
 The [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) solver can also be used, which will run much faster than the default LAPACK solver for very large problems. For this, the code must be compiled with the `WITH_QRMUMPS` preprocessor directive. See the `build.sh` and `run.sh` scripts for details.

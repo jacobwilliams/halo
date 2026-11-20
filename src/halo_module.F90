@@ -291,7 +291,7 @@
 !### Author
 !  * Jacob Williams : Sept. 2017
 
-    subroutine halo_solver_main(config_file_name,debug)
+    subroutine halo_solver_main(config_file_name,debug,gui)
 
     use parameters_module
 !$  use omp_lib
@@ -300,6 +300,9 @@
 
     character(len=*),intent(in) :: config_file_name  !! the config file to read
     logical,intent(in) :: debug !! for debugging prints
+    logical,intent(in),optional :: gui !! run for the GUI (`halo_gui`): the JSON trajectory
+                                       !! file is always exported, and the pyvista script
+                                       !! is not run. [Default is False]
 
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
@@ -337,6 +340,14 @@
     end if
 
     call solver%init(config_file_name,x)  ! initialize the solver & mission (and generate the initial guess)
+
+    if (present(gui)) then
+        if (gui) then
+            ! the GUI plots the JSON trajectory file itself
+            solver%mission%generate_json_trajectory_file = .true.
+            solver%mission%run_pyvista_script = .false.
+        end if
+    end if
 
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
@@ -462,6 +473,8 @@
 
     if (solver%mission%generate_json_trajectory_file) then
         call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
+        ! note: halo_gui reads the file name from this line
+        write(*,'(A)') ' * Trajectory file: traj_'//solver%mission%get_case_name()//'.json'
     end if
 
     if (solver%mission%generate_eclipse_files) then

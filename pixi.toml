@@ -2,10 +2,14 @@
 authors = ["Jacob Williams <jacobwilliams@users.noreply.github.com>"]
 channels = ["conda-forge"]
 name = "halo"
-platforms = ["osx-arm64"]
+# macOS 26 or later: KosmicKrisp (the Vulkan driver vkframes uses) needs Metal 4
+platforms = [{ name = "osx-arm64-macos26", platform = "osx-arm64", macos = "26.0" }]
 version = "0.1.0"
 
 [tasks]
+# the GUI (app/halo_gui.f90): qt-fortran + vkframes; see tools/fpm_gui.py
+gui-build = "python tools/fpm_gui.py build"
+gui = "python tools/fpm_gui.py run halo_gui"
 
 [dependencies]
 gfortran = ">=16.2.0,<16.3"
@@ -18,3 +22,16 @@ trame-vtk = ">=2.11.17,<3"
 trame-vuetify = ">=3.3.0,<4"
 trame = ">=4.0.0,<5"
 nest-asyncio2 = ">=1.7.4,<2"
+vulkanscenegraph = "1.1.*"
+vsgxchange = "1.1.*"
+vsgimgui = "0.8.*"
+glslang = ">=16.6.0,<17"
+cxx-compiler = ">=2.0.0,<3"
+pkg-config = ">=0.29.2,<0.30"
+mesa-kosmickrisp = ">=26.3.1,<27"
+font-ttf-dejavu = ">=2.37,<3"
+qt6-main = ">=6.11,<7"
+
+# the Vulkan loader uses KosmicKrisp only (Qt depends on MoltenVK, which is installed too)
+[activation.env]
+VK_DRIVER_FILES = "$CONDA_PREFIX/share/vulkan/icd.d/kosmickrisp_mesa_icd.aarch64.json"
