@@ -116,6 +116,60 @@
     integer,parameter :: plot_phi(3)        = [175, 145, 255]  !! eclipses' phi (violet)
     integer,parameter :: plot_now(3)        = [255, 180, 50]   !! the current time (orange)
 
+    !> the window's colors (dark, like the plots): [r, g, b], 0 to 255
+    integer,parameter :: ui_window(3)    = [30, 31, 34]     !! panels' background
+    integer,parameter :: ui_base(3)      = [43, 45, 49]     !! fields' background
+    integer,parameter :: ui_button(3)    = [52, 54, 60]
+    integer,parameter :: ui_text(3)      = [220, 221, 225]
+    integer,parameter :: ui_disabled(3)  = [100, 103, 110]
+    integer,parameter :: ui_accent(3)    = [61, 139, 253]   !! (blue) the selection, focus, the main button
+    character(len=*),parameter :: ui_dim = '#8b8e96'        !! secondary text (names, hints, status)
+    !> the controls' look (Fusion style, with the colors above)
+    character(len=*),parameter :: ui_style_sheet = &
+        'QMainWindow, QDockWidget > QWidget { background: #1e1f22; }'// &
+        'QDockWidget { color: #b4b6bc; }'// &
+        'QDockWidget::title { background: #18191b; padding: 6px 8px; }'// &
+        'QScrollArea { border: none; }'// &
+        'QLabel#section { color: '//ui_dim//'; font-weight: bold; padding-top: 14px; }'// &
+        'QLabel#dim { color: '//ui_dim//'; }'// &
+        'QLineEdit, QComboBox, QDoubleSpinBox { background: #2b2d31; border: 1px solid #3c3f45;'// &
+        ' border-radius: 6px; padding: 4px 8px; min-height: 18px; }'// &
+        'QLineEdit:focus, QComboBox:focus, QDoubleSpinBox:focus { border-color: #3d8bfd; }'// &
+        'QLineEdit:disabled, QComboBox:disabled { color: #64676e; }'// &
+        'QComboBox QAbstractItemView { background: #2b2d31; border: 1px solid #3c3f45;'// &
+        ' selection-background-color: #3d8bfd; outline: none; }'// &
+        'QDoubleSpinBox::up-button, QDoubleSpinBox::down-button { width: 0; border: none; }'// &
+        'QPushButton, QToolButton { background: #34363c; border: 1px solid #3c3f45; border-radius: 6px;'// &
+        ' padding: 5px 12px; min-height: 18px; }'// &
+        'QPushButton:hover, QToolButton:hover { background: #3e4148; }'// &
+        'QPushButton:pressed, QToolButton:pressed { background: #2b2d31; }'// &
+        'QPushButton:disabled, QToolButton:disabled { background: #26282c; color: #5c5f66;'// &
+        ' border-color: #303237; }'// &
+        'QPushButton#primary { background: #3d8bfd; border-color: #3d8bfd; color: white; font-weight: bold; }'// &
+        'QPushButton#primary:hover { background: #5a9cff; }'// &
+        'QPushButton#primary:disabled { background: #2a3d5c; border-color: #2a3d5c; color: #8b8e96; }'// &
+        'QToolButton { padding: 5px 8px; min-width: 18px; }'// &
+        'QSlider::groove:horizontal { height: 4px; background: #3c3f45; border-radius: 2px; }'// &
+        'QSlider::sub-page:horizontal { background: #3d8bfd; border-radius: 2px; }'// &
+        'QSlider::handle:horizontal { background: #dcdde1; width: 14px; height: 14px; margin: -5px 0;'// &
+        ' border-radius: 7px; }'// &
+        'QCheckBox { spacing: 8px; }'// &
+        'QScrollBar:vertical { background: transparent; width: 8px; margin: 2px; }'// &
+        'QScrollBar::handle:vertical { background: #3c3f45; border-radius: 3px; min-height: 30px; }'// &
+        'QScrollBar::handle:vertical:hover { background: #4a4e55; }'// &
+        'QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }'// &
+        'QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }'// &
+        'QTabWidget::pane { border: none; }'// &
+        'QTabBar::tab { background: transparent; color: '//ui_dim//'; padding: 6px 14px;'// &
+        ' border: none; border-bottom: 2px solid transparent; }'// &
+        'QTabBar::tab:selected { color: #dcdde1; border-bottom: 2px solid #3d8bfd; }'// &
+        'QTabBar::tab:hover { color: #dcdde1; }'// &
+        'QPlainTextEdit { background: #18191b; border: none; color: #c8cad0; }'// &
+        'QToolTip { background: #2b2d31; color: #dcdde1; border: 1px solid #3c3f45; }'
+    character(len=*),parameter :: play_symbol = '▶'   !! (on the play/pause button)
+    character(len=*),parameter :: pause_symbol = '❚❚'
+    character(len=*),parameter :: reset_symbol = '↺'
+
     real(wp),parameter :: segment_marker_size = 8.0_wp  !! (window units: the largest they get, with the
                                                         !! camera within the markers' extent; smaller
                                                         !! farther away)
@@ -182,7 +236,7 @@
         type(QComboBox) :: color_mode  !! how the trajectory is colored (COLOR_*)
         type(QCheckBox) :: show_segment_markers  !! the segments' start and end markers
         type(QDoubleSpinBox) :: time_scale
-        type(QCheckBox) :: pause_time
+        type(QToolButton) :: pause_time  !! play/pause (checked: paused)
         type(QLabel) :: time_label
         type(QSlider) :: time_slider
         logical :: slider_held = .false.
@@ -828,11 +882,13 @@
 
     call app%hud_title%set_text(title)
     call show_legend()
-    call app%info_label%setText(title//'<br>'// &
-                                int_text(n)//' points, '//details//'<br>'// &
-                                real_text((app%tf - app%t0)/day, '(F0.2)')//' days<br>'// &
-                                '|r|: '//real_text(rmin, '(F0.0)')//' to '//real_text(rmax, '(F0.0)')//' km'// &
-                                max_defect_text())
+    call app%info_label%setText('<b>'//breakable(title)//'</b>'// &
+                                '<table cellspacing="0" cellpadding="1">'// &
+                                info_row('Points', int_text(n)//', '//details)// &
+                                info_row('Duration', real_text((app%tf - app%t0)/day, '(F0.2)')//' days')// &
+                                info_row('|r|', real_text(rmin, '(F0.0)')//' to '// &
+                                                real_text(rmax, '(F0.0)')//' km')// &
+                                max_defect_text()//'</table>')
     call show_frame(app%current_frame)
 
     if (keep_view) then
@@ -895,10 +951,24 @@
     text = ''
     if (.not. allocated(app%defects)) return
     if (size(app%defects,2) == 0) return
-    text = '<br>max defect: '//real_text(maxval(app%defects(1,:)), '(ES9.2)')//' km, '// &
-           real_text(maxval(app%defects(2,:)), '(ES9.2)')//' km/s'
+    text = info_row('Max defect', real_text(maxval(app%defects(1,:)), '(ES9.2)')//' km, '// &
+                                  real_text(maxval(app%defects(2,:)), '(ES9.2)')//' km/s')
 
     end function max_defect_text
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  A row of the trajectory's summary table: a dim name, and its value.
+
+    function info_row(name, value) result(text)
+
+    character(len=*),intent(in) :: name, value
+    character(len=:),allocatable :: text
+
+    text = '<tr><td style="color:'//ui_dim//'; padding-right:12px;">'//name//'</td><td>'//value//'</td></tr>'
+
+    end function info_row
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1722,7 +1792,19 @@
     logical,intent(in) :: checked
     class(*),intent(inout),optional :: data
     if (app%proxy%is_open()) call app%proxy%pause_time(checked)
+    call show_pause_state(checked)
     end subroutine on_pause_time
+
+    subroutine show_pause_state(paused)  !! the play/pause button's symbol: what a click does
+    logical,intent(in) :: paused
+    if (paused) then
+        call app%pause_time%setText(play_symbol)
+        call app%pause_time%setToolTip('Play')
+    else
+        call app%pause_time%setText(pause_symbol)
+        call app%pause_time%setToolTip('Pause')
+    end if
+    end subroutine show_pause_state
 
     subroutine on_reset_time(data)
     class(*),intent(inout),optional :: data
@@ -1790,16 +1872,19 @@
     type(QDockWidget) :: dock
     type(QScrollArea) :: scroll
     type(QWidget) :: panel, row
-    type(QVBoxLayout) :: column
+    type(QGridLayout) :: grid
     type(QHBoxLayout) :: hbox
-    type(QGroupBox) :: group
-    type(QFormLayout) :: form
-    type(QPushButton) :: reset, reset_view_button
+    type(QPushButton) :: reset_view_button
+    type(QToolButton) :: reset
+    type(QLabel) :: hint
+    integer :: r  !! the grid's next row
     type(QMenuBar) :: bar
     type(QMenu) :: menu
     type(QAction) :: action
 
+    call apply_theme()
     app%main = QMainWindow()
+    call app%main%setStyleSheet(ui_style_sheet)
     call app%main%setWindowTitle('HALO')
     call app%main%closeEvent%connect(on_close)
 
@@ -1836,55 +1921,63 @@
     call app%stack%addWidget(app%container)
     call app%main%setCentralWidget(app%stack)
 
+    ! the controls: one grid (names in column 0, the fields in 1), in sections
     panel = QWidget()
-    column = QVBoxLayout(panel)
+    grid = QGridLayout(panel)
+    call grid%setContentsMargins(14, 4, 14, 14)
+    call grid%setSpacing(8)
+    call grid%setColumnStretch(1, 1)
+    r = 0
 
     ! the solver
-    group = QGroupBox('Solver')
-    form = QFormLayout(group)
+    call add_section('SOLVER')
     row = QWidget()
     hbox = QHBoxLayout(row)
     call hbox%setContentsMargins(0, 0, 0, 0)
+    call hbox%setSpacing(6)
     app%config_edit = QLineEdit(app%config_file)
     call app%config_edit%setPlaceholderText('config file (.json)')
-    call hbox%addWidget(app%config_edit)
-    app%browse_button = QPushButton('Browse...')
+    call app%config_edit%setToolTip('The solver''s config file')
+    call hbox%addWidget(app%config_edit, 1)
+    app%browse_button = QPushButton('Browse')
+    call app%browse_button%setToolTip('Choose a config file')
     call app%browse_button%clicked%connect(on_browse)
     call hbox%addWidget(app%browse_button)
-    call form%addRow('Config file', row)
+    call add_wide(row)
     app%plot_iterations = QCheckBox('Plot each iteration')
     call app%plot_iterations%setChecked(app%iterations_at_start)
     call app%plot_iterations%setToolTip('Show the trajectory of each solver iteration as it solves '// &
                                         '(propagates all the segments at each iteration).')
-    call form%addRow('', app%plot_iterations)
+    call add_wide(app%plot_iterations)
     row = QWidget()
     hbox = QHBoxLayout(row)
     call hbox%setContentsMargins(0, 0, 0, 0)
+    call hbox%setSpacing(6)
     app%run_button = QPushButton('Run solver')
+    call app%run_button%setObjectName('primary')
     call app%run_button%clicked%connect(on_run)
-    call hbox%addWidget(app%run_button)
+    call hbox%addWidget(app%run_button, 1)
     app%stop_button = QPushButton('Stop')
     call app%stop_button%setEnabled(.false.)
     call app%stop_button%clicked%connect(on_stop)
     call hbox%addWidget(app%stop_button)
-    call form%addRow('', row)
+    call add_wide(row)
     app%status_label = QLabel('Choose a config file and run the solver.')
+    call app%status_label%setObjectName('dim')
     call app%status_label%setWordWrap(.true.)
-    call form%addRow(app%status_label)
-    call column%addWidget(group)
+    call add_wide(app%status_label)
 
     ! the trajectory
-    group = QGroupBox('Trajectory')
-    form = QFormLayout(group)
-    app%info_label = QLabel('None loaded')
+    call add_section('TRAJECTORY')
+    app%info_label = QLabel('No trajectory loaded')
     call app%info_label%setWordWrap(.true.)
-    call form%addRow(app%info_label)
+    call add_wide(app%info_label)
     app%frame_choice = QComboBox()
     call app%frame_choice%addItems(frame_names)
     call app%frame_choice%setCurrentIndex(app%frame_at_start - 1)
     call show_frame(app%frame_at_start)
     call app%frame_choice%currentIndexChanged%connect(on_frame_choice)
-    call form%addRow('Frame', app%frame_choice)
+    call add_field('Frame', app%frame_choice)
     app%color_mode = QComboBox()
     call app%color_mode%addItems(color_names)
     call app%color_mode%setCurrentIndex(app%color_at_start)
@@ -1892,34 +1985,32 @@
                                    'blue: farthest), by eclipses (yellow: in sunlight; cyan to violet: in '// &
                                    'the Earth''s shadow), or cyan.')
     call app%color_mode%currentIndexChanged%connect(on_color_mode)
-    call form%addRow('Color by', app%color_mode)
+    call add_field('Color', app%color_mode)
     app%show_segment_markers = QCheckBox('Segment start/end markers')
     call app%show_segment_markers%setChecked(.true.)
     call app%show_segment_markers%toggled%connect(on_show_segment_markers)
-    call form%addRow('', app%show_segment_markers)
+    call add_wide(app%show_segment_markers)
     reset_view_button = QPushButton('Reset view')
     call reset_view_button%clicked%connect(on_reset_view)
-    call form%addRow('', reset_view_button)
-    call column%addWidget(group)
+    call add_wide(reset_view_button)
 
-    ! time
-    group = QGroupBox('Time')
-    form = QFormLayout(group)
-    app%time_scale = QDoubleSpinBox()
-    call app%time_scale%setRange(0.0_c_double, 1.0e9_c_double)
-    call app%time_scale%setValue(1.0_c_double)  ! (real time)
-    call app%time_scale%setSuffix(' x')
-    call app%time_scale%valueChanged%connect(on_time_scale)
-    call form%addRow('Time scale', app%time_scale)
-    app%pause_time = QCheckBox('Pause')
+    ! time: play/pause, back to the start, the slider; the readout; the speed
+    call add_section('TIME')
+    row = QWidget()
+    hbox = QHBoxLayout(row)
+    call hbox%setContentsMargins(0, 0, 0, 0)
+    call hbox%setSpacing(6)
+    app%pause_time = QToolButton()
+    call app%pause_time%setCheckable(.true.)
     call app%pause_time%setChecked(.true.)  ! (paused at first)
+    call show_pause_state(.true.)
     call app%pause_time%toggled%connect(on_pause_time)
-    call form%addRow('', app%pause_time)
-    reset = QPushButton('Reset time')
+    call hbox%addWidget(app%pause_time)
+    reset = QToolButton()
+    call reset%setText(reset_symbol)
+    call reset%setToolTip('Back to the start')
     call reset%clicked%connect(on_reset_time)
-    call form%addRow('', reset)
-    app%time_label = QLabel('')
-    call form%addRow(app%time_label)
+    call hbox%addWidget(reset)
     app%time_slider = QSlider(Qt_Horizontal)
     call app%time_slider%setRange(0, slider_steps)
     call app%time_slider%setSingleStep(slider_steps / 100)
@@ -1927,16 +2018,33 @@
     call app%time_slider%valueChanged%connect(on_time_slider)
     call app%time_slider%sliderPressed%connect(on_slider_pressed)
     call app%time_slider%sliderReleased%connect(on_slider_released)
-    call form%addRow(app%time_slider)
-    call column%addWidget(group)
+    call hbox%addWidget(app%time_slider, 1)
+    call add_wide(row)
+    app%time_label = QLabel('')
+    call app%time_label%setObjectName('dim')
+    call add_wide(app%time_label)
+    app%time_scale = QDoubleSpinBox()
+    call app%time_scale%setRange(0.0_c_double, 1.0e9_c_double)
+    call app%time_scale%setValue(1.0_c_double)  ! (real time)
+    call app%time_scale%setSuffix(' x')
+    call app%time_scale%setToolTip('Simulation seconds per second (type a value, or use the wheel)')
+    call app%time_scale%valueChanged%connect(on_time_scale)
+    call add_field('Speed', app%time_scale)
 
-    call column%addWidget(QLabel('<small>Left drag: rotate<br>Right drag: zoom<br>' // &
-                                 'Shift + left drag, or middle drag: pan<br>Wheel: zoom</small>'))
-    call column%addStretch()
+    ! the mouse
+    call add_section('VIEW')
+    hint = QLabel('Left drag: rotate<br>Right drag or wheel: zoom<br>Shift + left drag, or middle drag: pan')
+    call hint%setObjectName('dim')
+    call add_wide(hint)
+    call grid%setRowStretch(r, 1)
+
     scroll = QScrollArea()
     call scroll%setWidgetResizable(.true.)
+    call scroll%setHorizontalScrollBarPolicy(Qt_ScrollBarAlwaysOff)
     call scroll%setWidget(panel)
+    call scroll%setMinimumWidth(340)  ! (the panel, and the scroll bar beside it)
     dock = QDockWidget('Controls', app%main)
+    call dock%setFeatures(ior(QDockWidget_DockWidgetMovable, QDockWidget_DockWidgetFloatable))
     call dock%setWidget(scroll)
     call app%main%addDockWidget(Qt_LeftDockWidgetArea, dock)
 
@@ -1944,7 +2052,7 @@
     app%log = QPlainTextEdit()
     call app%log%setReadOnly(.true.)
     call app%log%setMaximumBlockCount(20000)
-    call app%log%setStyleSheet('font-family: Menlo, Monaco, monospace; font-size: 11pt;')
+    call app%log%setStyleSheet('font-family: Menlo, Monaco, Consolas, monospace; font-size: 11pt;')
     ! the plots
     app%defects_plot = QtfWidget()
     call app%defects_plot%setMinimumSize(300, 150)
@@ -1957,6 +2065,7 @@
     call app%bottom_tabs%addTab(app%defects_plot, 'Defects')
     call app%bottom_tabs%addTab(app%eclipse_plot, 'Eclipses')
     dock = QDockWidget('Output and plots', app%main)
+    call dock%setFeatures(ior(QDockWidget_DockWidgetMovable, QDockWidget_DockWidgetFloatable))
     call dock%setWidget(app%bottom_tabs)
     call app%main%addDockWidget(Qt_BottomDockWidgetArea, dock)
     call app%bottom_tabs%setCurrentIndex(app%tab_at_start)
@@ -1967,7 +2076,66 @@
     app%rjob%text = QSignalString(app%main)
     call app%rjob%text%connect(on_output)
 
+    contains
+
+        subroutine add_section(title)  !! a section's heading (across the grid)
+        character(len=*),intent(in) :: title
+        type(QLabel) :: label
+        label = QLabel(title)
+        call label%setObjectName('section')
+        call grid%addWidget(label, r, 0, 1, 2)
+        r = r + 1
+        end subroutine add_section
+
+        subroutine add_field(name, widget)  !! a field and its name
+        character(len=*),intent(in) :: name
+        class(QWidget),intent(in) :: widget
+        type(QLabel) :: label
+        label = QLabel(name)
+        call grid%addWidget(label, r, 0)
+        call grid%addWidget(widget, r, 1)
+        r = r + 1
+        end subroutine add_field
+
+        subroutine add_wide(widget)  !! a widget across the grid
+        class(QWidget),intent(in) :: widget
+        call grid%addWidget(widget, r, 0, 1, 2)
+        r = r + 1
+        end subroutine add_wide
+
     end subroutine build_ui
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The application's look: the Fusion style (the same on all platforms), with a
+!  dark palette (the controls' details are in `ui_style_sheet`).
+
+    subroutine apply_theme()
+
+    type(QPalette) :: palette
+
+    if (.not. QApplication_setStyle('Fusion')) return  ! (keep the platform's look)
+    palette = QPalette()
+    call palette%setColor(QPalette_Window, plot_color(ui_window))
+    call palette%setColor(QPalette_WindowText, plot_color(ui_text))
+    call palette%setColor(QPalette_Base, plot_color(ui_base))
+    call palette%setColor(QPalette_AlternateBase, plot_color(ui_button))
+    call palette%setColor(QPalette_Text, plot_color(ui_text))
+    call palette%setColor(QPalette_Button, plot_color(ui_button))
+    call palette%setColor(QPalette_ButtonText, plot_color(ui_text))
+    call palette%setColor(QPalette_Highlight, plot_color(ui_accent))
+    call palette%setColor(QPalette_HighlightedText, QColor(255, 255, 255))
+    call palette%setColor(QPalette_ToolTipBase, plot_color(ui_base))
+    call palette%setColor(QPalette_ToolTipText, plot_color(ui_text))
+    call palette%setColor(QPalette_PlaceholderText, plot_color(ui_disabled))
+    call palette%setColor(QPalette_Text, plot_color(ui_disabled), QPalette_Disabled)
+    call palette%setColor(QPalette_WindowText, plot_color(ui_disabled), QPalette_Disabled)
+    call palette%setColor(QPalette_ButtonText, plot_color(ui_disabled), QPalette_Disabled)
+    call QApplication_setPalette(palette)
+    call palette%delete()
+
+    end subroutine apply_theme
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2305,8 +2473,20 @@
 
     subroutine set_status(text)
     character(len=*),intent(in) :: text
-    call app%status_label%setText(text)
+    call app%status_label%setText(breakable(text))
     end subroutine set_status
+
+    function breakable(text) result(b)  !! the text, with line breaks allowed after _ and / (for file names)
+    character(len=*),intent(in) :: text
+    character(len=:),allocatable :: b
+    character(len=*),parameter :: zero_width_space = '​'
+    integer :: i
+    b = ''
+    do i = 1, len(text)
+        b = b//text(i:i)
+        if (text(i:i) == '_' .or. text(i:i) == '/') b = b//zero_width_space
+    end do
+    end function breakable
 
     subroutine error_message(text)
     character(len=*),intent(in) :: text

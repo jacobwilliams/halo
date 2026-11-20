@@ -858,7 +858,8 @@
                                 tol              = me%mission%nlesolver_tol,    & ! tolerance
                                 ! step_mode = 1,& ! TEST TEST TEST
                                 ! alpha = 1.0_wp,&
-                                step_mode        = 4,            & ! 3-point "line search" (2 intervals)
+                                step_mode        = 2,  & ! backtrack test!
+                                !step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 use_broyden      = .false.,      & ! broyden update
                                 !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
