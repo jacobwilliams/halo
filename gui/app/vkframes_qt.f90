@@ -1,6 +1,8 @@
 !> Copied from vkframes (https://github.com/jacobwilliams/vkframes, rev a2f551a):
 !> demos/qt_common/src/vkframes_qt.f90 [MIT license]. It is not part of the
 !> vkframes library itself, and fpm cannot depend on a subfolder of a git repo.
+!> Changed here: Shift + left drag pans (sent as the middle button, VSG's
+!> trackball's pan button), for mice and trackpads without a middle button.
 !>
 !> What the vkframes demos in qt-fortran GUIs share (vkframes itself doesn't
 !> depend on Qt): Qt's mouse, wheel and key events turned into VSG's for a
@@ -60,6 +62,13 @@ module vkframes_qt
 
     ! VSG's modifier bits (vsg::KeyModifier)
     integer, parameter :: MODKEY_SHIFT = 1, MODKEY_CONTROL = 4, MODKEY_ALT = 8, MODKEY_META = 128
+
+    ! VSG's button masks: left (the trackball turns), middle (it pans)
+    integer, parameter :: MASK_LEFT = 256, MASK_MIDDLE = 512
+
+    !> A Shift + left drag is in progress: its left button is sent as the
+    !> middle one (the trackball pans) until it is released.
+    logical, save :: shift_panning = .false.
 
 contains
 
@@ -223,16 +232,32 @@ contains
     end function keypad_symbol
 
     !> A Qt mouse event of `window` to `proxy` (kind MOUSE_MOVE, MOUSE_PRESS
-    !> or MOUSE_RELEASE), in framebuffer pixels; accepted.
+    !> or MOUSE_RELEASE), in framebuffer pixels; accepted. A left drag started
+    !> with Shift held pans: its left button is sent as the middle one (VSG's
+    !> trackball: left turns, middle pans, right zooms) until it is released.
     subroutine forward_mouse(proxy, window, kind, event)
         type(WindowProxy), intent(inout) :: proxy           !! the view the event goes to
         type(QWindow), intent(in) :: window                 !! its window (its pixel ratio)
         integer, intent(in) :: kind                         !! MOUSE_MOVE, MOUSE_PRESS or MOUSE_RELEASE
         type(QMouseEvent), intent(in) :: event              !! the event (logical pixels)
         real(wp) :: dpr
+        integer :: mask, button
+        logical :: release_pan
         dpr = window%devicePixelRatio()
-        call proxy%mouse(kind, nint(event%x() * dpr), nint(event%y() * dpr), vsg_mask(event%buttons()), &
-                         vsg_button(event%button()))
+        mask = vsg_mask(event%buttons())
+        button = vsg_button(event%button())
+        release_pan = .false.
+        if (kind == MOUSE_PRESS .and. button == 1 .and. iand(event%modifiers(), Qt_ShiftModifier) /= 0) &
+            shift_panning = .true.
+        if (shift_panning) then
+            if (iand(mask, MASK_LEFT) /= 0) mask = ior(iand(mask, not(MASK_LEFT)), MASK_MIDDLE)
+            if (button == 1) then
+                button = 2
+                release_pan = kind == MOUSE_RELEASE
+            end if
+        end if
+        call proxy%mouse(kind, nint(event%x() * dpr), nint(event%y() * dpr), mask, button)
+        if (release_pan) shift_panning = .false.
         call event%accept()
     end subroutine forward_mouse
 

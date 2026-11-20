@@ -28,7 +28,7 @@
 !    frame (with the Earth's umbra and penumbra, along +x, away from the Sun), as in
 !    `python/plot_utilities.py`. It is colored ("Color by") by the distance from the
 !    Moon, by eclipses (in sunlight or in the Earth's shadow: `phi_se` from the
-!    `eclipse_*.json` file written with the solution), or red. With a marker for the current state (following it
+!    `eclipse_*.json` file written with the solution), or cyan. With a marker for the current state (following it
 !    in time), and green and red markers at each segment's start and end (where its
 !    propagation starts and ends: during the iterations, the red ones show the gaps
 !    the solver is closing).
@@ -88,7 +88,7 @@
     !> how the trajectory is colored ("Color by": the combo box's index)
     integer,parameter :: COLOR_ALTITUDE = 0, COLOR_ECLIPSE = 1, COLOR_NONE = 2
     character(len=*),parameter :: color_names(0:2) = [character(len=36) :: &
-                                    'Altitude (distance from the Moon)', 'Eclipses (Earth''s shadow)', 'None (red)']
+                                    'Altitude (distance from the Moon)', 'Eclipses (Earth''s shadow)', 'None (cyan)']
     real(wp),parameter :: lit_color(3) = [1.0_wp, 0.85_wp, 0.25_wp]  !! in sunlight (yellow)
     real(wp),parameter :: shadow_color_edge(3) = [0.3_wp, 0.8_wp, 1.0_wp]  !! just in the shadow (cyan)
     real(wp),parameter :: shadow_color_deep(3) = [0.5_wp, 0.25_wp, 1.0_wp]  !! deepest in it (violet)
@@ -101,11 +101,12 @@
                                                 0.20_wp, 0.85_wp, 1.00_wp, &
                                                 0.35_wp, 0.45_wp, 1.00_wp ], [3,5])
 
-    real(wp),parameter :: line_color(3) = [1.0_wp, 0.2_wp, 0.2_wp]  !! the trajectory with "Color by" None (red)
+    real(wp),parameter :: line_color(3) = [0.2_wp, 0.9_wp, 1.0_wp]  !! the trajectory with "Color by" None (cyan)
     real(wp),parameter :: start_color(3) = [0.2_wp, 1.0_wp, 0.3_wp]  !! segment start markers (green)
     real(wp),parameter :: end_color(3) = [1.0_wp, 0.2_wp, 0.2_wp]  !! segment end markers (red)
-    real(wp),parameter :: segment_marker_size = 20.0_wp  !! (window units: when the camera is within the
-                                                         !! markers' extent; smaller farther away)
+    real(wp),parameter :: segment_marker_size = 8.0_wp  !! (window units: the largest they get, with the
+                                                        !! camera within the markers' extent; smaller
+                                                        !! farther away)
     real(wp),parameter :: state_marker_size = 14.0_wp  !! the current state's marker
 
     !> The trajectory in one frame, and what draws it.
@@ -913,7 +914,7 @@
 !  The trajectory's colors, as "Color by" says: by the distance from the Moon
 !  `r` (along the colormap, nearest to farthest); by eclipses at times `t`
 !  (yellow in sunlight; in the Earth's shadow cyan to violet, by how deep; gray
-!  without eclipse data); or all red.
+!  without eclipse data); or all cyan.
 
     subroutine trajectory_colors(t, r, colors)
 
@@ -957,7 +958,7 @@
 !*****************************************************************************************
 !>
 !  The legend for "Color by" (bottom right): the nearest and farthest distances,
-!  or the eclipses' colors; none for red.
+!  or the eclipses' colors; none for a single color.
 
     subroutine show_legend()
 
@@ -1877,7 +1878,7 @@
     call app%color_mode%setCurrentIndex(app%color_at_start)
     call app%color_mode%setToolTip('Color the trajectory by the distance from the Moon (red: nearest, '// &
                                    'blue: farthest), by eclipses (yellow: in sunlight; cyan to violet: in '// &
-                                   'the Earth''s shadow), or red.')
+                                   'the Earth''s shadow), or cyan.')
     call app%color_mode%currentIndexChanged%connect(on_color_mode)
     call form%addRow('Color by', app%color_mode)
     app%show_segment_markers = QCheckBox('Segment start/end markers')
@@ -1917,8 +1918,8 @@
     call form%addRow(app%time_slider)
     call column%addWidget(group)
 
-    call column%addWidget(QLabel('<small>Left drag: rotate<br>Right drag: zoom<br>Middle drag: pan<br>' // &
-                                 'Wheel: zoom</small>'))
+    call column%addWidget(QLabel('<small>Left drag: rotate<br>Right drag: zoom<br>' // &
+                                 'Shift + left drag, or middle drag: pan<br>Wheel: zoom</small>'))
     call column%addStretch()
     scroll = QScrollArea()
     call scroll%setWidgetResizable(.true.)
@@ -2409,7 +2410,7 @@
             select case (arg)
             case ('eclipse', 'eclipses')
                 app%color_at_start = COLOR_ECLIPSE
-            case ('none', 'red')
+            case ('none', 'cyan', 'red')
                 app%color_at_start = COLOR_NONE
             case default
                 app%color_at_start = COLOR_ALTITUDE
