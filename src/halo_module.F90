@@ -253,16 +253,21 @@
     end type mission_type
 
     abstract interface
-        subroutine iteration_callback_func(iter,et,r_rotating,r_inertial)
+        subroutine iteration_callback_func(iter,et,r_rotating,r_inertial,seg_et,seg_r_rotating,seg_r_inertial)
             !! Receives the trajectory of a solver iteration (see [[halo_solver_main]]).
             !! The segments are joined in time order (the backward-propagated ones
             !! reversed, and the points shared by two segments only once).
+            !! Also each segment's start and end (where its propagation starts and
+            !! ends: for a backward-propagated segment, the start is the later time).
             import :: wp
             implicit none
-            integer,intent(in)                  :: iter        !! iteration number
-            real(wp),dimension(:),intent(in)    :: et          !! ephemeris times [sec]
-            real(wp),dimension(:,:),intent(in)  :: r_rotating  !! (3,n) positions [km], Moon-centered Earth-Moon rotating frame
-            real(wp),dimension(:,:),intent(in)  :: r_inertial  !! (3,n) positions [km], Moon-centered inertial frame
+            integer,intent(in)                    :: iter        !! iteration number
+            real(wp),dimension(:),intent(in)      :: et          !! (n) ephemeris times [sec]
+            real(wp),dimension(:,:),intent(in)    :: r_rotating  !! (3,n) positions [km], Moon-centered Earth-Moon rotating frame
+            real(wp),dimension(:,:),intent(in)    :: r_inertial  !! (3,n) positions [km], Moon-centered inertial frame
+            real(wp),dimension(:,:),intent(in)    :: seg_et          !! (2,nseg) each segment's start and end times [sec]
+            real(wp),dimension(:,:,:),intent(in)  :: seg_r_rotating  !! (3,2,nseg) their positions [km], rotating frame
+            real(wp),dimension(:,:,:),intent(in)  :: seg_r_inertial  !! (3,2,nseg) their positions [km], inertial frame
         end subroutine iteration_callback_func
         logical function stop_check_func()
             !! Returns true to stop the solver iterations (see [[halo_solver_main]]).
@@ -2411,9 +2416,11 @@
     real(wp),dimension(:),intent(in) :: x  !! the solver's (scaled) opt vars for this iteration
     integer,intent(in) :: iter  !! iteration number
 
-    integer :: iseg, i, n, ntot, istart, iend, istep
+    integer :: iseg, i, n, ntot, istart, iend, istep, nseg
     real(wp),dimension(:),allocatable :: et
     real(wp),dimension(:,:),allocatable :: r_rot, r_inr
+    real(wp),dimension(:,:),allocatable :: seg_et  !! (2,nseg) each segment's start and end times
+    real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr  !! (3,2,nseg) and positions
 
     associate (segs => me%mission%segs)
 
@@ -2428,17 +2435,28 @@
         end do
 !$OMP END PARALLEL DO
 
+        nseg = size(segs)
         n = 0
-        do iseg = 1, size(segs)
+        do iseg = 1, nseg
             n = n + size(segs(iseg)%traj_inertial%et)
         end do
         allocate(et(n), r_rot(3,n), r_inr(3,n))
+        allocate(seg_et(2,nseg), seg_rot(3,2,nseg), seg_inr(3,2,nseg))
+        seg_et = 0.0_wp;  seg_rot = 0.0_wp;  seg_inr = 0.0_wp
 
         ntot = 0
         do iseg = 1, size(segs)
             associate (ti => segs(iseg)%traj_inertial, tr => segs(iseg)%traj_rotating)
                 n = size(ti%et)
                 if (n == 0) cycle
+                ! the segment's start and end (as propagated):
+                seg_et(1,iseg) = ti%et(1)
+                seg_et(2,iseg) = ti%et(n)
+                seg_inr(:,1,iseg) = [ti%x(1), ti%y(1), ti%z(1)]
+                seg_inr(:,2,iseg) = [ti%x(n), ti%y(n), ti%z(n)]
+                seg_rot(:,1,iseg) = [tr%x(1), tr%y(1), tr%z(1)]
+                seg_rot(:,2,iseg) = [tr%x(n), tr%y(n), tr%z(n)]
+                ! the joined trajectory:
                 if (ti%et(n) >= ti%et(1)) then
                     istart = 1;  iend = n;  istep = 1     ! forward propagated
                 else
@@ -2464,7 +2482,7 @@
 
     end associate
 
-    call me%iteration_callback(iter, et(1:ntot), r_rot(:,1:ntot), r_inr(:,1:ntot))
+    call me%iteration_callback(iter, et(1:ntot), r_rot(:,1:ntot), r_inr(:,1:ntot), seg_et, seg_rot, seg_inr)
 
     end subroutine iteration_trajectory
 !*****************************************************************************************

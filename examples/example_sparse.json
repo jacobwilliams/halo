@@ -121,9 +121,9 @@
   //"n_revs": 2,
   //"n_revs": 10,
   // "n_revs": 5,
-   "n_revs": 20,
+  // "n_revs": 20,
   // "n_revs": 100,  //689 days
-  //"n_revs": 200,
+  "n_revs": 200,
   // "n_revs": 1000,   // tests above
   // "n_revs": 1120,   // 20 years <--- now try this
 
@@ -170,7 +170,7 @@
     "generate_plots": false,
     "generate_trajectory_files": true,
 
-    "generate_kernel": true,   // make the spk kernel
+    "generate_kernel": false,   // make the spk kernel
     "object_id": -50000,
     "object_name": "HALO",
     "leapseconds_file": "kernel/naif0012.tls",

@@ -20,7 +20,10 @@
 !  * File > Open Trajectory plots an existing `traj_*.json` file without solving.
 !  * The trajectory is drawn in the Moon-centered Earth-Moon rotating frame or the
 !    Moon-centered inertial (J2000) frame (as in `python/plot_utilities.py`), colored by
-!    the distance from the Moon, with a body following it in time.
+!    the distance from the Moon ("Color by altitude"; otherwise red), with a marker for the current state (following it
+!    in time), and green and red markers at each segment's start and end (where its
+!    propagation starts and ends: during the iterations, the red ones show the gaps
+!    the solver is closing).
 !
 !  Notes:
 !  * the solver runs in this process, so if it stops the program (`error stop`,
@@ -73,13 +76,20 @@
                                                 0.20_wp, 0.85_wp, 1.00_wp, &
                                                 0.35_wp, 0.45_wp, 1.00_wp ], [3,5])
 
+    real(wp),parameter :: line_color(3) = [1.0_wp, 0.2_wp, 0.2_wp]  !! the trajectory without "Color by altitude" (red)
+    real(wp),parameter :: start_color(3) = [0.2_wp, 1.0_wp, 0.3_wp]  !! segment start markers (green)
+    real(wp),parameter :: end_color(3) = [1.0_wp, 0.2_wp, 0.2_wp]  !! segment end markers (red)
+    real(wp),parameter :: segment_marker_size = 8.0_wp  !! (window units)
+    real(wp),parameter :: state_marker_size = 14.0_wp  !! the current state's marker
+
     !> The trajectory in one frame, and what draws it.
     type :: frame_t
         type(Trajectory) :: traj
+        type(Trajectory) :: starts, ends  !! each segment's start and end points
         type(DrawableTrajectory) :: drawable
         type(CurveArtist) :: curve
-        real(wp) :: center(3) = 0.0_wp  !! the center of the trajectory's bounding box (km)
-        real(wp) :: radius = 1.0e5_wp  !! half its diagonal (km)
+        type(MarkerArtist) :: start_markers, end_markers
+        real(wp) :: radius = 1.0e5_wp  !! the trajectory's farthest distance from the Moon (km)
     end type frame_t
 
     !> One iteration's trajectory, made by the worker thread and handed to the
@@ -88,6 +98,8 @@
         integer :: iter = 0
         real(wp),dimension(:),allocatable :: t  !! (n) ET (sec)
         real(wp),dimension(:,:),allocatable :: rot, inr  !! (3,n) km
+        real(wp),dimension(:,:),allocatable :: seg_t  !! (2,nseg) each segment's start and end times
+        real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr  !! (3,2,nseg) and positions
     end type iteration_points
 
     !> A solver run (in the worker thread). The worker reads the inputs, sets the
@@ -127,6 +139,7 @@
         type(QCheckBox) :: plot_iterations
         type(QLabel) :: status_label, info_label
         type(QComboBox) :: frame_choice
+        type(QCheckBox) :: color_by_altitude  !! the trajectory colored by the distance from the Moon (else red)
         type(QDoubleSpinBox) :: time_scale
         type(QCheckBox) :: pause_time
         type(QLabel) :: time_label
@@ -150,7 +163,10 @@
         type(FrameManager) :: scene
         type(ReferenceFrame) :: root  !! Moon-centered
         type(Sphere) :: moon
-        type(Sphere) :: body  !! follows the trajectory
+        type(ReferenceFrame) :: body  !! follows the trajectory (the current state)
+        type(Trajectory) :: state_point  !! one point, at the body's origin
+        type(DrawableTrajectory) :: state_drawable
+        type(MarkerArtist) :: state_marker
         type(frame_t) :: frames(2)  !! rotating, inertial
         integer :: current_frame = ROTATING
         type(View) :: view
@@ -280,17 +296,36 @@
         associate (f => app%frames(i))
         f%traj = Trajectory()
         f%curve = CurveArtist(f%traj, color=[1.0_wp, 1.0_wp, 1.0_wp], width=2.0_wp)
-        call f%curve%set_point_colors(.true.)  ! colored by the distance from the Moon
+        call f%curve%set_point_colors(.true.)  ! (the colors: see trajectory_colors)
+        ! the segments' starts and ends: a marker at each point
+        f%starts = Trajectory()
+        f%ends = Trajectory()
+        call segment_markers(f%start_markers, f%starts, start_color)
+        call segment_markers(f%end_markers, f%ends, end_color)
         f%drawable = DrawableTrajectory(trim(frame_names(i)))
         call f%drawable%show_decorations(.false.)
         call f%drawable%add_artist(f%curve)
+        call f%drawable%add_artist(f%start_markers)
+        call f%drawable%add_artist(f%end_markers)
         if (.not. app%root%add_child(f%drawable)) write(*,'(A)') 'halo_gui: add_child failed'
         end associate
     end do
 
-    app%body = Sphere('HALO', radius=500.0_wp, color=[1.0_wp, 1.0_wp, 1.0_wp])
+    ! the current state: a marker at the origin of a frame following the trajectory
+    app%body = ReferenceFrame('HALO')
     call app%body%show_axes(NO_AXES)
     call app%body%show_axes_labels(NO_AXES)
+    app%state_point = Trajectory()
+    call app%state_point%add([0.0_wp], pos=reshape([0.0_wp, 0.0_wp, 0.0_wp], [3,1]))
+    app%state_marker = MarkerArtist(app%state_point, markers=MARKER_START, size=state_marker_size, &
+                                    color=[1.0_wp, 1.0_wp, 1.0_wp])
+    call app%state_marker%set_marker_color(MARKER_START, [1.0_wp, 1.0_wp, 1.0_wp, 1.0_wp])
+    call app%state_marker%set_marker_shape(MARKER_TARGET)
+    call app%state_marker%set_auto_attenuate(.false.)  ! (one point: no size to attenuate by)
+    app%state_drawable = DrawableTrajectory('state')
+    call app%state_drawable%show_decorations(.false.)
+    call app%state_drawable%add_artist(app%state_marker)
+    if (.not. app%body%add_child(app%state_drawable)) write(*,'(A)') 'halo_gui: add_child failed'
     if (.not. app%root%add_child(app%body)) write(*,'(A)') 'halo_gui: add_child failed'
 
     call app%scene%set_frame(app%root)
@@ -319,6 +354,28 @@
 
 !*****************************************************************************************
 !>
+!  A MarkerArtist drawing a marker of `color` at each point of `traj`.
+
+    subroutine segment_markers(artist, traj, color)
+
+    type(MarkerArtist),intent(out) :: artist
+    type(Trajectory),intent(in),target :: traj
+    real(wp),dimension(3),intent(in) :: color
+
+    artist = MarkerArtist(traj, markers=ior(ior(MARKER_START, MARKER_INTERMEDIATE), MARKER_END), &
+                          size=segment_marker_size, color=color)
+    call artist%set_intermediate_type(INTERMEDIATE_DATA)
+    call artist%set_intermediate_spacing(1.0_wp)  ! (every point)
+    call artist%set_auto_attenuate(.false.)  ! (the same size on screen at any distance)
+    call artist%set_marker_color(MARKER_START, [color, 1.0_wp])
+    call artist%set_marker_color(MARKER_INTERMEDIATE, [color, 1.0_wp])
+    call artist%set_marker_color(MARKER_END, [color, 1.0_wp])
+
+    end subroutine segment_markers
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
 !  Read a trajectory JSON file written by the solver (`traj_*.json`: an array
 !  `segs` of segments, each with `et` and the positions in each frame), and plot
 !  it. The segments are joined in time order (backward-propagated ones
@@ -334,7 +391,9 @@
     real(wp),dimension(:),allocatable :: et, xr, yr, zr, xi, yi, zi
     real(wp),dimension(:),allocatable :: t_all
     real(wp),dimension(:,:),allocatable :: rot_all, inr_all
-    integer :: nsegs, iseg, n, ntot, k, kstart, kend, kstep
+    real(wp),dimension(:,:),allocatable :: seg_t  !! (2,nseg) each segment's start and end times
+    real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr  !! (3,2,nseg) and positions
+    integer :: nsegs, iseg, n, ntot, k, kstart, kend, kstep, nseg_ok
     logical :: found, status_ok
     character(len=:),allocatable :: msg
 
@@ -357,6 +416,8 @@
 
     ! join the segments:
     allocate(t_all(0), rot_all(3,0), inr_all(3,0))
+    allocate(seg_t(2,nsegs), seg_rot(3,2,nsegs), seg_inr(3,2,nsegs))
+    nseg_ok = 0
     ntot = 0
     do iseg = 1, nsegs
         call json%get_child(segs, iseg, seg)
@@ -369,6 +430,15 @@
         call json%get(seg, 'z_inertial', zi, found);  if (.not. found) cycle
         n = min(size(et), size(xr), size(yr), size(zr), size(xi), size(yi), size(zi))
         if (n == 0) cycle
+        ! the segment's start and end (as propagated: the file's order)
+        nseg_ok = nseg_ok + 1
+        seg_t(1,nseg_ok) = et(1)
+        seg_t(2,nseg_ok) = et(n)
+        seg_rot(1,1,nseg_ok) = xr(1);  seg_rot(2,1,nseg_ok) = yr(1);  seg_rot(3,1,nseg_ok) = zr(1)
+        seg_rot(1,2,nseg_ok) = xr(n);  seg_rot(2,2,nseg_ok) = yr(n);  seg_rot(3,2,nseg_ok) = zr(n)
+        seg_inr(1,1,nseg_ok) = xi(1);  seg_inr(2,1,nseg_ok) = yi(1);  seg_inr(3,1,nseg_ok) = zi(1)
+        seg_inr(1,2,nseg_ok) = xi(n);  seg_inr(2,2,nseg_ok) = yi(n);  seg_inr(3,2,nseg_ok) = zi(n)
+        ! the joined trajectory:
         if (et(n) >= et(1)) then  ! forward propagated
             kstart = 1;  kend = n;  kstep = 1
         else                      ! backward propagated: reversed
@@ -393,8 +463,9 @@
         return
     end if
 
-    call plot_points(t_all(1:ntot), rot_all(:,1:ntot), inr_all(:,1:ntot), basename(file), &
-                     int_text(nsegs)//' segments', keep_view)
+    call plot_points(t_all(1:ntot), rot_all(:,1:ntot), inr_all(:,1:ntot), &
+                     seg_t(:,1:nseg_ok), seg_rot(:,:,1:nseg_ok), seg_inr(:,:,1:nseg_ok), &
+                     basename(file), int_text(nsegs)//' segments', keep_view)
     call app%main%setWindowTitle('HALO - '//basename(file))
     ok = .true.
 
@@ -426,11 +497,14 @@
 !  Plot a trajectory (in both frames): its points put into the vkframes
 !  trajectories, colored by the distance from the Moon.
 
-    subroutine plot_points(t, rot, inr, title, details, keep_view)
+    subroutine plot_points(t, rot, inr, seg_t, seg_rot, seg_inr, title, details, keep_view)
 
     real(wp),dimension(:),intent(in) :: t  !! (n) ET (sec)
     real(wp),dimension(:,:),intent(in) :: rot  !! (3,n) Moon-centered rotating frame (km)
     real(wp),dimension(:,:),intent(in) :: inr  !! (3,n) Moon-centered inertial frame (km)
+    real(wp),dimension(:,:),intent(in) :: seg_t  !! (2,nseg) each segment's start and end times (sec)
+    real(wp),dimension(:,:,:),intent(in) :: seg_rot  !! (3,2,nseg) their positions, rotating frame (km)
+    real(wp),dimension(:,:,:),intent(in) :: seg_inr  !! (3,2,nseg) their positions, inertial frame (km)
     character(len=*),intent(in) :: title  !! for the HUD and the panel
     character(len=*),intent(in) :: details  !! for the panel
     logical,intent(in) :: keep_view  !! keep the camera and the time (else reset them)
@@ -449,9 +523,7 @@
     end do
     rmin = minval(r)
     rmax = maxval(r)
-    do j = 1, n
-        colors(:,j) = colormap((r(j) - rmin) / max(rmax - rmin, 1.0e-9_wp))
-    end do
+    call trajectory_colors(r, colors)
 
     call app%frames(ROTATING)%traj%clear()
     call app%frames(ROTATING)%traj%add(t, pos=rot, color=colors)
@@ -459,7 +531,8 @@
     call app%frames(INERTIAL)%traj%add(t, pos=inr, color=colors)
     call set_bounds(app%frames(ROTATING), rot)
     call set_bounds(app%frames(INERTIAL), inr)
-    call app%body%set_radius(0.01_wp * max(rmax_inertial, rmax))
+    call set_segment_points(app%frames(ROTATING), seg_t, seg_rot)
+    call set_segment_points(app%frames(INERTIAL), seg_t, seg_inr)
 
     app%t0 = t(1)
     app%tf = t(n)
@@ -468,6 +541,7 @@
     call app%hud_title%set_text(title)
     call app%hud_near%set_text('|r| = '//real_text(rmin, '(F0.0)')//' km')
     call app%hud_far%set_text('|r| = '//real_text(rmax, '(F0.0)')//' km')
+    call show_legend()
     call app%info_label%setText(title//'<br>'// &
                                 int_text(n)//' points, '//details//'<br>'// &
                                 real_text((app%tf - app%t0)/day, '(F0.2)')//' days<br>'// &
@@ -482,24 +556,41 @@
             call app%proxy%set_time(time)
         end if
     else
-        call app%time_scale%setValue(real(max(1.0_wp, (app%tf - app%t0) / 60.0_wp), c_double))  ! all in ~1 min
-        call update_time_range()
+        call update_time_range()  ! (at the start; the time scale and pause as they are)
         call reset_view()
     end if
 
     contains
 
-        subroutine set_bounds(f, pos)  !! the bounding box of the trajectory (including the Moon)
+        subroutine set_segment_points(f, st, sp)  !! the segments' start and end markers' points
+            type(frame_t),intent(inout) :: f
+            real(wp),dimension(:,:),intent(in) :: st  !! (2,nseg)
+            real(wp),dimension(:,:,:),intent(in) :: sp  !! (3,2,nseg)
+            real(wp),dimension(:,:),allocatable :: pos
+            integer :: k, m
+            m = size(st,2)
+            call f%starts%clear()
+            call f%ends%clear()
+            if (m == 0) return
+            allocate(pos(3,m))
+            do k = 1, m
+                pos(:,k) = sp(:,1,k)
+            end do
+            call f%starts%add(st(1,:), pos=pos)
+            do k = 1, m
+                pos(:,k) = sp(:,2,k)
+            end do
+            call f%ends%add(st(2,:), pos=pos)
+        end subroutine set_segment_points
+
+        subroutine set_bounds(f, pos)  !! the trajectory's farthest distance from the Moon
             type(frame_t),intent(inout) :: f
             real(wp),dimension(:,:),intent(in) :: pos
-            real(wp),dimension(3) :: lo, hi
             integer :: i
-            do i = 1, 3
-                lo(i) = min(minval(pos(i,:)), -moon_radius)
-                hi(i) = max(maxval(pos(i,:)),  moon_radius)
+            f%radius = moon_radius
+            do i = 1, size(pos,2)
+                f%radius = max(f%radius, norm2(pos(:,i)))
             end do
-            f%center = 0.5_wp * (lo + hi)
-            f%radius = 0.5_wp * norm2(hi - lo)
         end subroutine set_bounds
 
     end subroutine plot_points
@@ -523,6 +614,87 @@
     c = (1.0_wp - w) * cmap(:,i) + w * cmap(:,i+1)
 
     end function colormap
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The trajectory's colors for the distances from the Moon `r`: with "Color by
+!  altitude", along the colormap (nearest to farthest); otherwise all red.
+
+    subroutine trajectory_colors(r, colors)
+
+    real(wp),dimension(:),intent(in) :: r  !! (n) km
+    real(wp),dimension(:,:),intent(out) :: colors  !! (3,n)
+
+    real(wp) :: rmin, rmax
+    integer :: j
+
+    if (app%color_by_altitude%isChecked()) then
+        rmin = minval(r)
+        rmax = maxval(r)
+        do j = 1, size(r)
+            colors(:,j) = colormap((r(j) - rmin) / max(rmax - rmin, 1.0e-9_wp))
+        end do
+    else
+        do j = 1, size(r)
+            colors(:,j) = line_color
+        end do
+    end if
+
+    end subroutine trajectory_colors
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The colormap's legend (the nearest and farthest distances) shown only with
+!  "Color by altitude".
+
+    subroutine show_legend()
+
+    logical :: shown
+
+    shown = app%loaded .and. app%color_by_altitude%isChecked()
+    call app%hud_near%show(shown)
+    call app%hud_far%show(shown)
+
+    end subroutine show_legend
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  "Color by altitude" toggled: the trajectory's points added again (from the
+!  vkframes trajectories, in both frames) with the new colors.
+
+    subroutine on_color_by_altitude(checked, data)
+
+    logical,intent(in) :: checked
+    class(*),intent(inout),optional :: data
+
+    real(wp),dimension(:),allocatable :: t, r
+    real(wp),dimension(:,:),allocatable :: pos, colors
+    integer :: i, k, n
+
+    call show_legend()
+    if (.not. app%loaded) return
+    n = app%frames(ROTATING)%traj%num_times()
+    if (n == 0) return
+    allocate(t(n), r(n), pos(3,n), colors(3,n))
+    do k = 1, n
+        r(k) = norm2(app%frames(ROTATING)%traj%position(k))  ! (the same in both frames)
+    end do
+    call trajectory_colors(r, colors)
+    do i = 1, size(app%frames)
+        associate (traj => app%frames(i)%traj)
+            do k = 1, n
+                t(k) = traj%time(k)
+                pos(:,k) = traj%position(k)
+            end do
+            call traj%clear()
+            call traj%add(t, pos=pos, color=colors)
+        end associate
+    end do
+
+    end subroutine on_color_by_altitude
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -554,19 +726,19 @@
 !*****************************************************************************************
 !>
 !  The camera put back to see the whole trajectory in the frame shown: looking
-!  at the center of its bounding box from an isometric direction (+x, +y, +z),
-!  z up.
+!  at the Moon (so the view rotates about it) from an isometric direction
+!  (+x, +y, +z), far enough for the trajectory's farthest point, z up.
 
     subroutine reset_view()
 
     type(View),pointer :: v
-    real(wp),dimension(3) :: eye, center
+    real(wp),dimension(3) :: eye
+    real(wp),dimension(3),parameter :: center = 0.0_wp  ! the Moon
     real(wp),dimension(3),parameter :: direction = [1.0_wp, 1.0_wp, 1.0_wp] / sqrt(3.0_wp)
     real(wp),dimension(3),parameter :: up = [0.0_wp, 0.0_wp, 1.0_wp]
 
     if (.not. app%loaded) return
-    center = app%frames(app%current_frame)%center
-    eye = center + 3.0_wp * app%frames(app%current_frame)%radius * direction
+    eye = 2.0_wp * app%frames(app%current_frame)%radius * direction
     call app%view%set_default_view_parameters(eye, center, up)
     if (.not. app%proxy%is_open()) return
     v => app%proxy%current_view()
@@ -614,6 +786,7 @@
     call app%proxy%add_hud_text(app%hud_time)
     call app%proxy%add_hud_text(app%hud_near)
     call app%proxy%add_hud_text(app%hud_far)
+    call app%proxy%pause_time(app%pause_time%isChecked())
     call update_time_range()
 
     end subroutine open_view
@@ -819,16 +992,18 @@
 !  plots and deletes it. Its address goes in the signal's two integers (the
 !  signal is queued, so nothing here is shared with the GUI thread).
 
-    subroutine send_iteration(iter, et, r_rotating, r_inertial)
+    subroutine send_iteration(iter, et, r_rotating, r_inertial, seg_et, seg_r_rotating, seg_r_inertial)
 
     integer,intent(in) :: iter
     real(hwp),dimension(:),intent(in) :: et
     real(hwp),dimension(:,:),intent(in) :: r_rotating, r_inertial
+    real(hwp),dimension(:,:),intent(in) :: seg_et
+    real(hwp),dimension(:,:,:),intent(in) :: seg_r_rotating, seg_r_inertial
 
     type(iteration_points),pointer :: p
     integer(c_intptr_t) :: address
     integer(int32),dimension(2) :: halves
-    integer :: i, n
+    integer :: i, n, nseg
 
     flush(output_unit)  ! (the iteration's output shown now)
     n = size(et)
@@ -840,6 +1015,13 @@
         p%t(i)     = real(et(i), wp)
         p%rot(:,i) = real(r_rotating(:,i), wp)
         p%inr(:,i) = real(r_inertial(:,i), wp)
+    end do
+    nseg = size(seg_et,2)
+    allocate(p%seg_t(2,nseg), p%seg_rot(3,2,nseg), p%seg_inr(3,2,nseg))
+    do i = 1, nseg
+        p%seg_t(:,i)     = real(seg_et(:,i), wp)
+        p%seg_rot(:,:,i) = real(seg_r_rotating(:,:,i), wp)
+        p%seg_inr(:,:,i) = real(seg_r_inertial(:,:,i), wp)
     end do
     address = transfer(c_loc(p), address)
     halves = transfer(address, halves)
@@ -874,7 +1056,7 @@
     cp = transfer(address, cp)
     call c_f_pointer(cp, p)
 
-    call plot_points(p%t, p%rot, p%inr, 'Iteration '//int_text(p%iter), &
+    call plot_points(p%t, p%rot, p%inr, p%seg_t, p%seg_rot, p%seg_inr, 'Iteration '//int_text(p%iter), &
                      'solver iteration', keep_view=app%plotted_this_run)
     app%plotted_this_run = .true.
     call set_status('Solving: iteration '//int_text(p%iter)//'...')
@@ -1299,6 +1481,12 @@
     call app%frame_choice%addItems(frame_names)
     call app%frame_choice%currentIndexChanged%connect(on_frame_choice)
     call form%addRow('Frame', app%frame_choice)
+    app%color_by_altitude = QCheckBox('Color by altitude')
+    call app%color_by_altitude%setChecked(.true.)
+    call app%color_by_altitude%setToolTip('Color the trajectory by the distance from the Moon '// &
+                                          '(red: nearest, blue: farthest). Otherwise it is red.')
+    call app%color_by_altitude%toggled%connect(on_color_by_altitude)
+    call form%addRow('', app%color_by_altitude)
     reset_view_button = QPushButton('Reset view')
     call reset_view_button%clicked%connect(on_reset_view)
     call form%addRow('', reset_view_button)
@@ -1309,11 +1497,12 @@
     form = QFormLayout(group)
     app%time_scale = QDoubleSpinBox()
     call app%time_scale%setRange(0.0_c_double, 1.0e9_c_double)
-    call app%time_scale%setValue(10000.0_c_double)
+    call app%time_scale%setValue(1.0_c_double)  ! (real time)
     call app%time_scale%setSuffix(' x')
     call app%time_scale%valueChanged%connect(on_time_scale)
     call form%addRow('Time scale', app%time_scale)
     app%pause_time = QCheckBox('Pause')
+    call app%pause_time%setChecked(.true.)  ! (paused at first)
     call app%pause_time%toggled%connect(on_pause_time)
     call form%addRow('', app%pause_time)
     reset = QPushButton('Reset time')
