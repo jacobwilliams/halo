@@ -9,7 +9,7 @@ version = "0.1.0"
 [tasks]
 # the GUI (app/halo_gui.f90): qt-fortran + vkframes; see tools/fpm_gui.py
 gui-build = "python tools/fpm_gui.py build"
-gui = "python tools/fpm_gui.py run halo_gui"
+gui = "python tools/fpm_gui.py run"
 
 [dependencies]
 gfortran = ">=16.2.0,<16.3"

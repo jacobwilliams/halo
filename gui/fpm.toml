@@ -1,0 +1,30 @@
+name = "halo-gui"
+author = "Jacob Williams"
+copyright  = "Copyright (c) 2026, Jacob Williams"
+license = "BSD-3"
+description = "GUI for the Halo orbit solver (qt-fortran + vkframes)"
+homepage = "https://github.com/jacobwilliams/halo"
+
+# The GUI is its own package, so the solver (the parent folder) still builds
+# and runs with plain fpm, without Qt or Vulkan. Build this one with
+# ../tools/fpm_gui.py (`pixi run gui-build`), which supplies the C++ settings
+# that qt-fortran and vkframes need.
+
+[build]
+auto-executables = true
+auto-examples = false
+auto-tests = false
+link = ["lapack", "blas"]
+
+[dependencies]
+halo = { path = ".." }
+qt-fortran = { git = "https://github.com/jacobwilliams/qt-fortran" }
+vkframes = { git = "https://github.com/jacobwilliams/vkframes" }
+
+[install]
+library = false
+
+[[executable]]
+name = "halo_gui"
+source-dir = "app"
+main = "halo_gui.F90"

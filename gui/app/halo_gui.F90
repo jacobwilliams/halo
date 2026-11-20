@@ -1,26 +1,39 @@
 !*****************************************************************************************
 !>
 !  A GUI for the Halo solver: choose a config file (e.g. `examples/example_sparse.json`),
-!  run the solver, and plot the resulting trajectory in 3D.
+!  run the solver, and plot the resulting trajectory in 3D. Optionally, each
+!  iteration of the solver is plotted as it goes.
 !
 !  The window is made with [qt-fortran](https://github.com/jacobwilliams/qt-fortran),
 !  and the 3D view with [vkframes](https://github.com/jacobwilliams/vkframes).
 !
-!  * The solver is run as a separate process (`halo_solver config.json --gui`, the
-!    executable next to this one), in the current directory (the config files' paths
-!    are relative to it). Its output is shown in the "Solver output" panel, and it can
-!    be stopped. With `--gui`, it always writes the JSON trajectory file (`traj_*.json`)
-!    and names it in its output; this is plotted when the solver is done.
+!  * The solver runs in this program, in a worker thread (`halo_solver_main`, with
+!    `gui=.true.`: the JSON trajectory file is always written, and the pyvista script
+!    is not run), in the current directory (the config files' paths are relative to
+!    it). Its output (standard output, redirected to a pipe while it runs) is shown
+!    in the "Solver output" panel (a reader thread reads the pipe), and in the
+!    terminal. Stop asks the solver to stop at its next iteration.
+!  * "Plot each iteration": the solver's iteration callback gives each iteration's
+!    trajectory (in memory) to the GUI thread, which puts it straight into the
+!    vkframes trajectories. When the solver is done, the solution's `traj_*.json`
+!    file is plotted.
 !  * File > Open Trajectory plots an existing `traj_*.json` file without solving.
 !  * The trajectory is drawn in the Moon-centered Earth-Moon rotating frame or the
 !    Moon-centered inertial (J2000) frame (as in `python/plot_utilities.py`), colored by
 !    the distance from the Moon, with a body following it in time.
 !
+!  Notes:
+!  * the solver runs in this process, so if it stops the program (`error stop`,
+!    e.g. for a bad config file), the GUI closes too.
+!  * large arrays here are allocatable (on the heap), not automatic or
+!    temporaries: with OpenMP, local arrays are on the stack, and worker threads'
+!    stacks are small (macOS: 512 kB; Windows: 1 MB).
+!  * the POSIX calls for the pipe are the C runtime's `_pipe`, `_dup`, ... on Windows.
+!
 !### Usage
 !
 !```
-!    > pixi run gui                                    (build and run)
-!    > python tools/fpm_gui.py run halo_gui -- [config.json] [--run] [--traj traj_file.json]
+!    > pixi run gui -- [config.json] [--run] [--iterations] [--traj traj_file.json]
 !```
 !
 !### Author
@@ -30,21 +43,23 @@
 
     use qt
     use vkframes
-    use vkframes_qt,  only: connect_view, ViewLink, DemoOptions
-    use vkf_text,     only: get_font
-    use json_module,  only: json_core, json_value
+    use vkframes_qt,        only: connect_view, ViewLink, DemoOptions
+    use vkf_text,           only: get_font
+    use json_module,        only: json_core, json_value
+    use halo_module,        only: halo_solver_main
+    use halo_kinds_module,  only: hwp => wp  ! (the solver's real kind)
     use iso_c_binding
+    use iso_fortran_env,    only: output_unit, int32
 
     implicit none
 
     private
 
-    public :: app, build_scene, build_ui, start_up
+    public :: app, build_scene, build_ui, start_up, change_directory
 
     integer,parameter :: slider_steps = 1000  !! the time slider's range
     real(wp),parameter :: moon_radius = 1737.4_wp  !! km
     real(wp),parameter :: day = 86400.0_wp  !! sec
-    character(len=*),parameter :: traj_marker = ' * Trajectory file: '  !! the solver's line naming the file
 
     !> the frames the trajectory can be shown in
     integer,parameter :: ROTATING = 1, INERTIAL = 2
@@ -67,7 +82,34 @@
         real(wp) :: radius = 1.0e5_wp  !! half its diagonal (km)
     end type frame_t
 
-    !> The GUI, the scene and the solver process.
+    !> One iteration's trajectory, made by the worker thread and handed to the
+    !> GUI thread (which deletes it) through `solver_job%iteration`.
+    type :: iteration_points
+        integer :: iter = 0
+        real(wp),dimension(:),allocatable :: t  !! (n) ET (sec)
+        real(wp),dimension(:,:),allocatable :: rot, inr  !! (3,n) km
+    end type iteration_points
+
+    !> A solver run (in the worker thread). The worker reads the inputs, sets the
+    !> results, and emits `iteration`; it touches nothing else of the GUI.
+    type :: solver_job
+        ! inputs
+        character(len=:),allocatable :: config  !! the config file
+        logical :: iterations = .false.  !! plot each iteration
+        ! results
+        character(len=:),allocatable :: traj_file  !! the solution's trajectory file (if written)
+        ! iteration points: (the address of an iteration_points, in two halves)
+        type(QSignalInt2) :: iteration
+    end type solver_job
+
+    !> The reader thread's job: read the pipe `fd` until it ends, sending what
+    !> it reads to the GUI thread through `text`.
+    type :: reader_job
+        integer(c_int) :: fd = -1  !! the pipe's read end
+        type(QSignalString) :: text
+    end type reader_job
+
+    !> The GUI, the scene and the solver.
     type :: app_t
         ! window
         type(QMainWindow) :: main
@@ -81,7 +123,8 @@
         integer :: frame = 0  !! frames drawn
         ! controls
         type(QLineEdit) :: config_edit
-        type(QPushButton) :: run_button, stop_button
+        type(QPushButton) :: run_button, stop_button, browse_button
+        type(QCheckBox) :: plot_iterations
         type(QLabel) :: status_label, info_label
         type(QComboBox) :: frame_choice
         type(QDoubleSpinBox) :: time_scale
@@ -91,10 +134,18 @@
         logical :: slider_held = .false.
         logical :: slider_setting = .false.
         type(QPlainTextEdit) :: log
-        ! solver process
-        type(QProcess) :: process
+        ! the solver (worker thread)
+        type(QThread) :: worker
+        logical :: running = .false.
+        logical :: plotted_this_run = .false.  !! something was plotted in this run (keep the camera)
+        type(solver_job) :: job
+        ! its output: standard output redirected to a pipe while it runs
+        integer(c_int) :: saved_stdout = -1  !! the original standard output (while redirected)
+        integer(c_int) :: tee_fd = -1  !! a copy of it, the output is also written to (until the pipe ends)
+        type(QThread) :: reader  !! reads the pipe (`read_pipe`)
+        logical :: reading = .false.  !! the reader is running
+        type(reader_job) :: rjob
         character(len=:),allocatable :: out_buffer  !! output not yet shown (no newline yet)
-        character(len=:),allocatable :: traj_file  !! the trajectory file the solver wrote (if any)
         ! the scene
         type(FrameManager) :: scene
         type(ReferenceFrame) :: root  !! Moon-centered
@@ -107,14 +158,102 @@
         type(HUDText) :: hud_title, hud_frame, hud_time, hud_near, hud_far
         logical :: loaded = .false.  !! a trajectory is loaded
         real(wp) :: t0 = 0.0_wp, tf = 1.0_wp  !! the trajectory's times (ET sec)
-        real(wp) :: extent = 1.0e5_wp  !! the farthest point from the Moon (km)
         ! startup options
         character(len=:),allocatable :: config_file, initial_traj
         logical :: run_at_start = .false.  !! --run: run the solver at startup
+        logical :: iterations_at_start = .false.  !! --iterations: "Plot each iteration" checked
         type(DemoOptions) :: options  !! --capture, --quit-after (for testing)
     end type app_t
 
     type(app_t),target,save :: app
+
+    integer,parameter :: pipe_size = 65536  !! the pipe's (and the reader's buffer) size
+
+    ! the C runtime, for redirecting standard output to a pipe:
+    interface
+#ifdef _WIN32
+        function c_chdir(path) bind(C, name='_chdir') result(r)
+            import :: c_int, c_char
+            character(kind=c_char),dimension(*),intent(in) :: path
+            integer(c_int) :: r
+        end function c_chdir
+        function c_pipe_win(fds, psize, textmode) bind(C, name='_pipe') result(r)
+            import :: c_int
+            integer(c_int),dimension(2),intent(out) :: fds
+            integer(c_int),value :: psize, textmode
+            integer(c_int) :: r
+        end function c_pipe_win
+        function c_dup(fd) bind(C, name='_dup') result(r)
+            import :: c_int
+            integer(c_int),value :: fd
+            integer(c_int) :: r
+        end function c_dup
+        function c_dup2(fd, fd2) bind(C, name='_dup2') result(r)
+            import :: c_int
+            integer(c_int),value :: fd, fd2
+            integer(c_int) :: r
+        end function c_dup2
+        function c_close(fd) bind(C, name='_close') result(r)
+            import :: c_int
+            integer(c_int),value :: fd
+            integer(c_int) :: r
+        end function c_close
+        function c_read(fd, buf, n) bind(C, name='_read') result(r)
+            import :: c_int, c_char
+            integer(c_int),value :: fd
+            character(kind=c_char),dimension(*),intent(out) :: buf
+            integer(c_int),value :: n
+            integer(c_int) :: r
+        end function c_read
+        function c_write(fd, buf, n) bind(C, name='_write') result(r)
+            import :: c_int, c_char
+            integer(c_int),value :: fd
+            character(kind=c_char),dimension(*),intent(in) :: buf
+            integer(c_int),value :: n
+            integer(c_int) :: r
+        end function c_write
+#else
+        function c_chdir(path) bind(C, name='chdir') result(r)
+            import :: c_int, c_char
+            character(kind=c_char),dimension(*),intent(in) :: path
+            integer(c_int) :: r
+        end function c_chdir
+        function c_pipe_posix(fds) bind(C, name='pipe') result(r)
+            import :: c_int
+            integer(c_int),dimension(2),intent(out) :: fds
+            integer(c_int) :: r
+        end function c_pipe_posix
+        function c_dup(fd) bind(C, name='dup') result(r)
+            import :: c_int
+            integer(c_int),value :: fd
+            integer(c_int) :: r
+        end function c_dup
+        function c_dup2(fd, fd2) bind(C, name='dup2') result(r)
+            import :: c_int
+            integer(c_int),value :: fd, fd2
+            integer(c_int) :: r
+        end function c_dup2
+        function c_close(fd) bind(C, name='close') result(r)
+            import :: c_int
+            integer(c_int),value :: fd
+            integer(c_int) :: r
+        end function c_close
+        function c_read_posix(fd, buf, n) bind(C, name='read') result(r)
+            import :: c_int, c_size_t, c_char, c_long
+            integer(c_int),value :: fd
+            character(kind=c_char),dimension(*),intent(out) :: buf
+            integer(c_size_t),value :: n
+            integer(c_long) :: r
+        end function c_read_posix
+        function c_write_posix(fd, buf, n) bind(C, name='write') result(r)
+            import :: c_int, c_size_t, c_char, c_long
+            integer(c_int),value :: fd
+            character(kind=c_char),dimension(*),intent(in) :: buf
+            integer(c_size_t),value :: n
+            integer(c_long) :: r
+        end function c_write_posix
+#endif
+    end interface
 
     contains
 !*****************************************************************************************
@@ -157,7 +296,7 @@
     call app%scene%set_frame(app%root)
 
     app%view = View(app%root, app%moon, frame_type=ABSOLUTE_FRAME)
-    call app%view%set_default_view_distance(3.0_wp * app%extent)
+    call app%view%set_default_view_distance(3.0e5_wp)
 
     app%hud_title = HUDText('No trajectory loaded', position=[0.01_wp, 0.99_wp], &
                             alignment=ALIGN_LEFT_TOP, size=16.0_wp, color=[0.85_wp, 0.85_wp, 0.85_wp])
@@ -181,23 +320,23 @@
 !*****************************************************************************************
 !>
 !  Read a trajectory JSON file written by the solver (`traj_*.json`: an array
-!  `segs` of segments, each with `et` and the positions in each frame), and put
-!  it in the scene. The segments are joined in time order (backward-propagated
-!  ones reversed), as in `python/plot_utilities.py`.
+!  `segs` of segments, each with `et` and the positions in each frame), and plot
+!  it. The segments are joined in time order (backward-propagated ones
+!  reversed), as in `python/plot_utilities.py`.
 
-    logical function load_trajectory(file) result(ok)
+    logical function load_trajectory(file, keep_view) result(ok)
 
     character(len=*),intent(in) :: file  !! the file to read
+    logical,intent(in) :: keep_view  !! keep the camera and the time (else reset them)
 
     type(json_core) :: json
     type(json_value),pointer :: root, segs, seg
     real(wp),dimension(:),allocatable :: et, xr, yr, zr, xi, yi, zi
-    real(wp),dimension(:),allocatable :: t_all, r_all
-    real(wp),dimension(:,:),allocatable :: rot_all, inr_all, colors
-    integer :: nsegs, iseg, n, ntot, k, j
+    real(wp),dimension(:),allocatable :: t_all
+    real(wp),dimension(:,:),allocatable :: rot_all, inr_all
+    integer :: nsegs, iseg, n, ntot, k, kstart, kend, kstep
     logical :: found, status_ok
     character(len=:),allocatable :: msg
-    real(wp) :: rmin, rmax
 
     ok = .false.
     call json%initialize()
@@ -228,25 +367,23 @@
         call json%get(seg, 'x_inertial', xi, found);  if (.not. found) cycle
         call json%get(seg, 'y_inertial', yi, found);  if (.not. found) cycle
         call json%get(seg, 'z_inertial', zi, found);  if (.not. found) cycle
-        n = minval([size(et), size(xr), size(yr), size(zr), size(xi), size(yi), size(zi)])
+        n = min(size(et), size(xr), size(yr), size(zr), size(xi), size(yi), size(zi))
         if (n == 0) cycle
-        if (n > 1) then
-            if (et(1) > et(n)) then  ! backward-propagated segment
-                et(1:n) = et(n:1:-1)
-                xr(1:n) = xr(n:1:-1);  yr(1:n) = yr(n:1:-1);  zr(1:n) = zr(n:1:-1)
-                xi(1:n) = xi(n:1:-1);  yi(1:n) = yi(n:1:-1);  zi(1:n) = zi(n:1:-1)
-            end if
+        if (et(n) >= et(1)) then  ! forward propagated
+            kstart = 1;  kend = n;  kstep = 1
+        else                      ! backward propagated: reversed
+            kstart = n;  kend = 1;  kstep = -1
         end if
         call grow(ntot + n)
-        do k = 1, n
+        do k = kstart, kend, kstep
             ! skip points not after the last one (the segments' shared ends)
             if (ntot > 0) then
                 if (et(k) <= t_all(ntot)) cycle
             end if
             ntot = ntot + 1
             t_all(ntot) = et(k)
-            rot_all(:,ntot) = [xr(k), yr(k), zr(k)]
-            inr_all(:,ntot) = [xi(k), yi(k), zi(k)]
+            rot_all(1,ntot) = xr(k);  rot_all(2,ntot) = yr(k);  rot_all(3,ntot) = zr(k)
+            inr_all(1,ntot) = xi(k);  inr_all(2,ntot) = yi(k);  inr_all(3,ntot) = zi(k)
         end do
     end do
     call json%destroy(root)
@@ -256,44 +393,99 @@
         return
     end if
 
-    ! colors: distance from the Moon (the same in both frames)
-    r_all = norm2(rot_all(:,1:ntot), dim=1)
-    rmin = minval(r_all)
-    rmax = maxval(r_all)
-    allocate(colors(3,ntot))
-    do j = 1, ntot
-        colors(:,j) = colormap((r_all(j) - rmin) / max(rmax - rmin, 1.0e-9_wp))
+    call plot_points(t_all(1:ntot), rot_all(:,1:ntot), inr_all(:,1:ntot), basename(file), &
+                     int_text(nsegs)//' segments', keep_view)
+    call app%main%setWindowTitle('HALO - '//basename(file))
+    ok = .true.
+
+    contains
+
+        subroutine grow(nmax)  !! make room for nmax points (copies on the heap)
+            integer,intent(in) :: nmax
+            integer :: m
+            real(wp),dimension(:),allocatable :: t_new
+            real(wp),dimension(:,:),allocatable :: rot_new, inr_new
+            if (size(t_all) >= nmax) return
+            m = max(nmax, 2 * size(t_all))
+            allocate(t_new(m), rot_new(3,m), inr_new(3,m))
+            if (ntot > 0) then
+                t_new(1:ntot) = t_all(1:ntot)
+                rot_new(:,1:ntot) = rot_all(:,1:ntot)
+                inr_new(:,1:ntot) = inr_all(:,1:ntot)
+            end if
+            call move_alloc(t_new, t_all)
+            call move_alloc(rot_new, rot_all)
+            call move_alloc(inr_new, inr_all)
+        end subroutine grow
+
+    end function load_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Plot a trajectory (in both frames): its points put into the vkframes
+!  trajectories, colored by the distance from the Moon.
+
+    subroutine plot_points(t, rot, inr, title, details, keep_view)
+
+    real(wp),dimension(:),intent(in) :: t  !! (n) ET (sec)
+    real(wp),dimension(:,:),intent(in) :: rot  !! (3,n) Moon-centered rotating frame (km)
+    real(wp),dimension(:,:),intent(in) :: inr  !! (3,n) Moon-centered inertial frame (km)
+    character(len=*),intent(in) :: title  !! for the HUD and the panel
+    character(len=*),intent(in) :: details  !! for the panel
+    logical,intent(in) :: keep_view  !! keep the camera and the time (else reset them)
+
+    real(wp),dimension(:),allocatable :: r
+    real(wp),dimension(:,:),allocatable :: colors
+    real(wp) :: rmin, rmax, time, rmax_inertial
+    integer :: j, n
+
+    n = size(t)
+    allocate(r(n), colors(3,n))
+    rmax_inertial = 0.0_wp
+    do j = 1, n
+        r(j) = norm2(rot(:,j))  ! (the same in both frames)
+        rmax_inertial = max(rmax_inertial, norm2(inr(:,j)))
+    end do
+    rmin = minval(r)
+    rmax = maxval(r)
+    do j = 1, n
+        colors(:,j) = colormap((r(j) - rmin) / max(rmax - rmin, 1.0e-9_wp))
     end do
 
-    ! into the scene:
     call app%frames(ROTATING)%traj%clear()
-    call app%frames(ROTATING)%traj%add(t_all(1:ntot), pos=rot_all(:,1:ntot), color=colors)
+    call app%frames(ROTATING)%traj%add(t, pos=rot, color=colors)
     call app%frames(INERTIAL)%traj%clear()
-    call app%frames(INERTIAL)%traj%add(t_all(1:ntot), pos=inr_all(:,1:ntot), color=colors)
+    call app%frames(INERTIAL)%traj%add(t, pos=inr, color=colors)
+    call set_bounds(app%frames(ROTATING), rot)
+    call set_bounds(app%frames(INERTIAL), inr)
+    call app%body%set_radius(0.01_wp * max(rmax_inertial, rmax))
 
-    call set_bounds(app%frames(ROTATING), rot_all(:,1:ntot))
-    call set_bounds(app%frames(INERTIAL), inr_all(:,1:ntot))
-    app%t0 = t_all(1)
-    app%tf = t_all(ntot)
-    app%extent = max(maxval(norm2(inr_all(:,1:ntot), dim=1)), rmax, 2.0_wp * moon_radius)
-    call app%body%set_radius(0.01_wp * app%extent)
+    app%t0 = t(1)
+    app%tf = t(n)
     app%loaded = .true.
 
-    call app%hud_title%set_text(basename(file))
+    call app%hud_title%set_text(title)
     call app%hud_near%set_text('|r| = '//real_text(rmin, '(F0.0)')//' km')
     call app%hud_far%set_text('|r| = '//real_text(rmax, '(F0.0)')//' km')
-    call app%info_label%setText(basename(file)//'<br>'// &
-                                int_text(ntot)//' points, '//int_text(nsegs)//' segments<br>'// &
+    call app%info_label%setText(title//'<br>'// &
+                                int_text(n)//' points, '//details//'<br>'// &
                                 real_text((app%tf - app%t0)/day, '(F0.2)')//' days<br>'// &
                                 '|r|: '//real_text(rmin, '(F0.0)')//' to '//real_text(rmax, '(F0.0)')//' km')
-    call app%main%setWindowTitle('HALO - '//basename(file))
-
-    ! time and view:
-    call app%time_scale%setValue(real(max(1.0_wp, (app%tf - app%t0) / 60.0_wp), c_double))  ! whole thing in ~1 min
-    call update_time_range()
     call show_frame(app%current_frame)
-    call reset_view()
-    ok = .true.
+
+    if (keep_view) then
+        ! the same time (within the new range), the same camera:
+        if (app%proxy%is_open()) then
+            time = max(app%t0, min(app%tf, app%proxy%time()))
+            call app%proxy%set_time_range(app%t0, app%tf)
+            call app%proxy%set_time(time)
+        end if
+    else
+        call app%time_scale%setValue(real(max(1.0_wp, (app%tf - app%t0) / 60.0_wp), c_double))  ! all in ~1 min
+        call update_time_range()
+        call reset_view()
+    end if
 
     contains
 
@@ -301,23 +493,16 @@
             type(frame_t),intent(inout) :: f
             real(wp),dimension(:,:),intent(in) :: pos
             real(wp),dimension(3) :: lo, hi
-            lo = min(minval(pos, dim=2), -moon_radius)
-            hi = max(maxval(pos, dim=2),  moon_radius)
+            integer :: i
+            do i = 1, 3
+                lo(i) = min(minval(pos(i,:)), -moon_radius)
+                hi(i) = max(maxval(pos(i,:)),  moon_radius)
+            end do
             f%center = 0.5_wp * (lo + hi)
             f%radius = 0.5_wp * norm2(hi - lo)
         end subroutine set_bounds
 
-        subroutine grow(nmax)  !! make room for nmax points
-            integer,intent(in) :: nmax
-            integer :: m
-            if (size(t_all) >= nmax) return
-            m = max(nmax, 2 * size(t_all))
-            t_all = [t_all, [(0.0_wp, j = 1, m - size(t_all))]]
-            rot_all = reshape(rot_all, [3, m], pad=[0.0_wp])
-            inr_all = reshape(inr_all, [3, m], pad=[0.0_wp])
-        end subroutine grow
-
-    end function load_trajectory
+    end subroutine plot_points
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -491,7 +676,7 @@
 !>
 !  After the main window is first painted: the slow parts of the startup
 !  (fonts, the Vulkan device), then the view in place of the message; then the
-!  trajectory given on the command line, if any.
+!  trajectory given on the command line, and the solver run, if asked for.
 
     subroutine on_startup(data)
 
@@ -506,7 +691,7 @@
     call app%stack%setCurrentIndex(1)
     if (app%proxy%is_open()) call app%window%requestUpdate()
     if (allocated(app%initial_traj)) then
-        if (load_trajectory(app%initial_traj)) call set_status('Loaded '//basename(app%initial_traj))
+        if (load_trajectory(app%initial_traj, keep_view=.false.)) call set_status('Loaded '//basename(app%initial_traj))
     end if
     if (app%run_at_start) call on_run()
 
@@ -531,6 +716,7 @@
 
     character(len=:),allocatable :: file
 
+    if (app%running) return
     file = QFileDialog_getOpenFileName('Open HALO config file', dir_of(app%config_edit%text()), &
                                        'Config files (*.json);;All files (*)', app%main)
     if (len(file) > 0) call app%config_edit%setText(relative_path(file))
@@ -548,29 +734,29 @@
 
     character(len=:),allocatable :: file
 
+    if (app%running) return
     file = QFileDialog_getOpenFileName('Open HALO trajectory file', QDir_currentPath(), &
                                        'Trajectory files (traj_*.json);;JSON files (*.json);;All files (*)', &
                                        app%main)
     if (len(file) == 0) return
-    if (load_trajectory(file)) call set_status('Loaded '//basename(file))
+    if (load_trajectory(file, keep_view=.false.)) call set_status('Loaded '//basename(file))
 
     end subroutine on_open_trajectory
 !*****************************************************************************************
 
 !*****************************************************************************************
 !>
-!  Run the solver on the config file: `halo_solver <config> --gui` (next to this
-!  program), in the current directory, its output shown as it comes.
+!  Run the solver on the config file, in a worker thread (`solve`), with its
+!  output shown in the log.
 
     subroutine on_run(data)
 
     class(*),intent(inout),optional :: data
 
-    character(len=:),allocatable :: config, solver
+    character(len=:),allocatable :: config
     logical :: exists
-    type(QProcessEnvironment) :: env
 
-    if (app%process%state() /= QProcess_NotRunning) return
+    if (app%running .or. app%reading) return
     config = trim(app%config_edit%text())
     if (len(config) == 0) then
         call error_message('Choose a config file first.')
@@ -581,142 +767,350 @@
         call error_message('Config file not found: '//config)
         return
     end if
-    solver = QCoreApplication_applicationDirPath()//'/halo_solver'
-    inquire(file=solver, exist=exists)
-    if (.not. exists) then
-        call error_message('The solver was not found: '//solver)
-        return
-    end if
 
     call app%log%clear()
-    app%out_buffer = ''
-    if (allocated(app%traj_file)) deallocate(app%traj_file)
-    call app%log%appendPlainText('$ '//solver//' '//config//' --gui')
+    call app%log%appendPlainText('Solving '//config//' (in '//QDir_currentPath()//')')
+    call capture_output()
 
-    env = QProcessEnvironment_systemEnvironment()
-    call env%insert('GFORTRAN_UNBUFFERED_PRECONNECTED', 'y')  ! (output shown as it is written)
-    call app%process%setProcessEnvironment(env)
-    call env%delete()
-    call app%process%setWorkingDirectory(QDir_currentPath())
-    call app%process%start(solver, [character(len=max(len(config),5)) :: config, '--gui'])
+    app%job%config = config
+    app%job%iterations = app%plot_iterations%isChecked()
+    if (allocated(app%job%traj_file)) deallocate(app%job%traj_file)
+    app%plotted_this_run = .false.
+    app%running = .true.
 
-    call app%run_button%setEnabled(.false.)
-    call app%stop_button%setEnabled(.true.)
-    call app%config_edit%setEnabled(.false.)
+    app%worker = QThread_create(solve, app%job, app%main)
+    call app%worker%finished%connect(on_solver_finished)
+    call app%worker%start()
+
+    call set_controls_enabled(.false.)
     call set_status('Solving '//basename(config)//'...')
 
     end subroutine on_run
 !*****************************************************************************************
 
 !*****************************************************************************************
+!>
+!  The worker thread: run the solver (only the job is touched here).
+
+    subroutine solve(data)
+
+    class(*),intent(inout),optional :: data
+
+    select type (job => data)
+    type is (solver_job)
+        if (job%iterations) then
+            call halo_solver_main(job%config, .false., gui=.true., &
+                                  iteration_callback=send_iteration, stop_check=stop_requested, &
+                                  traj_file=job%traj_file)
+        else
+            call halo_solver_main(job%config, .false., gui=.true., &
+                                  stop_check=stop_requested, traj_file=job%traj_file)
+        end if
+        flush(output_unit)
+    end select
+
+    end subroutine solve
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The solver's iteration callback (worker thread): copy the points to a new
+!  `iteration_points`, and hand it to the GUI thread (`on_iteration`), which
+!  plots and deletes it. Its address goes in the signal's two integers (the
+!  signal is queued, so nothing here is shared with the GUI thread).
+
+    subroutine send_iteration(iter, et, r_rotating, r_inertial)
+
+    integer,intent(in) :: iter
+    real(hwp),dimension(:),intent(in) :: et
+    real(hwp),dimension(:,:),intent(in) :: r_rotating, r_inertial
+
+    type(iteration_points),pointer :: p
+    integer(c_intptr_t) :: address
+    integer(int32),dimension(2) :: halves
+    integer :: i, n
+
+    flush(output_unit)  ! (the iteration's output shown now)
+    n = size(et)
+    if (n < 2) return
+    allocate(p)
+    allocate(p%t(n), p%rot(3,n), p%inr(3,n))
+    p%iter = iter
+    do i = 1, n
+        p%t(i)     = real(et(i), wp)
+        p%rot(:,i) = real(r_rotating(:,i), wp)
+        p%inr(:,i) = real(r_inertial(:,i), wp)
+    end do
+    address = transfer(c_loc(p), address)
+    halves = transfer(address, halves)
+    call app%job%iteration%emit(int(halves(1)), int(halves(2)))  ! (delivered on the GUI thread)
+
+    end subroutine send_iteration
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The solver's stop check (worker thread): Stop was clicked.
+
+    logical function stop_requested()
+    stop_requested = QThread_isInterruptionRequested()
+    end function stop_requested
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  An iteration's trajectory from the worker (GUI thread): plot it, then delete it.
+
+    subroutine on_iteration(half1, half2, data)
+
+    integer,intent(in) :: half1, half2
+    class(*),intent(inout),optional :: data
+
+    type(iteration_points),pointer :: p
+    integer(c_intptr_t) :: address
+    type(c_ptr) :: cp
+
+    address = transfer([int(half1,int32), int(half2,int32)], address)
+    cp = transfer(address, cp)
+    call c_f_pointer(cp, p)
+
+    call plot_points(p%t, p%rot, p%inr, 'Iteration '//int_text(p%iter), &
+                     'solver iteration', keep_view=app%plotted_this_run)
+    app%plotted_this_run = .true.
+    call set_status('Solving: iteration '//int_text(p%iter)//'...')
+    deallocate(p)
+
+    end subroutine on_iteration
+!*****************************************************************************************
+
+!*****************************************************************************************
     subroutine on_stop(data)
     class(*),intent(inout),optional :: data
-    if (app%process%state() == QProcess_NotRunning) return
-    call app%log%appendPlainText('*** stopped by the user')
-    call app%process%kill()
+    if (.not. app%running) return
+    call app%worker%requestInterruption()
+    call app%log%appendPlainText('*** stop requested (at the next iteration)')
+    call set_status('Stopping at the next iteration...')
+    call app%stop_button%setEnabled(.false.)
     end subroutine on_stop
 !*****************************************************************************************
 
 !*****************************************************************************************
 !>
-!  The solver wrote output: show the complete lines (and look for the trajectory file).
+!  The solver is done (GUI thread): output back to the terminal, and the
+!  solution's trajectory plotted.
 
-    subroutine on_solver_output(data)
+    subroutine on_solver_finished(data)
 
     class(*),intent(inout),optional :: data
 
-    app%out_buffer = app%out_buffer//app%process%readAllStandardOutput()
-    call flush_lines(.false.)
+    call restore_output()  ! (the reader then sees the end of the output)
+    app%running = .false.
+    call app%worker%deleteLater()
+    call set_controls_enabled(.true.)
 
-    end subroutine on_solver_output
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  Show the output's complete lines in the log (with `all`: what's left too).
-
-    subroutine flush_lines(all)
-
-    logical,intent(in) :: all
-
-    integer :: i
-    character(len=:),allocatable :: line
-
-    do
-        i = index(app%out_buffer, new_line('a'))
-        if (i == 0) exit
-        line = app%out_buffer(1:i-1)
-        app%out_buffer = app%out_buffer(i+1:)
-        call add_line(line)
-    end do
-    if (all .and. len(app%out_buffer) > 0) then
-        call add_line(app%out_buffer)
-        app%out_buffer = ''
-    end if
-
-    contains
-
-        subroutine add_line(line)
-            character(len=*),intent(in) :: line
-            character(len=:),allocatable :: l
-            l = line
-            if (len(l) > 0) then
-                if (l(len(l):len(l)) == achar(13)) l = l(1:len(l)-1)
-            end if
-            call app%log%appendPlainText(l)
-            if (index(l, traj_marker) == 1) app%traj_file = trim(adjustl(l(len(traj_marker)+1:)))
-        end subroutine add_line
-
-    end subroutine flush_lines
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  The solver finished: plot its trajectory (if it wrote one).
-
-    subroutine on_solver_finished(exit_code, exit_status, data)
-
-    integer,intent(in) :: exit_code, exit_status
-    class(*),intent(inout),optional :: data
-
-    character(len=:),allocatable :: file
-
-    app%out_buffer = app%out_buffer//app%process%readAllStandardOutput()
-    call flush_lines(.true.)
-    call app%run_button%setEnabled(.true.)
-    call app%stop_button%setEnabled(.false.)
-    call app%config_edit%setEnabled(.true.)
-
-    if (exit_status /= QProcess_NormalExit) then
-        call set_status('The solver was stopped or crashed.')
-        return
-    end if
-    if (exit_code /= 0) then
-        call set_status('The solver failed (exit code '//int_text(exit_code)//'). See its output.')
-        return
-    end if
-    if (.not. allocated(app%traj_file)) then
+    if (.not. allocated(app%job%traj_file)) then
         call set_status('Solver done, but it wrote no trajectory file.')
         return
     end if
-    file = app%traj_file
-    if (file(1:1) /= '/') file = app%process%workingDirectory()//'/'//file
-    if (load_trajectory(file)) call set_status('Done: plotted '//app%traj_file)
+    if (load_trajectory(app%job%traj_file, keep_view=app%plotted_this_run)) &
+        call set_status('Done: plotted '//app%job%traj_file)
 
     end subroutine on_solver_finished
 !*****************************************************************************************
 
 !*****************************************************************************************
-    subroutine on_solver_error(error, data)
-    integer,intent(in) :: error
-    class(*),intent(inout),optional :: data
-    if (error == QProcess_FailedToStart) then
-        call app%run_button%setEnabled(.true.)
-        call app%stop_button%setEnabled(.false.)
-        call app%config_edit%setEnabled(.true.)
-        call error_message('The solver could not be started: '//app%process%errorString())
+    subroutine set_controls_enabled(enabled)
+    logical,intent(in) :: enabled
+    call app%run_button%setEnabled(enabled)
+    call app%stop_button%setEnabled(.not. enabled)
+    call app%config_edit%setEnabled(enabled)
+    call app%browse_button%setEnabled(enabled)
+    call app%plot_iterations%setEnabled(enabled)
+    end subroutine set_controls_enabled
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Standard output (the solver's `write(*,...)`, and the programs it runs) to a
+!  pipe, read by a reader thread (`read_pipe`) and shown in the log (and copied
+!  to the terminal) on the GUI thread (`on_output`).
+
+    subroutine capture_output()
+
+    integer(c_int),dimension(2) :: fds
+
+    if (app%saved_stdout >= 0 .or. app%reading) return  ! (already)
+    if (make_pipe(fds) /= 0) return  ! (then the output just goes to the terminal)
+    flush(output_unit)
+    app%saved_stdout = c_dup(1_c_int)  ! (-1 if there is none, e.g. no console)
+    if (c_dup2(fds(2), 1_c_int) < 0) then
+        if (c_close(fds(1)) /= 0 .or. c_close(fds(2)) /= 0) continue
+        if (app%saved_stdout >= 0) then
+            if (c_close(app%saved_stdout) /= 0) continue
+        end if
+        app%saved_stdout = -1
+        return
     end if
-    end subroutine on_solver_error
+    if (c_close(fds(2)) /= 0) continue  ! (standard output is now the only write end)
+    app%tee_fd = -1
+    if (app%saved_stdout >= 0) app%tee_fd = c_dup(app%saved_stdout)
+    app%out_buffer = ''
+
+    app%rjob%fd = fds(1)
+    app%reader = QThread_create(read_pipe, app%rjob, app%main)
+    call app%reader%finished%connect(on_reader_finished)
+    app%reading = .true.
+    call app%reader%start()
+
+    end subroutine capture_output
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Standard output back to where it was. That closes the pipe's write end, so
+!  the reader gets the rest of the output, then the end.
+
+    subroutine restore_output()
+
+    flush(output_unit)
+    if (app%saved_stdout < 0) return
+    if (c_dup2(app%saved_stdout, 1_c_int) < 0) continue
+    if (c_close(app%saved_stdout) /= 0) continue
+    app%saved_stdout = -1
+
+    end subroutine restore_output
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The reader thread: read the pipe until it ends (all its write ends closed),
+!  sending each chunk to the GUI thread. Blocking reads, so it works with pipes
+!  on Windows too (where QSocketNotifier doesn't).
+
+    subroutine read_pipe(data)
+
+    class(*),intent(inout),optional :: data
+
+    character(kind=c_char),dimension(:),allocatable :: buf  ! (heap: a worker's stack is small)
+    character(len=:),allocatable :: chunk
+    integer :: n, i
+
+    select type (job => data)
+    type is (reader_job)
+        allocate(buf(pipe_size))
+        do
+            n = read_fd(job%fd, buf)
+            if (n <= 0) exit  ! the end (or an error)
+            if (allocated(chunk)) deallocate(chunk)
+            allocate(character(len=n) :: chunk)
+            do i = 1, n
+                chunk(i:i) = buf(i)
+            end do
+            call job%text%emit(chunk)  ! (a copy, delivered on the GUI thread)
+        end do
+    end select
+
+    end subroutine read_pipe
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The reader is done (GUI thread): the last partial line shown, the pipe closed.
+
+    subroutine on_reader_finished(data)
+
+    class(*),intent(inout),optional :: data
+
+    if (len(app%out_buffer) > 0) call app%log%appendPlainText(app%out_buffer)
+    app%out_buffer = ''
+    if (c_close(app%rjob%fd) /= 0) continue
+    app%rjob%fd = -1
+    if (app%tee_fd >= 0) then
+        if (c_close(app%tee_fd) /= 0) continue
+        app%tee_fd = -1
+    end if
+    app%reading = .false.
+    call app%reader%deleteLater()
+
+    end subroutine on_reader_finished
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Output from the reader (GUI thread): copied to the terminal, and its complete
+!  lines shown in the log.
+
+    subroutine on_output(text, data)
+
+    character(len=*),intent(in) :: text
+    class(*),intent(inout),optional :: data
+
+    integer :: i
+
+    if (app%tee_fd >= 0 .and. len(text) > 0) i = write_fd(app%tee_fd, text)
+
+    app%out_buffer = app%out_buffer//text
+    do
+        i = index(app%out_buffer, new_line('a'))
+        if (i == 0) exit
+        call add_line(app%out_buffer(1:i-1))
+        app%out_buffer = app%out_buffer(i+1:)
+    end do
+
+    contains
+
+        subroutine add_line(line)
+            character(len=*),intent(in) :: line
+            if (len(line) > 0) then
+                if (line(len(line):len(line)) == achar(13)) then  ! (CRLF)
+                    call app%log%appendPlainText(line(1:len(line)-1))
+                    return
+                end if
+            end if
+            call app%log%appendPlainText(line)
+        end subroutine add_line
+
+    end subroutine on_output
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The C runtime's pipe, read and write, portably.
+
+    integer function make_pipe(fds) result(r)
+    integer(c_int),dimension(2),intent(out) :: fds  !! read end, write end
+#ifdef _WIN32
+    integer(c_int),parameter :: O_BINARY = int(z'8000', c_int)
+    r = c_pipe_win(fds, int(pipe_size, c_int), O_BINARY)
+#else
+    r = c_pipe_posix(fds)
+#endif
+    end function make_pipe
+
+    integer function read_fd(fd, buf) result(n)  !! bytes read (0: the end; < 0: an error)
+    integer(c_int),intent(in) :: fd
+    character(kind=c_char),dimension(:),intent(out) :: buf
+#ifdef _WIN32
+    n = c_read(fd, buf, int(size(buf), c_int))
+#else
+    n = int(c_read_posix(fd, buf, int(size(buf), c_size_t)))
+#endif
+    end function read_fd
+
+    logical function change_directory(dir) result(ok)  !! the current directory set to `dir`
+    character(len=*),intent(in) :: dir
+    ok = c_chdir(trim(dir)//c_null_char) == 0
+    end function change_directory
+
+    integer function write_fd(fd, text) result(n)  !! bytes written (< 0: an error)
+    integer(c_int),intent(in) :: fd
+    character(len=*),intent(in) :: text
+#ifdef _WIN32
+    n = c_write(fd, text, int(len(text), c_int))
+#else
+    n = int(c_write_posix(fd, text, int(len(text), c_size_t)))
+#endif
+    end function write_fd
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -776,7 +1170,8 @@
 
 !*****************************************************************************************
 !>
-!  Closing: stop a running solver (after asking), and close the view.
+!  Closing: not while the solver runs (it can only be stopped between
+!  iterations); otherwise close the view.
 
     subroutine on_close(event, data)
 
@@ -785,15 +1180,16 @@
 
     integer :: answer
 
-    if (app%process%state() /= QProcess_NotRunning) then
-        answer = QMessageBox_question('Solver running', 'The solver is still running. Stop it and quit?', &
-                                      ior(QMessageBox_Yes, QMessageBox_No), QMessageBox_No, app%main)
-        if (answer /= QMessageBox_Yes) then
-            call event%ignore()
-            return
+    if (app%running) then
+        answer = QMessageBox_question('Solver running', &
+                    'The solver is still running. Stop it at its next iteration, then quit?', &
+                    ior(QMessageBox_Yes, QMessageBox_No), QMessageBox_No, app%main)
+        call event%ignore()
+        if (answer == QMessageBox_Yes) then
+            call on_stop()
+            call app%worker%finished%connect(on_quit)  ! (closes once it's done)
         end if
-        call app%process%kill()
-        if (app%process%waitForFinished(3000)) continue
+        return
     end if
     call app%proxy%close()
 
@@ -814,7 +1210,7 @@
     type(QHBoxLayout) :: hbox
     type(QGroupBox) :: group
     type(QFormLayout) :: form
-    type(QPushButton) :: browse, reset, reset_view_button
+    type(QPushButton) :: reset, reset_view_button
     type(QMenuBar) :: bar
     type(QMenu) :: menu
     type(QAction) :: action
@@ -868,10 +1264,15 @@
     app%config_edit = QLineEdit(app%config_file)
     call app%config_edit%setPlaceholderText('config file (.json)')
     call hbox%addWidget(app%config_edit)
-    browse = QPushButton('Browse...')
-    call browse%clicked%connect(on_browse)
-    call hbox%addWidget(browse)
+    app%browse_button = QPushButton('Browse...')
+    call app%browse_button%clicked%connect(on_browse)
+    call hbox%addWidget(app%browse_button)
     call form%addRow('Config file', row)
+    app%plot_iterations = QCheckBox('Plot each iteration')
+    call app%plot_iterations%setChecked(app%iterations_at_start)
+    call app%plot_iterations%setToolTip('Show the trajectory of each solver iteration as it solves '// &
+                                        '(propagates all the segments at each iteration).')
+    call form%addRow('', app%plot_iterations)
     row = QWidget()
     hbox = QHBoxLayout(row)
     call hbox%setContentsMargins(0, 0, 0, 0)
@@ -949,12 +1350,11 @@
     call dock%setWidget(app%log)
     call app%main%addDockWidget(Qt_BottomDockWidgetArea, dock)
 
-    ! the solver process
-    app%process = QProcess(app%main)
-    call app%process%setProcessChannelMode(QProcess_MergedChannels)
-    call app%process%readyReadStandardOutput%connect(on_solver_output)
-    call app%process%finished%connect(on_solver_finished)
-    call app%process%errorOccurred%connect(on_solver_error)
+    ! the iterations' trajectories (from the solver's thread), and its output (from the reader's)
+    app%job%iteration = QSignalInt2(app%main)
+    call app%job%iteration%connect(on_iteration)
+    app%rjob%text = QSignalString(app%main)
+    call app%rjob%text%connect(on_output)
 
     end subroutine build_ui
 !*****************************************************************************************
@@ -1048,9 +1448,12 @@
 !>
 !  The HALO GUI program (see [[halo_gui_module]]).
 !
-!  Arguments: `[config.json] [--run] [--traj traj_file.json]`. The config file
-!  defaults to `examples/example_sparse.json` (if it exists); `--run` runs the
-!  solver on it at startup; `--traj` plots a trajectory file at startup.
+!  Arguments: `[--dir DIR] [config.json] [--run] [--iterations] [--traj traj_file.json]`.
+!  `--dir` sets the current directory (the halo root, which the config files'
+!  paths are relative to; give it first: the other paths are relative to it).
+!  The config file defaults to `examples/example_sparse.json` (if it exists);
+!  `--run` runs the solver on it at startup; `--iterations` checks "Plot each
+!  iteration"; `--traj` plots a trajectory file at startup.
 !  For testing: `--capture file.png` saves frame `--capture-frame n` (default 120),
 !  and `--quit-after sec` closes the program.
 
@@ -1074,8 +1477,17 @@
         if (app%options%take(i)) cycle  ! (--capture file, --capture-frame n, --quit-after sec)
         call get_command_argument(i, arg)
         select case (arg)
+        case ('--dir')  ! (first: the other arguments' paths are relative to it)
+            call get_command_argument(i + 1, arg)
+            if (.not. change_directory(trim(arg))) then
+                write(*,'(A)') 'halo_gui: cannot change to directory '//trim(arg)
+                stop 1
+            end if
+            i = i + 1
         case ('--run')
             app%run_at_start = .true.
+        case ('--iterations')
+            app%iterations_at_start = .true.
         case ('--traj')
             call get_command_argument(i + 1, arg)
             app%initial_traj = trim(arg)

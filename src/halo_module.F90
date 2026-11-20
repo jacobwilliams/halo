@@ -252,12 +252,36 @@
 
     end type mission_type
 
+    abstract interface
+        subroutine iteration_callback_func(iter,et,r_rotating,r_inertial)
+            !! Receives the trajectory of a solver iteration (see [[halo_solver_main]]).
+            !! The segments are joined in time order (the backward-propagated ones
+            !! reversed, and the points shared by two segments only once).
+            import :: wp
+            implicit none
+            integer,intent(in)                  :: iter        !! iteration number
+            real(wp),dimension(:),intent(in)    :: et          !! ephemeris times [sec]
+            real(wp),dimension(:,:),intent(in)  :: r_rotating  !! (3,n) positions [km], Moon-centered Earth-Moon rotating frame
+            real(wp),dimension(:,:),intent(in)  :: r_inertial  !! (3,n) positions [km], Moon-centered inertial frame
+        end subroutine iteration_callback_func
+        logical function stop_check_func()
+            !! Returns true to stop the solver iterations (see [[halo_solver_main]]).
+            implicit none
+        end function stop_check_func
+    end interface
+
     type,extends(nlesolver_type) :: my_solver_type
 
         !! the solver class, which contains
         !! an instance of the mission
 
         type(mission_type) :: mission !! the Halo mission
+
+        ! optional hooks (used by the GUI):
+        procedure(iteration_callback_func),pointer,nopass :: iteration_callback => null()
+            !! if associated, it receives the trajectory of each solver iteration
+        procedure(stop_check_func),pointer,nopass :: stop_check => null()
+            !! if associated, checked at each solver iteration: true stops the solver
 
     contains
 
@@ -279,6 +303,7 @@
     end interface
 
     public :: halo_solver_main !! main program
+    public :: iteration_callback_func, stop_check_func ! for halo_solver_main's hooks
     public :: read_epoch ! also used by optimizer app
 
     contains
@@ -291,7 +316,7 @@
 !### Author
 !  * Jacob Williams : Sept. 2017
 
-    subroutine halo_solver_main(config_file_name,debug,gui)
+    subroutine halo_solver_main(config_file_name,debug,gui,iteration_callback,stop_check,traj_file)
 
     use parameters_module
 !$  use omp_lib
@@ -303,6 +328,15 @@
     logical,intent(in),optional :: gui !! run for the GUI (`halo_gui`): the JSON trajectory
                                        !! file is always exported, and the pyvista script
                                        !! is not run. [Default is False]
+    procedure(iteration_callback_func),optional :: iteration_callback
+        !! if present, it receives the trajectory of each solver iteration
+        !! (in memory: no files are written for them). Note: this
+        !! propagates all the segments at each iteration.
+    procedure(stop_check_func),optional :: stop_check
+        !! if present, it is checked at each solver iteration, and the
+        !! solver stops if it returns true
+    character(len=:),allocatable,intent(out),optional :: traj_file
+        !! the JSON trajectory file written for the solution (if any)
 
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
@@ -348,6 +382,8 @@
             solver%mission%run_pyvista_script = .false.
         end if
     end if
+    if (present(iteration_callback)) solver%iteration_callback => iteration_callback
+    if (present(stop_check)) solver%stop_check => stop_check  ! (see halo_user_input_check)
 
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
@@ -473,6 +509,7 @@
 
     if (solver%mission%generate_json_trajectory_file) then
         call solver%mission%export_trajectory_json_file('traj_'//solver%mission%get_case_name())
+        if (present(traj_file)) traj_file = 'traj_'//solver%mission%get_case_name()//'.json'
         ! note: halo_gui reads the file name from this line
         write(*,'(A)') ' * Trajectory file: traj_'//solver%mission%get_case_name()//'.json'
     end if
@@ -768,7 +805,8 @@
                                 alpha_max = 1.0_wp, &
                                 use_broyden      = .false.,      & ! broyden update
                                 ! use_broyden=.true.,broyden_update_n=10, & ! ... test ...
-                                export_iteration = halo_export   )
+                                export_iteration = halo_export, &
+                                user_input_check = halo_user_input_check )
 
     case(5)
         ! this is using the qr_mumps solver as a user-defined solver to nlesolver-fortran.
@@ -795,7 +833,8 @@
                                 custom_solver_sparse = qrm_solver, &  ! the qr_mumps solver wrapper
                                 irow             = irow, &  ! sparsity pattern
                                 icol             = icol, &
-                                export_iteration = halo_export   )
+                                export_iteration = halo_export, &
+                                user_input_check = halo_user_input_check )
     case (2:4, 6:7)
         ! various sparse options available in nlesolver-fortran
         call me%mission%get_sparsity_pattern(irow,icol) ! it's already been computed, but for now, just compute it again for this call
@@ -812,6 +851,7 @@
                                 use_broyden      = .false.,      & ! broyden update
                                 !use_broyden=.true.,broyden_update_n=10, & ! ... test ...
                                 export_iteration = halo_export,  &
+                                user_input_check = halo_user_input_check, &
                                 sparsity_mode = me%mission%solver_mode, &  ! use a sparse solver
                                 atol          = 1.0e-12_wp,&  ! relative error in definition of `A`
                                 btol          = 1.0e-12_wp,&  ! relative error in definition of `b`
@@ -2344,12 +2384,109 @@
 
     count_start = count_end
 
+    ! send this iteration's trajectory to the callback (e.g., to plot it):
+    select type (me)
+    class is (my_solver_type)
+        if (associated(me%iteration_callback)) call iteration_trajectory(me, x, iter)
+    end select
+
     !select type (me)
     !class is (my_solver_type)
     !    write(*,*) 'rdot = ', compute_rdot(me%mission%segs(1)%data%x0)
     !end select
 
     end subroutine halo_export
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Propagate the segments for the solver's current `x`, and send the trajectory
+!  (joined in time order) to the solver's `iteration_callback`.
+
+    subroutine iteration_trajectory(me,x,iter)
+
+    implicit none
+
+    class(my_solver_type),intent(inout) :: me
+    real(wp),dimension(:),intent(in) :: x  !! the solver's (scaled) opt vars for this iteration
+    integer,intent(in) :: iter  !! iteration number
+
+    integer :: iseg, i, n, ntot, istart, iend, istep
+    real(wp),dimension(:),allocatable :: et
+    real(wp),dimension(:,:),allocatable :: r_rot, r_inr
+
+    associate (segs => me%mission%segs)
+
+        call me%mission%put_x_in_segments(x)  ! (the segments' initial states for this iteration)
+
+!$OMP PARALLEL DO
+        do iseg = 1, size(segs)
+            call segs(iseg)%traj_inertial%destroy()
+            call segs(iseg)%traj_rotating%destroy()
+            call segs(iseg)%traj_se_rotating%destroy()
+            call segs(iseg)%propagate(mode=2)  ! [export points]
+        end do
+!$OMP END PARALLEL DO
+
+        n = 0
+        do iseg = 1, size(segs)
+            n = n + size(segs(iseg)%traj_inertial%et)
+        end do
+        allocate(et(n), r_rot(3,n), r_inr(3,n))
+
+        ntot = 0
+        do iseg = 1, size(segs)
+            associate (ti => segs(iseg)%traj_inertial, tr => segs(iseg)%traj_rotating)
+                n = size(ti%et)
+                if (n == 0) cycle
+                if (ti%et(n) >= ti%et(1)) then
+                    istart = 1;  iend = n;  istep = 1     ! forward propagated
+                else
+                    istart = n;  iend = 1;  istep = -1    ! backward propagated
+                end if
+                do i = istart, iend, istep
+                    if (ntot > 0) then
+                        if (ti%et(i) <= et(ntot)) cycle   ! (the segments' shared ends)
+                    end if
+                    ntot = ntot + 1
+                    et(ntot) = ti%et(i)
+                    r_inr(:,ntot) = [ti%x(i), ti%y(i), ti%z(i)]
+                    r_rot(:,ntot) = [tr%x(i), tr%y(i), tr%z(i)]
+                end do
+            end associate
+        end do
+
+        do iseg = 1, size(segs)
+            call segs(iseg)%traj_inertial%destroy()
+            call segs(iseg)%traj_rotating%destroy()
+            call segs(iseg)%traj_se_rotating%destroy()
+        end do
+
+    end associate
+
+    call me%iteration_callback(iter, et(1:ntot), r_rot(:,1:ntot), r_inr(:,1:ntot))
+
+    end subroutine iteration_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  nlesolver's `user_input_check`: stop if the solver's `stop_check` says so.
+
+    subroutine halo_user_input_check(me,user_stop)
+
+    implicit none
+
+    class(nlesolver_type),intent(inout) :: me
+    logical,intent(out) :: user_stop
+
+    user_stop = .false.
+    select type (me)
+    class is (my_solver_type)
+        if (associated(me%stop_check)) user_stop = me%stop_check()
+    end select
+
+    end subroutine halo_user_input_check
 !*****************************************************************************************
 
 !*****************************************************************************************
