@@ -253,21 +253,28 @@
     end type mission_type
 
     abstract interface
-        subroutine iteration_callback_func(iter,et,r_rotating,r_inertial,seg_et,seg_r_rotating,seg_r_inertial)
+        subroutine iteration_callback_func(iter,et,r_rotating,r_inertial,r_se_rotating,&
+                                           seg_et,seg_r_rotating,seg_r_inertial,seg_r_se_rotating,defects)
             !! Receives the trajectory of a solver iteration (see [[halo_solver_main]]).
             !! The segments are joined in time order (the backward-propagated ones
             !! reversed, and the points shared by two segments only once).
             !! Also each segment's start and end (where its propagation starts and
-            !! ends: for a backward-propagated segment, the start is the later time).
+            !! ends: for a backward-propagated segment, the start is the later time),
+            !! and the constraint defects at the segments' interfaces.
             import :: wp
             implicit none
             integer,intent(in)                    :: iter        !! iteration number
             real(wp),dimension(:),intent(in)      :: et          !! (n) ephemeris times [sec]
             real(wp),dimension(:,:),intent(in)    :: r_rotating  !! (3,n) positions [km], Moon-centered Earth-Moon rotating frame
             real(wp),dimension(:,:),intent(in)    :: r_inertial  !! (3,n) positions [km], Moon-centered inertial frame
+            real(wp),dimension(:,:),intent(in)    :: r_se_rotating  !! (3,n) positions [km], Earth-centered Sun-Earth rotating frame
             real(wp),dimension(:,:),intent(in)    :: seg_et          !! (2,nseg) each segment's start and end times [sec]
             real(wp),dimension(:,:,:),intent(in)  :: seg_r_rotating  !! (3,2,nseg) their positions [km], rotating frame
             real(wp),dimension(:,:,:),intent(in)  :: seg_r_inertial  !! (3,2,nseg) their positions [km], inertial frame
+            real(wp),dimension(:,:,:),intent(in)  :: seg_r_se_rotating  !! (3,2,nseg) their positions [km], Sun-Earth rotating frame
+            real(wp),dimension(:,:),intent(in)    :: defects  !! (2,nseg/2) at each interface (where segments
+                                                              !! 2k-1 and 2k end): |dr| [km], |dv| [km/s]
+                                                              !! (rotating frame)
         end subroutine iteration_callback_func
         logical function stop_check_func()
             !! Returns true to stop the solver iterations (see [[halo_solver_main]]).
@@ -2418,9 +2425,11 @@
 
     integer :: iseg, i, n, ntot, istart, iend, istep, nseg
     real(wp),dimension(:),allocatable :: et
-    real(wp),dimension(:,:),allocatable :: r_rot, r_inr
+    real(wp),dimension(:,:),allocatable :: r_rot, r_inr, r_se
     real(wp),dimension(:,:),allocatable :: seg_et  !! (2,nseg) each segment's start and end times
-    real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr  !! (3,2,nseg) and positions
+    real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr, seg_se  !! (3,2,nseg) and positions
+    real(wp),dimension(:,:),allocatable :: defects  !! (2,nseg/2) |dr|, |dv| at each interface
+    real(wp),dimension(6) :: dx
 
     associate (segs => me%mission%segs)
 
@@ -2440,13 +2449,14 @@
         do iseg = 1, nseg
             n = n + size(segs(iseg)%traj_inertial%et)
         end do
-        allocate(et(n), r_rot(3,n), r_inr(3,n))
-        allocate(seg_et(2,nseg), seg_rot(3,2,nseg), seg_inr(3,2,nseg))
-        seg_et = 0.0_wp;  seg_rot = 0.0_wp;  seg_inr = 0.0_wp
+        allocate(et(n), r_rot(3,n), r_inr(3,n), r_se(3,n))
+        allocate(seg_et(2,nseg), seg_rot(3,2,nseg), seg_inr(3,2,nseg), seg_se(3,2,nseg))
+        seg_et = 0.0_wp;  seg_rot = 0.0_wp;  seg_inr = 0.0_wp;  seg_se = 0.0_wp
 
         ntot = 0
         do iseg = 1, size(segs)
-            associate (ti => segs(iseg)%traj_inertial, tr => segs(iseg)%traj_rotating)
+            associate (ti => segs(iseg)%traj_inertial, tr => segs(iseg)%traj_rotating, &
+                       ts => segs(iseg)%traj_se_rotating)
                 n = size(ti%et)
                 if (n == 0) cycle
                 ! the segment's start and end (as propagated):
@@ -2456,6 +2466,8 @@
                 seg_inr(:,2,iseg) = [ti%x(n), ti%y(n), ti%z(n)]
                 seg_rot(:,1,iseg) = [tr%x(1), tr%y(1), tr%z(1)]
                 seg_rot(:,2,iseg) = [tr%x(n), tr%y(n), tr%z(n)]
+                seg_se(:,1,iseg) = [ts%x(1), ts%y(1), ts%z(1)]
+                seg_se(:,2,iseg) = [ts%x(n), ts%y(n), ts%z(n)]
                 ! the joined trajectory:
                 if (ti%et(n) >= ti%et(1)) then
                     istart = 1;  iend = n;  istep = 1     ! forward propagated
@@ -2470,6 +2482,7 @@
                     et(ntot) = ti%et(i)
                     r_inr(:,ntot) = [ti%x(i), ti%y(i), ti%z(i)]
                     r_rot(:,ntot) = [tr%x(i), tr%y(i), tr%z(i)]
+                    r_se(:,ntot) = [ts%x(i), ts%y(i), ts%z(i)]
                 end do
             end associate
         end do
@@ -2480,9 +2493,18 @@
             call segs(iseg)%traj_se_rotating%destroy()
         end do
 
+        ! the defects: segments 2k-1 and 2k end at the same point (when solved)
+        allocate(defects(2, nseg/2))
+        do i = 1, nseg/2
+            dx = segs(2*i-1)%data%xf_rotating - segs(2*i)%data%xf_rotating
+            defects(1,i) = norm2(dx(1:3))
+            defects(2,i) = norm2(dx(4:6))
+        end do
+
     end associate
 
-    call me%iteration_callback(iter, et(1:ntot), r_rot(:,1:ntot), r_inr(:,1:ntot), seg_et, seg_rot, seg_inr)
+    call me%iteration_callback(iter, et(1:ntot), r_rot(:,1:ntot), r_inr(:,1:ntot), r_se(:,1:ntot), &
+                               seg_et, seg_rot, seg_inr, seg_se, defects)
 
     end subroutine iteration_trajectory
 !*****************************************************************************************

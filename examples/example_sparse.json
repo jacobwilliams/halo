@@ -123,9 +123,9 @@
   // "n_revs": 5,
   // "n_revs": 20,
   // "n_revs": 100,  //689 days
-  "n_revs": 200,
+  //"n_revs": 200,
   // "n_revs": 1000,   // tests above
-  // "n_revs": 1120,   // 20 years <--- now try this
+   "n_revs": 1120,   // 20 years <--- now try this
 
     // data files:
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
