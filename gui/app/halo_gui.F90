@@ -104,6 +104,18 @@
     real(wp),parameter :: line_color(3) = [0.2_wp, 0.9_wp, 1.0_wp]  !! the trajectory with "Color by" None (cyan)
     real(wp),parameter :: start_color(3) = [0.2_wp, 1.0_wp, 0.3_wp]  !! segment start markers (green)
     real(wp),parameter :: end_color(3) = [1.0_wp, 0.2_wp, 0.2_wp]  !! segment end markers (red)
+    !> the plots' colors (dark): [r, g, b], 0 to 255
+    integer,parameter :: plot_background(3) = [30, 31, 34]
+    integer,parameter :: plot_grid(3)       = [62, 64, 70]
+    integer,parameter :: plot_frame(3)      = [110, 112, 120]
+    integer,parameter :: plot_text(3)       = [190, 192, 198]  !! tick and axis labels, legend
+    integer,parameter :: plot_dim_text(3)   = [140, 142, 150]  !! messages (no data)
+    integer,parameter :: plot_title(3)      = [235, 236, 240]
+    integer,parameter :: plot_dr(3)         = [90, 170, 255]   !! |dr| (blue)
+    integer,parameter :: plot_dv(3)         = [255, 110, 110]  !! |dv| (red)
+    integer,parameter :: plot_phi(3)        = [175, 145, 255]  !! eclipses' phi (violet)
+    integer,parameter :: plot_now(3)        = [255, 180, 50]   !! the current time (orange)
+
     real(wp),parameter :: segment_marker_size = 8.0_wp  !! (window units: the largest they get, with the
                                                         !! camera within the markers' extent; smaller
                                                         !! farther away)
@@ -2010,11 +2022,11 @@
     do i = 1, n
         y(i) = log10(max(floor, app%defects(1,i)))
     end do
-    call plot_series(painter, x, y, QColor(30, 100, 200), 1, '|dr| (km)')
+    call plot_series(painter, x, y, plot_color(plot_dr), 1, '|dr| (km)')
     do i = 1, n
         y(i) = log10(max(floor, app%defects(2,i)))
     end do
-    call plot_series(painter, x, y, QColor(210, 50, 50), 2, '|dv| (km/s)')
+    call plot_series(painter, x, y, plot_color(plot_dv), 2, '|dv| (km/s)')
 
     end subroutine on_paint_defects
 !*****************************************************************************************
@@ -2068,14 +2080,14 @@
         x(k) = x(i)
         y(k) = y(i)
     end do
-    call plot_series(painter, x(1:k), y(1:k), QColor(80, 60, 200), 0, '')
+    call plot_series(painter, x(1:k), y(1:k), plot_color(plot_phi), 0, '')
 
     ! the current time
     if (app%loaded .and. app%proxy%is_open()) then
         t = (app%proxy%time() - app%ecl_t(1)) / day
         if (t >= 0.0_wp .and. t <= xmax) then
             xpix = app%plot_x0 + (app%plot_x1 - app%plot_x0) * t / xmax
-            call painter%setPen(QPen(QColor(230, 150, 0), 1.5_wp))
+            call painter%setPen(QPen(plot_color(plot_now), 1.5_wp))
             call painter%drawLine(xpix, app%plot_y0, xpix, app%plot_y1)
         end if
     end if
@@ -2092,7 +2104,7 @@
     w = painter%deviceWidth()
     h = painter%deviceHeight()
     call painter%setRenderHint(QPainter_Antialiasing)
-    call painter%fillRect(0, 0, w, h, QColor(255, 255, 255))
+    call painter%fillRect(0, 0, w, h, plot_color(plot_background))
     app%plot_x0 = 70.0_wp
     app%plot_x1 = max(app%plot_x0 + 10.0_wp, real(w, wp) - 20.0_wp)
     app%plot_y0 = 30.0_wp
@@ -2102,7 +2114,7 @@
     subroutine plot_message(painter, text)  !! a message in place of a plot
     type(QPainter),intent(inout) :: painter
     character(len=*),intent(in) :: text
-    call painter%setPen(QColor(120, 120, 120))
+    call painter%setPen(plot_color(plot_dim_text))
     call painter%setFont(QFont(pointSize=11.0_wp))
     call painter%drawText(0.0_wp, 0.0_wp, real(painter%deviceWidth(), wp), real(painter%deviceHeight(), wp), &
                           Qt_AlignCenter, text)
@@ -2136,14 +2148,14 @@
     v = ceiling_to(ymin, step)
     do while (v <= ymax + 1.0e-9_wp * step .and. k < 50)
         py = plot_y(v)
-        call painter%setPen(QPen(QColor(220, 220, 220), 1.0_wp, Qt_DotLine))
+        call painter%setPen(QPen(plot_color(plot_grid), 1.0_wp, Qt_DotLine))
         call painter%drawLine(app%plot_x0, py, app%plot_x1, py)
         if (logy) then
             write(label, '(A,I0)') '1e', nint(v)
         else
             label = number_label(v, step)
         end if
-        call painter%setPen(QColor(90, 90, 90))
+        call painter%setPen(plot_color(plot_text))
         call painter%drawText(0.0_wp, py - 8.0_wp, app%plot_x0 - 6.0_wp, 16.0_wp, &
                               ior(Qt_AlignRight, Qt_AlignVCenter), trim(label))
         v = v + step
@@ -2156,23 +2168,23 @@
     v = ceiling_to(xmin, step)
     do while (v <= xmax + 1.0e-9_wp * step .and. k < 50)
         px = plot_x(v)
-        call painter%setPen(QPen(QColor(220, 220, 220), 1.0_wp, Qt_DotLine))
+        call painter%setPen(QPen(plot_color(plot_grid), 1.0_wp, Qt_DotLine))
         call painter%drawLine(px, app%plot_y0, px, app%plot_y1)
         label = number_label(v, step)
-        call painter%setPen(QColor(90, 90, 90))
+        call painter%setPen(plot_color(plot_text))
         call painter%drawText(px - 40.0_wp, app%plot_y1 + 2.0_wp, 80.0_wp, 16.0_wp, Qt_AlignCenter, trim(label))
         v = v + step
         k = k + 1
     end do
 
     ! box, labels, title
-    call painter%setPen(QPen(QColor(90, 90, 90), 1.0_wp))
+    call painter%setPen(QPen(plot_color(plot_frame), 1.0_wp))
     call painter%setBrush(QBrush(style=Qt_NoBrush))
     call painter%drawRect(app%plot_x0, app%plot_y0, app%plot_x1 - app%plot_x0, app%plot_y1 - app%plot_y0)
     call painter%drawText(app%plot_x0, app%plot_y1 + 18.0_wp, app%plot_x1 - app%plot_x0, 16.0_wp, &
                           Qt_AlignCenter, xlabel)
     call painter%drawText(4.0_wp, app%plot_y0 - 22.0_wp, ylabel)
-    call painter%setPen(QColor(0, 0, 0))
+    call painter%setPen(plot_color(plot_title))
     call painter%setFont(QFont(pointSize=11.0_wp, bold=.true.))
     call painter%drawText(app%plot_x0, 4.0_wp, app%plot_x1 - app%plot_x0, 20.0_wp, Qt_AlignCenter, title)
     call painter%setFont(QFont(pointSize=9.0_wp))
@@ -2210,14 +2222,20 @@
     if (len(name) > 0) then
         app%plot_legend_row = app%plot_legend_row + 1
         ly = app%plot_y0 + 6.0_wp + 16.0_wp * (app%plot_legend_row - 1)
-        call painter%fillRect(app%plot_x1 - 114.0_wp, ly - 1.0_wp, 112.0_wp, 16.0_wp, QColor(255, 255, 255))
+        call painter%fillRect(app%plot_x1 - 114.0_wp, ly - 1.0_wp, 112.0_wp, 16.0_wp, plot_color(plot_background))
         call painter%setPen(QPen(color, 1.5_wp))
         call painter%drawLine(app%plot_x1 - 110.0_wp, ly + 7.0_wp, app%plot_x1 - 90.0_wp, ly + 7.0_wp)
-        call painter%setPen(QColor(40, 40, 40))
+        call painter%setPen(plot_color(plot_text))
         call painter%drawText(app%plot_x1 - 86.0_wp, ly, 84.0_wp, 14.0_wp, &
                               ior(Qt_AlignLeft, Qt_AlignVCenter), name)
     end if
     end subroutine plot_series
+
+    function plot_color(rgb) result(c)  !! a plot palette color as a QColor
+    integer,dimension(3),intent(in) :: rgb
+    type(QColor) :: c
+    c = QColor(rgb(1), rgb(2), rgb(3))
+    end function plot_color
 
     real(wp) function plot_x(v)  !! data x to pixels
     real(wp),intent(in) :: v
