@@ -109,6 +109,7 @@
     "nlesolver_tol": 1.0e-10,
     // "nlesolver_tol": 1.0e-20,  // use for quad precision
 
+  // derivative computation mode: 1 = finite differences, 2 = state transition matrices (STMs)
     // "jacobian_mode": 1, // finite diffs
     "jacobian_mode": 2, // stms
 
