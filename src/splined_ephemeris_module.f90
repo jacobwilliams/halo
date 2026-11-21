@@ -49,6 +49,7 @@
             contains
             procedure,public :: get_r
             procedure,public :: get_rv
+            procedure,public :: get_rv_dot
             procedure,public :: destroy => destroy_body_eph_interface
             procedure,public :: initialize => initialize_body_eph_interface
         end type body_eph_interface
@@ -64,6 +65,7 @@
             procedure :: initialize_globals !! this is done once to initialize the global ephemeris vars
             procedure,public :: get_r  => get_r_splined
             procedure,public :: get_rv => get_rv_splined
+            procedure,public :: get_rv_derivative => get_rv_derivative_splined
             procedure,public :: destroy => destroy_jpl_ephemeris_splined
         end type jpl_ephemeris_splined
 
@@ -279,6 +281,33 @@
 
     end subroutine get_rv_splined
 
+    subroutine get_rv_derivative_splined(me,et,targ,obs,rvdot,status_ok)
+
+        !! The time derivative of the splined state returned by [[get_rv_splined]]
+        !! (the derivative of each component's spline: so `rvdot(1:3)` is the derivative of
+        !! the position spline, which is close to, but not exactly, the velocity spline).
+        !! Only the Earth/Moon pairs are available.
+
+        class(jpl_ephemeris_splined),intent(inout) :: me
+        real(wp),intent(in)                :: et         !! ephemeris time [sec]
+        type(celestial_body),intent(in)    :: targ       !! target body
+        type(celestial_body),intent(in)    :: obs        !! observer body
+        real(wp),dimension(6),intent(out)  :: rvdot      !! d/dt of the state of targ w.r.t. obs [km/s, km/s^2]
+        logical,intent(out)                :: status_ok  !! true if there were no problems
+
+        status_ok = .true.
+        if (targ==body_earth .and. obs==body_moon) then
+            rvdot = me%earth_eph_interface%get_rv_dot(et)
+        elseif (targ==body_moon .and. obs==body_earth) then
+            rvdot = -me%earth_eph_interface%get_rv_dot(et)
+        else
+            write(*,*) 'targ = ', targ
+            write(*,*) 'obs  = ', obs
+            error stop 'error in get_rv_derivative_splined: this combo is not available'
+        end if
+
+    end subroutine get_rv_derivative_splined
+
     subroutine get_r_splined(me,et,targ,obs,r,status_ok)
 
         class(jpl_ephemeris_splined),intent(inout) :: me
@@ -345,6 +374,28 @@
         end do
 
     end function get_rv
+
+    function get_rv_dot(me,et) result(rvdot)
+
+        !! time derivative of each component's spline
+
+        class(body_eph_interface),intent(inout) :: me
+        real(wp),intent(in) :: et !! ephemeris time (sec)
+        real(wp),dimension(6) :: rvdot !! d/dt of the position/velocity vector
+
+        integer :: iflag, i
+
+        do i = 1, 6
+            call db1val(et, 1, me%eph%tx(:,i), me%eph%nx, kx, me%eph%bcoef(:,i), rvdot(i), iflag, &
+                        me%inbvx, me%w0, extrap=.false.)
+            if (iflag /= 0) then
+                write(*,*) 'et    = ', et
+                write(*,*) 'iflag = ', iflag
+                error stop 'error calling get_rv_dot'
+            end if
+        end do
+
+    end function get_rv_dot
 
     function get_r(me,et) result(r)
 

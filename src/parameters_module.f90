@@ -11,6 +11,7 @@
 
     ! constants:
     integer,parameter,public  :: n_eoms = 6  !! size of EOM derivative vector [x,y,z,vx,vy,vz]
+    integer,parameter,public  :: n_eoms_stm = n_eoms + n_eoms*n_eoms  !! state and state transition matrix (42)
 
     real(wp),public :: mu_earth   = 3.9860043543609593E+05_wp !! \( \mu_{earth} \)
     real(wp),public :: mu_moon    = 4.9028000661637961E+03_wp !! \( \mu_{moon} \)

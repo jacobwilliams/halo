@@ -34,6 +34,17 @@ Or with Gfortran:
 fpm run halo_solver --profile release --flag "-fopenmp" -- examples/example.json
 ```
 
+### Jacobian options
+
+The solver's Jacobian is computed by finite differences by default (`"jacobian_mode": 1`). With `"jacobian_mode": 2`, it is computed analytically instead: each segment is propagated once with its state transition matrix (using Pines' second partials for the lunar gravity field, in `src/astro_partials_module.f90`), and the epoch partials are computed in closed form. This is faster and more accurate. It requires `"use_splined_ephemeris": true`. Optional `"stm_rtol"` and `"stm_atol"` set the integrator tolerances for the state transition matrix (default: `rtol` and `atol`). See the technical note in `docs/` for details and a comparison.
+
+The tests `partials_test` (the partial derivatives) and `jacobian_test` (both Jacobian methods, compared) are run from the root directory:
+
+```
+fpm test partials_test --profile release
+fpm test jacobian_test --profile release --flag "-fopenmp" -- examples/example_sparse.json
+```
+
 ### GUI
 
 `halo_gui` is a GUI for the solver ([qt-fortran](https://github.com/jacobwilliams/qt-fortran) for the window, [vkframes](https://github.com/jacobwilliams/vkframes) for the 3D view). Choose a config file (default `examples/example_sparse.json`) and click **Run solver**. The solver runs inside the GUI (in a worker thread), its output is shown in the window, and the resulting trajectory is plotted in the Earth-Moon rotating or inertial frame (Moon-centered, colored by the distance from the Moon). With **Plot each iteration** checked, each solver iteration's trajectory is plotted as it solves (sent straight to the 3D view, not through files). **Center** puts the camera's center (what it rotates about) on the central body or on the spacecraft (the camera then moves with it). **Stop** stops the solver at its next iteration. **File > Open Trajectory** plots an existing `traj_*.json` file.

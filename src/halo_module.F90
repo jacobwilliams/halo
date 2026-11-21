@@ -16,6 +16,7 @@
     use splined_ephemeris_module
     use halo_utilities_module
     use moon_frame_module
+    use astro_partials_module
 
     implicit none
 
@@ -89,6 +90,16 @@
         logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model
         procedure(third_body_grav_f),pointer,nopass :: third_body_gravity => null() !! procedure used to compute 3rd body gravity
 
+        ! for the analytic partials (`jacobian_mode=2`):
+        logical :: stm_mode = .false. !! if true, the integrator state includes the
+                                      !! state transition matrix (6 + 36 = 42 variables),
+                                      !! and the Pines gravity routine (with its gradient) is used.
+        logical :: compute_stm = .false. !! if true (during [[propagate_segment_stm]]), the STM
+                                         !! is integrated (otherwise its derivatives are zero)
+        real(wp),dimension(6,6) :: dxf_dx0 = zero !! d(xf_rotating)/d(x0_rotating)
+        real(wp),dimension(6)   :: dxf_dt0 = zero !! d(xf_rotating)/d(t0) [per second], at fixed `tf`
+        real(wp),dimension(6)   :: dxf_dtf = zero !! d(xf_rotating)/d(tf) [per second]
+
         ! for saving the trajectory for plotting:
         type(trajectory) :: traj_inertial  !! in the inertial frame (j2000-moon)
         type(trajectory) :: traj_rotating  !! in the rotating frame (moon-earth, moon-centered)
@@ -101,6 +112,7 @@
         procedure,public :: get_outputs => get_segment_outputs
         procedure,public :: set_outputs => set_segment_outputs
         procedure,public :: propagate   => propagate_segment
+        procedure,public :: propagate_stm => propagate_segment_stm
 
         procedure :: cache
         procedure :: uncache
@@ -228,6 +240,15 @@
                                     !! * 6 - sparse (CRAIG)
                                     !! * 7 - sparse (direct)
 
+        integer :: jacobian_mode = 1  !! how the Jacobian is computed:
+                                      !!
+                                      !! * 1 - finite differences (central differences, see [[halo_grad_sparse]])
+                                      !! * 2 - analytic: the state transition matrix is integrated with each
+                                      !!   segment, and the time partials are computed analytically
+                                      !!   (see [[compute_jacobian_stm]]). Requires `use_splined_ephemeris`.
+        real(wp) :: stm_rtol = -1.0_wp  !! integrator rtol for the STM (<0: use `rtol`)
+        real(wp) :: stm_atol = -1.0_wp  !! integrator atol for the STM (<0: use `atol`)
+
     contains
 
         procedure,public :: init => initialize_the_mission
@@ -244,6 +265,8 @@
         procedure :: get_scales_from_segs
         procedure :: segs_to_propagate
         procedure :: get_sparsity_pattern
+        procedure :: removed_columns
+        procedure :: compute_jacobian_stm
         procedure :: define_problem_size
         procedure :: get_case_name
         procedure :: generate_patch_points
@@ -1413,23 +1436,7 @@
     ! the full pattern was generated above.
     ! Here we just remove the columns (optimization variables) we don't need.
 
-    allocate(cols_to_remove(0))
-    if (me%fix_initial_time) &
-        cols_to_remove = [cols_to_remove, 1]
-    if (me%fix_initial_r) &
-        cols_to_remove = [cols_to_remove, [2,3,4]]
-
-    if (me%fix_ry_at_end_of_rev > 0) then
-        ! remove Ry at end of specified rev
-        ! e.g. rev 1 : SEG8 Ry (km) : column 31
-        !
-        ! patch point: [t rx ry rz vx vy vz]
-        !                    ^^
-        cols_to_remove = [cols_to_remove, me%fix_ry_at_end_of_rev*7*5 - 4]
-    end if
-
-    if (me%fix_final_ry_and_vx) &
-        cols_to_remove = [cols_to_remove, [n-4,n-2]] ! last segment Ry & Vx
+    cols_to_remove = me%removed_columns()
 
     if (size(cols_to_remove) > 0) then
 
@@ -1454,6 +1461,158 @@
     end if
 
     end subroutine get_sparsity_pattern
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The columns (optimization variables) of the full problem that are removed
+!  (fixed) by the problem options. The full problem has 7 columns per node
+!  (`[t, rx, ry, rz, vx, vy, vz]`), with nodes in time order.
+
+    function removed_columns(me) result(cols_to_remove)
+
+    implicit none
+
+    class(mission_type),intent(in) :: me
+    integer,dimension(:),allocatable :: cols_to_remove
+
+    integer :: n  !! number of optimization variables in the full problem
+
+    call me%define_problem_size(n=n, full_problem=.true.)
+
+    allocate(cols_to_remove(0))
+    if (me%fix_initial_time) &
+        cols_to_remove = [cols_to_remove, 1]
+    if (me%fix_initial_r) &
+        cols_to_remove = [cols_to_remove, [2,3,4]]
+
+    if (me%fix_ry_at_end_of_rev > 0) then
+        ! remove Ry at end of specified rev
+        ! e.g. rev 1 : SEG8 Ry (km) : column 31
+        !
+        ! patch point: [t rx ry rz vx vy vz]
+        !                    ^^
+        cols_to_remove = [cols_to_remove, me%fix_ry_at_end_of_rev*7*5 - 4]
+    end if
+
+    if (me%fix_final_ry_and_vx) &
+        cols_to_remove = [cols_to_remove, [n-4,n-2]] ! last segment Ry & Vx
+
+    end function removed_columns
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Compute the (scaled) sparse Jacobian analytically (`jacobian_mode=2`): each segment
+!  is propagated once with its state transition matrix (in parallel, see
+!  [[propagate_segment_stm]]), and the blocks are assembled.
+!
+!  Constraint block `i` (rows `6i-5:6i`) is \( \mathbf{c}_i = \mathbf{x}_{f,2i} - \mathbf{x}_{f,2i-1} \)
+!  (rotating frame). Segment `2i-1` starts at node `i`, and segment `2i` at node `i+1`;
+!  each segment's final epoch is set by the epoch of one of these two nodes (see
+!  [[put_x_in_segments]]). So block row `i` has nonzeros only in the 14 columns of
+!  nodes `i` and `i+1`.
+!
+!  The values are returned in the order of the sparsity pattern ([[get_sparsity_pattern]]).
+
+    subroutine compute_jacobian_stm(me,x,jac)
+
+    implicit none
+
+    class(mission_type),intent(inout) :: me
+    real(wp),dimension(:),intent(in) :: x  !! opt var vector (scaled)
+    real(wp),dimension(:),allocatable,intent(out) :: jac  !! the nonzero Jacobian elements (scaled)
+
+    ! for each of the 8 segments of a rev: its start node, and the node whose epoch sets its final epoch
+    ! (nodes of a rev: 1 periapsis, 2 quarter, 3 apoapsis, 4 three-quarter, 5 next periapsis)
+    integer,dimension(8),parameter :: start_node = [1,2,2,3,3,4,4,5]
+    integer,dimension(8),parameter :: tf_node    = [1,1,3,3,3,3,5,5]
+
+    real(wp),dimension(:,:,:),allocatable :: blk  !! (6,14,n_blocks) the nonzero blocks [unscaled]
+    integer,dimension(:),allocatable :: irow, icol  !! sparsity pattern
+    integer,dimension(:),allocatable :: keep  !! the full-problem column of each column
+    integer,dimension(:),allocatable :: removed  !! the full-problem columns that are removed
+    logical,dimension(:),allocatable :: is_removed
+    real(wp),dimension(6) :: drdot  !! d(rdot)/d(initial rotating-frame state)
+    real(wp),dimension(6,6) :: n_0
+    real(wp),dimension(3) :: r, v
+    real(wp) :: sgn, rmag
+    integer :: i, k, iseg, irev, l, ib, js, ks, cs, ck, n_segs, n_full, m, row, fc, node, cc, rr
+
+    call me%define_problem_size(n_segs=n_segs, m=m)
+    call me%define_problem_size(n=n_full, full_problem=.true.)
+
+    ! set the segment inputs, and propagate them all with their STMs:
+    call me%put_x_in_segments(x)
+    !$OMP PARALLEL DO
+    do i = 1, n_segs
+        call me%segs(i)%propagate_stm()
+    end do
+    !$OMP END PARALLEL DO
+
+    ! assemble the blocks (unscaled; times in days):
+    allocate(blk(6,14,4*me%n_revs))
+    blk = zero
+    do iseg = 1, n_segs
+        irev = (iseg-1)/8           ! 0-based rev
+        l    = iseg - 8*irev        ! segment in the rev (1-8)
+        ib   = (iseg+1)/2           ! constraint block
+        sgn  = merge(one, -one, mod(iseg,2)==0)
+        js   = 4*irev + start_node(l)  ! start node
+        ks   = 4*irev + tf_node(l)     ! node that sets the final epoch
+        cs   = (js-ib)*7               ! column offset of the start node in the block (0 or 7)
+        ck   = (ks-ib)*7               ! column offset of the final-epoch node
+        associate (seg => me%segs(iseg))
+            blk(:,cs+2:cs+7,ib) = blk(:,cs+2:cs+7,ib) + sgn*seg%dxf_dx0
+            blk(:,cs+1,ib)      = blk(:,cs+1,ib)      + sgn*seg%dxf_dt0*day2sec
+            blk(:,ck+1,ib)      = blk(:,ck+1,ib)      + sgn*seg%dxf_dtf*day2sec
+        end associate
+    end do
+
+    ! the optional rdot=0 constraint (a function of the first inertial state, which
+    ! is N(t0) times the rotating-frame state). [only the state columns are in the pattern]
+    drdot = zero
+    if (me%constrain_initial_rdot) then
+        r = me%segs(1)%data%x0(1:3)
+        v = me%segs(1)%data%x0(4:6)
+        rmag = norm2(r)
+        call earth_moon_frame_matrices(me%segs(1), me%segs(1)%data%et_ref + me%segs(1)%data%t0*day2sec, n=n_0)
+        drdot = matmul([v/rmag - dot_product(r,v)*r/rmag**3, r/rmag], n_0)
+    end if
+
+    ! map each column of the problem to its full-problem column:
+    removed = me%removed_columns()
+    allocate(is_removed(n_full))
+    is_removed = .false.
+    if (size(removed)>0) is_removed(removed) = .true.
+    allocate(keep(n_full - count(is_removed)))  ! (a loop: no large temporaries on the stack)
+    k = 0
+    do i = 1, n_full
+        if (.not. is_removed(i)) then
+            k = k + 1
+            keep(k) = i
+        end if
+    end do
+
+    ! fill the values in the sparsity pattern order, and scale them:
+    call me%get_sparsity_pattern(irow,icol)
+    allocate(jac(size(irow)))
+    do k = 1, size(irow)
+        row = irow(k)
+        fc  = keep(icol(k))
+        if (me%constrain_initial_rdot .and. row==m) then
+            jac(k) = drdot(fc-1)  ! (columns 2-7: the first node's state)
+        else
+            ib   = (row-1)/6 + 1
+            rr   = row - 6*(ib-1)
+            node = (fc-1)/7 + 1
+            cc   = fc - 7*(node-1)
+            jac(k) = blk(rr, (node-ib)*7 + cc, ib)
+        end if
+        jac(k) = jac(k) * me%xscale(icol(k)) / me%fscale(row)
+    end do
+
+    end subroutine compute_jacobian_stm
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1488,6 +1647,7 @@
     logical :: use_openmp !! if OpenMP is being used
     real(wp) :: et0 !! initial et for splined ephemeris
     real(wp) :: etf !! final et for splined ephemeirs
+    real(wp),dimension(:),allocatable :: stm_rtols, stm_atols !! integrator tolerances for `jacobian_mode=2`
 
     use_openmp = .false.
 !$  use_openmp = .true.
@@ -1577,11 +1737,33 @@
     allocate(me%segs(n_segs))
 
     ! set up the integrators:
+    if (me%jacobian_mode==2) then
+        if (.not. me%use_splined_ephemeris) &
+            error stop 'error: jacobian_mode=2 requires use_splined_ephemeris=true'
+        ! tolerances for the state, and for the STM:
+        allocate(stm_rtols(n_eoms_stm), stm_atols(n_eoms_stm))
+        stm_rtols(1:n_eoms) = me%rtol
+        stm_atols(1:n_eoms) = me%atol
+        stm_rtols(n_eoms+1:) = merge(me%stm_rtol, me%rtol, me%stm_rtol>=zero)
+        stm_atols(n_eoms+1:) = merge(me%stm_atol, me%atol, me%stm_atol>=zero)
+        write(*,'(A)') ' * Using analytic partials (state transition matrix)'
+    end if
+
     do i = 1, n_segs
 
-        call me%segs(i)%initialize(n_eoms,maxnum,ballistic_derivs,&
-                                   [me%rtol],[me%atol],&
-                                   report=trajectory_export_func)
+        if (me%jacobian_mode==2) then
+            ! the state and the STM are integrated together. When the STM is not needed
+            ! (function evaluations), its derivatives are zero, so it costs very little
+            ! and does not affect the step sizes.
+            call me%segs(i)%initialize(n_eoms_stm,maxnum,ballistic_derivs,&
+                                       stm_rtols,stm_atols,&
+                                       report=trajectory_export_func)
+            me%segs(i)%stm_mode = .true.
+        else
+            call me%segs(i)%initialize(n_eoms,maxnum,ballistic_derivs,&
+                                       [me%rtol],[me%atol],&
+                                       report=trajectory_export_func)
+        end if
 
         ! make a copy of this global variable in the segment.
         ! [this was set in read_config_file]
@@ -1815,6 +1997,8 @@
     class(ddeabm_class),intent(inout) :: me
     real(wp),intent(in)               :: t    !! time [sec from epoch]
     real(wp),dimension(:),intent(in)  :: x    !! state [r,v] in inertial frame (moon-centered)
+                                              !! (and, for `stm_mode`, the 6x6 state transition matrix
+                                              !! \( \Phi \), column by column)
     real(wp),dimension(:),intent(out) :: xdot !! derivative of state (\( dx/dt \))
 
     real(wp),dimension(3) :: r,rb,v
@@ -1827,6 +2011,10 @@
     real(wp),dimension(3) :: a_third_body  !! total third-body acc
     real(wp) :: et !! ephemeris time of `t`
     logical :: status_ok
+    logical :: stm  !! if the STM derivatives are to be computed
+    real(wp),dimension(3,3) :: ggrad  !! gravity gradient d(acc)/dr [inertial]
+    real(wp),dimension(3,3) :: hb     !! central body gravity gradient [body-fixed frame]
+    real(wp),dimension(6,6) :: phi, phidot
 
     select type (me)
 
@@ -1835,6 +2023,8 @@
         ! get state:
         r = x(1:3)
         v = x(4:6)
+        stm = me%stm_mode .and. me%compute_stm .and. size(x)==n_eoms_stm
+        ggrad = zero
 
         ! compute ephemeris time [sec]:
         et = me%data%et_ref + t
@@ -1842,6 +2032,7 @@
         if (me%pointmass_central_body) then
             ! pointmass moon gravity model
             a_geopot = -mu_moon / norm2(r)**3 * r
+            if (stm) ggrad = pointmass_gravity_gradient(r,mu_moon)
         else
             ! geopotential gravity:
             ! first get the rotation matrix from inertial to body-fixed Moon frame
@@ -1851,7 +2042,19 @@
             case default; error stop 'invalid grav_frame in ballistic_derivs'
             end select
             rb = matmul(rotmat,r)           ! r in body-fixed frame
-            call me%grav%get_acc(rb,grav_n,grav_m,a_geopot)  ! get the acc due to the geopotential
+            if (me%stm_mode) then
+                ! Pines, with the gradient (the same coefficients as the toolkit's model)
+                if (stm) then
+                    call pines_gravity(rb,grav_n,grav_m,me%grav%re,me%grav%mu,&
+                                       me%grav%cnm,me%grav%snm,a_geopot,hb)
+                    ggrad = matmul(transpose(rotmat),matmul(hb,rotmat))  ! gradient in the inertial frame
+                else
+                    call pines_gravity(rb,grav_n,grav_m,me%grav%re,me%grav%mu,&
+                                       me%grav%cnm,me%grav%snm,a_geopot)
+                end if
+            else
+                call me%grav%get_acc(rb,grav_n,grav_m,a_geopot)  ! get the acc due to the geopotential
+            end if
             a_geopot = matmul(transpose(rotmat),a_geopot)    ! convert acc back to inertial frame
         end if
 
@@ -1862,21 +2065,36 @@
             call me%eph%get_r(et,body_earth,body_moon,r_earth_wrt_moon,status_ok)
             call me%third_body_gravity(r,r_earth_wrt_moon,mu_earth,a_earth)
             a_third_body = a_third_body + a_earth
+            if (stm) ggrad = ggrad + third_body_gravity_gradient(r,r_earth_wrt_moon,mu_earth)
         end if
         if (me%include_pointmass_sun) then
             call me%eph%get_r(et,body_sun,body_moon,r_sun_wrt_moon,status_ok)
             call me%third_body_gravity(r,r_sun_wrt_moon,mu_sun,a_sun)
             a_third_body = a_third_body + a_sun
+            if (stm) ggrad = ggrad + third_body_gravity_gradient(r,r_sun_wrt_moon,mu_sun)
         end if
         if (me%include_pointmass_jupiter) then
             call me%eph%get_r(et,body_jupiter,body_moon,r_jupiter_wrt_moon,status_ok)
             call me%third_body_gravity(r,r_jupiter_wrt_moon,mu_jupiter, a_jupiter)
             a_third_body = a_third_body + a_jupiter
+            if (stm) ggrad = ggrad + third_body_gravity_gradient(r,r_jupiter_wrt_moon,mu_jupiter)
         end if
 
         !total derivative vector:
         xdot(1:3) = v
         xdot(4:6) = a_geopot + a_third_body
+
+        if (size(x) > n_eoms) then
+            if (stm) then
+                ! variational equations: dPhi/dt = [0 I; G 0] Phi
+                phi = reshape(x(n_eoms+1:n_eoms_stm), [6,6])
+                phidot(1:3,:) = phi(4:6,:)
+                phidot(4:6,:) = matmul(ggrad, phi(1:3,:))
+                xdot(n_eoms+1:n_eoms_stm) = reshape(phidot, [n_eoms*n_eoms])
+            else
+                xdot(n_eoms+1:) = zero  ! the STM is not being computed
+            end if
+        end if
 
     class default
 
@@ -2007,7 +2225,9 @@
     integer  :: idid
     real(wp) :: t
     real(wp) :: tf
-    real(wp),dimension(6) :: x
+    real(wp),dimension(n_eoms_stm) :: x  !! the integration state (only the first `n_eoms` are used
+                                         !! unless `stm_mode`, see [[propagate_segment_stm]])
+    integer :: neq !! number of integrated variables
     type(icrf_frame) :: inertial
     type(two_body_rotating_frame) :: rotating
     real(wp) :: etf
@@ -2024,7 +2244,10 @@
 
     t  = me%data%t0 * day2sec  ! initial time in seconds from epoch
     tf = me%data%tf * day2sec  ! final time in seconds from epoch
-    x  = me%data%x0   ! inertial state
+    neq = merge(n_eoms_stm, n_eoms, me%stm_mode)
+    x  = zero
+    x(1:n_eoms) = me%data%x0   ! inertial state
+    if (me%stm_mode) x(n_eoms+1:neq) = identity_stm()  ! (not integrated here: its derivatives are zero)
 
     !write(*,*) ''
     !write(*,*) 'propagate segment '//me%name, t0, tf
@@ -2032,18 +2255,19 @@
     !write(*,'(A,*(F15.3,1X))') 'x0:',x
     !write(*,*) 'tf:',tf
 
+    me%compute_stm = .false.
     call me%first_call()  !restarting the integration
     if (present(tstep)) then
-        call me%integrate(t,x,tf,idid=idid,integration_mode=integration_mode,tstep=tstep)
+        call me%integrate(t,x(1:neq),tf,idid=idid,integration_mode=integration_mode,tstep=tstep)
     else
-        call me%integrate(t,x,tf,idid=idid,integration_mode=integration_mode)
+        call me%integrate(t,x(1:neq),tf,idid=idid,integration_mode=integration_mode)
     end if
     if (idid<0) then
         write(*,'(A,*(I5/))')    'idid: ',idid
         error stop 'error in integrator'
     end if
 
-    xf = x  ! final state [inertial frame]
+    xf = x(1:n_eoms)  ! final state [inertial frame]
 
     ! also save the rotating frame state at tf (to compute the constraint violations):
     etf = me%data%et_ref + tf  ! convert to ephemeris time [sec]
@@ -2054,13 +2278,145 @@
                                        et=etf)
 
     ! from inertial to rotating:
-    call inertial%transform(x,rotating,etf,me%eph,xf_rotating,status_ok)
+    call inertial%transform(xf,rotating,etf,me%eph,xf_rotating,status_ok)
     if (.not. status_ok) error stop 'transformation error in propagate_segment'
 
     ! put final states in the segment:
     call me%set_outputs(xf,xf_rotating)
 
     end subroutine propagate_segment
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Propagate a segment with its state transition matrix, and compute the analytic
+!  partials of its final rotating-frame state (for `jacobian_mode=2`):
+!
+!  * `dxf_dx0` \( = M(t_f)\,\Phi\,N(t_0) \): w.r.t. the initial rotating-frame state,
+!  * `dxf_dt0` \( = M(t_f)\,\Phi\,(\dot{N}(t_0)\,\mathbf{y}_0 - \mathbf{f}(t_0)) \): w.r.t. the
+!    initial epoch (at fixed final epoch, and fixed rotating-frame initial state \( \mathbf{y}_0 \)),
+!  * `dxf_dtf` \( = \dot{M}(t_f)\,\mathbf{x}_f + M(t_f)\,\mathbf{f}(t_f) \): w.r.t. the final epoch,
+!
+!  where \( \Phi \) is the inertial state transition matrix, \( \mathbf{f} \) the equations
+!  of motion, and \( M \), \( N = M^{-1} \) the inertial-to-rotating and rotating-to-inertial
+!  transformations (see [[two_body_rotating_frame_matrices]]). The epoch partial uses
+!  \( \partial \mathbf{x}(t_f)/\partial t_0 = -\Phi(t_f,t_0)\,\mathbf{f}(t_0) \).
+!
+!  The final state (and its rotating-frame version) is also set, as by [[propagate_segment]].
+
+    subroutine propagate_segment_stm(me)
+
+    implicit none
+
+    class(segment),intent(inout) :: me
+
+    integer  :: idid
+    real(wp) :: t, t0, tf, et0, etf
+    real(wp),dimension(n_eoms_stm) :: x
+    real(wp),dimension(6) :: xf, xf_rotating, f0, ff
+    real(wp),dimension(6,6) :: phi, m_f, mdot_f, n_0, ndot_0
+    type(icrf_frame) :: inertial
+    type(two_body_rotating_frame) :: rotating
+    logical :: status_ok
+
+    if (.not. me%stm_mode) error stop 'error: propagate_segment_stm requires stm_mode'
+
+    t0 = me%data%t0 * day2sec  ! initial time in seconds from epoch
+    tf = me%data%tf * day2sec  ! final time in seconds from epoch
+    t  = t0
+    x(1:n_eoms) = me%data%x0   ! inertial state
+    x(n_eoms+1:) = identity_stm()
+
+    me%compute_stm = .true.
+    call me%first_call()
+    call me%integrate(t,x,tf,idid=idid,integration_mode=1)
+    me%compute_stm = .false.
+    if (idid<0) then
+        write(*,'(A,*(I5/))') 'idid: ',idid
+        error stop 'error in integrator'
+    end if
+
+    xf  = x(1:n_eoms)
+    phi = reshape(x(n_eoms+1:), [6,6])
+
+    ! the final state in the rotating frame (as in propagate_segment):
+    etf = me%data%et_ref + tf
+    inertial = icrf_frame(b=body_moon)
+    rotating = two_body_rotating_frame(primary_body=body_earth,&
+                                       secondary_body=body_moon,&
+                                       center=center_at_secondary_body,&
+                                       et=etf)
+    call inertial%transform(xf,rotating,etf,me%eph,xf_rotating,status_ok)
+    if (.not. status_ok) error stop 'transformation error in propagate_segment_stm'
+    call me%set_outputs(xf,xf_rotating)
+
+    ! the frame transformations and their time derivatives:
+    et0 = me%data%et_ref + t0
+    call earth_moon_frame_matrices(me, et0, n=n_0, ndot=ndot_0)
+    call earth_moon_frame_matrices(me, etf, m=m_f, mdot=mdot_f)
+
+    ! equations of motion at the start and the end:
+    call ballistic_derivs(me, t0, me%data%x0, f0)
+    call ballistic_derivs(me, tf, xf, ff)
+
+    me%dxf_dx0 = matmul(m_f, matmul(phi, n_0))
+    me%dxf_dt0 = matmul(m_f, matmul(phi, matmul(ndot_0, me%data%x0_rotating) - f0))
+    me%dxf_dtf = matmul(mdot_f, xf) + matmul(m_f, ff)
+
+    end subroutine propagate_segment_stm
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The Moon-centered Earth-Moon rotating frame transformations at `et` (and their
+!  time derivatives), consistent with the toolkit's `two_body_rotating_frame`
+!  as used in [[set_segment_inputs]] and [[propagate_segment]].
+!  Requires the splined ephemeris (for the time derivatives).
+
+    subroutine earth_moon_frame_matrices(seg, et, m, mdot, n, ndot)
+
+    implicit none
+
+    class(segment),intent(inout) :: seg
+    real(wp),intent(in) :: et  !! ephemeris time [sec]
+    real(wp),dimension(6,6),intent(out),optional :: m     !! inertial to rotating
+    real(wp),dimension(6,6),intent(out),optional :: mdot  !! dm/dt
+    real(wp),dimension(6,6),intent(out),optional :: n     !! rotating to inertial
+    real(wp),dimension(6,6),intent(out),optional :: ndot  !! dn/dt
+
+    real(wp),dimension(6) :: rv, rvdot
+    logical :: status_ok
+
+    select type (eph => seg%eph)
+    class is (jpl_ephemeris_splined)
+        call eph%get_rv(et,body_moon,body_earth,rv,status_ok)  ! (secondary w.r.t. primary)
+        if (status_ok) call eph%get_rv_derivative(et,body_moon,body_earth,rvdot,status_ok)
+    class default
+        error stop 'error: earth_moon_frame_matrices requires the splined ephemeris'
+    end select
+    if (.not. status_ok) error stop 'ephemeris error in earth_moon_frame_matrices'
+
+    call two_body_rotating_frame_matrices(rv, rvdot(1:3), rvdot(4:6), m, mdot, n, ndot)
+
+    end subroutine earth_moon_frame_matrices
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The 6x6 identity matrix, as a vector (the initial state transition matrix).
+
+    pure function identity_stm() result(phi)
+
+    real(wp),dimension(n_eoms*n_eoms) :: phi
+
+    integer :: i
+
+    phi = zero
+    do i = 1, n_eoms
+        phi((i-1)*n_eoms + i) = one
+    end do
+
+    end function identity_stm
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2231,6 +2587,8 @@
     real(wp),dimension(:,:),allocatable :: jac !! the jacobian matrix returned by `numdiff`
         ! ...note: need to modify so it doesn't
         !          have to return an allocatable array
+    real(wp),dimension(:),allocatable :: jac_sparse !! for `jacobian_mode=2`
+    integer,dimension(:),allocatable :: irow, icol  !! for `jacobian_mode=2`
 
     integer :: i  !! seg number counter
 
@@ -2242,9 +2600,19 @@
             call me%mission%segs(i)%cache()
         end do
 
-        ! use numdiff to compute the jacobian matrix (dense version)
-        call me%mission%compute_jacobian_dense(x,jac)
-        g = jac
+        if (me%mission%jacobian_mode==2) then
+            ! analytic (sparse), scattered into the dense matrix:
+            call me%mission%compute_jacobian_stm(x,jac_sparse)
+            call me%mission%get_sparsity_pattern(irow,icol)
+            g = zero
+            do i = 1, size(irow)
+                g(irow(i),icol(i)) = jac_sparse(i)
+            end do
+        else
+            ! use numdiff to compute the jacobian matrix (dense version)
+            call me%mission%compute_jacobian_dense(x,jac)
+            g = jac
+        end if
 
         ! restore data just in case:
         do i=1,size(me%mission%segs)
@@ -2285,8 +2653,13 @@
             call me%mission%segs(i)%cache()
         end do
 
-        ! use numdiff to compute the jacobian matrix (sparse version)
-        call me%mission%compute_jacobian(x,jac)
+        if (me%mission%jacobian_mode==2) then
+            ! analytic: propagate each segment with its STM
+            call me%mission%compute_jacobian_stm(x,jac)
+        else
+            ! use numdiff to compute the jacobian matrix (sparse version)
+            call me%mission%compute_jacobian(x,jac)
+        end if
         g = jac
 
         ! restore data just in case:
@@ -3340,7 +3713,7 @@
                                            center=center_at_secondary_body,&
                                            et=et)
         ! from inertial to rotating:
-        call inertial%transform(x,rotating,et,me%eph,x_rotating,status_ok)
+        call inertial%transform(x(1:6),rotating,et,me%eph,x_rotating,status_ok)
         if (.not. status_ok) error stop 'transformation error in propagate_segment'
 
         ! also convert to sun-earth rotating for plotting: -- really should only do when when exporting the json traj file
@@ -3349,11 +3722,11 @@
                                               center=center_at_secondary_body,&
                                               et=et)
         ! from inertial to rotating:
-        call inertial%transform(x,se_rotating,et,me%eph,x_se_rotating,status_ok)
+        call inertial%transform(x(1:6),se_rotating,et,me%eph,x_se_rotating,status_ok)
         if (.not. status_ok) error stop 'transformation error in propagate_segment'
 
         ! save both the inertial and rotating trajectories:
-        call me%traj_inertial%add(et,x)
+        call me%traj_inertial%add(et,x(1:6))
         call me%traj_rotating%add(et,x_rotating)
         call me%traj_se_rotating%add(et,x_se_rotating)
 
@@ -3481,6 +3854,12 @@
 
     call f%get('solver_mode', me%mission%solver_mode, found)
     if (.not. found) me%mission%solver_mode = 1
+
+    call f%get('jacobian_mode', me%mission%jacobian_mode, found)
+    if (.not. found) me%mission%jacobian_mode = 1
+    if (me%mission%jacobian_mode<1 .or. me%mission%jacobian_mode>2) error stop 'error: jacobian_mode must be 1 or 2.'
+    call f%get('stm_rtol', me%mission%stm_rtol, found)
+    call f%get('stm_atol', me%mission%stm_atol, found)
 
     !optional global parameter inputs:
     call f%get('mu_earth'  , mu_earth,  found)

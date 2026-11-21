@@ -104,10 +104,13 @@
     // "atol": 1.0e-10,
 
     //nlesolver tol:
-      "nlesolver_tol": 1.0e-6,
+      // "nlesolver_tol": 1.0e-6,
     // "nlesolver_tol": 1.0e-9,
-    // "nlesolver_tol": 1.0e-12,
+    "nlesolver_tol": 1.0e-10,
     // "nlesolver_tol": 1.0e-20,  // use for quad precision
+
+    // "jacobian_mode": 1, // finite diffs
+    "jacobian_mode": 2, // stms
 
   //  "solver_mode": 1, // dense solver (LAPACK)
   //  "solver_mode": 2, // sparse solver (LSQR)
@@ -121,11 +124,11 @@
   //"n_revs": 2,
   //"n_revs": 10,
   // "n_revs": 5,
-  "n_revs": 20,
+  //"n_revs": 20,
   // "n_revs": 100,  //689 days
   //"n_revs": 200,
   //  "n_revs": 1000,   // tests above
-  //  "n_revs": 1120,   // 20 years <--- now try this
+    "n_revs": 1120,   // 20 years <--- now try this
 
     // data files:
     "use_splined_ephemeris": true,  // precompute a spline of the ephemeris and use that during solving
@@ -166,6 +169,7 @@
     // "initial_guess_from_file": "./solution_20251204120000_L2_S_NREVS=20.json",
     // "initial_guess_from_file": "./solution_20231231242833_L2_S_NREVS=100.json",
     // "initial_guess_from_file": "./solution_20251213060000_L2_S_NREVS=100.json",
+    // "initial_guess_from_file": "./solution_20251229220000_L2_S_NREVS=1120.json",
 
     "generate_plots": false,
     "generate_trajectory_files": true,
