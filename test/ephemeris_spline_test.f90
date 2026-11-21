@@ -13,7 +13,7 @@
 !  * the splined ephemeris (`initialize_splinded_ephemeris`: opening the file, and
 !    evaluating DE421 at each spline point for the Earth, Sun, SSB and Jupiter
 !    w.r.t. the Moon, and fitting the splines),
-!  * the splined MOON_PA frame (`moon_frame_interpolater%initialize`: reading the CSV
+!  * the splined MOON_PA frame (`moon_pa_frame%initialize`: reading the CSV
 !    file and fitting the splines; only used with `grav_frame=2`),
 !  * the whole problem setup (`mission%init`, with the config's options: it includes
 !    the above, and the per-segment copies made for OpenMP).
@@ -29,7 +29,7 @@
     use halo_module
     use halo_kinds_module, only: wp
     use splined_ephemeris_module, only: jpl_ephemeris_splined
-    use moon_frame_module, only: moon_frame_interpolater
+    use splined_moon_frame_module, only: moon_pa_frame
     use fortran_astrodynamics_toolkit, only: jpl_ephemeris
     use iso_fortran_env, only: output_unit
 !$  use omp_lib
@@ -129,7 +129,7 @@
         function time_moon_pa() result(t)
             !! the splined MOON_PA frame, as in the solver
             real(wp) :: t
-            type(moon_frame_interpolater),allocatable :: moon_pa
+            type(moon_pa_frame),allocatable :: moon_pa
             allocate(moon_pa)
             t0 = wall_time()
             call moon_pa%initialize(solver%mission%moon_pa_file, et0=et0, etf=etf)

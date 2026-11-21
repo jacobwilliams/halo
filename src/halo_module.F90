@@ -15,7 +15,7 @@
     use config_file_module
     use splined_ephemeris_module
     use halo_utilities_module
-    use moon_frame_module
+    use splined_moon_frame_module
     use astro_partials_module
     use text_buffer_module
 
@@ -84,7 +84,7 @@
         ! Or, when using OpenMP, they are allocated in each segment.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model
         class(jpl_ephemeris),pointer :: eph => null()  !! the ephemeris
-        type(moon_frame_interpolater),pointer :: moon_pa => null() !! the moon_pa frame interpolater
+        type(moon_pa_frame),pointer :: moon_pa => null() !! the moon_pa frame interpolater (its workspace: the splines are shared)
         logical :: pointmass_central_body = .false.
         logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
         logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
@@ -135,7 +135,7 @@
                                                    !! otherwise, the `grav` model is used.
         type(geopotential_model_pines),pointer :: grav => null() !! central body geopotential model [global]
         class(jpl_ephemeris),pointer :: eph => null()            !! the ephemeris [global]
-        type(moon_frame_interpolater),pointer :: moon_pa => null() !! the moon_pa frame interpolater [global]
+        type(moon_pa_frame),pointer :: moon_pa => null() !! the moon_pa frame interpolater [global]
         logical :: include_pointmass_earth = .true. !! if true, earth is included as a pointmass in the force model
         logical :: include_pointmass_sun = .true. !! if true, sun is included as a pointmass in the force model
         logical :: include_pointmass_jupiter = .false. !! if true, jupiter is included as a pointmass in the force model

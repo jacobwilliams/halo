@@ -45,6 +45,8 @@ fpm test partials_test --profile release
 fpm test jacobian_test --profile release --flag "-fopenmp" -- examples/example_sparse.json
 ```
 
+`moon_frame_test` checks the splined MOON_PA frame (`src/splined_moon_frame_module.f90`, used with `"grav_frame": 2`) against the [moonframe](https://github.com/jacobwilliams/moonframe) library, which is only a test dependency: the rotation matrices must be identical (`fpm test moon_frame_test --profile release --flag "-fopenmp"`).
+
 `text_buffer_test` checks the number formatting used to write the trajectory JSON file (every number must read back exactly):
 
 ```
