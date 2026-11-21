@@ -21,8 +21,10 @@
 !    its `eclipse_*.json` file, if there is one).
 !  * Plots (tabs next to the solver output): the constraint defects at the segments'
 !    interfaces (|dr| and |dv| where segments 2k-1 and 2k end; updated at each
-!    iteration while solving), and the eclipses (`phi` < 0: in the Earth's shadow)
-!    over time, with the current time.
+!    iteration while solving), the epoch drift (how far each iteration's epochs at
+!    those constraint points have moved from the initial guess's, while solving),
+!    and the eclipses (`phi` < 0: in the Earth's shadow) over time, with the
+!    current time.
 !  * The trajectory is drawn in the Moon-centered Earth-Moon rotating frame, the
 !    Moon-centered inertial (J2000) frame, or the Earth-centered Sun-Earth rotating
 !    frame (with the Earth's umbra and penumbra, along +x, away from the Sun), as in
@@ -121,6 +123,8 @@
     integer,parameter :: plot_dv(3)         = [255, 110, 110]  !! |dv| (red)
     integer,parameter :: plot_phi(3)        = [175, 145, 255]  !! eclipses' phi (violet)
     integer,parameter :: plot_now(3)        = [255, 180, 50]   !! the current time (orange)
+    integer,parameter :: plot_drift(3)      = [90, 170, 255]   !! the latest iteration's epoch drift (blue)
+    integer,parameter :: plot_drift_old(3)  = [70, 82, 105]    !! the earlier iterations' (dim)
 
     !> the window's colors (dark, like the plots): [r, g, b], 0 to 255
     integer,parameter :: ui_window(3)    = [30, 31, 34]     !! panels' background
@@ -202,6 +206,13 @@
         real(wp),dimension(:,:),allocatable :: defects  !! (2,nseg/2) |dr| (km), |dv| (km/s)
     end type iteration_points
 
+    !> One iteration's epochs at the constraint points, made by the worker thread and
+    !> handed to the GUI thread (which deletes it) through `solver_job%epochs`.
+    type :: iteration_epochs
+        integer :: iter = 0
+        real(wp),dimension(:),allocatable :: et  !! (npairs) ET (sec)
+    end type iteration_epochs
+
     !> A trajectory read from a `traj_*.json` file (and its eclipse file), ready to plot
     !> (see [[read_trajectory]]: it can be read in the worker thread).
     type :: trajectory_data
@@ -224,6 +235,8 @@
         character(len=:),allocatable :: read_error  !! why it couldn't be read
         ! iteration points: (the address of an iteration_points, in two halves)
         type(QSignalInt2) :: iteration
+        ! iteration epochs: (the address of an iteration_epochs, in two halves)
+        type(QSignalInt2) :: epochs
     end type solver_job
 
     !> The reader thread's job: read the pipe `fd` until it ends, sending what
@@ -262,8 +275,13 @@
         logical :: slider_setting = .false.
         type(QPlainTextEdit) :: log
         type(QTabWidget) :: bottom_tabs  !! the solver output, and the plots
-        type(QtfWidget) :: defects_plot, eclipse_plot
+        type(QtfWidget) :: defects_plot, eclipse_plot, drift_plot
         ! the plots' data
+        real(wp),dimension(:),allocatable :: drift_guess  !! (npairs) the run's initial guess's epochs at the
+                                                          !! constraint points (ET sec)
+        real(wp),dimension(:,:),allocatable :: drift  !! (npairs,ndrift) each iteration's drift from them (hours)
+        integer,dimension(:),allocatable :: drift_iter  !! (ndrift) the iteration numbers
+        integer :: ndrift = 0  !! the number of iterations received
         real(wp),dimension(:,:),allocatable :: defects  !! (2,npairs) |dr| (km), |dv| (km/s) at the interfaces
         character(len=:),allocatable :: defects_title
         logical :: has_eclipses = .false.  !! eclipse data for the trajectory shown
@@ -311,7 +329,7 @@
         integer :: frame_at_start = ROTATING  !! --frame n
         integer :: color_at_start = COLOR_ALTITUDE  !! --color altitude|eclipse|none
         integer :: center_at_start = CENTER_BODY  !! --center body|spacecraft
-        integer :: tab_at_start = 0  !! --tab n (the bottom tabs: 0 output, 1 defects, 2 eclipses)
+        integer :: tab_at_start = 0  !! --tab n (the bottom tabs: 0 output, 1 defects, 2 epoch drift, 3 eclipses)
         type(DemoOptions) :: options  !! --capture, --quit-after (for testing)
     end type app_t
 
@@ -583,6 +601,7 @@
         call error_message(msg)
         return
     end if
+    call clear_drift()  ! (a file has no initial guess: the drift is only for a solve)
     call show_trajectory(d, file, keep_view)
 
     end function load_trajectory
@@ -1498,6 +1517,7 @@
     app%job%iterations = app%plot_iterations%isChecked()
     if (allocated(app%job%traj_file)) deallocate(app%job%traj_file)
     call clear_solution()
+    call clear_drift()
     app%plotted_this_run = .false.
     call clear_eclipses()  ! (the iterations have none; the solution's are read when it's done)
     app%running = .true.
@@ -1525,10 +1545,11 @@
         if (job%iterations) then
             call halo_solver_main(job%config, .false., gui=.true., &
                                   iteration_callback=send_iteration, stop_check=stop_requested, &
-                                  traj_file=job%traj_file)
+                                  traj_file=job%traj_file, epoch_callback=send_epochs)
         else
             call halo_solver_main(job%config, .false., gui=.true., &
-                                  stop_check=stop_requested, traj_file=job%traj_file)
+                                  stop_check=stop_requested, traj_file=job%traj_file, &
+                                  epoch_callback=send_epochs)
         end if
         ! read the solution's trajectory here too (large files take seconds to read,
         ! which would freeze the window in the GUI thread). [[on_solver_finished]] plots it.
@@ -1595,6 +1616,91 @@
     call app%job%iteration%emit(int(halves(1)), int(halves(2)))  ! (delivered on the GUI thread)
 
     end subroutine send_iteration
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The solver's epoch callback (worker thread): copy the epochs at the constraint
+!  points to a new `iteration_epochs`, and hand it to the GUI thread (`on_epochs`),
+!  which keeps them and deletes it.
+
+    subroutine send_epochs(iter, et)
+
+    integer,intent(in) :: iter
+    real(hwp),dimension(:),intent(in) :: et
+
+    type(iteration_epochs),pointer :: p
+    integer(c_intptr_t) :: address
+    integer(int32),dimension(2) :: halves
+    integer :: i
+
+    allocate(p)
+    p%iter = iter
+    allocate(p%et(size(et)))
+    do i = 1, size(et)
+        p%et(i) = real(et(i), wp)
+    end do
+    address = transfer(c_loc(p), address)
+    halves = transfer(address, halves)
+    call app%job%epochs%emit(int(halves(1)), int(halves(2)))  ! (delivered on the GUI thread)
+
+    end subroutine send_epochs
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  An iteration's epochs at the constraint points from the worker (GUI thread): the
+!  first ones of a run are the initial guess's; keep each iteration's drift from
+!  them, and redraw the plot. Then delete them.
+
+    subroutine on_epochs(half1, half2, data)
+
+    integer,intent(in) :: half1, half2
+    class(*),intent(inout),optional :: data
+
+    type(iteration_epochs),pointer :: p
+    integer(c_intptr_t) :: address
+    type(c_ptr) :: cp
+    real(wp),dimension(:,:),allocatable :: drift_new
+    integer,dimension(:),allocatable :: iter_new
+    integer :: n
+
+    address = transfer([int(half1,int32), int(half2,int32)], address)
+    cp = transfer(address, cp)
+    call c_f_pointer(cp, p)
+
+    n = size(p%et)
+    if (.not. allocated(app%drift_guess)) then
+        app%drift_guess = p%et  ! (the run's first: the initial guess)
+        allocate(app%drift(n, 8), app%drift_iter(8))
+        app%ndrift = 0
+    end if
+    if (n == size(app%drift_guess)) then
+        if (app%ndrift == size(app%drift, 2)) then  ! (room for more: copies on the heap)
+            allocate(drift_new(n, 2*app%ndrift), iter_new(2*app%ndrift))
+            drift_new(:, 1:app%ndrift) = app%drift
+            iter_new(1:app%ndrift) = app%drift_iter
+            call move_alloc(drift_new, app%drift)
+            call move_alloc(iter_new, app%drift_iter)
+        end if
+        app%ndrift = app%ndrift + 1
+        app%drift(:, app%ndrift) = (p%et - app%drift_guess) / 3600.0_wp
+        app%drift_iter(app%ndrift) = p%iter
+        call app%drift_plot%update()
+    end if
+    deallocate(p)
+
+    end subroutine on_epochs
+!*****************************************************************************************
+
+!*****************************************************************************************
+    subroutine clear_drift()  !! no epoch drift data (a new run, or a trajectory file)
+    if (allocated(app%drift_guess)) deallocate(app%drift_guess)
+    if (allocated(app%drift)) deallocate(app%drift)
+    if (allocated(app%drift_iter)) deallocate(app%drift_iter)
+    app%ndrift = 0
+    call app%drift_plot%update()
+    end subroutine clear_drift
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2182,12 +2288,16 @@
     app%defects_plot = QtfWidget()
     call app%defects_plot%setMinimumSize(300, 150)
     call app%defects_plot%paintEvent%connect(on_paint_defects)
+    app%drift_plot = QtfWidget()
+    call app%drift_plot%setMinimumSize(300, 150)
+    call app%drift_plot%paintEvent%connect(on_paint_drift)
     app%eclipse_plot = QtfWidget()
     call app%eclipse_plot%setMinimumSize(300, 150)
     call app%eclipse_plot%paintEvent%connect(on_paint_eclipses)
     app%bottom_tabs = QTabWidget()
     call app%bottom_tabs%addTab(app%log, 'Solver output')
     call app%bottom_tabs%addTab(app%defects_plot, 'Defects')
+    call app%bottom_tabs%addTab(app%drift_plot, 'Epoch drift')
     call app%bottom_tabs%addTab(app%eclipse_plot, 'Eclipses')
     dock = QDockWidget('Output and plots', app%main)
     call dock%setFeatures(ior(QDockWidget_DockWidgetMovable, QDockWidget_DockWidgetFloatable))
@@ -2198,6 +2308,8 @@
     ! the iterations' trajectories (from the solver's thread), and its output (from the reader's)
     app%job%iteration = QSignalInt2(app%main)
     call app%job%iteration%connect(on_iteration)
+    app%job%epochs = QSignalInt2(app%main)
+    call app%job%epochs%connect(on_epochs)
     app%rjob%text = QSignalString(app%main)
     call app%rjob%text%connect(on_output)
 
@@ -2322,6 +2434,49 @@
     call plot_series(painter, x, y, plot_color(plot_dv), 2, '|dv| (km/s)')
 
     end subroutine on_paint_defects
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The epoch drift plot: for each solver iteration of the current run, how far the
+!  epochs at the constraint points (where segments 2k-1 and 2k end) have moved
+!  from the initial guess's (hours), over the guess's time. The latest iteration is
+!  bright, the earlier ones dim.
+
+    subroutine on_paint_drift(painter, data)
+
+    type(QPainter),intent(inout) :: painter
+    class(*),intent(inout),optional :: data
+
+    real(wp),dimension(:),allocatable :: x
+    real(wp) :: ymin, ymax, xmax, pad
+    integer :: j, n
+
+    call begin_plot(painter)
+    if (app%ndrift == 0) then
+        call plot_message(painter, 'No epoch drift: solve a trajectory (each iteration''s epochs '// &
+                                   'at the constraint points, versus the initial guess).')
+        return
+    end if
+    n = size(app%drift_guess)
+    allocate(x(n))
+    x = (app%drift_guess - app%drift_guess(1)) / day
+    xmax = max(x(n), 1.0e-6_wp)
+    ymin = min(0.0_wp, minval(app%drift(:, 1:app%ndrift)))
+    ymax = max(0.0_wp, maxval(app%drift(:, 1:app%ndrift)))
+    pad = max(0.05_wp * (ymax - ymin), 1.0e-3_wp)
+    call plot_axes(painter, 0.0_wp, xmax, ymin - pad, ymax + pad, .false., &
+                   'Constraint point (days from the first, initial guess)', 'Drift (hours)', &
+                   'Epoch drift from the initial guess: iteration '//int_text(app%drift_iter(app%ndrift)))
+    do j = 1, app%ndrift - 1
+        call plot_series(painter, x, app%drift(:, j), plot_color(plot_drift_old), 0, '')
+    end do
+    call plot_series(painter, x, app%drift(:, app%ndrift), plot_color(plot_drift), 0, &
+                     'iteration '//int_text(app%drift_iter(app%ndrift)))
+    if (app%ndrift > 1) call plot_series(painter, x(1:1), app%drift(1:1, 1), &
+                                         plot_color(plot_drift_old), 0, 'earlier')
+
+    end subroutine on_paint_drift
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2681,7 +2836,7 @@
 !  The HALO GUI program (see [[halo_gui_module]]).
 !
 !  Arguments: `[--dir DIR] [config.json] [--run] [--iterations] [--traj traj_file.json]
-!  [--frame 1|2|3] [--color altitude|eclipse|none] [--tab 0|1|2]`.
+!  [--frame 1|2|3] [--color altitude|eclipse|none] [--tab 0|1|2|3]`.
 !  `--dir` sets the current directory (the halo root, which the config files'
 !  paths are relative to; give it first: the other paths are relative to it).
 !  The config file defaults to `examples/example_sparse.json` (if it exists);
@@ -2689,7 +2844,7 @@
 !  iteration"; `--traj` plots a trajectory file at startup; `--frame` the frame shown
 !  (1: Earth-Moon rotating, 2: inertial, 3: Sun-Earth rotating); `--color` the
 !  coloring; `--center body|spacecraft` what the camera is centered on; `--tab`
-!  the bottom tab (0: solver output, 1: defects, 2: eclipses).
+!  the bottom tab (0: solver output, 1: defects, 2: epoch drift, 3: eclipses).
 !  For testing: `--capture file.png` saves frame `--capture-frame n` (default 120),
 !  and `--quit-after sec` closes the program.
 
@@ -2748,7 +2903,7 @@
                 app%color_at_start = COLOR_ALTITUDE
             end select
             i = i + 1
-        case ('--tab')  ! 0: solver output, 1: defects, 2: eclipses
+        case ('--tab')  ! 0: solver output, 1: defects, 2: epoch drift, 3: eclipses
             call get_command_argument(i + 1, arg)
             read(arg, *) app%tab_at_start
             i = i + 1

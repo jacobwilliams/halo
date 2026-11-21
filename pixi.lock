@@ -253,6 +253,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/llvm-tools-21.1.8-hdb3d66b_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/lz4-c-1.10.0-hdca3b7d_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/lzo-2.10-h74c22ad_1003.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-3.11.2-py314h314fc0d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-base-3.11.2-py314heb334b3_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/mesa-kosmickrisp-26.3.1-h6a78cde_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/minizip-4.2.2-h6a11f2a_1.conda
@@ -302,6 +303,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tbb-2023.1.0-h81c76ee_4.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tbb-devel-2023.1.0-h33e3aa9_4.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tk-8.6.13-hbeba79b_4.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/tornado-6.6.1-py314hef190fd_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/uriparser-0.9.8-h00cdb27_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/utfcpp-5.0.0-hce30654_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/viskores-1.2.0-cpu_ha995874_1.conda
@@ -3698,6 +3700,19 @@ packages:
     - lzo >=2.10,<3.0a0
   size: 154521
   timestamp: 1787049250312
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-3.11.2-py314h314fc0d_1.conda
+  sha256: 3a856ebbf2571ac643459be3bb65097a33bbc51b7302ceb026d517e6473eaf79
+  md5: 33e0ab88c137fd363cbb13372c00f168
+  depends:
+  - matplotlib-base >=3.11.2,<3.11.3.0a0
+  - python >=3.14,<3.15.0a0
+  - python_abi 3.14.* *_cp314
+  - tornado >=5
+  license: PSF-2.0
+  license_family: PSF
+  run_exports: {}
+  size: 15007
+  timestamp: 1789824062128
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-base-3.11.2-py314heb334b3_1.conda
   sha256: 123d5d4a269e96d5c0133614cffcab56bbaf314dab65290d57fb3ebf17986fe0
   md5: c00a0cfa60f7db715d294a9f14766946
@@ -4449,6 +4464,18 @@ packages:
     - tk >=8.6.13,<8.7.0a0
   size: 3342183
   timestamp: 1787272852357
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/tornado-6.6.1-py314hef190fd_0.conda
+  sha256: 3397bbbc2a81057060ff035a12a059dc5028da32275d0fa18e0676fdb8b07cb8
+  md5: acafa6f04d0e98f0a1e9e5a95086d036
+  depends:
+  - python
+  - __osx >=11.0
+  - python_abi 3.14.* *_cp314
+  license: Apache-2.0
+  license_family: APACHE
+  run_exports: {}
+  size: 1146640
+  timestamp: 1794500542069
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/uriparser-0.9.8-h00cdb27_0.conda
   sha256: fa0bcbfb20a508ca9bf482236fe799581cbd0eab016e47a865e9fa44dbe3c512
   md5: e8ff9e11babbc8cd77af5a4258dc2802

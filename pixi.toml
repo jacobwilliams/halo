@@ -34,6 +34,7 @@ pkg-config = ">=0.29.2,<0.30"
 mesa-kosmickrisp = ">=26.3.1,<27"
 font-ttf-dejavu = ">=2.37,<3"
 qt6-main = ">=6.11,<7"
+matplotlib = ">=3.11.2,<4"
 
 # the Vulkan loader uses KosmicKrisp only (Qt depends on MoltenVK, which is installed too)
 [activation.env]

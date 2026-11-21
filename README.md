@@ -57,6 +57,10 @@ fpm test text_buffer_test --profile release
 fpm test ephemeris_spline_test --profile release --flag "-fopenmp" -- examples/example_sparse.json 100 1120
 ```
 
+### Solution plots
+
+With `"generate_solution_plots": true`, after the solve the program writes the epochs and the defects at the constraint points for the initial guess and the solution (`solution_plot_data_*.json`), and runs `python/plot_solution.py` on it (it needs Python with numpy and matplotlib, as in the pixi environment: `pixi run fpm run halo_solver ...`). It makes two plots (PDF and PNG): `epoch_drift_*` (how far the solution's epochs moved from the initial guess's) and `defects_*` (the position and velocity defects, for the guess and the solution). The script can also be run by itself on a data file: `python python/plot_solution.py solution_plot_data_<case>.json [--outdir DIR]`. To compare the epoch drift of several solutions (e.g., with different options) in one plot: `python python/plot_solution.py --compare a.json b.json --labels "default" "offsets" [--name NAME] [--outdir DIR]`.
+
 ### Epoch variables
 
 By default (`"epoch_variable_mode": 1`), each node's epoch variable is its epoch (days from the reference epoch), scaled by its own initial magnitude. The scale grows along the trajectory, so the solver's minimum-norm steps change the later epochs most, and the orbit's phase (its periapsis passage times) can drift by many hours from the initial guess. With `"epoch_variable_mode": 2`, the epoch variables are the offsets from the initial guess, all scaled by the same `"epoch_scale"` (days, default 1.0). This keeps the phase closer to the initial guess (for the 100-rev baseline: periapsis times within 4.4 h of the guess, instead of 18 h). A smaller scale holds the phase more tightly, but too small a scale doesn't converge (0.01 days diverges, and 1 day stalls for 1120 revs: use about 10 to 100 days there).

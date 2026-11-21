@@ -159,6 +159,11 @@
         logical :: generate_guess_and_solution_files = .true.  !! to export the json guess and solution files.
         logical :: generate_kernel = .false.  !! to generate a spice kernel (bsp) of the solution
                                               !! [this requires the external mkspk SPICE tool]
+        logical :: generate_solution_plots = .false. !! write the solution's plot data (`solution_plot_data_*.json`:
+                                                     !! the epochs and defects at the constraint points, for the
+                                                     !! initial guess and the solution) and run
+                                                     !! `python/plot_solution.py` on it (matplotlib: the epoch
+                                                     !! drift and defect plots, `*.pdf` and `*.png`)
         logical :: generate_defect_file = .false. !! generate the file that shows the pos/vel
                                                   !! constraint defects for the solution
         logical :: generate_eclipse_files = .false. !! generate the eclipse data file for the solution
@@ -281,6 +286,7 @@
         procedure,public :: write_optvars_to_file
         procedure,public :: constraint_violations
         procedure,public :: print_constraint_defects
+        procedure,public :: write_solution_plot_data
         procedure,public :: generate_eclipse_data
         procedure :: get_problem_arrays
         procedure :: put_x_in_segments
@@ -327,6 +333,14 @@
             !! Returns true to stop the solver iterations (see [[halo_solver_main]]).
             implicit none
         end function stop_check_func
+        subroutine epoch_callback_func(iter,et)
+            !! Receives the epochs at the constraint points of a solver iteration
+            !! (see [[halo_solver_main]]): the interfaces where segments 2k-1 and 2k end.
+            import :: wp
+            implicit none
+            integer,intent(in)               :: iter  !! iteration number
+            real(wp),dimension(:),intent(in) :: et    !! (nseg/2) their ephemeris times [sec]
+        end subroutine epoch_callback_func
     end interface
 
     type,extends(nlesolver_type) :: my_solver_type
@@ -341,6 +355,9 @@
             !! if associated, it receives the trajectory of each solver iteration
         procedure(stop_check_func),pointer,nopass :: stop_check => null()
             !! if associated, checked at each solver iteration: true stops the solver
+        procedure(epoch_callback_func),pointer,nopass :: epoch_callback => null()
+            !! if associated, it receives the epochs at the constraint points of each
+            !! solver iteration (cheap: no propagation)
 
     contains
 
@@ -362,7 +379,7 @@
     end interface
 
     public :: halo_solver_main !! main program
-    public :: iteration_callback_func, stop_check_func ! for halo_solver_main's hooks
+    public :: iteration_callback_func, stop_check_func, epoch_callback_func ! for halo_solver_main's hooks
     public :: read_epoch ! also used by optimizer app
 
     contains
@@ -375,7 +392,7 @@
 !### Author
 !  * Jacob Williams : Sept. 2017
 
-    subroutine halo_solver_main(config_file_name,debug,gui,iteration_callback,stop_check,traj_file)
+    subroutine halo_solver_main(config_file_name,debug,gui,iteration_callback,stop_check,traj_file,epoch_callback)
 
     use parameters_module
 !$  use omp_lib
@@ -392,6 +409,9 @@
         !! (in memory: no files are written for them). Note: this
         !! propagates all the segments at each iteration.
     procedure(stop_check_func),optional :: stop_check
+    procedure(epoch_callback_func),optional :: epoch_callback
+        !! if present, it receives the epochs at the constraint points of each
+        !! solver iteration (cheap: no propagation)
         !! if present, it is checked at each solver iteration, and the
         !! solver stops if it returns true
     character(len=:),allocatable,intent(out),optional :: traj_file
@@ -399,6 +419,9 @@
 
     type(my_solver_type) :: solver  !! an instance of the solver that we will use
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
+    real(wp),dimension(:),allocatable :: x_guess  !! the initial guess (for `generate_solution_plots`)
+    character(len=:),allocatable :: plot_data_file  !! for `generate_solution_plots`
+    integer :: istat_plot  !! exit status of the plot script
     integer :: m  !! number of functions
     real(wp),dimension(:),allocatable :: f  !! function vector (constraint violations)
     real(wp) :: tstart, tend  !! for timing
@@ -443,6 +466,7 @@
     end if
     if (present(iteration_callback)) solver%iteration_callback => iteration_callback
     if (present(stop_check)) solver%stop_check => stop_check  ! (see halo_user_input_check)
+    if (present(epoch_callback)) solver%epoch_callback => epoch_callback
 
     if (solver%mission%generate_plots) &
         call solver%mission%plot('guess', draw_trajectory=.true.)    ! plot the initial guess
@@ -491,6 +515,7 @@
         write(*,'(A)') ' * Solving'
         write(*,*) ''
 
+        if (solver%mission%generate_solution_plots) x_guess = x  ! (for the plots)
         call cpu_time(tstart_cpu)
 !$      tstart = omp_get_wtime()
         call solver%solve(x)  ! call the solver
@@ -520,6 +545,16 @@
     if (solver%mission%generate_guess_and_solution_files) then
         write(*,'(A)') ' * Generate solution file'
         call solver%mission%write_optvars_to_file('solution',x) ! write solution to a file
+    end if
+
+    if (solver%mission%generate_solution_plots .and. allocated(x_guess)) then
+        plot_data_file = 'solution_plot_data_'//solver%mission%get_case_name()//'.json'
+        write(*,'(A)') ' * Solution plot data: '//plot_data_file
+        call solver%mission%write_solution_plot_data(plot_data_file, x_guess, x)
+        write(*,'(A)') ' * Solution plots (python/plot_solution.py)'
+        call execute_command_line('python ./python/plot_solution.py '//plot_data_file, &
+                                  wait=.true., exitstat=istat_plot)
+        if (istat_plot /= 0) write(*,'(A)') '   (the plot script failed: it needs Python with numpy and matplotlib)'
     end if
 
     ! export solution to plot or trajectory file
@@ -1147,15 +1182,17 @@
         call me%define_problem_size(m=m)
         allocate(f(m))
         call me%get_problem_arrays(f=f)
+        f = f * me%fscale  ! (unscaled: km and km/s)
 
         ! f = [xf1-xf2, xf3-xf4, xf5-xf6, xf7-xf8, ... ] in rotating frame
+        ! (6 elements for each pair of segments)
 
         i = 0
         write(iunit,'(A26,A1,A26)') 'rerr (km)', ',', 'verr (km/s)'
         do irev = 1, me%n_revs
             do j = 1, 4
-                i = i + 1
-                write(iunit,'(1P,E26.16,A1,E26.16)') norm2(f(i:i+2)), ',', norm2(f(i+2:i+5))
+                write(iunit,'(1P,E26.16,A1,E26.16)') norm2(f(i+1:i+3)), ',', norm2(f(i+4:i+6))
+                i = i + 6
             end do
         end do
 
@@ -1166,6 +1203,67 @@
         close(iunit, iostat=istat)
 
     end subroutine print_constraint_defects
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Write the data for the solution plots (`generate_solution_plots`, see
+!  `python/plot_solution.py`): for the initial guess and the solution, the epochs at
+!  the constraint points (where segments 2k-1 and 2k end) and the defects there
+!  (|dr|, |dv| in the rotating frame). The segments are left with the solution.
+
+    subroutine write_solution_plot_data(me, filename, x_guess, x)
+
+    class(mission_type),intent(inout) :: me
+    character(len=*),intent(in) :: filename  !! the JSON file to write
+    real(wp),dimension(:),intent(in) :: x_guess  !! the initial guess (scaled)
+    real(wp),dimension(:),intent(in) :: x  !! the solution (scaled)
+
+    type(json_file) :: json
+    real(wp),dimension(:),allocatable :: f, et_g, dr_g, dv_g, et_s, dr_s, dv_s
+    integer :: m, n_segs
+
+    call me%define_problem_size(m=m, n_segs=n_segs)
+    allocate(f(m))
+    call evaluate(x_guess, et_g, dr_g, dv_g)
+    call evaluate(x, et_s, dr_s, dv_s)  ! (last: the segments are left with the solution)
+
+    call json%initialize(compress_vectors=.true.)
+    call json%add('case',        me%get_case_name())
+    call json%add('et_ref',      me%et_ref)
+    call json%add('n_revs',      me%n_revs)
+    call json%add('epoch_variable_mode', me%epoch_variable_mode)
+    call json%add('xscale_mode', me%xscale_mode)
+    call json%add('jacobian_mode', me%jacobian_mode)
+    call json%add('et_guess',    et_g)  ! [sec]
+    call json%add('dr_guess',    dr_g)  ! [km]
+    call json%add('dv_guess',    dv_g)  ! [km/s]
+    call json%add('et_solution', et_s)
+    call json%add('dr_solution', dr_s)
+    call json%add('dv_solution', dv_s)
+    call json%print(filename)
+    call json%destroy()
+
+    contains
+
+        subroutine evaluate(xx, et, dr, dv)
+            !! the epochs and defects at the constraint points for `xx`
+            real(wp),dimension(:),intent(in) :: xx
+            real(wp),dimension(:),allocatable,intent(out) :: et, dr, dv
+            integer :: k
+            call me%constraint_violations(xx, f)  ! (propagates all the segments)
+            f = f * me%fscale  ! (unscaled: km and km/s)
+            allocate(et(n_segs/2), dr(n_segs/2), dv(n_segs/2))
+            do k = 1, n_segs/2
+                associate (seg => me%segs(2*k-1))
+                    et(k) = seg%data%et_ref + seg%data%tf*day2sec
+                end associate
+                dr(k) = norm2(f(6*k-5:6*k-3))
+                dv(k) = norm2(f(6*k-2:6*k))
+            end do
+        end subroutine evaluate
+
+    end subroutine write_solution_plot_data
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -2900,6 +2998,7 @@
     select type (me)
     class is (my_solver_type)
         if (associated(me%iteration_callback)) call iteration_trajectory(me, x, iter)
+        if (associated(me%epoch_callback)) call iteration_epochs(me, x, iter)
     end select
 
     !select type (me)
@@ -2908,6 +3007,35 @@
     !end select
 
     end subroutine halo_export
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Send the epochs at the constraint points (where segments 2k-1 and 2k end) for
+!  the solver's current `x` to the solver's `epoch_callback`.
+
+    subroutine iteration_epochs(me,x,iter)
+
+    implicit none
+
+    class(my_solver_type),intent(inout) :: me
+    real(wp),dimension(:),intent(in) :: x  !! the solver's (scaled) opt vars for this iteration
+    integer,intent(in) :: iter  !! iteration number
+
+    real(wp),dimension(:),allocatable :: et
+    integer :: k, nseg
+
+    call me%mission%put_x_in_segments(x)  ! (the segments' epochs for this iteration)
+    nseg = size(me%mission%segs)
+    allocate(et(nseg/2))
+    do k = 1, nseg/2
+        associate (seg => me%mission%segs(2*k-1))
+            et(k) = seg%data%et_ref + seg%data%tf*day2sec
+        end associate
+    end do
+    call me%epoch_callback(iter, et)
+
+    end subroutine iteration_epochs
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -3937,6 +4065,7 @@
     call f%get('generate_guess_and_solution_files', me%mission%generate_guess_and_solution_files, found)
     call f%get('generate_kernel',                   me%mission%generate_kernel,           found)
     call f%get('generate_defect_file',              me%mission%generate_defect_file,      found)
+    call f%get('generate_solution_plots',           me%mission%generate_solution_plots,   found)
     call f%get('generate_eclipse_files',            me%mission%generate_eclipse_files,    found)
     call f%get('run_pyvista_script',                me%mission%run_pyvista_script,        found)
     call f%get('generate_rp_ra_file',               me%mission%generate_rp_ra_file,       found)
