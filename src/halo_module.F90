@@ -3477,18 +3477,17 @@
         character(len=*),intent(in) :: fileprefix !! file prefix for the csv file (case name will be added)
         integer,intent(in),optional :: filetype !! type of output file: 1=csv [default] or 2=json
 
-        integer :: i,iunit,iseg,istat,istart,istep,iend
-        real(wp) :: phi !! sunfrac value
-        real(wp) :: p
+        integer :: i,k,iunit,iseg,istat,istart,istep,n,n_total,n_shadow
         integer :: ifiletype
+        logical :: do_se !! also compute the Sun-Earth rotating frame positions (JSON file)
         type(json_file) :: json
-        character(len=10) :: iseg_str
         character(len=:),allocatable :: full_filename
-        real(wp),dimension(:),allocatable :: phi_vec !! vector of `phi` values from a segment (for JSON file)
-        real(wp),dimension(:),allocatable :: et_vec !! vector of `et` values from a segment (for JSON file)
-        real(wp),dimension(:),allocatable :: phi_vec_total, et_vec_total !! cumulative for all segments
-
-        real(wp),dimension(:),allocatable :: x_se, y_se, z_se, vx_se, vy_se, vz_se, et_se, phi_se
+        integer,dimension(:),allocatable :: offset !! index of each segment's first point in the arrays below, minus 1
+        real(wp),dimension(:),allocatable :: et_se  !! epochs of all the points [sec], in time order within each segment
+        real(wp),dimension(:),allocatable :: phi_se !! sun fraction of all the points (>0 in sunlight, <0 in eclipse)
+        real(wp),dimension(:),allocatable :: x_se, y_se, z_se !! Sun-Earth rotating frame positions of all the points
+        real(wp),dimension(:),allocatable :: et_shadow, phi_shadow !! only the points in eclipse (for the JSON file)
+        real(wp),dimension(6) :: rv_moon !! inertial state of a point
         type(icrf_frame) :: inertial
         type(two_body_rotating_frame) :: se_rotating
         real(wp),dimension(6) :: x_se_rotating
@@ -3504,28 +3503,13 @@
         else
             ifiletype = FILETYPE_JSON
         end if
+        if (ifiletype/=FILETYPE_CSV .and. ifiletype/=FILETYPE_JSON) &
+            error stop 'invalid filetype for eclipse file'
+        do_se = ifiletype==FILETYPE_JSON
         full_filename = trim(fileprefix)//'_'//me%get_case_name()//&
                         trim(file_ext(ifiletype))
 
         write(*,'(A)') ' * Generating eclipse file: '//full_filename
-
-        select case (ifiletype)
-        case (FILETYPE_CSV)
-            open(newunit=iunit,file=full_filename,status='REPLACE',iostat=istat)
-            if (istat/=0) error stop 'error opening eclipse csv file.'
-            write(iunit,'(A30,A,1X,A30)',iostat=istat) 'ET (sec)', ',', 'PHI'
-        case (FILETYPE_JSON)
-            call json%initialize(compress_vectors=.true.)
-        case default
-            error stop 'invalid filetype for eclipse file'
-        end select
-
-        allocate(x_se(0));allocate(y_se(0));allocate(z_se(0))
-        allocate(vx_se(0));allocate(vy_se(0));allocate(vz_se(0))
-        allocate(et_se(0))
-        allocate(phi_se(0))
-        allocate(phi_vec_total(0))
-        allocate(et_vec_total(0))
 
         ! destroy all trajectories first:
         do iseg = 1, size(me%segs)
@@ -3537,110 +3521,104 @@
         !====================================
         ! now propagate the segments:
         ! [export points at a fixed time step]
-!$OMP PARALLEL DO    !...FIRSTPRIVATE(me)
+!$OMP PARALLEL DO
         do iseg = 1, size(me%segs)
             call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
         end do
 !$OMP END PARALLEL DO
         !====================================
 
-        ! TODO: could also try to do this stuff in parallel too...
+        ! size the arrays for all the points at once (appending to them one
+        ! point at a time is quadratic in the number of points):
+        allocate(offset(size(me%segs)))
+        n_total = 0
         do iseg = 1, size(me%segs)
+            offset(iseg) = n_total
+            n_total = n_total + size(me%segs(iseg)%traj_inertial%et)
+        end do
+        allocate(et_se(n_total))
+        allocate(phi_se(n_total))
+        if (do_se) then
+            allocate(x_se(n_total))
+            allocate(y_se(n_total))
+            allocate(z_se(n_total))
+        end if
 
-            if (ifiletype==FILETYPE_JSON) then
-                if (allocated(phi_vec)) deallocate(phi_vec); allocate(phi_vec(0))
-                if (allocated(et_vec))  deallocate(et_vec);  allocate(et_vec(0))
-            end if
-            write(iseg_str,'(I10)') iseg    ! segment number as string
-            iseg_str = adjustl(iseg_str)
-
-            ! destroy all trajectories first:
-            ! call me%segs(iseg)%traj_inertial%destroy()
-            ! call me%segs(iseg)%traj_rotating%destroy()
-            ! call me%segs(iseg)%traj_se_rotating%destroy()
-            ! generate the trajectory for this segment:
-            ! [export points at a fixed time step]
-            !call me%segs(iseg)%propagate(mode=2,tstep=me%eclipse_dt_step)
-
-            if (me%segs(iseg)%traj_inertial%et(2) > me%segs(iseg)%traj_inertial%et(1)) then
-                ! forward propagated
-                istart = 1
-                iend   = size(me%segs(iseg)%traj_inertial%et)
-                istep  = 1
-            else
-                ! backward propagated
-                istart = size(me%segs(iseg)%traj_inertial%et)
-                iend   = 1
-                istep  = -1
-            end if
-
-            do i=istart,iend,istep
-                associate (et => me%segs(iseg)%traj_inertial%et(i),&
-                            rv_moon => [me%segs(iseg)%traj_inertial%x(i),&
-                                        me%segs(iseg)%traj_inertial%y(i),&
-                                        me%segs(iseg)%traj_inertial%z(i),&
-                                        me%segs(iseg)%traj_inertial%vx(i),&
-                                        me%segs(iseg)%traj_inertial%vy(i),&
-                                        me%segs(iseg)%traj_inertial%vz(i) ])
-
-                    p = get_sun_fraction(me%eph, et, rv_moon, me%r_eclipse_bubble)
-                    phi = min(0.0_wp, p) ! phi >0 mean the spacecraft is in sunlight
-
-                    select case (ifiletype)
-                    case (FILETYPE_CSV)
-                        write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) et, ',', phi
-                    case (FILETYPE_JSON)
-                        ! for this we accumulate the data for the whole
-                        ! segment and write all at once at the end
-                        phi_vec = [phi_vec, phi] ! TODO: could use expand routines to make this more efficient
-                        phi_se = [phi_se, p] ! save the actual value
-                        et_se = [et_se, et]
-
-                        ! also convert to sun-earth rotating
+        ! compute the sun fraction (and the Sun-Earth rotating frame position) of each point.
+        ! each segment fills its own slice of the arrays, so the segments are done in parallel
+        ! (each one with its own copy of the ephemeris).
+!$OMP PARALLEL DO PRIVATE(i,k,n,istart,istep,rv_moon,inertial,se_rotating,x_se_rotating,status_ok)
+        do iseg = 1, size(me%segs)
+            associate (traj => me%segs(iseg)%traj_inertial)
+                n = size(traj%et)
+                if (traj%et(n) > traj%et(1)) then
+                    istart = 1;  istep = 1   ! forward propagated
+                else
+                    istart = n;  istep = -1  ! backward propagated: reverse it, so the points are in time order
+                end if
+                do k = 1, n
+                    i = istart + (k-1)*istep
+                    rv_moon = [traj%x(i), traj%y(i), traj%z(i), traj%vx(i), traj%vy(i), traj%vz(i)]
+                    et_se(offset(iseg)+k)  = traj%et(i)
+                    phi_se(offset(iseg)+k) = get_sun_fraction(me%segs(iseg)%eph, traj%et(i), &
+                                                              rv_moon, me%r_eclipse_bubble)
+                    if (do_se) then
+                        ! also convert to sun-earth rotating (from inertial):
                         se_rotating = two_body_rotating_frame(primary_body=body_sun,&
                                                               secondary_body=body_earth,&
                                                               center=center_at_secondary_body,&
-                                                              et=et)
-                        ! from inertial to rotating:
+                                                              et=traj%et(i))
                         inertial = icrf_frame(b=body_moon)
-                        call inertial%transform(rv_moon,se_rotating,et,me%segs(iseg)%eph,x_se_rotating,status_ok)
-                        if (.not. status_ok) error stop 'transformation error in propagate_segment'
-                        x_se = [x_se, x_se_rotating(1)]
-                        y_se = [y_se, x_se_rotating(2)]
-                        z_se = [z_se, x_se_rotating(3)]
-
-                    end select
-
-                end associate
-            end do
-            if (ifiletype==FILETYPE_JSON) then
-                ! accumulate only the points where phi < 0 (in shadow)
-                et_vec  = pack(me%segs(iseg)%traj_inertial%et, mask=phi_vec<0.0_wp)
-                phi_vec = pack(phi_vec, mask=phi_vec<0.0_wp)
-                if (size(et_vec)>0) then
-                    et_vec_total = [et_vec_total, et_vec]
-                    phi_vec_total = [phi_vec_total, phi_vec]
-                end if
-            end if
-
+                        call inertial%transform(rv_moon,se_rotating,traj%et(i),me%segs(iseg)%eph,&
+                                                x_se_rotating,status_ok)
+                        if (.not. status_ok) error stop 'transformation error in generate_eclipse_data'
+                        x_se(offset(iseg)+k) = x_se_rotating(1)
+                        y_se(offset(iseg)+k) = x_se_rotating(2)
+                        z_se(offset(iseg)+k) = x_se_rotating(3)
+                    end if
+                end do
+            end associate
         end do
+!$OMP END PARALLEL DO
 
         ! save file:
         select case (ifiletype)
         case (FILETYPE_CSV)
+            open(newunit=iunit,file=full_filename,status='REPLACE',iostat=istat)
+            if (istat/=0) error stop 'error opening eclipse csv file.'
+            write(iunit,'(A30,A,1X,A30)',iostat=istat) 'ET (sec)', ',', 'PHI'
+            do k = 1, n_total
+                ! phi >0 means the spacecraft is in sunlight (written as 0)
+                write(iunit,'(*(E30.16E3,A,1X))',iostat=istat) et_se(k), ',', min(0.0_wp, phi_se(k))
+            end do
             close(iunit,iostat=istat)
         case (FILETYPE_JSON)
-            call json%add('et',  et_vec_total)     ! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)
-            call json%add('phi', phi_vec_total)
-
+            ! only the points where phi < 0 (in shadow):
+            n_shadow = 0
+            do k = 1, n_total
+                if (phi_se(k) < 0.0_wp) n_shadow = n_shadow + 1
+            end do
+            allocate(et_shadow(n_shadow))
+            allocate(phi_shadow(n_shadow))
+            n_shadow = 0
+            do k = 1, n_total
+                if (phi_se(k) < 0.0_wp) then
+                    n_shadow = n_shadow + 1
+                    et_shadow(n_shadow)  = et_se(k)
+                    phi_shadow(n_shadow) = phi_se(k)
+                end if
+            end do
+            call json%initialize(compress_vectors=.true.)
+            call json%add('et',  et_shadow)     ! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)
+            call json%add('phi', phi_shadow)
             call json%add('phi_se', phi_se) ! also the full S-E trajectory data for plotting
             call json%add('et_se', et_se)
             call json%add('x_se_rotating', x_se)
             call json%add('y_se_rotating', y_se)
             call json%add('z_se_rotating', z_se)
             call json%print(full_filename)
+            call json%destroy()
         end select
-        call json%destroy()
 
     end subroutine generate_eclipse_data
 !*****************************************************************************************
