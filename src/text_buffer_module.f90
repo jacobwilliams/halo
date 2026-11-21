@@ -11,7 +11,7 @@
     module text_buffer_module
 
     use halo_kinds_module, only: wp
-    use iso_fortran_env, only: int64
+    use iso_fortran_env, only: int64, real64
     use, intrinsic :: ieee_arithmetic, only: ieee_is_finite
 
     implicit none
@@ -33,11 +33,13 @@
         procedure,public :: add_real_array  !! append a JSON array of real numbers
     end type text_buffer
 
-    real(wp),dimension(0:22),parameter :: p10 = [1.0e0_wp,  1.0e1_wp,  1.0e2_wp,  1.0e3_wp,  1.0e4_wp,  &
-                                                 1.0e5_wp,  1.0e6_wp,  1.0e7_wp,  1.0e8_wp,  1.0e9_wp,  &
-                                                 1.0e10_wp, 1.0e11_wp, 1.0e12_wp, 1.0e13_wp, 1.0e14_wp, &
-                                                 1.0e15_wp, 1.0e16_wp, 1.0e17_wp, 1.0e18_wp, 1.0e19_wp, &
-                                                 1.0e20_wp, 1.0e21_wp, 1.0e22_wp]
+    integer,parameter :: dp = real64  !! the numbers are written in double precision (whatever `wp` is)
+
+    real(dp),dimension(0:22),parameter :: p10 = [1.0e0_dp,  1.0e1_dp,  1.0e2_dp,  1.0e3_dp,  1.0e4_dp,  &
+                                                 1.0e5_dp,  1.0e6_dp,  1.0e7_dp,  1.0e8_dp,  1.0e9_dp,  &
+                                                 1.0e10_dp, 1.0e11_dp, 1.0e12_dp, 1.0e13_dp, 1.0e14_dp, &
+                                                 1.0e15_dp, 1.0e16_dp, 1.0e17_dp, 1.0e18_dp, 1.0e19_dp, &
+                                                 1.0e20_dp, 1.0e21_dp, 1.0e22_dp]
         !! the powers of ten that are exactly representable in double precision
 
     contains
@@ -110,7 +112,9 @@
 
 !*****************************************************************************************
 !>
-!  Append a real number, in JSON syntax, with 17 significant digits
+!  Append a real number, in JSON syntax, in double precision (also when `wp` is
+!  quad precision: the trajectory files are for plotting and SPK files, which are
+!  double precision), with 17 significant digits
 !  (e.g., `8.2031911203980994E+8`; trailing zeros are removed, e.g. `1.5E+0`).
 !
 !  The 17 digits are correctly rounded, so the number reads back as exactly the
@@ -124,29 +128,30 @@
     pure subroutine add_real(me, x)
 
     class(text_buffer),intent(inout) :: me
-    real(wp),intent(in) :: x
+    real(wp),intent(in) :: x  !! the number (converted to double precision, if `wp` is not)
 
     integer(int64),parameter :: ten16 = 10000000000000000_int64  !! 10^16
     integer(int64),parameter :: ten17 = 10_int64*ten16           !! 10^17
 
-    real(wp) :: ax
+    real(dp) :: xd, ax
     integer :: e10, i, last
     integer(int64) :: im
     logical :: ok
     character(len=17) :: digits
     character(len=30) :: str
 
-    if (.not. ieee_is_finite(x)) then
+    xd = real(x, dp)
+    if (.not. ieee_is_finite(xd)) then
         call me%add_str('null')
         return
     end if
-    if (x == 0.0_wp) then
+    if (xd == 0.0_dp) then
         call me%add_str('0.0')
         return
     end if
 
     ! im = |x| * 10^(16-e10), rounded, should have 17 digits:
-    ax  = abs(x)
+    ax  = abs(xd)
     e10 = floor(log10(ax))
     call scaled(ax, 16-e10, im, ok)
     ! (log10 may be off by one near powers of ten)
@@ -164,7 +169,7 @@
     end if
     if (.not. ok) then
         ! out of the range of the exact powers of ten:
-        write(str,'(ES24.16E3)') x
+        write(str,'(ES24.16E3)') xd
         call me%add_str(trim(adjustl(str)))
         return
     end if
@@ -181,7 +186,7 @@
     end do
 
     call me%reserve(30)
-    if (x < 0.0_wp) call me%add_str('-')
+    if (xd < 0.0_dp) call me%add_str('-')
     call me%add_str(digits(1:1)//'.'//digits(2:last)//'E')
     if (e10 >= 0) call me%add_str('+')
     call add_digits(me, int(e10,int64), negative=e10<0)
@@ -201,12 +206,12 @@
 
     pure subroutine scaled(a, k, im, ok)
 
-    real(wp),intent(in) :: a
+    real(dp),intent(in) :: a
     integer,intent(in) :: k
     integer(int64),intent(out) :: im
     logical,intent(out) :: ok
 
-    real(wp) :: p, q, hi, lo, r
+    real(dp) :: p, q, hi, lo, r
 
     im = 0
     ok = abs(k) <= 22
@@ -235,10 +240,10 @@
 
     pure subroutine two_prod(a, b, p, e)
 
-    real(wp),intent(in) :: a, b
-    real(wp),intent(out) :: p, e
+    real(dp),intent(in) :: a, b
+    real(dp),intent(out) :: p, e
 
-    real(wp) :: ah, al, bh, bl
+    real(dp) :: ah, al, bh, bl
 
     p = a * b
     call split(a, ah, al)
@@ -254,11 +259,11 @@
 
     pure subroutine split(a, h, l)
 
-    real(wp),intent(in) :: a
-    real(wp),intent(out) :: h, l
+    real(dp),intent(in) :: a
+    real(dp),intent(out) :: h, l
 
-    real(wp),parameter :: factor = 134217729.0_wp  !! 2^27 + 1
-    real(wp) :: c
+    real(dp),parameter :: factor = 134217729.0_dp  !! 2^27 + 1
+    real(dp) :: c
 
     c = factor * a
     h = c - (c - a)

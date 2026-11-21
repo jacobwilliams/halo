@@ -9,17 +9,19 @@
 
     use halo_kinds_module, only: wp
     use text_buffer_module
+    use iso_fortran_env, only: real64
 
     implicit none
 
     integer,parameter :: n = 1000000
     type(text_buffer) :: buf
-    real(wp) :: x, y, u, err, worst
+    real(wp) :: x, u
+    real(real64) :: xd, y, err, worst  !! (the numbers are written in double precision)
     real(wp),dimension(*),parameter :: special = [0.0_wp, 1.0_wp, -1.0_wp, 0.1_wp, 1.5_wp, &
                                                   9.9999999999999999e5_wp, 1.0e16_wp, 1.0e17_wp, &
                                                   820319112.03980994_wp, -1738.0_wp, 1.0e-300_wp, &
-                                                  -2.5e300_wp, tiny(1.0_wp), huge(1.0_wp), &
-                                                  epsilon(1.0_wp), 123456789012345678.0_wp]
+                                                  -2.5e300_wp, real(tiny(1.0_real64),wp), real(huge(1.0_real64),wp), &
+                                                  real(epsilon(1.0_real64),wp), 123456789012345678.0_wp]
     integer :: i, n_exact, n_ok
     logical :: all_ok
 
@@ -39,18 +41,19 @@
         call buf%clear()
         call buf%add_real(x)
         read(buf%s(1:buf%n),*) y
-        if (x == 0.0_wp) then
+        xd = real(x, real64)
+        if (xd == 0.0_real64) then
             err = abs(y)
         else
-            err = abs(y - x) / abs(x)
+            err = abs(y - xd) / abs(xd)
         end if
         worst = max(worst, err)
-        if (y == x) n_exact = n_exact + 1
-        if (i <= size(special)) write(*,'(A30,A,A)') buf%s(1:buf%n), '   ', merge('exact', '     ', y==x)
+        if (y == xd) n_exact = n_exact + 1
+        if (i <= size(special)) write(*,'(A30,A,A)') buf%s(1:buf%n), '   ', merge('exact', '     ', y==xd)
     end do
     write(*,'(A,ES10.2)') 'max relative error:            ', worst
     write(*,'(A,F8.4,A)') 'read back as the same number:  ', 100.0_wp*n_exact/(size(special)+n), ' %'
-    if (worst > 0.0_wp .or. n_exact /= size(special)+n) then
+    if (worst > 0.0_real64 .or. n_exact /= size(special)+n) then
         write(*,'(A)') 'FAILED: not all numbers read back exactly'
         all_ok = .false.
     end if
