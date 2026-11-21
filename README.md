@@ -57,6 +57,12 @@ fpm test text_buffer_test --profile release
 fpm test ephemeris_spline_test --profile release --flag "-fopenmp" -- examples/example_sparse.json 100 1120
 ```
 
+### Epoch variables
+
+By default (`"epoch_variable_mode": 1`), each node's epoch variable is its epoch (days from the reference epoch), scaled by its own initial magnitude. The scale grows along the trajectory, so the solver's minimum-norm steps change the later epochs most, and the orbit's phase (its periapsis passage times) can drift by many hours from the initial guess. With `"epoch_variable_mode": 2`, the epoch variables are the offsets from the initial guess, all scaled by the same `"epoch_scale"` (days, default 1.0). This keeps the phase closer to the initial guess (for the 100-rev baseline: periapsis times within 4.4 h of the guess, instead of 18 h). A smaller scale holds the phase more tightly, but too small a scale doesn't converge (0.01 days diverges, and 1 day stalls for 1120 revs: use about 10 to 100 days there).
+
+With `"xscale_mode": 2`, all the variables' scales are instead set from their sensitivities: each scale is divided by the norm of its column of the Jacobian at the initial guess, so a unit change of any scaled variable changes the constraints by the same amount (`"epoch_scale_factor"` multiplies the epoch scales: >1 makes the epochs cheaper to change). This is experimental: for the 100-rev baseline it converges as well as the default (periapsis times within 5.6 h of the guess), but it doesn't converge for 1120 revs (with any `epoch_scale_factor` from 1 to 100), where the default scaling does.
+
 ### GUI
 
 `halo_gui` is a GUI for the solver ([qt-fortran](https://github.com/jacobwilliams/qt-fortran) for the window, [vkframes](https://github.com/jacobwilliams/vkframes) for the 3D view). Choose a config file (default `examples/example_sparse.json`) and click **Run solver**. The solver runs inside the GUI (in a worker thread), its output is shown in the window, and the resulting trajectory is plotted in the Earth-Moon rotating or inertial frame (Moon-centered, colored by the distance from the Moon). With **Plot each iteration** checked, each solver iteration's trajectory is plotted as it solves (sent straight to the 3D view, not through files). **Center** puts the camera's center (what it rotates about) on the central body or on the spacecraft (the camera then moves with it). **Stop** stops the solver at its next iteration. **File > Open Trajectory** plots an existing `traj_*.json` file.

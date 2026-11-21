@@ -249,6 +249,28 @@
                                       !!   (see [[compute_jacobian_stm]]). Requires `use_splined_ephemeris`.
         real(wp) :: stm_rtol = -1.0_wp  !! integrator rtol for the STM (<0: use `rtol`)
         real(wp) :: stm_atol = -1.0_wp  !! integrator atol for the STM (<0: use `atol`)
+        integer :: epoch_variable_mode = 1  !! the epoch variables (each node's epoch) in the `x` vector:
+                                            !!
+                                            !! * 1 - the epochs (days from the reference epoch), each scaled by
+                                            !!   `magnitude(2*t0)` of its initial value (so the scale grows along
+                                            !!   the trajectory, and the later epochs are cheaper to change)
+                                            !! * 2 - the offsets from the initial guess (days), all scaled by the
+                                            !!   same `epoch_scale` (so a change of an epoch costs the same
+                                            !!   anywhere along the trajectory, and the variables start at 0)
+        real(wp) :: epoch_scale = 1.0_wp  !! scale for the epoch variables with `epoch_variable_mode=2` [days]
+        real(wp),dimension(:),allocatable :: xoffset  !! opt var offsets: `x_scaled = (x - xoffset) / xscale`
+                                                      !! (nonzero only for the epochs, with `epoch_variable_mode=2`)
+        logical,dimension(:),allocatable :: x_is_epoch  !! the opt vars that are epochs
+        integer :: xscale_mode = 1  !! the scales of the opt vars:
+                                    !!
+                                    !! * 1 - from the magnitudes of the initial values (see [[initialize_the_mission]];
+                                    !!   the states are scaled by at least `xscale_x0`)
+                                    !! * 2 - from the sensitivities: each scale is divided by the norm of its column
+                                    !!   of the (scaled) Jacobian at the initial guess, so each variable's unit
+                                    !!   change gives the same size change in the constraints
+                                    !!   (see [[equilibrate_scales]])
+        real(wp) :: epoch_scale_factor = 1.0_wp  !! with `xscale_mode=2`: the epoch scales are also multiplied by
+                                                 !! this (>1 makes the epochs cheaper to change, relative to the states)
 
     contains
 
@@ -268,6 +290,7 @@
         procedure :: get_sparsity_pattern
         procedure :: removed_columns
         procedure :: compute_jacobian_stm
+        procedure :: equilibrate_scales
         procedure :: define_problem_size
         procedure :: get_case_name
         procedure :: generate_patch_points
@@ -442,7 +465,7 @@
         write(*,*) 'Initial Guess...'
         write(*,*) '----------------------'
         write(*,*) ''
-        write(*,'(A/,*(F30.16/))') 'x:      ', x * solver%mission%xscale    ! unscaled values
+        write(*,'(A/,*(F30.16/))') 'x:      ', x * solver%mission%xscale + solver%mission%xoffset  ! unscaled values
         write(*,*) ''
         write(*,'(A/,*(F30.16/))') 'f:      ', f    ! scaled values
         write(*,*) ''
@@ -1068,7 +1091,7 @@
         end if
 
         ! scale the x vector:
-        x = x / me%xscale
+        x = (x - me%xoffset) / me%xscale
 
     end if
 
@@ -1194,7 +1217,14 @@
             call json%get(p_element,'scale',xscale(i), found)
             if (.not. found) error stop 'could not find scale in json file'
         end do
-        x = x / xscale  ! return scaled vector
+        ! (the values in the file are unscaled. they are scaled with this problem's
+        !  scales, which may be different from the ones in the file)
+        if (size(x) /= size(me%xscale)) error stop 'error: the initial guess file does not match the problem size'
+        if (me%epoch_variable_mode==2) then
+            ! the epoch variables are the offsets from this starting point:
+            where (me%x_is_epoch) me%xoffset = x
+        end if
+        x = (x - me%xoffset) / me%xscale  ! return scaled vector
     else
         error stop 'error: the initial_guess_from_file has not been initialized'
     end if
@@ -1224,7 +1254,7 @@
 
     ! unscale the x vector:
     allocate(x(size(x_scaled)))
-    x = x_scaled * me%xscale
+    x = x_scaled * me%xscale + me%xoffset
 
     ! first extract data from the opt var vector and put it into the segments:
     i = 0  ! initialize index, will be updated by extract_vector
@@ -1859,7 +1889,13 @@
 
             ! also set the scales:
             ! the t0 gradually grows larger so use the initial value for each segment.
-            me%segs(iseg+j)%data%t0_scale = abs(magnitude(2.0_wp*me%segs(iseg+j)%data%t0))    ! magic number
+            ! [or, with epoch_variable_mode=2, the variables are the offsets from the initial guess,
+            !  and all have the same scale]
+            if (me%epoch_variable_mode==2) then
+                me%segs(iseg+j)%data%t0_scale = me%epoch_scale
+            else
+                me%segs(iseg+j)%data%t0_scale = abs(magnitude(2.0_wp*me%segs(iseg+j)%data%t0))    ! magic number
+            end if
 
             ! do the same for the states, but just in case, specify the min values:
             me%segs(iseg+j)%data%x0_rotating_scale = abs(magnitude(2.0_wp*me%segs(iseg+j)%data%x0_rotating, xscale_x0))
@@ -1881,6 +1917,8 @@
 
 
     allocate(me%xscale(n))
+    allocate(me%xoffset(n))
+    allocate(me%x_is_epoch(n))
     allocate(me%xname(n))
     allocate(me%dpert_(n))
     allocate(me%fscale(m))
@@ -1895,9 +1933,81 @@
         ! get the initial guess from the mission:
         allocate(x(n))    ! size the opt var vector
         call me%get_problem_arrays(x=x)
+        ! scales from the sensitivities at the initial guess:
+        if (me%xscale_mode==2) call me%equilibrate_scales(x)
     end if
 
     end subroutine initialize_the_mission
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Set the opt var scales from the sensitivities (`xscale_mode=2`): the Jacobian is
+!  computed at `x` (as the solver does, see `jacobian_mode`), and each variable's
+!  scale is divided by the norm of its column, so the columns of the scaled
+!  Jacobian all have unit norm. A unit change of any scaled variable then gives the
+!  same size change in the (scaled) constraints, so the solver's minimum-norm steps
+!  weigh each variable by its effect, not its units. (With the scales from the
+!  magnitudes, the 1e5 km position scale makes the positions at periapsis, where they
+!  are most sensitive, the cheapest variables to change.) The epoch scales are also
+!  multiplied by `epoch_scale_factor`.
+!
+!  `x` (scaled), and the scaled perturbations for the finite differences, are
+!  updated for the new scales.
+
+    subroutine equilibrate_scales(me,x)
+
+    implicit none
+
+    class(mission_type),intent(inout) :: me
+    real(wp),dimension(:),intent(inout) :: x  !! opt var vector (scaled): in with the old scales, out with the new
+
+    real(wp),dimension(:),allocatable :: jac  !! the nonzero Jacobian elements (scaled)
+    real(wp),dimension(:),allocatable :: colnorm  !! norm of each column of the scaled Jacobian
+    real(wp),dimension(:),allocatable :: x_unscaled, new_scale
+    integer,dimension(:),allocatable :: irow, icol
+    integer :: i, k
+
+    write(*,'(A)') ' * Scaling the variables by their sensitivities (Jacobian at the initial guess)'
+
+    do i = 1, size(me%segs)
+        call me%segs(i)%cache()
+    end do
+    if (me%jacobian_mode==2) then
+        call me%compute_jacobian_stm(x,jac)
+    else
+        call me%compute_jacobian(x,jac)
+    end if
+    do i = 1, size(me%segs)
+        call me%segs(i)%uncache()
+    end do
+
+    call me%get_sparsity_pattern(irow,icol)
+    allocate(colnorm(size(x)))
+    colnorm = zero
+    do k = 1, size(jac)
+        colnorm(icol(k)) = colnorm(icol(k)) + jac(k)**2
+    end do
+    colnorm = sqrt(colnorm)
+
+    allocate(new_scale(size(x)))
+    do i = 1, size(x)
+        if (colnorm(i) > zero) then
+            new_scale(i) = me%xscale(i) / colnorm(i)
+        else
+            new_scale(i) = me%xscale(i)  ! (no constraint depends on it: keep it)
+        end if
+        if (me%x_is_epoch(i)) new_scale(i) = new_scale(i) * me%epoch_scale_factor
+    end do
+
+    ! x and the perturbations with the new scales:
+    x_unscaled = x * me%xscale + me%xoffset
+    me%dpert_ = me%dpert_ * me%xscale / new_scale  ! (dpert_ is scaled: the unscaled perturbations are kept)
+    me%xscale = new_scale
+    x = (x_unscaled - me%xoffset) / me%xscale
+    call me%set_dpert(me%dpert_)
+
+    end subroutine equilibrate_scales
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1930,9 +2040,12 @@
     i = 0 ! for xscale
     ii = 0 ! for dpert
     j = 0 ! for xname
+    me%xoffset = zero
+    me%x_is_epoch = .false.
     ! x scales - segment 1:
     if (.not. me%fix_initial_time) then
         call fill_vector(me%xscale, me%segs(1)%data%t0_scale, i)
+        call set_epoch_offset(i, 1)
         call fill_vector(me%dpert_, me%segs(1)%data%t0_dpert, ii)
         call fill_vector(me%xname, 'SEG1 '//t0_label, j)
     end if
@@ -1949,6 +2062,7 @@
     do iseg = 2, n_segs, 2
         write(iseg_str,'(I10)') iseg
         call fill_vector(me%xscale, me%segs(iseg)%data%t0_scale, i)
+        call set_epoch_offset(i, iseg)
         call fill_vector(me%dpert_, me%segs(iseg)%data%t0_dpert, ii)
         call fill_vector(me%xname, 'SEG'//trim(adjustl(iseg_str))//' '//t0_label, j)
         if (iseg == me%fix_ry_at_end_of_rev*8) then
@@ -1982,6 +2096,17 @@
     ! write(*,*) ''
     ! write(*,*) 'fscale: ', me%fscale
     ! write(*,*) ''
+
+    contains
+
+        subroutine set_epoch_offset(i, iseg)
+            !! `x(i)` is the epoch of segment `iseg`: with `epoch_variable_mode=2`,
+            !! its offset is the current (initial guess) value.
+            integer,intent(in) :: i, iseg
+            me%x_is_epoch(i) = .true.
+            if (me%epoch_variable_mode==2) me%xoffset(i) = me%segs(iseg)%data%t0
+        end subroutine set_epoch_offset
+
     end subroutine get_scales_from_segs
 !*****************************************************************************************
 
@@ -3843,6 +3968,19 @@
     if (me%mission%jacobian_mode<1 .or. me%mission%jacobian_mode>2) error stop 'error: jacobian_mode must be 1 or 2.'
     call f%get('stm_rtol', me%mission%stm_rtol, found)
     call f%get('stm_atol', me%mission%stm_atol, found)
+    call f%get('epoch_variable_mode', me%mission%epoch_variable_mode, found)
+    if (.not. found) me%mission%epoch_variable_mode = 1
+    if (me%mission%epoch_variable_mode<1 .or. me%mission%epoch_variable_mode>2) &
+        error stop 'error: epoch_variable_mode must be 1 or 2.'
+    call f%get('epoch_scale', me%mission%epoch_scale, found)
+    if (.not. found) me%mission%epoch_scale = 1.0_wp
+    if (me%mission%epoch_scale <= 0.0_wp) error stop 'error: epoch_scale must be > 0.'
+    call f%get('xscale_mode', me%mission%xscale_mode, found)
+    if (.not. found) me%mission%xscale_mode = 1
+    if (me%mission%xscale_mode<1 .or. me%mission%xscale_mode>2) error stop 'error: xscale_mode must be 1 or 2.'
+    call f%get('epoch_scale_factor', me%mission%epoch_scale_factor, found)
+    if (.not. found) me%mission%epoch_scale_factor = 1.0_wp
+    if (me%mission%epoch_scale_factor <= 0.0_wp) error stop 'error: epoch_scale_factor must be > 0.'
 
     !optional global parameter inputs:
     call f%get('mu_earth'  , mu_earth,  found)
@@ -4291,7 +4429,7 @@
         call json%create_object(p_element, '') ! allocate
         call json%add(p_element, 'i',     i)
         call json%add(p_element, 'label', trim(me%xname(i)))
-        call json%add(p_element, 'value', x(i)*me%xscale(i))
+        call json%add(p_element, 'value', x(i)*me%xscale(i) + me%xoffset(i))
         call json%add(p_element, 'scale', me%xscale(i))
         ! to speed this up, we keep track of the
         ! last element and insert after it.
