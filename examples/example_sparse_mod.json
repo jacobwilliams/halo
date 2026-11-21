@@ -19,7 +19,7 @@
     // epoch variable settings: how the solver treats the epoch variables
     // "epoch_variable_mode": 1,  // use the actual epochs as the epoch variables
     "epoch_variable_mode": 2,  // use offsets from the initial guess for epoch variables
-    "epoch_scale": 100.0,      // scale for the epoch offsets (days) -- for epoch_variable_mode=2 only
+    "epoch_scale": 10.0,      // scale for the epoch offsets (days) -- for epoch_variable_mode=2 only
 
     // integrator tols:
     "rtol": 1.0e-12,
