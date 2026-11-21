@@ -202,6 +202,15 @@
         real(wp),dimension(:,:),allocatable :: defects  !! (2,nseg/2) |dr| (km), |dv| (km/s)
     end type iteration_points
 
+    !> A trajectory read from a `traj_*.json` file (and its eclipse file), ready to plot
+    !> (see [[read_trajectory]]: it can be read in the worker thread).
+    type :: trajectory_data
+        type(iteration_points) :: pts  !! the joined trajectory, the segments' ends, and the defects
+        integer :: nsegs = 0  !! the number of segments in the file
+        logical :: has_eclipses = .false.  !! if there was an eclipse file
+        real(wp),dimension(:),allocatable :: ecl_t, ecl_phi  !! its times (ET sec, increasing) and phi
+    end type trajectory_data
+
     !> A solver run (in the worker thread). The worker reads the inputs, sets the
     !> results, and emits `iteration`; it touches nothing else of the GUI.
     type :: solver_job
@@ -210,6 +219,9 @@
         logical :: iterations = .false.  !! plot each iteration
         ! results
         character(len=:),allocatable :: traj_file  !! the solution's trajectory file (if written)
+        logical :: solution_read = .false.  !! if `solution` was read from it (by the worker)
+        type(trajectory_data) :: solution  !! the solution's trajectory (read by the worker, plotted by the GUI thread)
+        character(len=:),allocatable :: read_error  !! why it couldn't be read
         ! iteration points: (the address of an iteration_points, in two halves)
         type(QSignalInt2) :: iteration
     end type solver_job
@@ -555,15 +567,68 @@
 
 !*****************************************************************************************
 !>
-!  Read a trajectory JSON file written by the solver (`traj_*.json`: an array
-!  `segs` of segments, each with `et` and the positions in each frame), and plot
-!  it. The segments are joined in time order (backward-propagated ones
-!  reversed), as in `python/plot_utilities.py`.
+!  Read a trajectory JSON file written by the solver (see [[read_trajectory]])
+!  and plot it (GUI thread).
 
     logical function load_trajectory(file, keep_view) result(ok)
 
     character(len=*),intent(in) :: file  !! the file to read
     logical,intent(in) :: keep_view  !! keep the camera and the time (else reset them)
+
+    type(trajectory_data) :: d
+    character(len=:),allocatable :: msg
+
+    ok = read_trajectory(file, d, msg)
+    if (.not. ok) then
+        call error_message(msg)
+        return
+    end if
+    call show_trajectory(d, file, keep_view)
+
+    end function load_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Plot a trajectory read by [[read_trajectory]] (GUI thread).
+
+    subroutine show_trajectory(d, file, keep_view)
+
+    type(trajectory_data),intent(in) :: d
+    character(len=*),intent(in) :: file  !! the file it was read from
+    logical,intent(in) :: keep_view  !! keep the camera and the time (else reset them)
+
+    call clear_eclipses()
+    if (d%has_eclipses) then
+        app%ecl_t = d%ecl_t
+        app%ecl_phi = d%ecl_phi
+        app%ecl_phi_min = min(0.0_wp, minval(app%ecl_phi))
+        app%has_eclipses = .true.
+    end if
+
+    call plot_points(d%pts%t, d%pts%rot, d%pts%inr, d%pts%se, &
+                     d%pts%seg_t, d%pts%seg_rot, d%pts%seg_inr, d%pts%seg_se, &
+                     d%pts%defects, basename(file), int_text(d%nsegs)//' segments', keep_view)
+    call app%main%setWindowTitle('HALO - '//basename(file))
+
+    end subroutine show_trajectory
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Read a trajectory JSON file written by the solver (`traj_*.json`: an array
+!  `segs` of segments, each with `et` and the positions in each frame), and its
+!  eclipse file (if there is one). The segments are joined in time order
+!  (backward-propagated ones reversed), as in `python/plot_utilities.py`.
+!
+!  This touches nothing of the GUI, so it can run in the worker thread (large
+!  files take seconds to read).
+
+    logical function read_trajectory(file, d, msg) result(ok)
+
+    character(len=*),intent(in) :: file  !! the file to read
+    type(trajectory_data),intent(out) :: d  !! the trajectory
+    character(len=:),allocatable,intent(out) :: msg  !! the error message (if not `ok`)
 
     type(json_core) :: json
     type(json_value),pointer :: root, segs, seg
@@ -573,23 +638,22 @@
     real(wp),dimension(:,:),allocatable :: seg_t  !! (2,nseg) each segment's start and end times
     real(wp),dimension(:,:,:),allocatable :: seg_rot, seg_inr, seg_se  !! (3,2,nseg) and positions
     real(wp),dimension(:,:),allocatable :: seg_v_end  !! (3,nseg) each segment's final velocity (inertial)
-    real(wp),dimension(:,:),allocatable :: defects  !! (2,nseg/2)
     integer :: nsegs, iseg, n, ntot, k, kstart, kend, kstep, nseg_ok
     logical :: found, status_ok, has_se, has_v
-    character(len=:),allocatable :: msg
 
     ok = .false.
+    msg = ''
     call json%initialize()
     call json%load(file=file, p=root)
     if (json%failed()) then
         call json%check_for_errors(status_ok, msg)
-        call error_message('Could not read '//file//': '//msg)
+        msg = 'Could not read '//file//': '//msg
         call json%destroy()
         return
     end if
     call json%get(root, 'segs', segs, found)
     if (.not. found) then
-        call error_message(file//' has no "segs" array (is it a traj_*.json file?)')
+        msg = file//' has no "segs" array (is it a traj_*.json file?)'
         call json%destroy(root)
         return
     end if
@@ -665,25 +729,31 @@
     call json%destroy(root)
 
     if (ntot < 2) then
-        call error_message('No trajectory points in '//file)
+        msg = 'No trajectory points in '//file
         return
     end if
 
+    ! the result (only the points used):
+    d%nsegs = nsegs
+    d%pts%t   = t_all(1:ntot)
+    d%pts%rot = rot_all(:,1:ntot)
+    d%pts%inr = inr_all(:,1:ntot)
+    d%pts%se  = se_all(:,1:ntot)
+    d%pts%seg_t   = seg_t(:,1:nseg_ok)
+    d%pts%seg_rot = seg_rot(:,:,1:nseg_ok)
+    d%pts%seg_inr = seg_inr(:,:,1:nseg_ok)
+    d%pts%seg_se  = seg_se(:,:,1:nseg_ok)
+
     ! the defects: segments 2k-1 and 2k end at the same point (when solved).
     ! (|dv| from the inertial velocities: the rotating frame's differs by w x dr, negligible)
-    allocate(defects(2, nseg_ok/2))
+    allocate(d%pts%defects(2, nseg_ok/2))
     do k = 1, nseg_ok/2
-        defects(1,k) = norm2(seg_inr(:,2,2*k-1) - seg_inr(:,2,2*k))
-        defects(2,k) = norm2(seg_v_end(:,2*k-1) - seg_v_end(:,2*k))
+        d%pts%defects(1,k) = norm2(seg_inr(:,2,2*k-1) - seg_inr(:,2,2*k))
+        d%pts%defects(2,k) = norm2(seg_v_end(:,2*k-1) - seg_v_end(:,2*k))
     end do
 
     ! the eclipses, from the solution's eclipse file (if there is one):
-    call load_eclipses(eclipse_file_for(file))
-
-    call plot_points(t_all(1:ntot), rot_all(:,1:ntot), inr_all(:,1:ntot), se_all(:,1:ntot), &
-                     seg_t(:,1:nseg_ok), seg_rot(:,:,1:nseg_ok), seg_inr(:,:,1:nseg_ok), seg_se(:,:,1:nseg_ok), &
-                     defects, basename(file), int_text(nsegs)//' segments', keep_view)
-    call app%main%setWindowTitle('HALO - '//basename(file))
+    d%has_eclipses = read_eclipses(eclipse_file_for(file), d%ecl_t, d%ecl_phi)
     ok = .true.
 
     contains
@@ -708,7 +778,7 @@
             call move_alloc(se_new, se_all)
         end subroutine grow
 
-    end function load_trajectory
+    end function read_trajectory
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -735,12 +805,14 @@
 !*****************************************************************************************
 !>
 !  Read the eclipse data (`et_se` and `phi_se`: < 0 in the Earth's shadow) from
-!  an `eclipse_*.json` file, for the coloring and the plot. None if the file
-!  isn't there (or isn't one).
+!  an `eclipse_*.json` file, for the coloring and the plot. False if the file
+!  isn't there (or isn't one). (Touches nothing of the GUI: see [[read_trajectory]].)
 
-    subroutine load_eclipses(file)
+    logical function read_eclipses(file, ecl_t, ecl_phi) result(ok)
 
     character(len=*),intent(in) :: file
+    real(wp),dimension(:),allocatable,intent(out) :: ecl_t  !! times (ET sec, increasing)
+    real(wp),dimension(:),allocatable,intent(out) :: ecl_phi  !! phi at those times
 
     type(json_core) :: json
     type(json_value),pointer :: root
@@ -748,7 +820,7 @@
     logical :: exists, found1, found2
     integer :: i, n, m
 
-    call clear_eclipses()
+    ok = .false.
     if (len(file) == 0) return
     inquire(file=file, exist=exists)
     if (.not. exists) return
@@ -766,26 +838,22 @@
     if (n < 2) return
 
     ! increasing times (the segments' shared ends only once):
-    allocate(app%ecl_t(n), app%ecl_phi(n))
+    allocate(ecl_t(n), ecl_phi(n))
     m = 0
     do i = 1, n
         if (m > 0) then
-            if (et(i) <= app%ecl_t(m)) cycle
+            if (et(i) <= ecl_t(m)) cycle
         end if
         m = m + 1
-        app%ecl_t(m) = et(i)
-        app%ecl_phi(m) = phi(i)
+        ecl_t(m) = et(i)
+        ecl_phi(m) = phi(i)
     end do
-    if (m < 2) then
-        call clear_eclipses()
-        return
-    end if
-    app%ecl_t = app%ecl_t(1:m)
-    app%ecl_phi = app%ecl_phi(1:m)
-    app%ecl_phi_min = min(0.0_wp, minval(app%ecl_phi))
-    app%has_eclipses = .true.
+    if (m < 2) return
+    ecl_t = ecl_t(1:m)
+    ecl_phi = ecl_phi(1:m)
+    ok = .true.
 
-    end subroutine load_eclipses
+    end function read_eclipses
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -1429,6 +1497,7 @@
     app%job%config = config
     app%job%iterations = app%plot_iterations%isChecked()
     if (allocated(app%job%traj_file)) deallocate(app%job%traj_file)
+    call clear_solution()
     app%plotted_this_run = .false.
     call clear_eclipses()  ! (the iterations have none; the solution's are read when it's done)
     app%running = .true.
@@ -1460,6 +1529,13 @@
         else
             call halo_solver_main(job%config, .false., gui=.true., &
                                   stop_check=stop_requested, traj_file=job%traj_file)
+        end if
+        ! read the solution's trajectory here too (large files take seconds to read,
+        ! which would freeze the window in the GUI thread). [[on_solver_finished]] plots it.
+        if (allocated(job%traj_file)) then
+            write(output_unit,'(A)') ' * Reading the trajectory for the plot...'
+            flush(output_unit)
+            job%solution_read = read_trajectory(job%traj_file, job%solution, job%read_error)
         end if
         flush(output_unit)
     end select
@@ -1586,10 +1662,23 @@
         call set_status('Solver done, but it wrote no trajectory file.')
         return
     end if
-    if (load_trajectory(app%job%traj_file, keep_view=app%plotted_this_run)) &
+    if (app%job%solution_read) then
+        call show_trajectory(app%job%solution, app%job%traj_file, keep_view=app%plotted_this_run)
         call set_status('Done: plotted '//app%job%traj_file)
+    else
+        call error_message(app%job%read_error)
+    end if
+    call clear_solution()  ! (plotted: the points are in the views now)
 
     end subroutine on_solver_finished
+!*****************************************************************************************
+
+!*****************************************************************************************
+    subroutine clear_solution()  !! free the job's copy of the solution's trajectory
+    type(trajectory_data) :: empty
+    app%job%solution = empty
+    app%job%solution_read = .false.
+    end subroutine clear_solution
 !*****************************************************************************************
 
 !*****************************************************************************************
