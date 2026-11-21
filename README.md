@@ -45,6 +45,12 @@ fpm test partials_test --profile release
 fpm test jacobian_test --profile release --flag "-fopenmp" -- examples/example_sparse.json
 ```
 
+`text_buffer_test` checks the number formatting used to write the trajectory JSON file (every number must read back exactly):
+
+```
+fpm test text_buffer_test --profile release
+```
+
 ### GUI
 
 `halo_gui` is a GUI for the solver ([qt-fortran](https://github.com/jacobwilliams/qt-fortran) for the window, [vkframes](https://github.com/jacobwilliams/vkframes) for the 3D view). Choose a config file (default `examples/example_sparse.json`) and click **Run solver**. The solver runs inside the GUI (in a worker thread), its output is shown in the window, and the resulting trajectory is plotted in the Earth-Moon rotating or inertial frame (Moon-centered, colored by the distance from the Moon). With **Plot each iteration** checked, each solver iteration's trajectory is plotted as it solves (sent straight to the 3D view, not through files). **Center** puts the camera's center (what it rotates about) on the central body or on the spacecraft (the camera then moves with it). **Stop** stops the solver at its next iteration. **File > Open Trajectory** plots an existing `traj_*.json` file.

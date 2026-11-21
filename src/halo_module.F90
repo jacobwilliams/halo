@@ -17,6 +17,7 @@
     use halo_utilities_module
     use moon_frame_module
     use astro_partials_module
+    use text_buffer_module
 
     implicit none
 
@@ -3092,14 +3093,15 @@
     character(len=*),intent(in) :: filename !! plot file name [without extension]
     logical,intent(in),optional :: only_first_rev  !! to only do the first rev [Default is False]
 
+    integer,parameter :: block_size = 512 !! number of segments formatted at a time (in parallel)
+
     integer :: iseg  !! segment number counter
     integer :: nsegs_to_plot !! number of segments to plot
-    type(json_core) :: json
-    type(json_value),pointer :: p_root, p_segs, p_seg, p_current
     real(wp),dimension(:),allocatable :: rdot, rmag
     logical :: accumulate_rdot !! to generate the rdot/rp/ra file
     real(wp),dimension(:),allocatable :: cumulative_et,cumulative_rdot,cumulative_r
-    integer :: n
+    type(text_buffer),dimension(:),allocatable :: buf !! the JSON text of a block of segments
+    integer :: iunit, istat, i1, i2
 
     write(*,'(A)') ' * Export the trajectory JSON file.'
 
@@ -3109,13 +3111,6 @@
         if (only_first_rev) nsegs_to_plot = 8 ! only the first rev (8 segments)
     end if
     accumulate_rdot = me%generate_rp_ra_file
-
-    ! the JSON file will contain an array of segments:
-    call json%initialize(compress_vectors=.true.)
-    call json%create_object(p_root, '')
-    call json%create_array(p_segs, 'segs')
-    call json%add(p_root, p_segs)
-    p_current => null()
 
     do iseg = 1, nsegs_to_plot
         call destroy_traj(iseg)
@@ -3134,84 +3129,44 @@
         allocate(cumulative_et(0))
         allocate(cumulative_rdot(0))
         allocate(cumulative_r(0))
-    end if
-
-    do iseg = 1, nsegs_to_plot
-
-        associate (seg => me%segs(iseg))
-            ! generate the trajectory for this segment:
-            !call destroy_traj(iseg)
-            !call seg%propagate(mode=2)  ! [export points]
-
-            ! create the segment object for exporting the trajectory:
-            call json%create_object(p_seg, '')
-            if (associated(p_current)) then
-                call json%insert_after(p_current, p_seg) ! next one
-            else
-                call json%add(p_segs, p_seg) ! first one
-            end if
-            p_current => p_seg ! update for next seg
-
-            call json%add(p_seg, 'iseg', iseg)
-            call json%add(p_seg, 'et', seg%traj_inertial%et)
-
-            call json%add(p_seg, 'x_inertial',  seg%traj_inertial%x)
-            call json%add(p_seg, 'y_inertial',  seg%traj_inertial%y)
-            call json%add(p_seg, 'z_inertial',  seg%traj_inertial%z)
-            call json%add(p_seg, 'vx_inertial', seg%traj_inertial%vx)
-            call json%add(p_seg, 'vy_inertial', seg%traj_inertial%vy)
-            call json%add(p_seg, 'vz_inertial', seg%traj_inertial%vz)
-
-            if (accumulate_rdot) then
+        do iseg = 1, nsegs_to_plot
+            associate (seg => me%segs(iseg))
                 call compute_rdot_vecs(seg%traj_inertial%x,seg%traj_inertial%y,seg%traj_inertial%z,&
                                        seg%traj_inertial%vx,seg%traj_inertial%vy,seg%traj_inertial%vz,&
                                        rmag, rdot)
                 call append_traj_to_arrays(seg)
-                !call json%add(p_seg, 'rdot_inertial', rdot)
-                ! don't include the last time step since that will overlap the next segment
-                ! n = size(seg%traj_inertial%x)
-                ! cumulative_et   = [cumulative_et,   seg%traj_inertial%et]
-                ! cumulative_rdot = [cumulative_rdot, rdot]
-                ! cumulative_r    = [cumulative_r,    rmag]
-            end if
-
-            call json%add(p_seg, 'x_rotating',  seg%traj_rotating%x)
-            call json%add(p_seg, 'y_rotating',  seg%traj_rotating%y)
-            call json%add(p_seg, 'z_rotating',  seg%traj_rotating%z)
-            ! call json%add(p_seg, 'vx_rotating', seg%traj_rotating%vx)
-            ! call json%add(p_seg, 'vy_rotating', seg%traj_rotating%vy)
-            ! call json%add(p_seg, 'vz_rotating', seg%traj_rotating%vz)
-            ! call compute_rdot_vecs(seg%traj_rotating%x,seg%traj_rotating%y,seg%traj_rotating%z,&
-            !                        seg%traj_rotating%vx,seg%traj_rotating%vy,seg%traj_rotating%vz,&
-            !                        rdot)
-            ! call json%add(p_seg, 'rdot_rotating', rdot)
-
-            call json%add(p_seg, 'x_se_rotating',  seg%traj_se_rotating%x)
-            call json%add(p_seg, 'y_se_rotating',  seg%traj_se_rotating%y)
-            call json%add(p_seg, 'z_se_rotating',  seg%traj_se_rotating%z)
-            ! call json%add(p_seg, 'vx_se_rotating', seg%traj_se_rotating%vx) ! don't need these
-            ! call json%add(p_seg, 'vy_se_rotating', seg%traj_se_rotating%vy)
-            ! call json%add(p_seg, 'vz_se_rotating', seg%traj_se_rotating%vz)
-
-            !TODO:
-            !  - maybe also earth & sun ephemeris for plotting
-            !  - solar fraction to color the trajectory [but really that should go in the eclipse file?]
-
-            !call destroy_traj(iseg) ! keep them for the eclipse file generation ...
-
-        end associate
-    end do
-
-    if (accumulate_rdot) then
+            end associate
+        end do
         call me%export_rp_ra_json_file(cumulative_et, cumulative_r, cumulative_rdot, filename)
     end if
+
+    ! write the JSON file directly (an array of segments). json-fortran is not used here,
+    ! because building and printing the JSON structure is slow for large files (millions of
+    ! numbers). the segments are formatted in parallel, a block at a time, and written in order.
+    open(newunit=iunit, file=trim(filename)//'.json', access='stream', form='unformatted', &
+         status='replace', iostat=istat)
+    if (istat/=0) error stop 'error opening trajectory JSON file.'
+    write(iunit) '{'//new_line('a')//'  "segs": ['//new_line('a')
+    allocate(buf(min(block_size, nsegs_to_plot)))
+    do i1 = 1, nsegs_to_plot, block_size
+        i2 = min(i1 + block_size - 1, nsegs_to_plot)
+!$OMP PARALLEL DO
+        do iseg = i1, i2
+            call segment_trajectory_json(me%segs(iseg), iseg, iseg==nsegs_to_plot, buf(iseg-i1+1))
+        end do
+!$OMP END PARALLEL DO
+        do iseg = i1, i2
+            associate (b => buf(iseg-i1+1))
+                write(iunit) b%s(1:b%n)
+            end associate
+        end do
+    end do
+    write(iunit) '  ]'//new_line('a')//'}'//new_line('a')
+    close(iunit)
 
     do iseg = 1, nsegs_to_plot
         call destroy_traj(iseg)
     end do
-
-    call json%print(p_root, trim(filename)//'.json')
-    call json%destroy(p_root)
 
     contains
 
@@ -3244,6 +3199,56 @@
         end subroutine append_traj_to_arrays
 
     end subroutine export_trajectory_json_file
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The JSON object of a segment's trajectory (for [[export_trajectory_json_file]]),
+!  replacing the contents of `buf`.
+
+    subroutine segment_trajectory_json(seg, iseg, last, buf)
+
+    implicit none
+
+    type(segment),intent(in) :: seg
+    integer,intent(in) :: iseg  !! segment number
+    logical,intent(in) :: last  !! if this is the last segment (no comma after it)
+    type(text_buffer),intent(inout) :: buf
+
+    character(len=*),parameter :: nl = new_line('a')
+
+    call buf%clear()
+    call buf%add_str('    {'//nl//'      "iseg": ')
+    call buf%add_int(iseg)
+    call add_array('et',          seg%traj_inertial%et)
+    call add_array('x_inertial',  seg%traj_inertial%x)
+    call add_array('y_inertial',  seg%traj_inertial%y)
+    call add_array('z_inertial',  seg%traj_inertial%z)
+    call add_array('vx_inertial', seg%traj_inertial%vx)
+    call add_array('vy_inertial', seg%traj_inertial%vy)
+    call add_array('vz_inertial', seg%traj_inertial%vz)
+    call add_array('x_rotating',  seg%traj_rotating%x)
+    call add_array('y_rotating',  seg%traj_rotating%y)
+    call add_array('z_rotating',  seg%traj_rotating%z)
+    call add_array('x_se_rotating', seg%traj_se_rotating%x)
+    call add_array('y_se_rotating', seg%traj_se_rotating%y)
+    call add_array('z_se_rotating', seg%traj_se_rotating%z)
+    if (last) then
+        call buf%add_str(nl//'    }'//nl)
+    else
+        call buf%add_str(nl//'    },'//nl)
+    end if
+
+    contains
+
+        subroutine add_array(name, x)
+        character(len=*),intent(in) :: name
+        real(wp),dimension(:),intent(in) :: x
+        call buf%add_str(','//nl//'      "'//name//'": ')
+        call buf%add_real_array(x)
+        end subroutine add_array
+
+    end subroutine segment_trajectory_json
 !*****************************************************************************************
 
 !*****************************************************************************************
