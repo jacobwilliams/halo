@@ -262,7 +262,9 @@
                                             !! * 2 - the offsets from the initial guess (days), all scaled by the
                                             !!   same `epoch_scale` (so a change of an epoch costs the same
                                             !!   anywhere along the trajectory, and the variables start at 0)
-        real(wp) :: epoch_scale = 1.0_wp  !! scale for the epoch variables with `epoch_variable_mode=2` [days]
+        real(wp) :: epoch_scale = 10.0_wp  !! scale for the epoch variables with `epoch_variable_mode=2` [days]
+                                           !! (10 days works well for both 100 and 1120 revs; much smaller
+                                           !! values don't converge, and 100 days lets the 100-rev solutions drift)
         real(wp),dimension(:),allocatable :: xoffset  !! opt var offsets: `x_scaled = (x - xoffset) / xscale`
                                                       !! (nonzero only for the epochs, with `epoch_variable_mode=2`)
         logical,dimension(:),allocatable :: x_is_epoch  !! the opt vars that are epochs
@@ -4102,7 +4104,7 @@
     if (me%mission%epoch_variable_mode<1 .or. me%mission%epoch_variable_mode>2) &
         error stop 'error: epoch_variable_mode must be 1 or 2.'
     call f%get('epoch_scale', me%mission%epoch_scale, found)
-    if (.not. found) me%mission%epoch_scale = 1.0_wp
+    if (.not. found) me%mission%epoch_scale = 10.0_wp
     if (me%mission%epoch_scale <= 0.0_wp) error stop 'error: epoch_scale must be > 0.'
     call f%get('xscale_mode', me%mission%xscale_mode, found)
     if (.not. found) me%mission%xscale_mode = 1
