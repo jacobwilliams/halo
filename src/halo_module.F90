@@ -5,7 +5,7 @@
     module halo_module
 
     use parameters_module
-    use fortran_astrodynamics_toolkit
+    use fortran_astrodynamics_toolkit, fat_get_sun_fraction => get_sun_fraction  ! (halo_utilities_module has its own)
     use ddeabm_module
     use nlesolver_module
     use numerical_differentiation_module

@@ -16,10 +16,6 @@
         integer,parameter :: kx = bspline_order_cubic !! spline interpolation order
         integer,parameter :: iknot = 0 !! use default knots
 
-        !TODO: this should be moved into the fortran astrodynamics toolkit
-        ! [also update the MU .... it isn't used here]
-        type(celestial_body),parameter,public :: body_ssb = celestial_body(0, 'SSB', 0.0_wp ) !! solar-system barycenter
-
         ! the coefficients are stored as global variables,
         ! so all the segments can access them without having
         ! to have multiple copies of the ephemeris in each segment

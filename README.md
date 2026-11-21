@@ -63,6 +63,8 @@ pixi run gui                                           # run it
 pixi run gui -- examples/example.json --iterations --run   # check "Plot each iteration", and solve at startup
 ```
 
+`pixi run gui-build-quad` and `pixi run gui-quad` do the same with the solver in quad precision (`-DREAL128`, much slower). The 3D view stays in double precision.
+
 ### Using qr_mumps
 
 The [qr_mumps](https://gitlab.com/qr_mumps/qr_mumps) solver can also be used, which will run much faster than the default LAPACK solver for very large problems. For this, the code must be compiled with the `WITH_QRMUMPS` preprocessor directive. See the `build.sh` and `run.sh` scripts for details.

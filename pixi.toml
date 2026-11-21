@@ -10,6 +10,9 @@ version = "0.1.0"
 # the GUI (app/halo_gui.f90): qt-fortran + vkframes; see tools/fpm_gui.py
 gui-build = "python tools/fpm_gui.py build"
 gui = "python tools/fpm_gui.py run"
+# the same, with the solver in quad precision (-DREAL128; much slower). vkframes stays in double precision.
+gui-build-quad = { cmd = "python tools/fpm_gui.py build", env = { HALO_FPM_FLAGS = "-DREAL128" } }
+gui-quad = { cmd = "python tools/fpm_gui.py run", env = { HALO_FPM_FLAGS = "-DREAL128" } }
 
 [dependencies]
 gfortran = ">=16.2.0,<16.3"

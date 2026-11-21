@@ -29,6 +29,7 @@ relative to it.
 """
 
 import os
+import shutil
 import subprocess
 import sys
 
@@ -45,9 +46,41 @@ def fpm_qt(env, command, extra):
     return subprocess.call([sys.executable, qt_tool, command, *flags, *extra], env=env, cwd=GUI)
 
 
+def update_changed_solver_dependencies():
+    """If a git tag of one of the solver's dependencies (halo's fpm.toml) is not the one
+    the GUI package fetched (gui/build/cache.toml), fetch it again. fpm doesn't do this
+    by itself for the dependencies of a path dependency, not even with `fpm update`
+    (it keeps the old checkout). So the old copy is removed, the cache is set aside,
+    and `fpm update` fetches the new one (the other dependencies are reused)."""
+    try:
+        import tomllib
+    except ImportError:                           # (Python < 3.11: not checked)
+        return
+    cache_file = os.path.join(GUI, "build", "cache.toml")
+    if not os.path.isfile(cache_file):
+        return
+    with open(os.path.join(ROOT, "fpm.toml"), "rb") as f:
+        wanted = tomllib.load(f).get("dependencies", {})
+    with open(cache_file, "rb") as f:
+        cache = tomllib.load(f)
+    changed = [name for name, spec in wanted.items()
+               if isinstance(spec, dict) and "tag" in spec and name in cache
+               and cache[name].get("obj") != spec["tag"]]
+    if not changed:
+        return
+    for name in changed:
+        print(f"fpm_gui: {name}: fetching tag {wanted[name]['tag']} (was {cache[name].get('obj')})")
+        path = os.path.realpath(os.path.join(GUI, cache[name].get("proj-dir", "")))
+        if os.path.dirname(path) == os.path.realpath(DEPS) and os.path.isdir(path):
+            shutil.rmtree(path)
+    os.replace(cache_file, cache_file + ".old")
+    subprocess.check_call(["fpm", "update"], cwd=GUI)
+
+
 def main(argv):
     if not argv or argv[0] not in ("build", "run"):
         sys.exit(__doc__)
+    update_changed_solver_dependencies()
     if not (os.path.isdir(os.path.join(DEPS, "vkframes")) and os.path.isdir(os.path.join(DEPS, "qt-fortran"))):
         subprocess.check_call(["fpm", "update"], cwd=GUI)
 
