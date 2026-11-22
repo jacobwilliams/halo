@@ -4282,6 +4282,20 @@
         pp_ydot0  = interpolate_point(normalized_period, ydot0, p)
     end if
 
+    ! the CR3BP orbit of the initial guess (normalized units; the state is at the
+    ! table's reference point, x0, 0, z0, 0, ydot0, 0, relative to the barycenter):
+    write(*,'(A)')          ' * CR3BP orbit of the initial guess (normalized units):'
+    write(*,'(A,1X,F18.6)')  '     lstar (km):         ', lstar
+    write(*,'(A,1X,F18.8)')  '     tstar (sec):        ', tstar
+    write(*,'(A,1X,F18.12)') '     mu:                 ', compute_crtpb_parameter(mu_earth,mu_moon)
+    write(*,'(A,1X,F18.12)') '     period:             ', pp_period
+    write(*,'(A,1X,F18.12)') '     x0:                 ', pp_x0
+    write(*,'(A,1X,F18.12)') '     z0:                 ', pp_z0
+    write(*,'(A,1X,F18.12)') '     ydot0:              ', pp_ydot0
+    write(*,'(A,1X,F18.12)') '     Jacobi constant:    ', &
+        compute_jacobi_constant(compute_crtpb_parameter(mu_earth,mu_moon), &
+                                [pp_x0, zero, pp_z0, zero, pp_ydot0, zero])
+
     call me%mission%generate_patch_points(lstar, tstar, pp_period, &
                                           pp_x0, pp_z0, pp_ydot0, pp)
     me%mission%periapsis = pp(1)
