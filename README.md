@@ -36,7 +36,7 @@ fpm run halo_solver --profile release --flag "-fopenmp" -- examples/example.json
 
 ### Jacobian options
 
-The solver's Jacobian is computed by finite differences by default (`"jacobian_mode": 1`). With `"jacobian_mode": 2`, it is computed analytically instead: each segment is propagated once with its state transition matrix (using Pines' second partials for the lunar gravity field, in `src/astro_partials_module.f90`), and the epoch partials are computed in closed form. This is faster and more accurate. It requires `"use_splined_ephemeris": true`. Optional `"stm_rtol"` and `"stm_atol"` set the integrator tolerances for the state transition matrix (default: `rtol` and `atol`). See the technical note in `docs/` for details and a comparison.
+The solver's Jacobian is computed by finite differences by default (`"jacobian_mode": 1`). With `"jacobian_mode": 2`, it is computed analytically instead: each segment is propagated once with its state transition matrix (using Pines' second partials for the lunar gravity field, in `src/astro_partials_module.f90`), and the epoch partials are computed in closed form. This is faster and more accurate. It requires `"use_splined_ephemeris": true`. Optional `"stm_rtol"` and `"stm_atol"` set the integrator tolerances for the state transition matrix (default: `rtol` and `atol`). See the technical note in `docs/halo-paper/` for details and a comparison.
 
 The tests `partials_test` (the partial derivatives) and `jacobian_test` (both Jacobian methods, compared) are run from the root directory:
 

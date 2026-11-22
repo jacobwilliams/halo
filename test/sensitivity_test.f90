@@ -11,7 +11,7 @@
 !
 !    fpm test sensitivity_test --profile release --flag "-fopenmp" -- [config.json]
 !
-!  The default config file is `docs/runs/baseline_stm.json`. The problem is set up
+!  The default config file is `docs/halo-paper/runs/baseline_stm.json`. The problem is set up
 !  with `jacobian_mode=2` and the splined ephemeris.
 
     program sensitivity_test
@@ -38,7 +38,7 @@
     character(len=:),allocatable :: label
     integer :: k, n, j, iseg, ityp, nodepos
 
-    config = 'docs/runs/baseline_stm.json'
+    config = 'docs/halo-paper/runs/baseline_stm.json'
     if (command_argument_count() >= 1) then
         call get_command_argument(1, arg)
         config = trim(arg)

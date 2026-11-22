@@ -198,6 +198,7 @@
     "r_eclipse_bubble": 1.0, // km
     "eclipse_dt_step": 3600.0,
     "eclipse_filetype": 2, // json
+    // "eclipse_file_se_positions": false, // leave the Sun-Earth rotating positions out of the json eclipse file (smaller, faster)
 
     // "run_pyvista_script": true,
 
