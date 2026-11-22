@@ -174,6 +174,9 @@
         real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
         real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
         integer :: eclipse_filetype = 1 !! type of eclipse file: 1=csv or 2=json
+        logical :: eclipse_file_se_positions = .true. !! for the JSON eclipse file: also write the Sun-Earth
+                                                      !! rotating frame positions of the points (for plotting;
+                                                      !! false gives a smaller file, faster to write and read)
 
         integer :: epoch_mode = 1 !! 1 - calendar date was specified, 2 - ephemeris time was specified
         integer :: year   = 0 !! epoch of first point (first periapsis crossing)
@@ -3740,7 +3743,6 @@
         integer :: i,k,iunit,iseg,istat,istart,istep,n,n_total,n_shadow
         integer :: ifiletype
         logical :: do_se !! also compute the Sun-Earth rotating frame positions (JSON file)
-        type(json_file) :: json
         character(len=:),allocatable :: full_filename
         integer,dimension(:),allocatable :: offset !! index of each segment's first point in the arrays below, minus 1
         real(wp),dimension(:),allocatable :: et_se  !! epochs of all the points [sec], in time order within each segment
@@ -3765,7 +3767,7 @@
         end if
         if (ifiletype/=FILETYPE_CSV .and. ifiletype/=FILETYPE_JSON) &
             error stop 'invalid filetype for eclipse file'
-        do_se = ifiletype==FILETYPE_JSON
+        do_se = ifiletype==FILETYPE_JSON .and. me%eclipse_file_se_positions
         full_filename = trim(fileprefix)//'_'//me%get_case_name()//&
                         trim(file_ext(ifiletype))
 
@@ -3868,19 +3870,77 @@
                     phi_shadow(n_shadow) = phi_se(k)
                 end if
             end do
-            call json%initialize(compress_vectors=.true.)
-            call json%add('et',  et_shadow)     ! TODO: could remove any duplicate time entries (e.g., at the segment interfaces)
-            call json%add('phi', phi_shadow)
-            call json%add('phi_se', phi_se) ! also the full S-E trajectory data for plotting
-            call json%add('et_se', et_se)
-            call json%add('x_se_rotating', x_se)
-            call json%add('y_se_rotating', y_se)
-            call json%add('z_se_rotating', z_se)
-            call json%print(full_filename)
-            call json%destroy()
+            ! write the JSON file directly: json-fortran is not used here, because
+            ! printing large arrays with it is slow (most of the time of this routine).
+            ! the numbers are formatted in parallel, a block at a time (see [[write_json_real_array]]).
+            open(newunit=iunit, file=full_filename, access='stream', form='unformatted', &
+                 status='replace', iostat=istat)
+            if (istat/=0) error stop 'error opening eclipse json file.'
+            write(iunit) '{'
+            call write_json_real_array(iunit, 'et',     et_shadow, last=.false.)
+            call write_json_real_array(iunit, 'phi',    phi_shadow, last=.false.)
+            call write_json_real_array(iunit, 'phi_se', phi_se, last=.false.) ! also the full S-E trajectory data for plotting
+            call write_json_real_array(iunit, 'et_se',  et_se, last=.not. do_se)
+            if (do_se) then
+                call write_json_real_array(iunit, 'x_se_rotating', x_se, last=.false.)
+                call write_json_real_array(iunit, 'y_se_rotating', y_se, last=.false.)
+                call write_json_real_array(iunit, 'z_se_rotating', z_se, last=.true.)
+            end if
+            write(iunit) new_line('a')//'}'//new_line('a')
+            close(iunit)
         end select
 
     end subroutine generate_eclipse_data
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Write a JSON name and real array (`"name": [x1, x2, ...]`, followed by a comma
+!  unless it is the `last` one) to a file opened for unformatted stream access.
+!  The array is formatted in parallel, in chunks, and written in order.
+
+    subroutine write_json_real_array(iunit, name, x, last)
+
+    integer,intent(in) :: iunit !! the file unit (stream access)
+    character(len=*),intent(in) :: name !! the variable name
+    real(wp),dimension(:),intent(in) :: x !! the array
+    logical,intent(in) :: last !! if this is the last variable in the object (no comma after it)
+
+    integer,parameter :: chunk = 16384 !! numbers per chunk
+    integer,parameter :: n_buf = 256   !! chunks formatted at a time (in parallel)
+
+    type(text_buffer),dimension(:),allocatable :: buf
+    integer :: n_chunks, ic1, ic2, ic, i1, i2
+
+    write(iunit) new_line('a')//'  "'//name//'": ['
+    n_chunks = (size(x) + chunk - 1) / chunk
+    allocate(buf(min(n_buf, max(1,n_chunks))))
+    do ic1 = 1, n_chunks, n_buf
+        ic2 = min(ic1 + n_buf - 1, n_chunks)
+!$OMP PARALLEL DO PRIVATE(i1,i2)
+        do ic = ic1, ic2
+            i1 = (ic-1)*chunk + 1
+            i2 = min(ic*chunk, size(x))
+            associate (b => buf(ic-ic1+1))
+                call b%clear()
+                if (ic > 1) call b%add_str(', ')
+                call b%add_real_list(x(i1:i2))
+            end associate
+        end do
+!$OMP END PARALLEL DO
+        do ic = ic1, ic2
+            associate (b => buf(ic-ic1+1))
+                write(iunit) b%s(1:b%n)
+            end associate
+        end do
+    end do
+    if (last) then
+        write(iunit) ']'
+    else
+        write(iunit) '],'
+    end if
+
+    end subroutine write_json_real_array
 !*****************************************************************************************
 
 !*****************************************************************************************
@@ -4080,6 +4140,7 @@
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
     call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)
     call f%get('eclipse_filetype',    me%mission%eclipse_filetype, found)
+    call f%get('eclipse_file_se_positions', me%mission%eclipse_file_se_positions, found)
 
     call f%get('use_splined_ephemeris',  me%mission%use_splined_ephemeris,  found)
     call f%get('dt_spline_sec',          me%mission%dt_spline_sec,          found)

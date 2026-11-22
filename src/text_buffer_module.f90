@@ -31,6 +31,7 @@
         procedure,public :: add_int   !! append an integer
         procedure,public :: add_real  !! append a real number (JSON syntax)
         procedure,public :: add_real_array  !! append a JSON array of real numbers
+        procedure,public :: add_real_list   !! append real numbers separated by commas (no brackets)
     end type text_buffer
 
     integer,parameter :: dp = real64  !! the numbers are written in double precision (whatever `wp` is)
@@ -281,17 +282,33 @@
     class(text_buffer),intent(inout) :: me
     real(wp),dimension(:),intent(in) :: x
 
-    integer :: i
-
     call me%reserve(2 + 26*size(x))  ! (at most 24 characters per number, plus ", ")
     call me%add_str('[')
+    call me%add_real_list(x)
+    call me%add_str(']')
+
+    end subroutine add_real_array
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  Append a list of real numbers, separated by commas (`x1, x2, ...`: the
+!  contents of a JSON array, for writing a large array in pieces).
+
+    pure subroutine add_real_list(me, x)
+
+    class(text_buffer),intent(inout) :: me
+    real(wp),dimension(:),intent(in) :: x
+
+    integer :: i
+
+    call me%reserve(26*size(x))  ! (at most 24 characters per number, plus ", ")
     do i = 1, size(x)
         if (i > 1) call me%add_str(', ')
         call me%add_real(x(i))
     end do
-    call me%add_str(']')
 
-    end subroutine add_real_array
+    end subroutine add_real_list
 !*****************************************************************************************
 
 !*****************************************************************************************
