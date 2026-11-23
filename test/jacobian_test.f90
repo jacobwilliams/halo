@@ -6,11 +6,18 @@
 !
 !  Usage (from the halo root directory):
 !
-!    fpm test jacobian_test --profile release --flag "-fopenmp" -- [config.json] [n_revs] [jac_file]
+!    fpm test jacobian_test --profile release --flag "-fopenmp" -- [config.json] [n_revs] [jac_file] [ref_config.json]
 !
 !  With `jac_file`, the two Jacobians (scaled, in the sparsity pattern order) are also
 !  written to that file (stream access: `nnz` (int32), then the `nnz` finite-difference values,
 !  then the `nnz` STM values (float64)), e.g., to compare runs with other tolerances.
+!
+!  With `ref_config.json` (e.g., the same problem with tighter integration tolerances), a
+!  reference analytic Jacobian is computed with that config *at the same variables `x`*,
+!  and appended to `jac_file` (another `nnz` float64 values). The initial guess depends
+!  slightly on the integration tolerances (the guess generation integrates), so Jacobians
+!  from separate runs are at slightly different points, and their differences then
+!  include that, not only the integration error. Comparing at the same `x` avoids it.
 !
 !  The default config file is `examples/example_sparse.json`. The problem is set
 !  up with `jacobian_mode=2` (the finite differences are also available then).
@@ -24,8 +31,8 @@
 
     implicit none
 
-    type(my_solver_type) :: solver
-    real(wp),dimension(:),allocatable :: x, jac_fd, jac_stm, colnorm
+    type(my_solver_type) :: solver, ref_solver
+    real(wp),dimension(:),allocatable :: x, x_ref, jac_fd, jac_stm, jac_ref, colnorm
     integer,dimension(:),allocatable :: irow, icol, keep
     integer,dimension(:),allocatable :: removed
     character(len=1024) :: arg
@@ -120,12 +127,30 @@
     write(output_unit,'(A,ES10.2,A,ES10.2)') '   epoch columns: ||dJ||/||J|| = ', sqrt(err_epoch/num_epoch), &
                                              '   max |dJ|/||column|| = ', worst_epoch
 
+    ! the reference Jacobian (another config, at the same x):
+    if (command_argument_count() >= 4) then
+        call get_command_argument(4, arg)
+        call ref_solver%read_config_file(trim(arg))
+        ref_solver%mission%n_revs = solver%mission%n_revs
+        ref_solver%mission%jacobian_mode = 2
+        ref_solver%mission%use_splined_ephemeris = .true.
+        call ref_solver%mission%init(x_ref)
+        if (size(x_ref) /= size(x)) error stop 'the reference config has a different problem size'
+        call ref_solver%mission%compute_jacobian_stm(x, jac_ref)  ! (at this run's x)
+        write(output_unit,'(A)') ' relative to the reference (analytic, '//trim(arg)//', same x):'
+        write(output_unit,'(A,ES10.2)') '   finite differences: ||dJ||/||J_ref|| = ', norm2(jac_fd-jac_ref)/norm2(jac_ref)
+        write(output_unit,'(A,ES10.2)') '   analytic:           ||dJ||/||J_ref|| = ', norm2(jac_stm-jac_ref)/norm2(jac_ref)
+        write(output_unit,'(A,ES10.2,A)') '   (the reference config''s own guess differs by max |x - x_ref| = ', &
+                                          maxval(abs(x-x_ref)), ' (scaled), not used)'
+    end if
+
     if (command_argument_count() >= 3) then
         call get_command_argument(3, arg)
         open(newunit=iunit, file=trim(arg), access='stream', form='unformatted', status='replace')
         write(iunit) int(size(irow),int32)
         write(iunit) jac_fd
         write(iunit) jac_stm
+        if (allocated(jac_ref)) write(iunit) jac_ref
         close(iunit)
     end if
 
