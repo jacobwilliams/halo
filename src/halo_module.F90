@@ -4190,7 +4190,7 @@
     if (.not. found) xscale_x0 = [1.0e+05_wp,1.0e+05_wp,1.0e+05_wp,2.0e+00_wp,2.0e+00_wp,2.0e+00_wp]
     if (size(xscale_x0) /= 6) error stop 'error: xscale_x0 must be a 6 element vector'
     call f%get('fscale_xf', fscale_xf, found)
-    if (.not. found) fscale_xf = [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0e+02_wp,1.0e+02_wp,1.0e+02_wp]
+    if (.not. found) fscale_xf = [1.0e+04_wp,1.0e+04_wp,1.0e+04_wp,1.0_wp,1.0_wp,1.0_wp]
     if (size(fscale_xf) /= 6) error stop 'error: fscale_xf must be a 6 element vector'
     call f%get('fscale_rdot' , fscale_rdot, found) ! rdot function scale value
 
