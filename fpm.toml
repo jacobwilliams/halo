@@ -15,7 +15,7 @@ link = ["lapack", "blas"]
 
 [dependencies]
 fortran-astrodynamics-toolkit = { git = "https://github.com/jacobwilliams/Fortran-Astrodynamics-Toolkit", tag = "0.14" }
-NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "1.8.0" }
+NumDiff = { git = "https://github.com/jacobwilliams/NumDiff", tag = "2.0.0" }
 ddeabm = { git = "https://github.com/jacobwilliams/ddeabm", tag = "3.0.0" }
 json-fortran = { git = "https://github.com/jacobwilliams/json-fortran", tag = "8.4.0" }
 bspline-fortran = { git = "https://github.com/jacobwilliams/bspline-fortran", tag = "7.0.0" }
