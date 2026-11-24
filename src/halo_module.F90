@@ -4416,56 +4416,18 @@
                                         me%sec)
     case(2)
         ! then compute calendar from et
-        call et_to_calendar_date(me%et_ref,&
-                                 me%year,&
-                                 me%month,&
-                                 me%day,&
-                                 me%hour,&
-                                 me%minute,&
-                                 me%sec)
+        call julian_date_to_calendar_date(et_to_jd(me%et_ref),&
+                                          me%year,&
+                                          me%month,&
+                                          me%day,&
+                                          me%hour,&
+                                          me%minute,&
+                                          me%sec)
     case default
         error stop 'error: epoch_mode must be 1 or 2.'
     end select
 
     end subroutine update_epoch
-!*****************************************************************************************
-
-!*****************************************************************************************
-!>
-!  The calendar date (TDB) of an ephemeris time.
-!
-!  The day and the time of day are computed from `et` directly (`et` = 0 is
-!  2000-01-01 12:00 TDB, Julian day number 2451545), so the time of day is exact, and
-!  the toolkit's `julian_date_to_calendar_date` is only used for the date of a whole
-!  Julian day number. (That routine takes the day as `int(jd)`, so after midnight it gives
-!  the previous date with hours of 24 to 35.)
-
-    subroutine et_to_calendar_date(et, year, month, day, hour, minute, sec)
-
-    implicit none
-
-    real(wp),intent(in)  :: et     !! ephemeris time [sec from J2000]
-    integer,intent(out)  :: year
-    integer,intent(out)  :: month
-    integer,intent(out)  :: day
-    integer,intent(out)  :: hour
-    integer,intent(out)  :: minute
-    real(wp),intent(out) :: sec
-
-    real(wp) :: days   !! whole days since 2000-01-01 00:00 TDB
-    real(wp) :: sod    !! seconds of the day
-    integer  :: h, m   !! (unused outputs of the date routine)
-    real(wp) :: s      !! (unused output of the date routine)
-
-    days = floor((et + 43200.0_wp) / 86400.0_wp)
-    sod  = (et + 43200.0_wp) - days * 86400.0_wp
-    call julian_date_to_calendar_date(2451545.0_wp + days, year, month, day, h, m, s)
-
-    hour   = int(sod / 3600.0_wp)
-    minute = int((sod - hour * 3600.0_wp) / 60.0_wp)
-    sec    = sod - hour * 3600.0_wp - minute * 60.0_wp
-
-    end subroutine et_to_calendar_date
 !*****************************************************************************************
 
 !*****************************************************************************************
