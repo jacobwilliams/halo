@@ -97,6 +97,11 @@
                                       !! and the Pines gravity routine (with its gradient) is used.
         logical :: compute_stm = .false. !! if true (during [[propagate_segment_stm]]), the STM
                                          !! is integrated (otherwise its derivatives are zero)
+        real(wp) :: t_offset = 0.0_wp  !! [sec from epoch] start of the segment while it is integrated:
+                                       !! the integrator's time is local, from 0 at `t0`, so that its
+                                       !! precision does not depend on how far the segment is from
+                                       !! `et_ref` (the derivative and report functions add it back).
+                                       !! zero otherwise.
         real(wp),dimension(6,6) :: dxf_dx0 = zero !! d(xf_rotating)/d(x0_rotating)
         real(wp),dimension(6)   :: dxf_dt0 = zero !! d(xf_rotating)/d(t0) [per second], at fixed `tf`
         real(wp),dimension(6)   :: dxf_dtf = zero !! d(xf_rotating)/d(tf) [per second]
@@ -2256,7 +2261,7 @@
         ggrad = zero
 
         ! compute ephemeris time [sec]:
-        et = me%data%et_ref + t
+        et = (me%data%et_ref + me%t_offset) + t  ! (t is local while integrating, see t_offset)
 
         if (me%pointmass_central_body) then
             ! pointmass moon gravity model
@@ -2471,8 +2476,10 @@
         integration_mode = 1
     end if
 
-    t  = me%data%t0 * day2sec  ! initial time in seconds from epoch
-    tf = me%data%tf * day2sec  ! final time in seconds from epoch
+    ! integrate in local time (from 0 at t0), see t_offset:
+    me%t_offset = me%data%t0 * day2sec
+    t  = zero
+    tf = (me%data%tf - me%data%t0) * day2sec
     neq = merge(n_eoms_stm, n_eoms, me%stm_mode)
     x  = zero
     x(1:n_eoms) = me%data%x0   ! inertial state
@@ -2491,6 +2498,7 @@
     else
         call me%integrate(t,x(1:neq),tf,idid=idid,integration_mode=integration_mode)
     end if
+    me%t_offset = zero
     if (idid<0) then
         write(*,'(A,*(I5/))')    'idid: ',idid
         error stop 'error in integrator'
@@ -2499,7 +2507,7 @@
     xf = x(1:n_eoms)  ! final state [inertial frame]
 
     ! also save the rotating frame state at tf (to compute the constraint violations):
-    etf = me%data%et_ref + tf  ! convert to ephemeris time [sec]
+    etf = me%data%et_ref + me%data%tf * day2sec  ! convert to ephemeris time [sec]
     inertial = icrf_frame(b=body_moon)
     rotating = two_body_rotating_frame(primary_body=body_earth,&
                                        secondary_body=body_moon,&
@@ -2552,14 +2560,17 @@
 
     t0 = me%data%t0 * day2sec  ! initial time in seconds from epoch
     tf = me%data%tf * day2sec  ! final time in seconds from epoch
-    t  = t0
     x(1:n_eoms) = me%data%x0   ! inertial state
     x(n_eoms+1:) = identity_stm()
 
+    ! integrate in local time (from 0 at t0), see t_offset:
+    me%t_offset = t0
+    t = zero
     me%compute_stm = .true.
     call me%first_call()
-    call me%integrate(t,x,tf,idid=idid,integration_mode=1)
+    call me%integrate(t,x,(me%data%tf - me%data%t0) * day2sec,idid=idid,integration_mode=1)
     me%compute_stm = .false.
+    me%t_offset = zero  ! (the calls below use the time from epoch)
     if (idid<0) then
         write(*,'(A,*(I5/))') 'idid: ',idid
         error stop 'error in integrator'
@@ -4002,7 +4013,7 @@
     select type (me)
     class is (segment)
 
-        et = me%data%et_ref + t  ! convert to ephemeris time [sec]
+        et = (me%data%et_ref + me%t_offset) + t  ! convert to ephemeris time [sec] (t is local, see t_offset)
 
         ! convert state to the moon-centered rotating frame
         inertial = icrf_frame(b=body_moon)
@@ -4100,6 +4111,7 @@
     type(config_file) :: f
     logical :: found, found_jc, found_period, found_initial_r
     real(wp):: jc !! jacobii constant from the file
+    character(len=9) :: sec_str !! seconds of the reference epoch, for printing
     real(wp):: p !! period from file (normalized)
     type(patch_point),dimension(3) :: pp !! patch points
     logical :: use_json_file  !! if true, use the JSON file.
@@ -4311,14 +4323,16 @@
     me%mission%period8 = me%mission%period / 8.0_wp      ! 1/8 of Halo period [days]
 
     write(*,*) ''
-    write(*,'(A30,1x,f16.6,a,i4,a,i2,a,i2,a,i0.2,a,i0.2,a,f9.6,a)') '   Reference ephemeris time: ', &
+    write(sec_str,'(f9.6)') me%mission%sec
+    if (sec_str(1:1)==' ') sec_str(1:1) = '0'  ! (zero-padded seconds: 00.000000)
+    write(*,'(A30,1x,f18.6,a,i4,a,i2.2,a,i2.2,a,i2.2,a,i2.2,a,a,a)') '   Reference ephemeris time: ', &
                                                                           me%mission%et_ref, &
                                                                     ' (', me%mission%year,'-',&
                                                                           me%mission%month,'-',&
                                                                           me%mission%day,' ',&
                                                                           me%mission%hour,':',&
                                                                           me%mission%minute,':',&
-                                                                          me%mission%sec, ')'
+                                                                          sec_str, ' TDB)'
     write(*,'(a30,1x,f21.17)') '   Orbit period (days): ', me%mission%period
 
     contains
@@ -4402,18 +4416,56 @@
                                         me%sec)
     case(2)
         ! then compute calendar from et
-        call julian_date_to_calendar_date(et_to_jd(me%et_ref),&
-                                          me%year,&
-                                          me%month,&
-                                          me%day,&
-                                          me%hour,&
-                                          me%minute,&
-                                          me%sec)
+        call et_to_calendar_date(me%et_ref,&
+                                 me%year,&
+                                 me%month,&
+                                 me%day,&
+                                 me%hour,&
+                                 me%minute,&
+                                 me%sec)
     case default
         error stop 'error: epoch_mode must be 1 or 2.'
     end select
 
     end subroutine update_epoch
+!*****************************************************************************************
+
+!*****************************************************************************************
+!>
+!  The calendar date (TDB) of an ephemeris time.
+!
+!  The day and the time of day are computed from `et` directly (`et` = 0 is
+!  2000-01-01 12:00 TDB, Julian day number 2451545), so the time of day is exact, and
+!  the toolkit's `julian_date_to_calendar_date` is only used for the date of a whole
+!  Julian day number. (That routine takes the day as `int(jd)`, so after midnight it gives
+!  the previous date with hours of 24 to 35.)
+
+    subroutine et_to_calendar_date(et, year, month, day, hour, minute, sec)
+
+    implicit none
+
+    real(wp),intent(in)  :: et     !! ephemeris time [sec from J2000]
+    integer,intent(out)  :: year
+    integer,intent(out)  :: month
+    integer,intent(out)  :: day
+    integer,intent(out)  :: hour
+    integer,intent(out)  :: minute
+    real(wp),intent(out) :: sec
+
+    real(wp) :: days   !! whole days since 2000-01-01 00:00 TDB
+    real(wp) :: sod    !! seconds of the day
+    integer  :: h, m   !! (unused outputs of the date routine)
+    real(wp) :: s      !! (unused output of the date routine)
+
+    days = floor((et + 43200.0_wp) / 86400.0_wp)
+    sod  = (et + 43200.0_wp) - days * 86400.0_wp
+    call julian_date_to_calendar_date(2451545.0_wp + days, year, month, day, h, m, s)
+
+    hour   = int(sod / 3600.0_wp)
+    minute = int((sod - hour * 3600.0_wp) / 60.0_wp)
+    sec    = sod - hour * 3600.0_wp - minute * 60.0_wp
+
+    end subroutine et_to_calendar_date
 !*****************************************************************************************
 
 !*****************************************************************************************
