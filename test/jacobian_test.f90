@@ -6,7 +6,7 @@
 !
 !  Usage (from the halo root directory):
 !
-!    fpm test jacobian_test --profile release --flag "-fopenmp" -- [config.json] [n_revs] [jac_file] [ref_config.json]
+!    fpm test jacobian_test --profile release --flag "-fopenmp" -- [config.json] [n_revs] [jac_file] [ref_config.json] [x_file]
 !
 !  With `jac_file`, the two Jacobians (scaled, in the sparsity pattern order) are also
 !  written to that file (stream access: `nnz` (int32), then the `nnz` finite-difference values,
@@ -19,6 +19,11 @@
 !  from separate runs are at slightly different points, and their differences then
 !  include that, not only the integration error. Comparing at the same `x` avoids it.
 !
+!  With `x_file`, the point is also written to that file (stream access: `n` (int32), then
+!  `x`, `xoffset` and `xscale` (`n` float64 each), then `m` (int32) and `fscale` (`m` float64)),
+!  for a reference Jacobian at exactly the same point from a quad-precision build
+!  (see `jacobian_ref_test.f90`).
+!
 !  The default config file is `examples/example_sparse.json`. The problem is set
 !  up with `jacobian_mode=2` (the finite differences are also available then).
 
@@ -26,7 +31,7 @@
 
     use halo_module
     use halo_kinds_module, only: wp
-    use iso_fortran_env, only: output_unit, int32
+    use iso_fortran_env, only: output_unit, int32, real64
 !$  use omp_lib
 
     implicit none
@@ -151,6 +156,16 @@
         write(iunit) jac_fd
         write(iunit) jac_stm
         if (allocated(jac_ref)) write(iunit) jac_ref
+        close(iunit)
+    end if
+
+    if (command_argument_count() >= 5) then
+        call get_command_argument(5, arg)
+        open(newunit=iunit, file=trim(arg), access='stream', form='unformatted', status='replace')
+        write(iunit) int(size(x),int32)
+        write(iunit) real(x,real64), real(solver%mission%xoffset,real64), real(solver%mission%xscale,real64)
+        write(iunit) int(size(solver%mission%fscale),int32)
+        write(iunit) real(solver%mission%fscale,real64)
         close(iunit)
     end if
 
