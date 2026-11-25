@@ -109,6 +109,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/compiler-rt21-21.1.8-hdb3d66b_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/conda-gcc-specs-16.2.0-hff6d3be_7.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/contourpy-1.4.0-py314h1433326_2.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/cspice-67-hc919400_13.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/cxx-compiler-2.0.0-he3883d0_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/cyrus-sasl-2.1.28-hb961e35_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/dbus-1.16.2-hf049998_2.conda
@@ -307,6 +308,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/shaderc-2026.4-hfd4ff19_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/sigtool-codesign-0.1.3-h98dc951_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/snappy-1.3.1-h7b3374d_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/spiceypy-8.4.0-py314hdd70a12_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/spirv-tools-2026.4-hc0b298b_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/sqlite-3.54.1-ha9f7ffe_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/svt-av1-4.3.0-h6111c0a_0.conda
@@ -1552,6 +1554,18 @@ packages:
   run_exports: {}
   size: 293195
   timestamp: 1794831595825
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/cspice-67-hc919400_13.conda
+  sha256: 446e6135322acfb9d6eeab948b1dfd44b1e0c585131fa0ddcc30bbddfd18dbbb
+  md5: 1db9738167d860e056b2d41aaf4c81da
+  depends:
+  - __osx >=11.0
+  license: MIT
+  license_family: MIT
+  run_exports:
+    weak:
+    - cspice >=67,<68.0a0
+  size: 1579906
+  timestamp: 1787279396861
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/cxx-compiler-2.0.0-he3883d0_1.conda
   sha256: 930ea08ea7a0c95fd489eb14a71436b43d949e5abe129e97cbae67b13a8b7818
   md5: f9dcd24896397502a72765d2625c57cd
@@ -4570,6 +4584,21 @@ packages:
     - snappy >=1.3.1,<1.4.0a0
   size: 42072
   timestamp: 1794480607790
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/spiceypy-8.4.0-py314hdd70a12_0.conda
+  sha256: d74d073769e5491ba236a23c40eb929e200b9d1397c4976772ede4a98092f13f
+  md5: 1463cde9c5e5ae5146ab175908e94cd6
+  depends:
+  - __osx >=11.0
+  - cspice >=67,<68
+  - cspice >=67,<68.0a0
+  - numpy >=1.25,<3
+  - python >=3.14,<3.15.0a0
+  - python_abi 3.14.* *_cp314
+  license: MIT
+  license_family: MIT
+  run_exports: {}
+  size: 919915
+  timestamp: 1794446572730
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/spirv-tools-2026.4-hc0b298b_2.conda
   sha256: e3529ae4406adff290ae541501e3349b7d08d057720ae46c56f4a41a97922ad1
   md5: 463c5755048deb232823935b007be54d
