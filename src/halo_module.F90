@@ -200,6 +200,10 @@
         real(wp) :: rtol = 1.0e-12_wp !! integrator rtol
         real(wp) :: atol = 1.0e-12_wp !! integrator atol
         real(wp) :: nlesolver_tol = 1.0e-6_wp !! nlesolver tol
+        real(wp) :: nlesolver_tolx = 1.0e-8_wp !! nlesolver tolerance for the change in the (scaled) `x`:
+                                               !! the solve stops when a step changes no variable by more
+                                               !! (make it smaller for a refinement from a converged solution,
+                                               !! whose steps are tiny)
 
         real(wp),dimension(:),allocatable :: initial_r
             !! if `fix_initial_r` is True, this can be used
@@ -900,6 +904,7 @@
                                 func             = halo_func,    &
                                 grad             = halo_grad,    &
                                 tol              = me%mission%nlesolver_tol,    & ! tolerance
+                                tolx             = me%mission%nlesolver_tolx,   & ! tolerance for the change in x
                                 ! step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 ! n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 ! alpha_min = 0.2_wp, &
@@ -924,6 +929,7 @@
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
                                 tol              = me%mission%nlesolver_tol,    & ! tolerance
+                                tolx             = me%mission%nlesolver_tolx,   & ! tolerance for the change in x
                                 step_mode        = 4,            & ! 3-point "line search" (2 intervals)
                                 n_intervals      = 2,            & ! number of intervals for step_mode=4
                                 alpha_min        = 0.2_wp, &
@@ -948,6 +954,7 @@
                                 func             = halo_func,    &
                                 grad_sparse      = halo_grad_sparse,    &
                                 tol              = me%mission%nlesolver_tol,    & ! tolerance
+                                tolx             = me%mission%nlesolver_tolx,   & ! tolerance for the change in x
                                 ! step_mode = 1,& ! TEST TEST TEST
                                 ! alpha = 1.0_wp,&
                                 step_mode        = 2,  & ! backtrack test!
@@ -4120,6 +4127,7 @@
     real(wp),dimension(:),allocatable :: jcvec, normalized_period
     real(wp),dimension(:),allocatable :: x0, z0, ydot0
     real(wp) :: pp_period, pp_x0, pp_z0, pp_ydot0
+    real(wp) :: tolx !! nlesolver_tolx from the file
 
     write(*,*) '* Loading config file: '//trim(filename)
     call f%open(filename)
@@ -4236,6 +4244,8 @@
     call f%get('rtol',          me%mission%rtol          , found )
     call f%get('atol',          me%mission%atol          , found )
     call f%get('nlesolver_tol', me%mission%nlesolver_tol , found )
+    call f%get('nlesolver_tolx', tolx, found )
+    if (found) me%mission%nlesolver_tolx = tolx
 
     ! if fix_initial_r is true, can specify the r to use
     ! [otherwise, the initial guess is used from the patch points]

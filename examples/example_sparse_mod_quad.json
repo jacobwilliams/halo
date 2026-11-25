@@ -26,7 +26,8 @@
     "atol": 1.0e-16,
 
     //nlesolver tol:
-    "nlesolver_tol": 1.0e-14,
+    "nlesolver_tol": 1.0e-16,
+    "nlesolver_tolx": 1.0e-20,  // (the steps from a converged double solution are tiny: no stop on the change in x)
 
     // derivative computation mode: 1 = finite differences, 2 = state transition matrices (STMs)
     // "jacobian_mode": 1, // finite diffs
