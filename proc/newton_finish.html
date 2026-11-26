@@ -1,0 +1,1090 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>newton_finish &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>newton_finish
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 2.5% of total for procedures.">103 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_eclipse_opt_submodule.html'>halo_eclipse_opt_submodule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">newton_finish</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/newton_finish.html#src">newton_finish</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2> subroutine newton_finish(d, x)  
+</h2>
+    
+
+    <p>The Newton finish (<code>eclipse_opt_newton_finish</code>): from the optimization's point, solve
+halo's continuity constraints and, as equalities <script type="math/tex"> \mathrm{KS}_k = \phi_{min} </script>, the
+eclipse rows that are at or near their bound (<script type="math/tex"> \mathrm{KS}_k < \phi_{min} </script> plus
+<code>eclipse_opt_newton_active_tol</code>), with halo's minimum-norm Newton solver (nlesolver, with
+halo's sparse linear solver). The optimization's point is near feasible but its
+continuity isn't converged; a solve of the continuity alone (<code>eclipse_opt_polish</code>) moves
+the trajectory back into the shadow, but with the active rows held at their bound it
+can't. A row left free that falls below its bound is added to the equalities, and the
+solve repeated (from where it ended).</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~4"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>the optimization's point (halo's scaled variables); replaced by the solution</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~newton_finish~~CallsGraph Pages: 1 -->
+<svg id="procnewton_finishCallsGraph" width="641pt" height="225pt"
+ viewBox="0.00 0.00 641.00 225.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~newton_finish~~CallsGraph" class="graph" transform="scale(0.527628 0.527628) rotate(0) translate(4 422.27)">
+<title>proc~~newton_finish~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-422.27 1210.87,-422.27 1210.87,4 -4,4"/>
+<!-- proc~newton_finish -->
+<g id="proc~~newton_finish~~CallsGraph_node1" class="node">
+<title>proc~newton_finish</title>
+<polygon fill="none" stroke="black" points="84.27,-256.27 0,-256.27 0,-232 84.27,-232 84.27,-256.27"/>
+<text xml:space="preserve" text-anchor="middle" x="42.13" y="-240.53" font-family="Helvetica,sans-Serif" font-size="10.50">newton_finish</text>
+</g>
+<!-- destroy -->
+<g id="proc~~newton_finish~~CallsGraph_node2" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="246.41,-418.27 192.41,-418.27 192.41,-394 246.41,-394 246.41,-418.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-402.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;destroy -->
+<g id="proc~~newton_finish~~CallsGraph_edge1" class="edge">
+<title>proc~newton_finish&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M46.17,-256.64C53.61,-284.48 75.53,-351.79 120.27,-385.13 137.59,-398.04 161.15,-403.37 180.84,-405.44"/>
+<polygon fill="#000000" stroke="#000000" points="180.46,-408.92 190.7,-406.21 181.01,-401.94 180.46,-408.92"/>
+</g>
+<!-- initialize -->
+<g id="proc~~newton_finish~~CallsGraph_node3" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="247.29,-376.27 191.52,-376.27 191.52,-352 247.29,-352 247.29,-376.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-360.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;initialize -->
+<g id="proc~~newton_finish~~CallsGraph_edge2" class="edge">
+<title>proc~newton_finish&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M49.05,-256.44C59.96,-277.73 85.38,-321.27 120.27,-343.13 138,-354.25 160.69,-359.55 179.78,-362.06"/>
+<polygon fill="#000000" stroke="#000000" points="179.31,-365.53 189.62,-363.12 180.06,-358.57 179.31,-365.53"/>
+</g>
+<!-- kt -->
+<g id="proc~~newton_finish~~CallsGraph_node4" class="node">
+<title>kt</title>
+<polygon fill="#777777" stroke="#777777" points="246.41,-334.27 192.41,-334.27 192.41,-310 246.41,-310 246.41,-334.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-318.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">kt</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;kt -->
+<g id="proc~~newton_finish~~CallsGraph_edge3" class="edge">
+<title>proc~newton_finish&#45;&gt;kt</title>
+<path fill="none" stroke="#000000" d="M58.46,-256.75C73.4,-268.47 97.18,-285.66 120.27,-296.13 139.54,-304.88 162.33,-311.14 181.09,-315.33"/>
+<polygon fill="#000000" stroke="#000000" points="180.19,-318.72 190.7,-317.35 181.64,-311.87 180.19,-318.72"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="proc~~newton_finish~~CallsGraph_node5" class="node">
+<title>proc~eval_rows</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node5"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="481.56,-256.27 418.29,-256.27 418.29,-232 481.56,-232 481.56,-256.27"/>
+<text xml:space="preserve" text-anchor="middle" x="449.93" y="-240.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="proc~~newton_finish~~CallsGraph_edge4" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M84.65,-244.13C162.28,-244.13 328.58,-244.13 406.72,-244.13"/>
+<polygon fill="#000000" stroke="#000000" points="406.52,-247.64 416.52,-244.14 406.52,-240.64 406.52,-247.64"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~newton_finish~~CallsGraph_node6" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node6"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="318.54,-216.27 120.27,-216.27 120.27,-192 318.54,-192 318.54,-216.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-200.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~newton_finish~~CallsGraph_edge5" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M84.67,-234.66C104.85,-230.05 129.6,-224.4 152.29,-219.22"/>
+<polygon fill="#000000" stroke="#000000" points="152.79,-222.7 161.76,-217.06 151.23,-215.88 152.79,-222.7"/>
+</g>
+<!-- proc~newton_func -->
+<g id="proc~~newton_finish~~CallsGraph_node7" class="node">
+<title>proc~newton_func</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node7"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="258.92,-174.27 179.9,-174.27 179.9,-150 258.92,-150 258.92,-174.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-158.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="proc~~newton_finish~~CallsGraph_edge6" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M55.27,-231.55C69.51,-217.54 94.47,-195.28 120.27,-183.13 135.24,-176.09 152.6,-171.38 168.53,-168.25"/>
+<polygon fill="#000000" stroke="#000000" points="169.1,-171.7 178.33,-166.5 167.87,-164.81 169.1,-171.7"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~newton_finish~~CallsGraph_node8" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node8"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="545.31,-298.27 354.54,-298.27 354.54,-274 545.31,-274 545.31,-298.27"/>
+<text xml:space="preserve" text-anchor="middle" x="449.93" y="-282.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~newton_finish~~CallsGraph_edge7" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M84.65,-252.41C96.16,-254.5 108.67,-256.59 120.27,-258.13 194.3,-267.98 278.2,-275.07 342.7,-279.64"/>
+<polygon fill="#000000" stroke="#000000" points="342.37,-283.13 352.59,-280.33 342.86,-276.15 342.37,-283.13"/>
+</g>
+<!-- solve -->
+<g id="proc~~newton_finish~~CallsGraph_node9" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="246.41,-132.27 192.41,-132.27 192.41,-108 246.41,-108 246.41,-132.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-116.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;solve -->
+<g id="proc~~newton_finish~~CallsGraph_edge8" class="edge">
+<title>proc~newton_finish&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M48.74,-231.69C59.35,-209.67 84.52,-164.02 120.27,-141.13 138.13,-129.7 161.2,-124.39 180.48,-121.97"/>
+<polygon fill="#000000" stroke="#000000" points="180.81,-125.45 190.41,-120.96 180.11,-118.49 180.81,-125.45"/>
+</g>
+<!-- status -->
+<g id="proc~~newton_finish~~CallsGraph_node10" class="node">
+<title>status</title>
+<polygon fill="#777777" stroke="#777777" points="246.41,-90.27 192.41,-90.27 192.41,-66 246.41,-66 246.41,-90.27"/>
+<text xml:space="preserve" text-anchor="middle" x="219.41" y="-74.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;status -->
+<g id="proc~~newton_finish~~CallsGraph_edge9" class="edge">
+<title>proc~newton_finish&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M45.95,-231.71C53.06,-203.36 74.52,-133.65 120.27,-99.13 137.51,-86.13 161.07,-80.79 180.78,-78.75"/>
+<polygon fill="#000000" stroke="#000000" points="180.95,-82.25 190.66,-78 180.42,-75.27 180.95,-82.25"/>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~newton_finish~~CallsGraph_node16" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node16"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="707.82,-256.27 653.82,-256.27 653.82,-232 707.82,-232 707.82,-256.27"/>
+<text xml:space="preserve" text-anchor="middle" x="680.82" y="-240.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~newton_finish~~CallsGraph_edge10" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M481.79,-244.13C523.35,-244.13 597.24,-244.13 642.06,-244.13"/>
+<polygon fill="#000000" stroke="#000000" points="641.82,-247.64 651.82,-244.14 641.82,-240.64 641.82,-247.64"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~newton_finish~~CallsGraph_node13" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node13"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="780.33,-214.27 581.31,-214.27 581.31,-190 780.33,-190 780.33,-214.27"/>
+<text xml:space="preserve" text-anchor="middle" x="680.82" y="-198.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~newton_finish~~CallsGraph_edge11" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M318.96,-203.71C392.72,-203.38 493.6,-202.95 569.95,-202.61"/>
+<polygon fill="#000000" stroke="#000000" points="569.53,-206.12 579.52,-202.57 569.5,-199.12 569.53,-206.12"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="proc~~newton_finish~~CallsGraph_node15" class="node">
+<title>proc~removed_columns</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node15"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="543.81,-176.27 356.04,-176.27 356.04,-152 543.81,-152 543.81,-176.27"/>
+<text xml:space="preserve" text-anchor="middle" x="449.93" y="-160.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="proc~~newton_finish~~CallsGraph_edge12" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M292.4,-191.53C315.66,-187.46 341.65,-182.91 365.66,-178.71"/>
+<polygon fill="#000000" stroke="#000000" points="366.17,-182.17 375.41,-177 364.96,-175.28 366.17,-182.17"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="proc~~newton_finish~~CallsGraph_edge15" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M259.16,-168.33C277.44,-171.78 299.38,-176.7 318.54,-183.13 353.1,-194.75 390.62,-212.94 416.5,-226.44"/>
+<polygon fill="#000000" stroke="#000000" points="414.68,-229.43 425.15,-231.01 417.95,-223.24 414.68,-229.43"/>
+</g>
+<!-- constraint_violations -->
+<g id="proc~~newton_finish~~CallsGraph_node11" class="node">
+<title>constraint_violations</title>
+<polygon fill="#777777" stroke="#777777" points="510.44,-134.27 389.42,-134.27 389.42,-110 510.44,-110 510.44,-134.27"/>
+<text xml:space="preserve" text-anchor="middle" x="449.93" y="-118.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">constraint_violations</text>
+</g>
+<!-- proc~newton_func&#45;&gt;constraint_violations -->
+<g id="proc~~newton_finish~~CallsGraph_edge13" class="edge">
+<title>proc~newton_func&#45;&gt;constraint_violations</title>
+<path fill="none" stroke="#000000" d="M259.17,-155.35C291.69,-149.66 338.98,-141.38 378.22,-134.51"/>
+<polygon fill="#000000" stroke="#000000" points="378.58,-138 387.82,-132.83 377.37,-131.11 378.58,-138"/>
+</g>
+<!-- proc~epochs_in_range -->
+<g id="proc~~newton_finish~~CallsGraph_node14" class="node">
+<title>proc~epochs_in_range</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node14"><a xlink:href="../proc/epochs_in_range.html" xlink:title="epochs_in_range">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="500.69,-92.27 399.17,-92.27 399.17,-68 500.69,-68 500.69,-92.27"/>
+<text xml:space="preserve" text-anchor="middle" x="449.93" y="-76.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">epochs_in_range</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~epochs_in_range -->
+<g id="proc~~newton_finish~~CallsGraph_edge14" class="edge">
+<title>proc~newton_func&#45;&gt;proc~epochs_in_range</title>
+<path fill="none" stroke="#000000" d="M259.22,-159.45C278.13,-156.78 300.59,-151.52 318.54,-141.13 339.24,-129.16 333.89,-113.19 354.54,-101.13 364.65,-95.23 376.25,-90.99 387.78,-87.94"/>
+<polygon fill="#000000" stroke="#000000" points="388.36,-91.4 397.3,-85.71 386.76,-84.58 388.36,-91.4"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~newton_finish~~CallsGraph_node12" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="724.46,-298.27 637.19,-298.27 637.19,-274 724.46,-274 724.46,-298.27"/>
+<text xml:space="preserve" text-anchor="middle" x="680.82" y="-282.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~newton_finish~~CallsGraph_edge16" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M545.68,-286.13C572.95,-286.13 601.75,-286.13 625.65,-286.13"/>
+<polygon fill="#000000" stroke="#000000" points="625.45,-289.64 635.45,-286.14 625.45,-282.64 625.45,-289.64"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~newton_finish~~CallsGraph_edge17" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M527.79,-273.53C533.91,-271.19 539.84,-268.42 545.31,-265.13 566.39,-252.48 560.17,-235.69 581.31,-223.13 583.66,-221.74 586.08,-220.44 588.57,-219.22"/>
+<polygon fill="#000000" stroke="#000000" points="589.91,-222.46 597.71,-215.29 587.14,-216.03 589.91,-222.46"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~newton_finish~~CallsGraph_node17" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node17"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="989.85,-338.27 817.08,-338.27 817.08,-314 989.85,-314 989.85,-338.27"/>
+<text xml:space="preserve" text-anchor="middle" x="903.47" y="-322.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~newton_finish~~CallsGraph_edge18" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M521.12,-298.77C540.56,-301.91 561.71,-304.98 581.31,-307.13 656.34,-315.38 741.65,-320.21 805.47,-322.94"/>
+<polygon fill="#000000" stroke="#000000" points="805.08,-326.43 815.22,-323.34 805.37,-319.43 805.08,-326.43"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~newton_finish~~CallsGraph_edge19" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M526.83,-176.74C547.88,-180.23 570.91,-184.05 592.56,-187.65"/>
+<polygon fill="#000000" stroke="#000000" points="591.8,-191.07 602.24,-189.26 592.95,-184.17 591.8,-191.07"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~newton_finish~~CallsGraph_edge23" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M707.93,-247.54C728.14,-250.68 756.59,-256.24 780.33,-265.13 797.47,-271.56 800.06,-276.75 816.33,-285.13 832.12,-293.27 849.8,-301.78 865.01,-308.93"/>
+<polygon fill="#000000" stroke="#000000" points="863.18,-311.94 873.72,-313 866.14,-305.6 863.18,-311.94"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~newton_finish~~CallsGraph_node19" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node19"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="987.98,-234.27 818.96,-234.27 818.96,-210 987.98,-210 987.98,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="903.47" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~newton_finish~~CallsGraph_edge20" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M708,-241.52C732.72,-239.06 771.33,-235.21 807.65,-231.59"/>
+<polygon fill="#000000" stroke="#000000" points="807.72,-235.1 817.32,-230.62 807.03,-228.13 807.72,-235.1"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~newton_finish~~CallsGraph_node20" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node20"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="953.1,-87.27 853.83,-87.27 853.83,-63 953.1,-63 953.1,-87.27"/>
+<text xml:space="preserve" text-anchor="middle" x="903.47" y="-71.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~newton_finish~~CallsGraph_edge21" class="edge">
+<title>proc~row_ks&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M708.24,-243.21C729.14,-241.42 758.35,-236.47 780.33,-223.13 832.02,-191.77 871.8,-130.49 890.58,-97.48"/>
+<polygon fill="#000000" stroke="#000000" points="893.62,-99.22 895.4,-88.78 887.5,-95.83 893.62,-99.22"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~newton_finish~~CallsGraph_node21" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node21"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="990.6,-276.27 816.33,-276.27 816.33,-252 990.6,-252 990.6,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="903.47" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~propagate_segment -->
+<g id="proc~~newton_finish~~CallsGraph_edge22" class="edge">
+<title>proc~row_ks&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M708,-246.51C732,-248.68 769.08,-252.04 804.45,-255.25"/>
+<polygon fill="#000000" stroke="#000000" points="804.07,-258.73 814.35,-256.15 804.71,-251.76 804.07,-258.73"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~newton_finish~~CallsGraph_node18" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1149.87,-402.27 1083.6,-402.27 1083.6,-378 1149.87,-378 1149.87,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~newton_finish~~CallsGraph_edge24" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M937.07,-338.69C961.5,-347.83 995.86,-360.13 1026.6,-369.13 1041.43,-373.48 1057.85,-377.55 1072.52,-380.93"/>
+<polygon fill="#000000" stroke="#000000" points="1071.33,-384.26 1081.86,-383.05 1072.88,-377.43 1071.33,-384.26"/>
+</g>
+<!-- transform -->
+<g id="proc~~newton_finish~~CallsGraph_node22" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="1148.75,-360.27 1084.73,-360.27 1084.73,-336 1148.75,-336 1148.75,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~newton_finish~~CallsGraph_edge25" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M990.09,-335.05C1018.7,-338.03 1049.33,-341.22 1073.19,-343.7"/>
+<polygon fill="#000000" stroke="#000000" points="1072.51,-347.15 1082.82,-344.71 1073.23,-340.19 1072.51,-347.15"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~newton_finish~~CallsGraph_node23" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1189.62,-318.27 1043.85,-318.27 1043.85,-294 1189.62,-294 1189.62,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~newton_finish~~CallsGraph_edge26" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M990.09,-318.03C1003.94,-316.72 1018.27,-315.36 1032.07,-314.05"/>
+<polygon fill="#000000" stroke="#000000" points="1032.39,-317.54 1042.02,-313.11 1031.73,-310.57 1032.39,-317.54"/>
+</g>
+<!-- apparent_position -->
+<g id="proc~~newton_finish~~CallsGraph_node24" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="1170.12,-108.27 1063.35,-108.27 1063.35,-84 1170.12,-84 1170.12,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="proc~~newton_finish~~CallsGraph_edge27" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M953.47,-80.01C982.67,-82.91 1020.07,-86.63 1051.61,-89.76"/>
+<polygon fill="#000000" stroke="#000000" points="1051.13,-93.23 1061.43,-90.74 1051.82,-86.26 1051.13,-93.23"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="proc~~newton_finish~~CallsGraph_node25" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="1179.12,-66.27 1054.35,-66.27 1054.35,-42 1179.12,-42 1179.12,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="proc~~newton_finish~~CallsGraph_edge28" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M953.47,-70.26C980.06,-67.62 1013.44,-64.3 1043.01,-61.36"/>
+<polygon fill="#000000" stroke="#000000" points="1043.02,-64.88 1052.62,-60.41 1042.33,-57.91 1043.02,-64.88"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="proc~~newton_finish~~CallsGraph_node27" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="1199.75,-24.27 1033.73,-24.27 1033.73,0 1199.75,0 1199.75,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="proc~~newton_finish~~CallsGraph_edge29" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M938.13,-62.54C962.5,-53.68 996.33,-41.88 1026.6,-33.13 1033.32,-31.19 1040.35,-29.3 1047.41,-27.5"/>
+<polygon fill="#000000" stroke="#000000" points="1048.13,-30.92 1056.99,-25.1 1046.44,-24.13 1048.13,-30.92"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~newton_finish~~CallsGraph_edge31" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M943.13,-276.62C959.19,-283.21 977.17,-292.59 990.6,-305.13 1014.45,-327.41 1000.52,-349.52 1026.6,-369.13 1039.69,-378.98 1056.67,-384.3 1072.3,-387.15"/>
+<polygon fill="#000000" stroke="#000000" points="1071.46,-390.56 1081.87,-388.58 1072.5,-383.64 1071.46,-390.56"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~newton_finish~~CallsGraph_edge35" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M932.76,-276.7C949.75,-284.47 971.67,-294.88 990.6,-305.13 1007.09,-314.07 1009.26,-320.01 1026.6,-327.13 1041.36,-333.2 1058.26,-337.74 1073.34,-341.02"/>
+<polygon fill="#000000" stroke="#000000" points="1072.48,-344.41 1082.97,-342.98 1073.87,-337.55 1072.48,-344.41"/>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~newton_finish~~CallsGraph_edge36" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M967.85,-276.74C990.94,-281.33 1017.24,-286.56 1041.21,-291.32"/>
+<polygon fill="#000000" stroke="#000000" points="1040.42,-294.73 1050.91,-293.25 1041.78,-287.86 1040.42,-294.73"/>
+</g>
+<!-- first_call -->
+<g id="proc~~newton_finish~~CallsGraph_node26" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="1144.62,-276.27 1088.85,-276.27 1088.85,-252 1144.62,-252 1144.62,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~newton_finish~~CallsGraph_edge30" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M991.01,-264.13C1021.03,-264.13 1053.19,-264.13 1077.33,-264.13"/>
+<polygon fill="#000000" stroke="#000000" points="1077.31,-267.64 1087.31,-264.14 1077.31,-260.64 1077.31,-267.64"/>
+</g>
+<!-- integrate -->
+<g id="proc~~newton_finish~~CallsGraph_node28" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="1146.87,-234.27 1086.6,-234.27 1086.6,-210 1146.87,-210 1146.87,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~newton_finish~~CallsGraph_edge32" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M967.85,-251.53C1002.66,-244.61 1044.8,-236.24 1075.18,-230.2"/>
+<polygon fill="#000000" stroke="#000000" points="1075.6,-233.68 1084.72,-228.3 1074.23,-226.82 1075.6,-233.68"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~newton_finish~~CallsGraph_node29" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node29"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1154.75,-192.27 1078.73,-192.27 1078.73,-168 1154.75,-168 1154.75,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="proc~~newton_finish~~CallsGraph_edge33" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M973.3,-251.57C979.36,-249.22 985.22,-246.44 990.6,-243.13 1011.55,-230.27 1005.6,-213.92 1026.6,-201.13 1038.92,-193.63 1053.71,-188.81 1067.66,-185.71"/>
+<polygon fill="#000000" stroke="#000000" points="1067.98,-189.22 1077.13,-183.87 1066.64,-182.35 1067.98,-189.22"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~newton_finish~~CallsGraph_node30" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~newton_finish~~CallsGraph_node30"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1206.87,-150.27 1026.6,-150.27 1026.6,-126 1206.87,-126 1206.87,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1116.74" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~newton_finish~~CallsGraph_edge34" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M977.85,-251.56C982.41,-249.2 986.72,-246.42 990.6,-243.13 1021.6,-216.89 995.5,-185.26 1026.6,-159.13 1027.57,-158.32 1028.57,-157.53 1029.6,-156.77"/>
+<polygon fill="#000000" stroke="#000000" points="1031.43,-159.75 1038.09,-151.51 1027.75,-153.8 1031.43,-159.75"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocnewton_finishCallsGraph = svgPanZoom('#procnewton_finishCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~newton_finish~~CalledByGraph Pages: 1 -->
+<svg id="procnewton_finishCalledByGraph" width="597pt" height="32pt"
+ viewBox="0.00 0.00 597.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~newton_finish~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~newton_finish~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 593.08,-28.27 593.08,4 -4,4"/>
+<!-- proc~newton_finish -->
+<g id="proc~~newton_finish~~CalledByGraph_node1" class="node">
+<title>proc~newton_finish</title>
+<polygon fill="none" stroke="black" points="589.08,-24.27 504.81,-24.27 504.81,0 589.08,0 589.08,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="546.94" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">newton_finish</text>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~newton_finish~~CalledByGraph_node2" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~newton_finish~~CalledByGraph_node2"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="468.81,-24.27 368.79,-24.27 368.79,0 468.81,0 468.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~newton_finish~~CalledByGraph_edge1" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M469.29,-12.13C477.08,-12.13 485.17,-12.13 493.03,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="492.83,-15.64 502.83,-12.14 492.83,-8.64 492.83,-15.64"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~newton_finish~~CalledByGraph_node3" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~newton_finish~~CalledByGraph_node3"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="332.79,-24.27 140.52,-24.27 140.52,0 332.79,0 332.79,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.65" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~newton_finish~~CalledByGraph_edge2" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.27,-12.13C341.32,-12.13 349.31,-12.13 356.99,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="356.85,-15.64 366.85,-12.14 356.85,-8.64 356.85,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~newton_finish~~CalledByGraph_node4" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~newton_finish~~CalledByGraph_node4"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~newton_finish~~CalledByGraph_edge3" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M104.55,-12.13C112.23,-12.13 120.38,-12.13 128.71,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.64,-15.64 138.64,-12.14 128.64,-8.64 128.64,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">newton_finish</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_opt_data</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">d</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">  </span><span class="c">!! the optimization's point (halo's scaled variables); replaced by the solution</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_newton_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nle</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ks</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span><span class="p">,</span><span class="w"> </span><span class="n">irow_all</span><span class="p">,</span><span class="w"> </span><span class="n">icol_all</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_active</span><span class="p">,</span><span class="w"> </span><span class="n">below</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">attempt</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">na</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">nnz</span><span class="p">,</span><span class="w"> </span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w"> </span><span class="n">stage_iter</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phi_min</span><span class="p">,</span><span class="w"> </span><span class="n">damp</span><span class="p">,</span><span class="w"> </span><span class="n">fnorm0</span><span class="p">,</span><span class="w"> </span><span class="n">fnorm</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">fvec</span><span class="p">,</span><span class="w"> </span><span class="n">x_save</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">message</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">count0</span><span class="p">,</span><span class="w"> </span><span class="n">count1</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span>
+
+<span class="w">    </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">call </span><span class="nb">system_clock</span><span class="p">(</span><span class="n">count0</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">m_halo</span>
+<span class="w">    </span><span class="n">phi_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_phi_min</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span><span class="p">)</span>
+<span class="w">    </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">solver_mode</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_solver_mode</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_solver_mode</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">all</span><span class="p">(</span><span class="n">mode</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]))</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="w">  </span><span class="c">! (a sparse solver of nlesolver's own)</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">ks</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)),</span><span class="w"> </span><span class="n">is_active</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)),</span><span class="w"> </span><span class="n">below</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)))</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">eval_rows</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">)</span>
+<span class="w">    </span><span class="n">is_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ks</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">phi_min</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_active_tol</span>
+<span class="w">    </span><span class="k">block</span><span class="w">  </span><span class="c">! TEMPORARY experiment: hold only the eclipse_opt_newton_max_active rows with the smallest KS</span>
+<span class="w">        </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">kk</span><span class="p">,</span><span class="w"> </span><span class="n">imin</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">kt</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_max_active</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">is_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">            </span><span class="n">kt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ks</span>
+<span class="w">            </span><span class="k">do </span><span class="n">kk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_max_active</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">ks</span><span class="p">))</span>
+<span class="w">                </span><span class="n">imin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">minloc</span><span class="p">(</span><span class="n">kt</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                </span><span class="n">is_active</span><span class="p">(</span><span class="n">imin</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">                </span><span class="n">kt</span><span class="p">(</span><span class="n">imin</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">huge</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end do</span>
+<span class="k">        end if</span>
+<span class="k">    end block</span>
+<span class="k">    write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,*(F10.6))'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish: the rows'' KS at the start: '</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span>
+
+<span class="w">    </span><span class="k">do </span><span class="n">attempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span>
+
+<span class="w">        </span><span class="n">nle</span><span class="p">%</span><span class="n">d</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span>
+<span class="w">        </span><span class="n">nle</span><span class="p">%</span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_active</span>
+<span class="w">        </span><span class="n">nle</span><span class="p">%</span><span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pack</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">))],</span><span class="w"> </span><span class="n">is_active</span><span class="p">)</span>
+<span class="w">        </span><span class="n">na</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">nle</span><span class="p">%</span><span class="n">active</span><span class="p">)</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,I0,A,I0,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish '</span><span class="p">,</span><span class="w"> </span><span class="n">attempt</span><span class="p">,</span><span class="w"> </span><span class="s1">': the continuity and '</span><span class="p">,</span><span class="w"> </span><span class="n">na</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                 </span><span class="s1">' eclipse rows (KS = phi_min)'</span>
+<span class="w">        </span><span class="n">nnz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">sum</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">nle</span><span class="p">%</span><span class="n">active</span><span class="p">)%</span><span class="n">ncol</span><span class="p">)</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">irow_all</span><span class="p">(</span><span class="n">nnz</span><span class="p">),</span><span class="w"> </span><span class="n">icol_all</span><span class="p">(</span><span class="n">nnz</span><span class="p">))</span>
+<span class="w">        </span><span class="n">irow_all</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span>
+<span class="w">        </span><span class="n">icol_all</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icol</span>
+<span class="w">        </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">)</span>
+<span class="w">        </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">na</span>
+<span class="w">            </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">nle</span><span class="p">%</span><span class="n">active</span><span class="p">(</span><span class="n">k</span><span class="p">)))</span>
+<span class="w">                </span><span class="n">irow_all</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">row</span><span class="p">%</span><span class="n">ncol</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span>
+<span class="w">                </span><span class="n">icol_all</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">row</span><span class="p">%</span><span class="n">ncol</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="p">%</span><span class="n">col</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">row</span><span class="p">%</span><span class="n">ncol</span><span class="p">)</span>
+<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">row</span><span class="p">%</span><span class="n">ncol</span>
+<span class="w">            </span><span class="k">end associate</span>
+<span class="k">        end do</span>
+
+<span class="w">        </span><span class="c">! the damping stages: from eclipse_opt_newton_damp down by 10 each stage to 0 (a damped</span>
+<span class="w">        </span><span class="c">! stage has eclipse_opt_newton_damp_iter iterations; the undamped last one, up to</span>
+<span class="w">        </span><span class="c">! eclipse_opt_newton_max_iter). A stage that ends worse than it started is undone.</span>
+<span class="w">        </span><span class="n">damp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_damp</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">fvec</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="n">na</span><span class="p">))</span>
+<span class="w">        </span><span class="k">do</span>
+<span class="k">            </span><span class="n">stage_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_max_iter</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">damp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="n">stage_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_damp_iter</span>
+<span class="w">            </span><span class="n">nle</span><span class="p">%</span><span class="n">d</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span>
+<span class="w">            </span><span class="n">nle</span><span class="p">%</span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_active</span>
+<span class="w">            </span><span class="n">nle</span><span class="p">%</span><span class="n">active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">pack</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">))],</span><span class="w"> </span><span class="n">is_active</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">nle</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">n</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w">                      </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">m</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">na</span><span class="p">,</span><span class="w">                 </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">max_iter</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">stage_iter</span><span class="p">,</span><span class="w">             </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">func</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">newton_func</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">grad_sparse</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">newton_grad</span><span class="p">,</span><span class="w">            </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">tol</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span><span class="p">,</span><span class="w">  </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">tolx</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tolx</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">step_mode</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">                      </span><span class="p">&amp;</span><span class="w"> </span><span class="c">! backtracking (as halo's solve)</span>
+<span class="w">                                </span><span class="n">n_intervals</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">                      </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">use_broyden</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.,</span><span class="w">                </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">export_iteration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newton_export</span><span class="p">,</span><span class="w">          </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">sparsity_mode</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">mode</span><span class="p">,</span><span class="w">                   </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">atol</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="p">,</span><span class="w">             </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">btol</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0e-12_wp</span><span class="p">,</span><span class="w">             </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">damp</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">damp</span><span class="p">,</span><span class="w">                   </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">itnlim</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span><span class="p">,</span><span class="w">                </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">irow</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">irow_all</span><span class="p">,</span><span class="w">               </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">icol</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">icol_all</span><span class="p">,</span><span class="w">               </span><span class="p">&amp;</span>
+<span class="w">                                </span><span class="n">lusol_method</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">nle</span><span class="p">%</span><span class="n">status</span><span class="p">(</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">istat</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish: '</span><span class="o">//</span><span class="n">message</span>
+<span class="w">                </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'error initializing the Newton finish'</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            call </span><span class="n">newton_func</span><span class="p">(</span><span class="n">nle</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">fvec</span><span class="p">)</span>
+<span class="w">            </span><span class="n">fnorm0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">norm2</span><span class="p">(</span><span class="n">fvec</span><span class="p">)</span>
+<span class="w">            </span><span class="n">x_save</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,ES9.1,A,ES12.4)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish, damp '</span><span class="p">,</span><span class="w"> </span><span class="n">damp</span><span class="p">,</span><span class="w"> </span><span class="s1">': start norm '</span><span class="p">,</span><span class="w"> </span><span class="n">fnorm0</span>
+<span class="w">            </span><span class="k">call </span><span class="n">nle</span><span class="p">%</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">nle</span><span class="p">%</span><span class="n">status</span><span class="p">(</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">newton_func</span><span class="p">(</span><span class="n">nle</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">fvec</span><span class="p">)</span>
+<span class="w">            </span><span class="n">fnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">norm2</span><span class="p">(</span><span class="n">fvec</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,ES12.4)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish: '</span><span class="o">//</span><span class="n">message</span><span class="o">//</span><span class="s1">', norm '</span><span class="p">,</span><span class="w"> </span><span class="n">fnorm</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">fnorm</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">fnorm0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish: worse; the stage is undone'</span>
+<span class="w">                </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x_save</span>
+<span class="w">                </span><span class="n">fnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fnorm0</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">damp</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(</span><span class="n">fnorm</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span><span class="w">  </span><span class="c">! (converged with damping)</span>
+<span class="w">            </span><span class="n">damp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">damp</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">1</span><span class="mf">0.0_wp</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">damp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_damp_min</span><span class="p">)</span><span class="w"> </span><span class="n">damp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">        </span><span class="k">end do</span>
+<span class="k">        call </span><span class="n">nle</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">deallocate</span><span class="p">(</span><span class="n">irow_all</span><span class="p">,</span><span class="w"> </span><span class="n">icol_all</span><span class="p">,</span><span class="w"> </span><span class="n">fvec</span><span class="p">)</span>
+
+<span class="w">        </span><span class="c">! the rows left free must still be at or above their bound:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">eval_rows</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">)</span>
+<span class="w">        </span><span class="n">below</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">is_active</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">ks</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">phi_min</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.0e-6_wp</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,F10.6,A,F10.6,A,I0,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish: smallest KS '</span><span class="p">,</span><span class="w"> </span><span class="nb">minval</span><span class="p">(</span><span class="n">ks</span><span class="p">),</span><span class="w"> </span><span class="s1">' (of the free rows: '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="nb">minval</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">mask</span><span class="o">=</span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">is_active</span><span class="p">),</span><span class="w"> </span><span class="s1">'), '</span><span class="p">,</span><span class="w"> </span><span class="nb">count</span><span class="p">(</span><span class="n">below</span><span class="p">),</span><span class="w"> </span><span class="s1">' free rows below phi_min'</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">any</span><span class="p">(</span><span class="n">below</span><span class="p">))</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">        </span><span class="n">is_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">is_active</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">below</span>
+
+<span class="w">    </span><span class="k">end do</span>
+<span class="k">    call </span><span class="nb">system_clock</span><span class="p">(</span><span class="n">count1</span><span class="p">)</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,F10.2,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   Newton finish wall time: '</span><span class="p">,</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">count1</span><span class="o">-</span><span class="n">count0</span><span class="p">,</span><span class="n">wp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="s1">' s'</span>
+
+<span class="w">    </span><span class="k">end associate</span>
+
+<span class="k">    end subroutine </span><span class="n">newton_finish</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

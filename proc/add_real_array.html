@@ -1,0 +1,685 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>add_real_array &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>add_real_array
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.2% of total for procedures.">8 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/text_buffer_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/text_buffer_module.f90.html'>text_buffer_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/text_buffer_module.html'>text_buffer_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">add_real_array</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/add_real_array.html#src">add_real_array</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>private pure subroutine add_real_array(me, x)  
+</h2>
+    
+
+    <p>Append a JSON array of real numbers (<code>[x1, x2, ...]</code>).</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/text_buffer.html'>text_buffer</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~87"></span>
+              class(<a href='../type/text_buffer.html'>text_buffer</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~50"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~add_real_array~~CallsGraph Pages: 1 -->
+<svg id="procadd_real_arrayCallsGraph" width="641pt" height="205pt"
+ viewBox="0.00 0.00 641.00 205.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~add_real_array~~CallsGraph" class="graph" transform="scale(0.700646 0.700646) rotate(0) translate(4 288.13)">
+<title>proc~~add_real_array~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-288.13 910.87,-288.13 910.87,4 -4,4"/>
+<!-- proc~add_real_array -->
+<g id="proc~~add_real_array~~CallsGraph_node1" class="node">
+<title>proc~add_real_array</title>
+<polygon fill="none" stroke="black" points="157.77,-220.27 0,-220.27 0,-196 157.77,-196 157.77,-220.27"/>
+<text xml:space="preserve" text-anchor="middle" x="78.88" y="-204.53" font-family="Helvetica,sans-Serif" font-size="10.50">text_buffer%add_real_array</text>
+</g>
+<!-- proc~add_real_list -->
+<g id="proc~~add_real_array~~CallsGraph_node2" class="node">
+<title>proc~add_real_list</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node2"><a xlink:href="../proc/add_real_list.html" xlink:title="text_buffer%add_real_list">
+<polygon fill="#d9534f" stroke="#d9534f" points="338.04,-180.27 193.77,-180.27 193.77,-156 338.04,-156 338.04,-180.27"/>
+<text xml:space="preserve" text-anchor="middle" x="265.9" y="-164.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_real_list</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~add_real_list -->
+<g id="proc~~add_real_array~~CallsGraph_edge1" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~add_real_list</title>
+<path fill="none" stroke="#000000" d="M138.17,-195.53C156.33,-191.61 176.53,-187.24 195.37,-183.17"/>
+<polygon fill="#000000" stroke="#000000" points="196.08,-186.6 205.11,-181.06 194.6,-179.75 196.08,-186.6"/>
+</g>
+<!-- proc~add_str -->
+<g id="proc~~add_real_array~~CallsGraph_node3" class="node">
+<title>proc~add_str</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node3"><a xlink:href="../proc/add_str.html" xlink:title="text_buffer%add_str">
+<polygon fill="#d9534f" stroke="#d9534f" points="752.85,-182.27 635.58,-182.27 635.58,-158 752.85,-158 752.85,-182.27"/>
+<text xml:space="preserve" text-anchor="middle" x="694.21" y="-166.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_str</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~add_str -->
+<g id="proc~~add_real_array~~CallsGraph_edge2" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M157.96,-206.57C259.77,-204.02 443.31,-197.71 599.58,-183.13 607.56,-182.39 615.9,-181.46 624.17,-180.44"/>
+<polygon fill="#000000" stroke="#000000" points="624.4,-183.93 633.87,-179.19 623.5,-176.99 624.4,-183.93"/>
+</g>
+<!-- proc~reserve -->
+<g id="proc~~add_real_array~~CallsGraph_node4" class="node">
+<title>proc~reserve</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node4"><a xlink:href="../proc/reserve.html" xlink:title="text_buffer%reserve">
+<polygon fill="#d9534f" stroke="#d9534f" points="906.87,-220.27 788.85,-220.27 788.85,-196 906.87,-196 906.87,-220.27"/>
+<text xml:space="preserve" text-anchor="middle" x="847.86" y="-204.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%reserve</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~reserve -->
+<g id="proc~~add_real_array~~CallsGraph_edge3" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M114.64,-220.68C177.63,-242.27 315.24,-284.13 435.05,-284.13 435.05,-284.13 435.05,-284.13 567.82,-284.13 656.88,-284.13 756.49,-247.65 809.27,-225.24"/>
+<polygon fill="#000000" stroke="#000000" points="810.62,-228.46 818.42,-221.29 807.85,-222.04 810.62,-228.46"/>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~add_str -->
+<g id="proc~~add_real_array~~CallsGraph_edge5" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M338.26,-168.47C417.78,-168.84 545.5,-169.44 624.1,-169.81"/>
+<polygon fill="#000000" stroke="#000000" points="623.8,-173.31 633.82,-169.86 623.84,-166.31 623.8,-173.31"/>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~reserve -->
+<g id="proc~~add_real_array~~CallsGraph_edge6" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M338.26,-179C350.19,-180.56 362.45,-182.02 374.04,-183.13 516.85,-196.88 684.71,-203.5 777.08,-206.33"/>
+<polygon fill="#000000" stroke="#000000" points="776.89,-209.82 786.99,-206.62 777.1,-202.83 776.89,-209.82"/>
+</g>
+<!-- proc~add_real -->
+<g id="proc~~add_real_array~~CallsGraph_node5" class="node">
+<title>proc~add_real</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node5"><a xlink:href="../proc/add_real.html" xlink:title="text_buffer%add_real">
+<polygon fill="#d9534f" stroke="#d9534f" points="498.06,-104.27 374.04,-104.27 374.04,-80 498.06,-80 498.06,-104.27"/>
+<text xml:space="preserve" text-anchor="middle" x="436.05" y="-88.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_real</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~add_real -->
+<g id="proc~~add_real_array~~CallsGraph_edge4" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~add_real</title>
+<path fill="none" stroke="#000000" d="M294.67,-155.59C322.54,-142.99 365.69,-123.49 396.79,-109.43"/>
+<polygon fill="#000000" stroke="#000000" points="398.19,-112.64 405.86,-105.33 395.31,-106.26 398.19,-112.64"/>
+</g>
+<!-- proc~add_str&#45;&gt;proc~reserve -->
+<g id="proc~~add_real_array~~CallsGraph_edge7" class="edge">
+<title>proc~add_str&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M745.29,-182.68C758.16,-185.91 772.16,-189.42 785.53,-192.77"/>
+<polygon fill="#000000" stroke="#000000" points="784.56,-196.13 795.11,-195.17 786.26,-189.34 784.56,-196.13"/>
+</g>
+<!-- proc~add_real&#45;&gt;proc~add_str -->
+<g id="proc~~add_real_array~~CallsGraph_edge9" class="edge">
+<title>proc~add_real&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M478.49,-104.75C522.76,-118.23 593.03,-139.63 641.04,-154.25"/>
+<polygon fill="#000000" stroke="#000000" points="639.8,-157.53 650.38,-157.09 641.84,-150.83 639.8,-157.53"/>
+</g>
+<!-- proc~add_real&#45;&gt;proc~reserve -->
+<g id="proc~~add_real_array~~CallsGraph_edge10" class="edge">
+<title>proc~add_real&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M474.91,-79.56C508.11,-70.34 557.53,-61.05 599.58,-71.13 689.02,-92.58 780.03,-156.05 822.38,-188.52"/>
+<polygon fill="#000000" stroke="#000000" points="820.13,-191.2 830.17,-194.58 824.42,-185.67 820.13,-191.2"/>
+</g>
+<!-- proc~add_digits -->
+<g id="proc~~add_real_array~~CallsGraph_node6" class="node">
+<title>proc~add_digits</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node6"><a xlink:href="../proc/add_digits.html" xlink:title="add_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="599.58,-104.27 534.06,-104.27 534.06,-80 599.58,-80 599.58,-104.27"/>
+<text xml:space="preserve" text-anchor="middle" x="566.82" y="-88.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real&#45;&gt;proc~add_digits -->
+<g id="proc~~add_real_array~~CallsGraph_edge8" class="edge">
+<title>proc~add_real&#45;&gt;proc~add_digits</title>
+<path fill="none" stroke="#000000" d="M498.42,-92.13C506.51,-92.13 514.66,-92.13 522.36,-92.13"/>
+<polygon fill="#000000" stroke="#000000" points="522.12,-95.64 532.12,-92.14 522.12,-88.64 522.12,-95.64"/>
+</g>
+<!-- proc~scaled -->
+<g id="proc~~add_real_array~~CallsGraph_node7" class="node">
+<title>proc~scaled</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node7"><a xlink:href="../proc/scaled.html" xlink:title="scaled">
+<polygon fill="#d9534f" stroke="#d9534f" points="593.82,-24.27 539.82,-24.27 539.82,0 593.82,0 593.82,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="566.82" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">scaled</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real&#45;&gt;proc~scaled -->
+<g id="proc~~add_real_array~~CallsGraph_edge11" class="edge">
+<title>proc~add_real&#45;&gt;proc~scaled</title>
+<path fill="none" stroke="#000000" d="M457.17,-79.63C478.34,-66.48 511.88,-45.65 536.1,-30.6"/>
+<polygon fill="#000000" stroke="#000000" points="537.91,-33.6 544.56,-25.35 534.21,-27.65 537.91,-33.6"/>
+</g>
+<!-- proc~add_digits&#45;&gt;proc~add_str -->
+<g id="proc~~add_real_array~~CallsGraph_edge12" class="edge">
+<title>proc~add_digits&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M587.97,-104.67C608.35,-117.35 640.1,-137.09 663.39,-151.59"/>
+<polygon fill="#000000" stroke="#000000" points="661.49,-154.52 671.83,-156.83 665.19,-148.58 661.49,-154.52"/>
+</g>
+<!-- proc~two_prod -->
+<g id="proc~~add_real_array~~CallsGraph_node8" class="node">
+<title>proc~two_prod</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node8"><a xlink:href="../proc/two_prod.html" xlink:title="two_prod">
+<polygon fill="#d9534f" stroke="#d9534f" points="723.97,-24.27 664.45,-24.27 664.45,0 723.97,0 723.97,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="694.21" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_prod</text>
+</a>
+</g>
+</g>
+<!-- proc~scaled&#45;&gt;proc~two_prod -->
+<g id="proc~~add_real_array~~CallsGraph_edge13" class="edge">
+<title>proc~scaled&#45;&gt;proc~two_prod</title>
+<path fill="none" stroke="#000000" d="M594.11,-12.13C611.12,-12.13 633.6,-12.13 652.85,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="652.82,-15.64 662.82,-12.14 652.82,-8.64 652.82,-15.64"/>
+</g>
+<!-- proc~split -->
+<g id="proc~~add_real_array~~CallsGraph_node9" class="node">
+<title>proc~split</title>
+<g id="a_proc~~add_real_array~~CallsGraph_node9"><a xlink:href="../proc/split.html" xlink:title="split">
+<polygon fill="#d9534f" stroke="#d9534f" points="874.86,-24.27 820.86,-24.27 820.86,0 874.86,0 874.86,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="847.86" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">split</text>
+</a>
+</g>
+</g>
+<!-- proc~two_prod&#45;&gt;proc~split -->
+<g id="proc~~add_real_array~~CallsGraph_edge14" class="edge">
+<title>proc~two_prod&#45;&gt;proc~split</title>
+<path fill="none" stroke="#000000" d="M724.45,-12.13C748.64,-12.13 783.14,-12.13 809.35,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="809.23,-15.64 819.23,-12.14 809.23,-8.64 809.23,-15.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocadd_real_arrayCallsGraph = svgPanZoom('#procadd_real_arrayCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~add_real_array~~CalledByGraph Pages: 1 -->
+<svg id="procadd_real_arrayCalledByGraph" width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~add_real_array~~CalledByGraph" class="graph" transform="scale(0.854576 0.854576) rotate(0) translate(4 28.27)">
+<title>proc~~add_real_array~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 746.08,-28.27 746.08,4 -4,4"/>
+<!-- proc~add_real_array -->
+<g id="proc~~add_real_array~~CalledByGraph_node1" class="node">
+<title>proc~add_real_array</title>
+<polygon fill="none" stroke="black" points="742.08,-24.27 584.31,-24.27 584.31,0 742.08,0 742.08,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="663.2" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">text_buffer%add_real_array</text>
+</g>
+<!-- proc~segment_trajectory_json -->
+<g id="proc~~add_real_array~~CalledByGraph_node2" class="node">
+<title>proc~segment_trajectory_json</title>
+<g id="a_proc~~add_real_array~~CalledByGraph_node2"><a xlink:href="../proc/segment_trajectory_json.html" xlink:title="segment_trajectory_json">
+<polygon fill="#d9534f" stroke="#d9534f" points="548.31,-24.27 406.29,-24.27 406.29,0 548.31,0 548.31,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="477.3" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment_trajectory_json</text>
+</a>
+</g>
+</g>
+<!-- proc~segment_trajectory_json&#45;&gt;proc~add_real_array -->
+<g id="proc~~add_real_array~~CalledByGraph_edge1" class="edge">
+<title>proc~segment_trajectory_json&#45;&gt;proc~add_real_array</title>
+<path fill="none" stroke="#000000" d="M548.61,-12.13C556.47,-12.13 564.55,-12.13 572.6,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="572.44,-15.64 582.44,-12.14 572.44,-8.64 572.44,-15.64"/>
+</g>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~add_real_array~~CalledByGraph_node3" class="node">
+<title>proc~export_trajectory_json_file</title>
+<g id="a_proc~~add_real_array~~CalledByGraph_node3"><a xlink:href="../proc/export_trajectory_json_file.html" xlink:title="mission_type%export_trajectory_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="370.29,-24.27 140.52,-24.27 140.52,0 370.29,0 370.29,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="255.4" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_trajectory_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~segment_trajectory_json -->
+<g id="proc~~add_real_array~~CalledByGraph_edge2" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~segment_trajectory_json</title>
+<path fill="none" stroke="#000000" d="M370.54,-12.13C378.62,-12.13 386.67,-12.13 394.51,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="394.33,-15.64 404.33,-12.14 394.33,-8.64 394.33,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~add_real_array~~CalledByGraph_node4" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~add_real_array~~CalledByGraph_node4"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~add_real_array~~CalledByGraph_edge3" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M104.8,-12.13C112.4,-12.13 120.5,-12.13 128.84,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.83,-15.64 138.83,-12.14 128.83,-8.64 128.83,-15.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocadd_real_arrayCalledByGraph = svgPanZoom('#procadd_real_arrayCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">add_real_array</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">text_buffer</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">reserve</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">26</span><span class="o">*</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="w">  </span><span class="c">! (at most 24 characters per number, plus ", ")</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="s1">'['</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">add_real_list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="s1">']'</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">add_real_array</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

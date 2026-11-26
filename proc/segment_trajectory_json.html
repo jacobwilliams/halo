@@ -1,0 +1,784 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>segment_trajectory_json &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>segment_trajectory_json
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.9% of total for procedures.">36 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">segment_trajectory_json</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/segment_trajectory_json.html#src">segment_trajectory_json</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine segment_trajectory_json(seg, iseg, last, buf)  
+</h2>
+    
+
+    <p>The JSON object of a segment's trajectory (for <a href="../proc/export_trajectory_json_file.html">export_trajectory_json_file</a>),
+replacing the contents of <code>buf</code>.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-seg~4"></span>
+              type(<a href='../type/segment.html'>segment</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>seg</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iseg~16"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iseg</strong></td>
+            <td>
+                <p>segment number</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-last"></span>
+              logical,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>last</strong></td>
+            <td>
+                <p>if this is the last segment (no comma after it)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-buf~2"></span>
+              type(<a href='../type/text_buffer.html'>text_buffer</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>buf</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~segment_trajectory_json~~CallsGraph Pages: 1 -->
+<svg id="procsegment_trajectory_jsonCallsGraph" width="641pt" height="261pt"
+ viewBox="0.00 0.00 641.00 261.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~segment_trajectory_json~~CallsGraph" class="graph" transform="scale(0.586518 0.586518) rotate(0) translate(4 441.27)">
+<title>proc~~segment_trajectory_json~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-441.27 1088.89,-441.27 1088.89,4 -4,4"/>
+<!-- proc~segment_trajectory_json -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node1" class="node">
+<title>proc~segment_trajectory_json</title>
+<polygon fill="none" stroke="black" points="142.02,-83.27 0,-83.27 0,-59 142.02,-59 142.02,-83.27"/>
+<text xml:space="preserve" text-anchor="middle" x="71.01" y="-67.53" font-family="Helvetica,sans-Serif" font-size="10.50">segment_trajectory_json</text>
+</g>
+<!-- proc~add_int -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node2" class="node">
+<title>proc~add_int</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node2"><a xlink:href="../proc/add_int.html" xlink:title="text_buffer%add_int">
+<polygon fill="#d9534f" stroke="#d9534f" points="502.56,-104.27 385.29,-104.27 385.29,-80 502.56,-80 502.56,-104.27"/>
+<text xml:space="preserve" text-anchor="middle" x="443.92" y="-88.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_int</text>
+</a>
+</g>
+</g>
+<!-- proc~segment_trajectory_json&#45;&gt;proc~add_int -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge1" class="edge">
+<title>proc~segment_trajectory_json&#45;&gt;proc~add_int</title>
+<path fill="none" stroke="#000000" d="M142.21,-75.11C208.62,-78.87 307.7,-84.48 373.77,-88.22"/>
+<polygon fill="#000000" stroke="#000000" points="373.2,-91.69 383.38,-88.76 373.59,-84.7 373.2,-91.69"/>
+</g>
+<!-- proc~add_real_array -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node3" class="node">
+<title>proc~add_real_array</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node3"><a xlink:href="../proc/add_real_array.html" xlink:title="text_buffer%add_real_array">
+<polygon fill="#d9534f" stroke="#d9534f" points="335.79,-182.27 178.02,-182.27 178.02,-158 335.79,-158 335.79,-182.27"/>
+<text xml:space="preserve" text-anchor="middle" x="256.9" y="-166.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_real_array</text>
+</a>
+</g>
+</g>
+<!-- proc~segment_trajectory_json&#45;&gt;proc~add_real_array -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge2" class="edge">
+<title>proc~segment_trajectory_json&#45;&gt;proc~add_real_array</title>
+<path fill="none" stroke="#000000" d="M95.3,-83.67C127.55,-101.03 185.96,-132.48 222.75,-152.29"/>
+<polygon fill="#000000" stroke="#000000" points="220.72,-155.17 231.18,-156.82 224.04,-149 220.72,-155.17"/>
+</g>
+<!-- proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node4" class="node">
+<title>proc~add_str</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node4"><a xlink:href="../proc/add_str.html" xlink:title="text_buffer%add_str">
+<polygon fill="#d9534f" stroke="#d9534f" points="930.87,-181.27 813.6,-181.27 813.6,-157 930.87,-157 930.87,-181.27"/>
+<text xml:space="preserve" text-anchor="middle" x="872.23" y="-165.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_str</text>
+</a>
+</g>
+</g>
+<!-- proc~segment_trajectory_json&#45;&gt;proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge3" class="edge">
+<title>proc~segment_trajectory_json&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M142.37,-65.38C216.94,-59.79 338.15,-52.14 442.92,-52.13 442.92,-52.13 442.92,-52.13 615.07,-52.13 707.8,-52.14 803.73,-116.35 847.22,-149.63"/>
+<polygon fill="#000000" stroke="#000000" points="844.94,-152.29 854.97,-155.68 849.24,-146.77 844.94,-152.29"/>
+</g>
+<!-- proc~clear -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node5" class="node">
+<title>proc~clear</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node5"><a xlink:href="../proc/clear.html" xlink:title="text_buffer%clear">
+<polygon fill="#d9534f" stroke="#d9534f" points="309.54,-24.27 204.27,-24.27 204.27,0 309.54,0 309.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="256.9" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%clear</text>
+</a>
+</g>
+</g>
+<!-- proc~segment_trajectory_json&#45;&gt;proc~clear -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge4" class="edge">
+<title>proc~segment_trajectory_json&#45;&gt;proc~clear</title>
+<path fill="none" stroke="#000000" d="M111.01,-58.62C138.71,-49.74 176.14,-37.73 206.01,-28.14"/>
+<polygon fill="#000000" stroke="#000000" points="206.75,-31.58 215.2,-25.19 204.61,-24.92 206.75,-31.58"/>
+</g>
+<!-- proc~add_digits -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node6" class="node">
+<title>proc~add_digits</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node6"><a xlink:href="../proc/add_digits.html" xlink:title="add_digits">
+<polygon fill="#d9534f" stroke="#d9534f" points="777.6,-201.27 712.08,-201.27 712.08,-177 777.6,-177 777.6,-201.27"/>
+<text xml:space="preserve" text-anchor="middle" x="744.84" y="-185.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add_digits</text>
+</a>
+</g>
+</g>
+<!-- proc~add_int&#45;&gt;proc~add_digits -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge5" class="edge">
+<title>proc~add_int&#45;&gt;proc~add_digits</title>
+<path fill="none" stroke="#000000" d="M483.7,-104.72C539.79,-122.92 643.22,-156.48 701.33,-175.34"/>
+<polygon fill="#000000" stroke="#000000" points="699.95,-178.57 710.54,-178.33 702.11,-171.91 699.95,-178.57"/>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge7" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M336.26,-168.56C426.78,-166.83 580.19,-164.15 712.08,-163.13 741.2,-162.91 748.49,-162.2 777.6,-163.13 785.46,-163.39 793.68,-163.76 801.85,-164.19"/>
+<polygon fill="#000000" stroke="#000000" points="801.63,-167.68 811.81,-164.76 802.03,-160.7 801.63,-167.68"/>
+</g>
+<!-- proc~add_real_list -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node7" class="node">
+<title>proc~add_real_list</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node7"><a xlink:href="../proc/add_real_list.html" xlink:title="text_buffer%add_real_list">
+<polygon fill="#d9534f" stroke="#d9534f" points="516.06,-220.27 371.79,-220.27 371.79,-196 516.06,-196 516.06,-220.27"/>
+<text xml:space="preserve" text-anchor="middle" x="443.92" y="-204.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_real_list</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~add_real_list -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge6" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~add_real_list</title>
+<path fill="none" stroke="#000000" d="M319.26,-182.74C335.65,-186.1 353.53,-189.77 370.46,-193.25"/>
+<polygon fill="#000000" stroke="#000000" points="369.44,-196.62 379.94,-195.2 370.85,-189.76 369.44,-196.62"/>
+</g>
+<!-- proc~reserve -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node8" class="node">
+<title>proc~reserve</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node8"><a xlink:href="../proc/reserve.html" xlink:title="text_buffer%reserve">
+<polygon fill="#d9534f" stroke="#d9534f" points="1084.89,-319.27 966.87,-319.27 966.87,-295 1084.89,-295 1084.89,-319.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1025.88" y="-303.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%reserve</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_array&#45;&gt;proc~reserve -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge8" class="edge">
+<title>proc~add_real_array&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M268.4,-182.62C308.2,-228.51 455.58,-385.13 613.07,-385.13 613.07,-385.13 613.07,-385.13 745.84,-385.13 835.54,-385.13 935.66,-347.29 988.17,-324.32"/>
+<polygon fill="#000000" stroke="#000000" points="989.53,-327.55 997.25,-320.28 986.69,-321.15 989.53,-327.55"/>
+</g>
+<!-- proc~add_str&#45;&gt;proc~reserve -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge9" class="edge">
+<title>proc~add_str&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M886.96,-181.62C913.35,-205.64 971.36,-258.43 1003.09,-287.31"/>
+<polygon fill="#000000" stroke="#000000" points="1000.42,-289.61 1010.18,-293.75 1005.14,-284.43 1000.42,-289.61"/>
+</g>
+<!-- proc~add_digits&#45;&gt;proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge10" class="edge">
+<title>proc~add_digits&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M777.81,-184.04C785.37,-182.83 793.74,-181.5 802.25,-180.14"/>
+<polygon fill="#000000" stroke="#000000" points="802.67,-183.62 811.99,-178.58 801.57,-176.7 802.67,-183.62"/>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge12" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M510.49,-195.54C564.39,-185.85 642.86,-173.29 712.08,-168.13 741.12,-165.97 748.48,-167.98 777.6,-168.13 785.45,-168.18 793.66,-168.24 801.83,-168.31"/>
+<polygon fill="#000000" stroke="#000000" points="801.75,-171.81 811.78,-168.41 801.82,-164.81 801.75,-171.81"/>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~reserve -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge13" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M464.69,-220.57C507.66,-246.79 613.64,-307.04 712.08,-328.13 796.3,-346.18 895.92,-333.89 959.73,-321.88"/>
+<polygon fill="#000000" stroke="#000000" points="960.19,-325.35 969.33,-320.01 958.85,-318.48 960.19,-325.35"/>
+</g>
+<!-- proc~add_real -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node9" class="node">
+<title>proc~add_real</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node9"><a xlink:href="../proc/add_real.html" xlink:title="text_buffer%add_real">
+<polygon fill="#d9534f" stroke="#d9534f" points="676.08,-241.27 552.06,-241.27 552.06,-217 676.08,-217 676.08,-241.27"/>
+<text xml:space="preserve" text-anchor="middle" x="614.07" y="-225.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer%add_real</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real_list&#45;&gt;proc~add_real -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge11" class="edge">
+<title>proc~add_real_list&#45;&gt;proc~add_real</title>
+<path fill="none" stroke="#000000" d="M516.23,-217.04C524.26,-218.04 532.45,-219.07 540.5,-220.07"/>
+<polygon fill="#000000" stroke="#000000" points="539.89,-223.52 550.25,-221.29 540.76,-216.58 539.89,-223.52"/>
+</g>
+<!-- proc~add_real&#45;&gt;proc~add_str -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge15" class="edge">
+<title>proc~add_real&#45;&gt;proc~add_str</title>
+<path fill="none" stroke="#000000" d="M676.47,-226.26C707.24,-223.74 744.83,-219.01 777.6,-210.13 798.31,-204.52 820.34,-195.07 837.83,-186.65"/>
+<polygon fill="#000000" stroke="#000000" points="839.31,-189.82 846.72,-182.26 836.21,-183.55 839.31,-189.82"/>
+</g>
+<!-- proc~add_real&#45;&gt;proc~add_digits -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge14" class="edge">
+<title>proc~add_real&#45;&gt;proc~add_digits</title>
+<path fill="none" stroke="#000000" d="M655.46,-216.59C669.92,-212.1 686.26,-207.02 700.93,-202.47"/>
+<polygon fill="#000000" stroke="#000000" points="701.8,-205.86 710.31,-199.55 699.72,-199.17 701.8,-205.86"/>
+</g>
+<!-- proc~add_real&#45;&gt;proc~reserve -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge16" class="edge">
+<title>proc~add_real&#45;&gt;proc~reserve</title>
+<path fill="none" stroke="#000000" d="M676.42,-240.81C751.12,-255.03 876.98,-278.98 955.24,-293.88"/>
+<polygon fill="#000000" stroke="#000000" points="954.47,-297.3 964.94,-295.73 955.78,-290.42 954.47,-297.3"/>
+</g>
+<!-- proc~scaled -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node10" class="node">
+<title>proc~scaled</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node10"><a xlink:href="../proc/scaled.html" xlink:title="scaled">
+<polygon fill="#d9534f" stroke="#d9534f" points="771.84,-319.27 717.84,-319.27 717.84,-295 771.84,-295 771.84,-319.27"/>
+<text xml:space="preserve" text-anchor="middle" x="744.84" y="-303.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">scaled</text>
+</a>
+</g>
+</g>
+<!-- proc~add_real&#45;&gt;proc~scaled -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge17" class="edge">
+<title>proc~add_real&#45;&gt;proc~scaled</title>
+<path fill="none" stroke="#000000" d="M635.76,-241.67C656.79,-254.4 689.58,-274.27 713.54,-288.78"/>
+<polygon fill="#000000" stroke="#000000" points="711.54,-291.66 721.91,-293.85 715.17,-285.68 711.54,-291.66"/>
+</g>
+<!-- proc~two_prod -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node11" class="node">
+<title>proc~two_prod</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node11"><a xlink:href="../proc/two_prod.html" xlink:title="two_prod">
+<polygon fill="#d9534f" stroke="#d9534f" points="901.99,-437.27 842.47,-437.27 842.47,-413 901.99,-413 901.99,-437.27"/>
+<text xml:space="preserve" text-anchor="middle" x="872.23" y="-421.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_prod</text>
+</a>
+</g>
+</g>
+<!-- proc~scaled&#45;&gt;proc~two_prod -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge18" class="edge">
+<title>proc~scaled&#45;&gt;proc~two_prod</title>
+<path fill="none" stroke="#000000" d="M759.26,-319.76C780.94,-340.17 823.87,-380.56 849.82,-404.98"/>
+<polygon fill="#000000" stroke="#000000" points="847.13,-407.26 856.81,-411.56 851.93,-402.16 847.13,-407.26"/>
+</g>
+<!-- proc~split -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_node12" class="node">
+<title>proc~split</title>
+<g id="a_proc~~segment_trajectory_json~~CallsGraph_node12"><a xlink:href="../proc/split.html" xlink:title="split">
+<polygon fill="#d9534f" stroke="#d9534f" points="1052.88,-437.27 998.88,-437.27 998.88,-413 1052.88,-413 1052.88,-437.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1025.88" y="-421.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">split</text>
+</a>
+</g>
+</g>
+<!-- proc~two_prod&#45;&gt;proc~split -->
+<g id="proc~~segment_trajectory_json~~CallsGraph_edge19" class="edge">
+<title>proc~two_prod&#45;&gt;proc~split</title>
+<path fill="none" stroke="#000000" d="M902.47,-425.13C926.66,-425.13 961.16,-425.13 987.37,-425.13"/>
+<polygon fill="#000000" stroke="#000000" points="987.25,-428.64 997.25,-425.14 987.25,-421.64 987.25,-428.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocsegment_trajectory_jsonCallsGraph = svgPanZoom('#procsegment_trajectory_jsonCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~segment_trajectory_json~~CalledByGraph Pages: 1 -->
+<svg id="procsegment_trajectory_jsonCalledByGraph" width="556pt" height="32pt"
+ viewBox="0.00 0.00 556.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~segment_trajectory_json~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~segment_trajectory_json~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 552.31,-28.27 552.31,4 -4,4"/>
+<!-- proc~segment_trajectory_json -->
+<g id="proc~~segment_trajectory_json~~CalledByGraph_node1" class="node">
+<title>proc~segment_trajectory_json</title>
+<polygon fill="none" stroke="black" points="548.31,-24.27 406.29,-24.27 406.29,0 548.31,0 548.31,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="477.3" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">segment_trajectory_json</text>
+</g>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~segment_trajectory_json~~CalledByGraph_node2" class="node">
+<title>proc~export_trajectory_json_file</title>
+<g id="a_proc~~segment_trajectory_json~~CalledByGraph_node2"><a xlink:href="../proc/export_trajectory_json_file.html" xlink:title="mission_type%export_trajectory_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="370.29,-24.27 140.52,-24.27 140.52,0 370.29,0 370.29,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="255.41" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_trajectory_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~segment_trajectory_json -->
+<g id="proc~~segment_trajectory_json~~CalledByGraph_edge1" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~segment_trajectory_json</title>
+<path fill="none" stroke="#000000" d="M370.54,-12.13C378.62,-12.13 386.67,-12.13 394.51,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="394.33,-15.64 404.33,-12.14 394.33,-8.64 394.33,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~segment_trajectory_json~~CalledByGraph_node3" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~segment_trajectory_json~~CalledByGraph_node3"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~segment_trajectory_json~~CalledByGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M104.8,-12.13C112.4,-12.13 120.5,-12.13 128.84,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.83,-15.64 138.83,-12.14 128.83,-8.64 128.83,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">segment_trajectory_json</span><span class="p">(</span><span class="n">seg</span><span class="p">,</span><span class="w"> </span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">last</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    type</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iseg</span><span class="w">  </span><span class="c">!! segment number</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">last</span><span class="w">  </span><span class="c">!! if this is the last segment (no comma after it)</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">text_buffer</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">buf</span>
+
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">new_line</span><span class="p">(</span><span class="s1">'a'</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">buf</span><span class="p">%</span><span class="n">clear</span><span class="p">()</span>
+<span class="w">    </span><span class="k">call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="s1">'    {'</span><span class="o">//</span><span class="n">nl</span><span class="o">//</span><span class="s1">'      "iseg": '</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_int</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'et'</span><span class="p">,</span><span class="w">          </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'x_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'y_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'z_inertial'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'vx_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'vy_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'vz_inertial'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'x_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'y_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'z_rotating'</span><span class="p">,</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'x_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'y_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">add_array</span><span class="p">(</span><span class="s1">'z_se_rotating'</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">z</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">last</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="n">nl</span><span class="o">//</span><span class="s1">'    }'</span><span class="o">//</span><span class="n">nl</span><span class="p">)</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="n">nl</span><span class="o">//</span><span class="s1">'    },'</span><span class="o">//</span><span class="n">nl</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    contains</span>
+
+<span class="k">        subroutine </span><span class="n">add_array</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">name</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">        </span><span class="k">call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_str</span><span class="p">(</span><span class="s1">','</span><span class="o">//</span><span class="n">nl</span><span class="o">//</span><span class="s1">'      "'</span><span class="o">//</span><span class="n">name</span><span class="o">//</span><span class="s1">'": '</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">buf</span><span class="p">%</span><span class="n">add_real_array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end subroutine </span><span class="n">add_array</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">segment_trajectory_json</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

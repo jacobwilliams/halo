@@ -1,0 +1,992 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>set_segment_inputs &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>set_segment_inputs
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.7% of total for procedures.">28 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">set_segment_inputs</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/set_segment_inputs.html#src">set_segment_inputs</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine set_segment_inputs(me, t0, tf, x0_rotating)  
+</h2>
+    
+
+    <p>Sets all the info in a segment for it to be propagated.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/segment.html'>segment</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~51"></span>
+              class(<a href='../type/segment.html'>segment</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t0~7"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t0</strong></td>
+            <td>
+                <p>[days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tf~7"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tf</strong></td>
+            <td>
+                <p>[days]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x0_rotating~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating</strong></td>
+            <td>
+                <p>state in rotating frame</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~set_segment_inputs~~CallsGraph Pages: 1 -->
+<svg id="procset_segment_inputsCallsGraph" width="363pt" height="116pt"
+ viewBox="0.00 0.00 363.00 116.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~set_segment_inputs~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 112.27)">
+<title>proc~~set_segment_inputs~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-112.27 358.54,-112.27 358.54,4 -4,4"/>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~set_segment_inputs~~CallsGraph_node1" class="node">
+<title>proc~set_segment_inputs</title>
+<polygon fill="none" stroke="black" points="172.77,-66.27 0,-66.27 0,-42 172.77,-42 172.77,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="86.38" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50">segment%set_segment_inputs</text>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~set_segment_inputs~~CallsGraph_node2" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="314.79,-108.27 248.52,-108.27 248.52,-84 314.79,-84 314.79,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="281.66" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~set_segment_inputs~~CallsGraph_edge1" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M145.37,-66.74C174.85,-73.14 210.08,-80.8 237.19,-86.69"/>
+<polygon fill="#000000" stroke="#000000" points="236.28,-90.07 246.79,-88.78 237.77,-83.23 236.28,-90.07"/>
+</g>
+<!-- transform -->
+<g id="proc~~set_segment_inputs~~CallsGraph_node3" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="313.67,-66.27 249.65,-66.27 249.65,-42 313.67,-42 313.67,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="281.66" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~set_segment_inputs~~CallsGraph_edge2" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M173,-54.13C195.58,-54.13 218.97,-54.13 238.15,-54.13"/>
+<polygon fill="#000000" stroke="#000000" points="238,-57.64 248,-54.14 238,-50.64 238,-57.64"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~set_segment_inputs~~CallsGraph_node4" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="354.54,-24.27 208.77,-24.27 208.77,0 354.54,0 354.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="281.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~set_segment_inputs~~CallsGraph_edge3" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M145.37,-41.53C166.2,-37.01 189.9,-31.86 211.58,-27.15"/>
+<polygon fill="#000000" stroke="#000000" points="212.2,-30.59 221.23,-25.05 210.71,-23.75 212.2,-30.59"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~set_segment_inputs~~CalledByGraph Pages: 1 -->
+<svg id="procset_segment_inputsCalledByGraph" width="641pt" height="260pt"
+ viewBox="0.00 0.00 641.00 260.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~set_segment_inputs~~CalledByGraph" class="graph" transform="scale(0.395279 0.395279) rotate(0) translate(4 654.13)">
+<title>proc~~set_segment_inputs~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-654.13 1617.64,-654.13 1617.64,4 -4,4"/>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node1" class="node">
+<title>proc~set_segment_inputs</title>
+<polygon fill="none" stroke="black" points="1613.64,-426.27 1440.87,-426.27 1440.87,-402 1613.64,-402 1613.64,-426.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1527.25" y="-410.53" font-family="Helvetica,sans-Serif" font-size="10.50">segment%set_segment_inputs</text>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node2" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node2"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="595.18,-622.27 392.41,-622.27 392.41,-598 595.18,-598 595.18,-622.27"/>
+<text xml:space="preserve" text-anchor="middle" x="493.8" y="-606.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge1" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M572.51,-622.74C594.02,-625.88 617.4,-628.96 639.06,-631.13 790.27,-646.32 828.49,-650.13 980.46,-650.13 980.46,-650.13 980.46,-650.13 1220.48,-650.13 1359.97,-650.13 1474.66,-494.32 1512.75,-435.91"/>
+<polygon fill="#000000" stroke="#000000" points="1515.52,-438.08 1517.96,-427.77 1509.62,-434.3 1515.52,-438.08"/>
+</g>
+<!-- proc~equilibrate_scales -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node19" class="node">
+<title>proc~equilibrate_scales</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node19"><a xlink:href="../proc/equilibrate_scales.html" xlink:title="mission_type%equilibrate_scales">
+<polygon fill="#d9534f" stroke="#d9534f" points="832.08,-622.27 645.81,-622.27 645.81,-598 832.08,-598 832.08,-622.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-606.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%equilibrate_scales</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge34" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales</title>
+<path fill="none" stroke="#000000" d="M595.45,-610.13C608.28,-610.13 621.44,-610.13 634.32,-610.13"/>
+<polygon fill="#000000" stroke="#000000" points="634.04,-613.64 644.04,-610.14 634.04,-606.64 634.04,-613.64"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node3" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node3"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="1314.87,-426.27 1124.1,-426.27 1124.1,-402 1314.87,-402 1314.87,-426.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1219.48" y="-410.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge2" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M1315.14,-414.13C1351.46,-414.13 1392.93,-414.13 1429.45,-414.13"/>
+<polygon fill="#000000" stroke="#000000" points="1429.1,-417.64 1439.1,-414.14 1429.1,-410.64 1429.1,-417.64"/>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node4" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node4"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1404.87,-267.27 1350.87,-267.27 1350.87,-243 1404.87,-243 1404.87,-267.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1377.87" y="-251.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge3" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M1390.44,-267.61C1415.73,-294.9 1476.16,-360.1 1507.18,-393.56"/>
+<polygon fill="#000000" stroke="#000000" points="1504.35,-395.65 1513.71,-400.61 1509.48,-390.89 1504.35,-395.65"/>
+</g>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node5" class="node">
+<title>proc~compute_jacobian_stm</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node5"><a xlink:href="../proc/compute_jacobian_stm.html" xlink:title="mission_type%compute_jacobian_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="1088.1,-542.27 874.83,-542.27 874.83,-518 1088.1,-518 1088.1,-542.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-526.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%compute_jacobian_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge5" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M1049.35,-517.57C1062.49,-514.02 1075.96,-509.6 1088.1,-504.13 1129.03,-485.72 1170.75,-454.22 1195.62,-433.8"/>
+<polygon fill="#000000" stroke="#000000" points="1197.7,-436.62 1203.14,-427.53 1193.22,-431.25 1197.7,-436.62"/>
+</g>
+<!-- proc~constraint_violations -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node6" class="node">
+<title>proc~constraint_violations</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node6"><a xlink:href="../proc/constraint_violations.html" xlink:title="mission_type%constraint_violations">
+<polygon fill="#d9534f" stroke="#d9534f" points="838.83,-470.27 639.06,-470.27 639.06,-446 838.83,-446 838.83,-470.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-454.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%constraint_violations</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge6" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M839.1,-449.02C918.98,-441.67 1031.02,-431.37 1112.63,-423.87"/>
+<polygon fill="#000000" stroke="#000000" points="1112.79,-427.37 1122.43,-422.97 1112.15,-420.4 1112.79,-427.37"/>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node7" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node7"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="543.81,-386.27 443.79,-386.27 443.79,-362 543.81,-362 543.81,-386.27"/>
+<text xml:space="preserve" text-anchor="middle" x="493.8" y="-370.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge7" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M515.86,-361.61C543.17,-346.17 592.78,-320.8 639.06,-311.13 834.42,-270.34 899.57,-245.65 1088.1,-311.13 1134.94,-327.4 1177.66,-368.26 1200.68,-393.35"/>
+<polygon fill="#000000" stroke="#000000" points="1197.96,-395.56 1207.23,-400.68 1203.17,-390.89 1197.96,-395.56"/>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~constraint_violations -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge17" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M544.12,-382.64C563.31,-387.25 584.98,-394.11 603.06,-404.13 622.04,-414.66 619.76,-427.2 639.06,-437.13 642.16,-438.73 645.37,-440.21 648.66,-441.57"/>
+<polygon fill="#000000" stroke="#000000" points="647.38,-444.83 657.97,-445.02 649.82,-438.26 647.38,-444.83"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node8" class="node">
+<title>proc~eval_rows</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node8"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="1251.12,-148.27 1187.85,-148.27 1187.85,-124 1251.12,-124 1251.12,-148.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1219.48" y="-132.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge23" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M507.41,-361.66C531.01,-339.12 584.43,-291.85 639.06,-269.13 825.69,-191.53 894.9,-256.54 1088.1,-197.13 1123.16,-186.35 1160.88,-167.88 1186.68,-154.08"/>
+<polygon fill="#000000" stroke="#000000" points="1188.18,-157.25 1195.3,-149.4 1184.84,-151.1 1188.18,-157.25"/>
+</g>
+<!-- proc~find_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node9" class="node">
+<title>proc~find_rows</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node9"><a xlink:href="../proc/find_rows.html" xlink:title="find_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="769.45,-386.27 708.43,-386.27 708.43,-362 769.45,-362 769.45,-386.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-370.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge27" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M544.3,-374.13C589.13,-374.13 654.43,-374.13 696.55,-374.13"/>
+<polygon fill="#000000" stroke="#000000" points="696.53,-377.64 706.53,-374.14 696.53,-370.64 696.53,-377.64"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node14" class="node">
+<title>proc~newton_finish</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node14"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="781.08,-168.27 696.81,-168.27 696.81,-144 781.08,-144 781.08,-168.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-152.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge31" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M502.43,-361.72C521.82,-331.01 575.97,-250.51 639.06,-202.13 654.61,-190.21 673.76,-180.41 691.04,-172.96"/>
+<polygon fill="#000000" stroke="#000000" points="692.22,-176.26 700.12,-169.21 689.54,-169.79 692.22,-176.26"/>
+</g>
+<!-- proc~equilibrate -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node18" class="node">
+<title>proc~equilibrate</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node18"><a xlink:href="../proc/equilibrate.html" xlink:title="equilibrate">
+<polygon fill="#d9534f" stroke="#d9534f" points="773.58,-428.27 704.31,-428.27 704.31,-404 773.58,-404 773.58,-428.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-412.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">equilibrate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~equilibrate -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge33" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~equilibrate</title>
+<path fill="none" stroke="#000000" d="M544.3,-382.68C587.83,-390.2 650.66,-401.06 692.83,-408.34"/>
+<polygon fill="#000000" stroke="#000000" points="692.2,-411.79 702.65,-410.04 693.4,-404.89 692.2,-411.79"/>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge14" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M1236.93,-148.65C1264.33,-169.5 1319.53,-211.5 1351.81,-236.07"/>
+<polygon fill="#000000" stroke="#000000" points="1349.37,-238.61 1359.45,-241.88 1353.61,-233.03 1349.37,-238.61"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge8" class="edge">
+<title>proc~find_rows&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M769.83,-379.66C797.09,-384.49 838.53,-391.32 874.83,-395.13 954.34,-403.5 1044.62,-408.31 1112.68,-411"/>
+<polygon fill="#000000" stroke="#000000" points="1112.2,-414.48 1122.32,-411.37 1112.47,-407.49 1112.2,-414.48"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node10" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node10"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-470.27 0,-470.27 0,-446 104.52,-446 104.52,-470.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-454.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge9" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M104.8,-467.54C116.5,-469.36 128.91,-471.04 140.52,-472.13 248.54,-482.31 276.05,-477.58 384.54,-479.13 697.47,-483.62 780.93,-510.04 1088.1,-450.13 1114.76,-444.94 1143.95,-437.08 1167.94,-430.04"/>
+<polygon fill="#000000" stroke="#000000" points="1168.88,-433.41 1177.47,-427.2 1166.88,-426.7 1168.88,-433.41"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~constraint_violations -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge18" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M104.88,-452.2C202.37,-441.87 420.21,-422.99 603.06,-437.13 621.26,-438.54 640.71,-441 659.03,-443.76"/>
+<polygon fill="#000000" stroke="#000000" points="658.34,-447.19 668.76,-445.27 659.42,-440.28 658.34,-447.19"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node11" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node11"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="348.54,-582.27 140.52,-582.27 140.52,-558 348.54,-558 348.54,-582.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-566.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge28" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M72.87,-470.59C90.47,-481.69 117.05,-498.27 140.52,-512.13 163.69,-525.82 190.16,-540.71 210.46,-551.97"/>
+<polygon fill="#000000" stroke="#000000" points="208.69,-554.99 219.14,-556.77 212.08,-548.87 208.69,-554.99"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node15" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node15"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="340.66,-388.27 148.39,-388.27 148.39,-364 340.66,-364 340.66,-388.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-372.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge32" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M70.16,-445.61C87.17,-433.52 114.54,-415.42 140.52,-404.13 151.28,-399.46 163.01,-395.39 174.58,-391.9"/>
+<polygon fill="#000000" stroke="#000000" points="175.48,-395.29 184.13,-389.16 173.55,-388.56 175.48,-395.29"/>
+</g>
+<!-- proc~write_solution_plot_data -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node23" class="node">
+<title>proc~write_solution_plot_data</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node23"><a xlink:href="../proc/write_solution_plot_data.html" xlink:title="mission_type%write_solution_plot_data">
+<polygon fill="#d9534f" stroke="#d9534f" points="603.06,-470.27 384.54,-470.27 384.54,-446 603.06,-446 603.06,-470.27"/>
+<text xml:space="preserve" text-anchor="middle" x="493.8" y="-454.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%write_solution_plot_data</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~write_solution_plot_data -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge36" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~write_solution_plot_data</title>
+<path fill="none" stroke="#000000" d="M104.97,-458.13C170.41,-458.13 285.16,-458.13 372.91,-458.13"/>
+<polygon fill="#000000" stroke="#000000" points="372.78,-461.64 382.78,-458.14 372.78,-454.64 372.78,-461.64"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge4" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M323.43,-582.74C348.94,-586.86 377.49,-591.48 403.76,-595.73"/>
+<polygon fill="#000000" stroke="#000000" points="402.94,-599.14 413.37,-597.29 404.06,-592.23 402.94,-599.14"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge10" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M348.66,-572.22C558.77,-575.82 1022.19,-580.28 1088.1,-551.13 1142.57,-527.05 1185.3,-468.33 1205.59,-436.13"/>
+<polygon fill="#000000" stroke="#000000" points="1208.34,-438.34 1210.58,-427.98 1202.38,-434.68 1208.34,-438.34"/>
+</g>
+<!-- proc~iteration_epochs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node12" class="node">
+<title>proc~iteration_epochs</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node12"><a xlink:href="../proc/iteration_epochs.html" xlink:title="iteration_epochs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1031.47,-386.27 931.45,-386.27 931.45,-362 1031.47,-362 1031.47,-386.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-370.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iteration_epochs</text>
+</a>
+</g>
+</g>
+<!-- proc~iteration_epochs&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge11" class="edge">
+<title>proc~iteration_epochs&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M1031.94,-382.52C1061.09,-387.46 1098.77,-393.85 1132.63,-399.58"/>
+<polygon fill="#000000" stroke="#000000" points="1132.01,-403.03 1142.46,-401.25 1133.18,-396.13 1132.01,-403.03"/>
+</g>
+<!-- proc~iteration_trajectory -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node13" class="node">
+<title>proc~iteration_trajectory</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node13"><a xlink:href="../proc/iteration_trajectory.html" xlink:title="iteration_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="1038.22,-344.27 924.7,-344.27 924.7,-320 1038.22,-320 1038.22,-344.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-328.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iteration_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~iteration_trajectory&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge12" class="edge">
+<title>proc~iteration_trajectory&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M1038.49,-340.66C1054.7,-343.83 1072.29,-347.95 1088.1,-353.13 1122.75,-364.5 1160.25,-382.72 1186.1,-396.3"/>
+<polygon fill="#000000" stroke="#000000" points="1184.28,-399.29 1194.75,-400.9 1187.57,-393.11 1184.28,-399.29"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge13" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M779.09,-168.71C864.31,-196.25 1061.2,-260.83 1088.1,-278.13 1137.03,-309.62 1180.92,-363.02 1203.14,-392.67"/>
+<polygon fill="#000000" stroke="#000000" points="1200.18,-394.55 1208.93,-400.53 1205.82,-390.4 1200.18,-394.55"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge24" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M781.58,-154.4C871.89,-150.62 1084.99,-141.71 1176.04,-137.91"/>
+<polygon fill="#000000" stroke="#000000" points="1176.19,-141.41 1186.03,-137.49 1175.89,-134.41 1176.19,-141.41"/>
+</g>
+<!-- proc~newton_func -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node21" class="node">
+<title>proc~newton_func</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node21"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="1020.97,-108.27 941.95,-108.27 941.95,-84 1020.97,-84 1020.97,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge35" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M781.55,-145.58C808.21,-138.84 843.55,-129.93 874.83,-122.13 893.11,-117.58 913.18,-112.63 930.87,-108.28"/>
+<polygon fill="#000000" stroke="#000000" points="931.47,-111.74 940.35,-105.95 929.8,-104.94 931.47,-111.74"/>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge20" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M341.13,-375.36C371.69,-375.11 404.67,-374.85 432.04,-374.63"/>
+<polygon fill="#000000" stroke="#000000" points="431.92,-378.13 441.89,-374.55 431.86,-371.13 431.92,-378.13"/>
+</g>
+<!-- proc~eclipse_fc -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node16" class="node">
+<title>proc~eclipse_fc</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node16"><a xlink:href="../proc/eclipse_fc.html" xlink:title="eclipse_fc">
+<polygon fill="#d9534f" stroke="#d9534f" points="1013.47,-188.27 949.45,-188.27 949.45,-164 1013.47,-164 1013.47,-188.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-172.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_fc</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge21" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M1013.81,-170.82C1055.54,-163.75 1129.49,-151.22 1176.15,-143.31"/>
+<polygon fill="#000000" stroke="#000000" points="1176.62,-146.78 1185.9,-141.66 1175.45,-139.88 1176.62,-146.78"/>
+</g>
+<!-- proc~eclipse_gjac -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node17" class="node">
+<title>proc~eclipse_gjac</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node17"><a xlink:href="../proc/eclipse_gjac.html" xlink:title="eclipse_gjac">
+<polygon fill="#d9534f" stroke="#d9534f" points="1019.85,-66.27 943.08,-66.27 943.08,-42 1019.85,-42 1019.85,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_gjac</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_gjac&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge22" class="edge">
+<title>proc~eclipse_gjac&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M1020.19,-59.36C1040.6,-62.76 1066.07,-67.91 1088.1,-75.13 1122.75,-86.5 1160.25,-104.72 1186.1,-118.3"/>
+<polygon fill="#000000" stroke="#000000" points="1184.28,-121.29 1194.75,-122.9 1187.57,-115.11 1184.28,-121.29"/>
+</g>
+<!-- proc~equilibrate&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge15" class="edge">
+<title>proc~equilibrate&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M773.84,-420.15C793.38,-423.24 818.1,-428.49 838.83,-437.13 884,-455.98 930.29,-489.61 957.15,-510.85"/>
+<polygon fill="#000000" stroke="#000000" points="954.64,-513.32 964.63,-516.85 959.03,-507.86 954.64,-513.32"/>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge16" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M777.79,-597.55C819.47,-583.69 886.58,-561.36 932.06,-546.24"/>
+<polygon fill="#000000" stroke="#000000" points="933.02,-549.6 941.4,-543.13 930.81,-542.96 933.02,-549.6"/>
+</g>
+<!-- proc~halo_export -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node20" class="node">
+<title>proc~halo_export</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node20"><a xlink:href="../proc/halo_export.html" xlink:title="halo_export">
+<polygon fill="#d9534f" stroke="#d9534f" points="775.83,-344.27 702.06,-344.27 702.06,-320 775.83,-320 775.83,-344.27"/>
+<text xml:space="preserve" text-anchor="middle" x="738.94" y="-328.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_export</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_export&#45;&gt;proc~iteration_epochs -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge29" class="edge">
+<title>proc~halo_export&#45;&gt;proc~iteration_epochs</title>
+<path fill="none" stroke="#000000" d="M776.21,-338.47C814.32,-345.12 874.91,-355.7 920.21,-363.61"/>
+<polygon fill="#000000" stroke="#000000" points="919.44,-367.03 929.89,-365.3 920.64,-360.14 919.44,-367.03"/>
+</g>
+<!-- proc~halo_export&#45;&gt;proc~iteration_trajectory -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge30" class="edge">
+<title>proc~halo_export&#45;&gt;proc~iteration_trajectory</title>
+<path fill="none" stroke="#000000" d="M776.21,-332.13C812.43,-332.13 868.95,-332.13 913.36,-332.13"/>
+<polygon fill="#000000" stroke="#000000" points="913.15,-335.64 923.15,-332.14 913.15,-328.64 913.15,-335.64"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge25" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M1021.44,-102.74C1064.11,-109.97 1132.28,-121.53 1176.21,-128.97"/>
+<polygon fill="#000000" stroke="#000000" points="1175.44,-132.39 1185.88,-130.61 1176.61,-125.49 1175.44,-132.39"/>
+</g>
+<!-- proc~newton_grad -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_node22" class="node">
+<title>proc~newton_grad</title>
+<g id="a_proc~~set_segment_inputs~~CalledByGraph_node22"><a xlink:href="../proc/newton_grad.html" xlink:title="newton_grad">
+<polygon fill="#d9534f" stroke="#d9534f" points="1021.72,-24.27 941.2,-24.27 941.2,0 1021.72,0 1021.72,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="981.46" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_grad</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_grad&#45;&gt;proc~eval_rows -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge26" class="edge">
+<title>proc~newton_grad&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M1022.22,-15.55C1042.63,-18.4 1067.47,-23.61 1088.1,-33.13 1132.42,-53.59 1175.12,-92.01 1198.97,-115.7"/>
+<polygon fill="#000000" stroke="#000000" points="1196.3,-117.97 1205.81,-122.63 1201.28,-113.06 1196.3,-117.97"/>
+</g>
+<!-- proc~write_solution_plot_data&#45;&gt;proc~constraint_violations -->
+<g id="proc~~set_segment_inputs~~CalledByGraph_edge19" class="edge">
+<title>proc~write_solution_plot_data&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M603.22,-458.13C611.22,-458.13 619.3,-458.13 627.32,-458.13"/>
+<polygon fill="#000000" stroke="#000000" points="627.09,-461.64 637.09,-458.14 627.09,-454.64 627.09,-461.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocset_segment_inputsCalledByGraph = svgPanZoom('#procset_segment_inputsCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">set_segment_inputs</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">t0</span><span class="p">,</span><span class="n">tf</span><span class="p">,</span><span class="n">x0_rotating</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">segment</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="c">!! [days]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tf</span><span class="w"> </span><span class="c">!! [days]</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_rotating</span><span class="w">  </span><span class="c">!! state in rotating frame</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0_inertial</span><span class="w"> </span><span class="c">!! inertial frame</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">icrf_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inertial</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">two_body_rotating_frame</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rotating</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et0</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">status_ok</span>
+
+<span class="w">    </span><span class="c">! note that the position vectors are in the rotating frame,</span>
+<span class="w">    </span><span class="c">! have to transform to inertial to integrate.</span>
+<span class="w">    </span><span class="c">! create the frames for the transformation:</span>
+<span class="w">    </span><span class="n">et0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">day2sec</span><span class="w">  </span><span class="c">! convert to ephemeris time [sec]</span>
+<span class="w">    </span><span class="n">rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two_body_rotating_frame</span><span class="p">(</span><span class="n">primary_body</span><span class="o">=</span><span class="n">body_earth</span><span class="p">,&amp;</span>
+<span class="w">                                        </span><span class="n">secondary_body</span><span class="o">=</span><span class="n">body_moon</span><span class="p">,&amp;</span>
+<span class="w">                                        </span><span class="n">center</span><span class="o">=</span><span class="n">center_at_secondary_body</span><span class="p">,&amp;</span>
+<span class="w">                                        </span><span class="n">et</span><span class="o">=</span><span class="n">et0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">inertial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icrf_frame</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">body_moon</span><span class="p">)</span>
+
+<span class="w">    </span><span class="c">! from rotating to inertial:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">rotating</span><span class="p">%</span><span class="n">transform</span><span class="p">(</span><span class="n">x0_rotating</span><span class="p">,</span><span class="n">inertial</span><span class="p">,</span><span class="n">et0</span><span class="p">,</span><span class="n">me</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="n">x0_inertial</span><span class="p">,</span><span class="n">status_ok</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">status_ok</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A/,*(E30.16/))'</span><span class="p">)</span><span class="w"> </span><span class="s1">'t0:         '</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A/,*(E30.16/))'</span><span class="p">)</span><span class="w"> </span><span class="s1">'et0:        '</span><span class="p">,</span><span class="w"> </span><span class="n">et0</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A/,*(E30.16/))'</span><span class="p">)</span><span class="w"> </span><span class="s1">'x0_rotating:'</span><span class="p">,</span><span class="w"> </span><span class="n">x0_rotating</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'transformation error in set_segment_inputs'</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! set the inputs (needed by the propagator)</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0_rotating</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">x0</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">x0_inertial</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">tf</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">set_segment_inputs</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,726 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>eclipse_fc &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>eclipse_fc
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.9% of total for procedures.">35 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_eclipse_opt_submodule.html'>halo_eclipse_opt_submodule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">eclipse_fc</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/eclipse_fc.html#src">eclipse_fc</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2> subroutine eclipse_fc(x, f, c, status, data)  
+</h2>
+    
+
+    <p>The objective and the constraints for sqpopt: halo's continuity constraints, then the
+eclipse rows.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-c"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>c</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-status"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>status</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data"></span>
+              class(*),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>data</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~eclipse_fc~~CallsGraph Pages: 1 -->
+<svg id="proceclipse_fcCallsGraph" width="641pt" height="353pt"
+ viewBox="0.00 0.00 641.00 353.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~eclipse_fc~~CallsGraph" class="graph" transform="scale(0.859733 0.859733) rotate(0) translate(4 406.27)">
+<title>proc~~eclipse_fc~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-406.27 741.58,-406.27 741.58,4 -4,4"/>
+<!-- proc~eclipse_fc -->
+<g id="proc~~eclipse_fc~~CallsGraph_node1" class="node">
+<title>proc~eclipse_fc</title>
+<polygon fill="none" stroke="black" points="64.02,-307.27 0,-307.27 0,-283 64.02,-283 64.02,-307.27"/>
+<text xml:space="preserve" text-anchor="middle" x="32.01" y="-291.53" font-family="Helvetica,sans-Serif" font-size="10.50">eclipse_fc</text>
+</g>
+<!-- constraint_violations -->
+<g id="proc~~eclipse_fc~~CallsGraph_node2" class="node">
+<title>constraint_violations</title>
+<polygon fill="#777777" stroke="#777777" points="221.04,-370.27 100.02,-370.27 100.02,-346 221.04,-346 221.04,-370.27"/>
+<text xml:space="preserve" text-anchor="middle" x="160.53" y="-354.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">constraint_violations</text>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;constraint_violations -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge1" class="edge">
+<title>proc~eclipse_fc&#45;&gt;constraint_violations</title>
+<path fill="none" stroke="#000000" d="M50.59,-307.66C63.76,-316.67 82.46,-328.66 100.02,-337.13 103.08,-338.61 106.27,-340.04 109.52,-341.4"/>
+<polygon fill="#000000" stroke="#000000" points="107.98,-344.56 118.57,-345 110.57,-338.06 107.98,-344.56"/>
+</g>
+<!-- proc~epochs_in_range -->
+<g id="proc~~eclipse_fc~~CallsGraph_node3" class="node">
+<title>proc~epochs_in_range</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node3"><a xlink:href="../proc/epochs_in_range.html" xlink:title="epochs_in_range">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="211.29,-328.27 109.77,-328.27 109.77,-304 211.29,-304 211.29,-328.27"/>
+<text xml:space="preserve" text-anchor="middle" x="160.53" y="-312.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">epochs_in_range</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~epochs_in_range -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge2" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~epochs_in_range</title>
+<path fill="none" stroke="#000000" d="M64.28,-300.33C74.6,-302.04 86.45,-304.01 98.22,-305.96"/>
+<polygon fill="#000000" stroke="#000000" points="97.48,-309.38 107.92,-307.57 98.63,-302.48 97.48,-309.38"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="proc~~eclipse_fc~~CallsGraph_node4" class="node">
+<title>proc~eval_rows</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node4"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="192.16,-286.27 128.89,-286.27 128.89,-262 192.16,-262 192.16,-286.27"/>
+<text xml:space="preserve" text-anchor="middle" x="160.53" y="-270.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~eval_rows -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge3" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M64.28,-289.94C80.37,-287.27 100.2,-283.98 117.6,-281.09"/>
+<polygon fill="#000000" stroke="#000000" points="117.83,-284.6 127.12,-279.51 116.68,-277.7 117.83,-284.6"/>
+</g>
+<!-- proc~ks_aggregate -->
+<g id="proc~~eclipse_fc~~CallsGraph_node5" class="node">
+<title>proc~ks_aggregate</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node5"><a xlink:href="../proc/ks_aggregate.html" xlink:title="ks_aggregate">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="201.91,-244.27 119.14,-244.27 119.14,-220 201.91,-220 201.91,-244.27"/>
+<text xml:space="preserve" text-anchor="middle" x="160.53" y="-228.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ks_aggregate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~ks_aggregate -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge4" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~ks_aggregate</title>
+<path fill="none" stroke="#000000" d="M50.59,-282.61C63.76,-273.6 82.46,-261.61 100.02,-253.13 103.08,-251.66 106.27,-250.23 109.52,-248.87"/>
+<polygon fill="#000000" stroke="#000000" points="110.57,-252.21 118.57,-245.27 107.98,-245.71 110.57,-252.21"/>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~eclipse_fc~~CallsGraph_node6" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node6"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="311.04,-286.27 257.04,-286.27 257.04,-262 311.04,-262 311.04,-286.27"/>
+<text xml:space="preserve" text-anchor="middle" x="284.04" y="-270.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge5" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M192.51,-274.13C208.62,-274.13 228.44,-274.13 245.42,-274.13"/>
+<polygon fill="#000000" stroke="#000000" points="245.14,-277.64 255.14,-274.14 245.14,-270.64 245.14,-277.64"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~eclipse_fc~~CallsGraph_node7" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node7"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="518.68,-360.27 349.66,-360.27 349.66,-336 518.68,-336 518.68,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="434.17" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge6" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M296.15,-286.55C307.7,-298.69 326.87,-316.81 347.04,-327.13 350.26,-328.78 353.61,-330.31 357.05,-331.71"/>
+<polygon fill="#000000" stroke="#000000" points="355.55,-334.89 366.14,-335.07 357.97,-328.32 355.55,-334.89"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~eclipse_fc~~CallsGraph_node8" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node8"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="483.81,-318.27 384.54,-318.27 384.54,-294 483.81,-294 483.81,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="434.17" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge7" class="edge">
+<title>proc~row_ks&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M311.52,-279.86C328.67,-283.56 351.73,-288.54 373.15,-293.17"/>
+<polygon fill="#000000" stroke="#000000" points="372.17,-296.54 382.69,-295.23 373.65,-289.7 372.17,-296.54"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~eclipse_fc~~CallsGraph_node9" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node9"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="521.31,-171.27 347.04,-171.27 347.04,-147 521.31,-147 521.31,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="434.17" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~propagate_segment -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge8" class="edge">
+<title>proc~row_ks&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M299.35,-261.67C311.77,-250.96 330.34,-235.22 347.04,-222.13 366.6,-206.8 389.32,-190.24 406.51,-177.95"/>
+<polygon fill="#000000" stroke="#000000" points="408.09,-181.12 414.2,-172.47 404.02,-175.42 408.09,-181.12"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~eclipse_fc~~CallsGraph_node10" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node10"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="520.56,-255.27 347.79,-255.27 347.79,-231 520.56,-231 520.56,-255.27"/>
+<text xml:space="preserve" text-anchor="middle" x="434.17" y="-239.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge9" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M311.52,-268.59C325.65,-265.64 343.79,-261.84 361.71,-258.09"/>
+<polygon fill="#000000" stroke="#000000" points="362.26,-261.55 371.33,-256.08 360.83,-254.7 362.26,-261.55"/>
+</g>
+<!-- apparent_position -->
+<g id="proc~~eclipse_fc~~CallsGraph_node11" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="700.83,-402.27 594.06,-402.27 594.06,-378 700.83,-378 700.83,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge10" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M484.2,-312.56C496.92,-315.67 510.16,-320.29 521.31,-327.13 542.26,-340 536.31,-356.35 557.31,-369.13 565.13,-373.9 573.94,-377.58 582.91,-380.42"/>
+<polygon fill="#000000" stroke="#000000" points="581.82,-383.75 592.4,-383.09 583.72,-377.02 581.82,-383.75"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="proc~~eclipse_fc~~CallsGraph_node12" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="709.83,-360.27 585.06,-360.27 585.06,-336 709.83,-336 709.83,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge11" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M484.18,-315.88C510.77,-321.16 544.15,-327.8 573.72,-333.68"/>
+<polygon fill="#000000" stroke="#000000" points="572.87,-337.08 583.36,-335.59 574.23,-330.21 572.87,-337.08"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="proc~~eclipse_fc~~CallsGraph_node14" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="730.45,-318.27 564.43,-318.27 564.43,-294 730.45,-294 730.45,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge12" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M484.18,-306.13C504.7,-306.13 529.26,-306.13 553,-306.13"/>
+<polygon fill="#000000" stroke="#000000" points="552.68,-309.64 562.68,-306.14 552.68,-302.64 552.68,-309.64"/>
+</g>
+<!-- first_call -->
+<g id="proc~~eclipse_fc~~CallsGraph_node13" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="675.33,-66.27 619.56,-66.27 619.56,-42 675.33,-42 675.33,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge13" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M449.51,-146.59C471.3,-128.18 514.72,-94 557.31,-75.13 573.22,-68.09 591.81,-63.23 607.89,-59.98"/>
+<polygon fill="#000000" stroke="#000000" points="608.41,-63.44 617.59,-58.16 607.12,-56.56 608.41,-63.44"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_node15" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="680.58,-276.27 614.31,-276.27 614.31,-252 680.58,-252 680.58,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M451.77,-171.69C479.69,-192.63 535.19,-233.34 557.31,-243.13 571.67,-249.5 588.23,-254.08 603.14,-257.3"/>
+<polygon fill="#000000" stroke="#000000" points="602.19,-260.68 612.68,-259.21 603.57,-253.82 602.19,-260.68"/>
+</g>
+<!-- integrate -->
+<g id="proc~~eclipse_fc~~CallsGraph_node16" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="677.58,-24.27 617.31,-24.27 617.31,0 677.58,0 677.58,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge15" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M443.33,-146.86C460.92,-121.4 505.11,-62.76 557.31,-33.13 572,-24.8 589.84,-19.77 605.69,-16.73"/>
+<polygon fill="#000000" stroke="#000000" points="606.04,-20.22 615.32,-15.1 604.88,-13.32 606.04,-20.22"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~eclipse_fc~~CallsGraph_node17" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node17"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="685.45,-150.27 609.43,-150.27 609.43,-126 685.45,-126 685.45,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge16" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M521.72,-150.53C547.63,-147.96 575.12,-145.22 597.68,-142.98"/>
+<polygon fill="#000000" stroke="#000000" points="597.89,-146.48 607.49,-142.01 597.2,-139.51 597.89,-146.48"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~eclipse_fc~~CallsGraph_node18" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~eclipse_fc~~CallsGraph_node18"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="737.58,-108.27 557.31,-108.27 557.31,-84 737.58,-84 737.58,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge17" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M468.84,-146.54C493.21,-137.68 527.04,-125.88 557.31,-117.13 564.03,-115.19 571.06,-113.3 578.12,-111.5"/>
+<polygon fill="#000000" stroke="#000000" points="578.84,-114.92 587.7,-109.1 577.15,-108.13 578.84,-114.92"/>
+</g>
+<!-- transform -->
+<g id="proc~~eclipse_fc~~CallsGraph_node19" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="679.45,-234.27 615.43,-234.27 615.43,-210 679.45,-210 679.45,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge18" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M468.84,-171.73C493.21,-180.59 527.04,-192.39 557.31,-201.13 572.52,-205.53 589.39,-209.69 604.33,-213.12"/>
+<polygon fill="#000000" stroke="#000000" points="603.31,-216.48 613.83,-215.27 604.85,-209.65 603.31,-216.48"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_node20" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="720.33,-192.27 574.56,-192.27 574.56,-168 720.33,-168 720.33,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="647.44" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge19" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M521.72,-167.74C535.34,-169.09 549.4,-170.49 562.95,-171.84"/>
+<polygon fill="#000000" stroke="#000000" points="562.39,-175.3 572.68,-172.8 563.08,-168.33 562.39,-175.3"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge20" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M520.8,-251.65C548.89,-254.44 578.93,-257.42 602.59,-259.78"/>
+<polygon fill="#000000" stroke="#000000" points="602.19,-263.25 612.49,-260.76 602.89,-256.29 602.19,-263.25"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge21" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M520.8,-234.62C549.28,-231.79 579.76,-228.76 603.58,-226.4"/>
+<polygon fill="#000000" stroke="#000000" points="603.92,-229.88 613.52,-225.41 603.23,-222.91 603.92,-229.88"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eclipse_fc~~CallsGraph_edge22" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M468.84,-230.54C493.21,-221.68 527.04,-209.88 557.31,-201.13 564.03,-199.19 571.06,-197.3 578.12,-195.5"/>
+<polygon fill="#000000" stroke="#000000" points="578.84,-198.92 587.7,-193.1 577.15,-192.13 578.84,-198.92"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproceclipse_fcCallsGraph = svgPanZoom('#proceclipse_fcCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">eclipse_fc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">)</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">                </span><span class="kd">::</span><span class="w"> </span><span class="n">f</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">c</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">               </span><span class="kd">::</span><span class="w"> </span><span class="n">status</span>
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="k">optional</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w">     </span><span class="kd">::</span><span class="w"> </span><span class="k">data</span>
+
+<span class="k">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ks</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ok</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="nb">present</span><span class="p">(</span><span class="k">data</span><span class="p">))</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'eclipse_fc: no data'</span>
+<span class="w">    </span><span class="k">select type</span><span class="w"> </span><span class="p">(</span><span class="k">data</span><span class="p">)</span>
+<span class="w">    </span><span class="k">type is</span><span class="w"> </span><span class="p">(</span><span class="n">eclipse_opt_data</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! (x here is the optimization's variable y = x/r)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_objective</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span><span class="w">  </span><span class="c">! (a feasibility problem: as SNOPT's feasible point mode)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5_wp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">sum</span><span class="p">((</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">data</span><span class="p">%</span><span class="n">x0</span><span class="o">/</span><span class="k">data</span><span class="p">%</span><span class="n">r</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">epochs_in_range</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="k">data</span><span class="p">%</span><span class="n">r</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">            </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="c">! (outside the splined ephemeris: can't evaluate here)</span>
+<span class="w">            </span><span class="k">return</span>
+<span class="k">        end if</span>
+<span class="k">        call data</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">constraint_violations</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="k">data</span><span class="p">%</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="k">data</span><span class="p">%</span><span class="n">m_halo</span><span class="p">))</span><span class="w">  </span><span class="c">! (also puts x in the segments)</span>
+<span class="w">        </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="k">data</span><span class="p">%</span><span class="n">m_halo</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="k">data</span><span class="p">%</span><span class="n">m_halo</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">data</span><span class="p">%</span><span class="n">w</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">single</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            allocate</span><span class="p">(</span><span class="n">ks</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">rows</span><span class="p">)))</span>
+<span class="w">            </span><span class="k">call </span><span class="n">eval_rows</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">ok</span><span class="o">=</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">            </span><span class="n">c</span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">m_halo</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ks_aggregate</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_ks_rho</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            call </span><span class="n">eval_rows</span><span class="p">(</span><span class="k">data</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">m_halo</span><span class="o">+</span><span class="mi">1</span><span class="p">:),</span><span class="w"> </span><span class="n">ok</span><span class="o">=</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="nb">any</span><span class="p">(</span><span class="k">data</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">%</span><span class="n">failed</span><span class="p">))</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="c">! (can't evaluate here: sqpopt shortens the step)</span>
+<span class="w">    </span><span class="k">class </span><span class="n">default</span>
+<span class="w">        </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'eclipse_fc: invalid data'</span>
+<span class="w">    </span><span class="k">end select</span>
+
+<span class="k">    end subroutine </span><span class="n">eclipse_fc</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1191 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>compute_jacobian_stm &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>compute_jacobian_stm
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.9% of total for procedures.">77 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">compute_jacobian_stm</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/compute_jacobian_stm.html#src">compute_jacobian_stm</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine compute_jacobian_stm(me, x, jac)  
+</h2>
+    
+
+    <p>Compute the (scaled) sparse Jacobian analytically (<code>jacobian_mode=2</code>): each segment
+is propagated once with its state transition matrix (in parallel, see
+<a href="../proc/propagate_segment_stm.html">propagate_segment_stm</a>), and the blocks are assembled.</p>
+<p>Constraint block <code>i</code> (rows <code>6i-5:6i</code>) is <script type="math/tex"> \mathbf{c}_i = \mathbf{x}_{f,2i} - \mathbf{x}_{f,2i-1} </script>
+(rotating frame). Segment <code>2i-1</code> starts at node <code>i</code>, and segment <code>2i</code> at node <code>i+1</code>;
+each segment's final epoch is set by the epoch of one of these two nodes (see
+<a href="../proc/put_x_in_segments.html">put_x_in_segments</a>). So block row <code>i</code> has nonzeros only in the 14 columns of
+nodes <code>i</code> and <code>i+1</code>.</p>
+<p>The values are returned in the order of the sparsity pattern (<a href="../proc/get_sparsity_pattern.html">get_sparsity_pattern</a>).</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~46"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~21"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>opt var vector (scaled)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jac~6"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>jac</strong></td>
+            <td>
+                <p>the nonzero Jacobian elements (scaled)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~compute_jacobian_stm~~CallsGraph Pages: 1 -->
+<svg id="proccompute_jacobian_stmCallsGraph" width="641pt" height="229pt"
+ viewBox="0.00 0.00 641.00 229.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~compute_jacobian_stm~~CallsGraph" class="graph" transform="scale(0.466565 0.466565) rotate(0) translate(4 486.21)">
+<title>proc~~compute_jacobian_stm~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-486.21 1369.87,-486.21 1369.87,4 -4,4"/>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node1" class="node">
+<title>proc~compute_jacobian_stm</title>
+<polygon fill="none" stroke="black" points="213.27,-380.27 0,-380.27 0,-356 213.27,-356 213.27,-380.27"/>
+<text xml:space="preserve" text-anchor="middle" x="106.63" y="-364.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%compute_jacobian_stm</text>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node2" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node2"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="917.58,-462.27 718.56,-462.27 718.56,-438 917.58,-438 917.58,-462.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-446.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge1" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M123.94,-380.76C149.17,-399.5 199.96,-434.1 249.27,-449.13 416.32,-500.07 624.1,-480.99 736.22,-464.4"/>
+<polygon fill="#000000" stroke="#000000" points="736.57,-467.89 745.93,-462.93 735.52,-460.97 736.57,-467.89"/>
+</g>
+<!-- proc~earth_moon_frame_matrices -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node3" class="node">
+<title>proc~earth_moon_frame_matrices</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node3"><a xlink:href="../proc/earth_moon_frame_matrices.html" xlink:title="earth_moon_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="900.7,-66.27 735.43,-66.27 735.43,-42 900.7,-42 900.7,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">earth_moon_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge2" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M123.54,-355.8C149.07,-336.38 201.21,-298.17 249.27,-272.13 448.16,-164.37 502.71,-142.79 718.56,-75.13 725.08,-73.09 731.9,-71.19 738.77,-69.42"/>
+<polygon fill="#000000" stroke="#000000" points="739.25,-72.9 748.13,-67.12 737.58,-66.11 739.25,-72.9"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node4" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node4"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="447.54,-440.27 249.27,-440.27 249.27,-416 447.54,-416 447.54,-440.27"/>
+<text xml:space="preserve" text-anchor="middle" x="348.4" y="-424.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge3" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M157.9,-380.71C195.22,-390.05 246.33,-402.84 286.06,-412.78"/>
+<polygon fill="#000000" stroke="#000000" points="285.19,-416.17 295.74,-415.21 286.89,-409.38 285.19,-416.17"/>
+</g>
+<!-- proc~propagate_segment_stm -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node5" class="node">
+<title>proc~propagate_segment_stm</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node5"><a xlink:href="../proc/propagate_segment_stm.html" xlink:title="segment%propagate_segment_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="682.56,-255.27 483.54,-255.27 483.54,-231 682.56,-231 682.56,-255.27"/>
+<text xml:space="preserve" text-anchor="middle" x="583.05" y="-239.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge4" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm</title>
+<path fill="none" stroke="#000000" d="M149.67,-355.55C177.79,-347.24 215.67,-336.24 249.27,-327.13 342.84,-301.79 451.88,-274.73 518.94,-258.38"/>
+<polygon fill="#000000" stroke="#000000" points="519.38,-261.87 528.27,-256.1 517.73,-255.07 519.38,-261.87"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node6" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node6"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="443.79,-360.27 253.02,-360.27 253.02,-336 443.79,-336 443.79,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="348.4" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge5" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M213.5,-359.3C222.78,-358.53 232.16,-357.75 241.44,-356.97"/>
+<polygon fill="#000000" stroke="#000000" points="241.5,-360.48 251.18,-356.16 240.92,-353.51 241.5,-360.48"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node7" class="node">
+<title>proc~removed_columns</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node7"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="676.93,-440.27 489.16,-440.27 489.16,-416 676.93,-416 676.93,-440.27"/>
+<text xml:space="preserve" text-anchor="middle" x="583.05" y="-424.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~removed_columns -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge6" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M213.42,-379.15C280.57,-386.42 369.25,-396.54 447.54,-407.13 462.52,-409.16 478.42,-411.49 493.83,-413.84"/>
+<polygon fill="#000000" stroke="#000000" points="493.04,-417.26 503.46,-415.32 494.1,-410.34 493.04,-417.26"/>
+</g>
+<!-- get_rv -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node10" class="node">
+<title>get_rv</title>
+<polygon fill="#777777" stroke="#777777" points="1079.34,-66.27 1025.34,-66.27 1025.34,-42 1079.34,-42 1079.34,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge7" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv</title>
+<path fill="none" stroke="#000000" d="M900.96,-54.13C939.36,-54.13 983.24,-54.13 1013.65,-54.13"/>
+<polygon fill="#000000" stroke="#000000" points="1013.48,-57.64 1023.48,-54.14 1013.48,-50.64 1013.48,-57.64"/>
+</g>
+<!-- get_rv_derivative -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node11" class="node">
+<title>get_rv_derivative</title>
+<polygon fill="#777777" stroke="#777777" points="1103.85,-24.27 1000.83,-24.27 1000.83,0 1103.85,0 1103.85,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv_derivative</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge8" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative</title>
+<path fill="none" stroke="#000000" d="M888.76,-41.53C920.77,-35.74 958.42,-28.94 989.43,-23.33"/>
+<polygon fill="#000000" stroke="#000000" points="989.82,-26.82 999.04,-21.59 988.57,-19.93 989.82,-26.82"/>
+</g>
+<!-- proc~two_body_rotating_frame_matrices -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node18" class="node">
+<title>proc~two_body_rotating_frame_matrices</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node18"><a xlink:href="../proc/two_body_rotating_frame_matrices.html" xlink:title="two_body_rotating_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1151.1,-108.27 953.58,-108.27 953.58,-84 1151.1,-84 1151.1,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge9" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M888.76,-66.74C914.48,-71.39 943.84,-76.7 970.47,-81.51"/>
+<polygon fill="#000000" stroke="#000000" points="969.75,-84.94 980.21,-83.27 970.99,-78.05 969.75,-84.94"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge10" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M416.72,-440.73C438.01,-444.16 461.69,-447.4 483.54,-449.13 558.02,-455.04 642.16,-455.25 707.29,-454"/>
+<polygon fill="#000000" stroke="#000000" points="706.96,-457.51 716.89,-453.8 706.81,-450.51 706.96,-457.51"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge11" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M447.73,-428.13C457.53,-428.13 467.51,-428.13 477.38,-428.13"/>
+<polygon fill="#000000" stroke="#000000" points="477.38,-431.64 487.38,-428.14 477.38,-424.64 477.38,-431.64"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge16" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M596.28,-230.73C615.65,-210.79 654.07,-170.03 682.56,-132.13 700.56,-108.18 693.98,-92.27 718.56,-75.13 720.66,-73.67 722.84,-72.31 725.08,-71.04"/>
+<polygon fill="#000000" stroke="#000000" points="726.5,-74.24 733.94,-66.7 723.42,-67.95 726.5,-74.24"/>
+</g>
+<!-- first_call -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node9" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="845.95,-192.27 790.18,-192.27 790.18,-168 845.95,-168 845.95,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;first_call -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge12" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M621.18,-230.52C648.04,-221.65 685.31,-209.85 718.56,-201.13 738.22,-195.98 760.33,-191.18 778.62,-187.47"/>
+<polygon fill="#000000" stroke="#000000" points="779.12,-190.94 788.25,-185.55 777.76,-184.07 779.12,-190.94"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node12" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="851.2,-402.27 784.93,-402.27 784.93,-378 851.2,-378 851.2,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;icrf_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge13" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M633.03,-255.71C650.41,-262.17 669.01,-271.61 682.56,-285.13 711.31,-313.83 687.18,-343.34 718.56,-369.13 733.77,-381.64 754.67,-387.21 773.3,-389.52"/>
+<polygon fill="#000000" stroke="#000000" points="772.75,-392.98 783.03,-390.43 773.4,-386.01 772.75,-392.98"/>
+</g>
+<!-- integrate -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node13" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="848.2,-150.27 787.93,-150.27 787.93,-126 848.2,-126 848.2,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;integrate -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M600.02,-230.54C624.25,-212.07 672.36,-177.81 718.56,-159.13 737,-151.68 758.5,-146.71 776.7,-143.48"/>
+<polygon fill="#000000" stroke="#000000" points="777.04,-146.97 786.34,-141.89 775.91,-140.06 777.04,-146.97"/>
+</g>
+<!-- proc~ballistic_derivs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node14" class="node">
+<title>proc~ballistic_derivs</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node14"><a xlink:href="../proc/ballistic_derivs.html" xlink:title="ballistic_derivs">
+<polygon fill="#d9534f" stroke="#d9534f" points="862.83,-276.27 773.31,-276.27 773.31,-252 862.83,-252 862.83,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ballistic_derivs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge15" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs</title>
+<path fill="none" stroke="#000000" d="M682.87,-252.04C709.84,-254.47 738.11,-257.02 761.7,-259.15"/>
+<polygon fill="#000000" stroke="#000000" points="761.1,-262.61 771.38,-260.02 761.73,-255.63 761.1,-262.61"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node15" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node15"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="856.08,-234.27 780.06,-234.27 780.06,-210 856.08,-210 856.08,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~identity_stm -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge17" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M682.87,-234.23C712.43,-231.57 743.54,-228.76 768.35,-226.53"/>
+<polygon fill="#000000" stroke="#000000" points="768.49,-230.03 778.13,-225.64 767.86,-223.06 768.49,-230.03"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node17" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node17"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="908.2,-108.27 727.93,-108.27 727.93,-84 908.2,-84 908.2,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge18" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M593.29,-230.79C613.15,-205.2 662.69,-146.32 718.56,-117.13 721.6,-115.55 724.75,-114.08 727.98,-112.72"/>
+<polygon fill="#000000" stroke="#000000" points="728.98,-116.09 737.1,-109.29 726.51,-109.54 728.98,-116.09"/>
+</g>
+<!-- transform -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node19" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="850.08,-360.27 786.06,-360.27 786.06,-336 850.08,-336 850.08,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;transform -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge19" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M624.61,-255.64C643.31,-262.57 665.17,-272.38 682.56,-285.13 702.39,-299.67 697.42,-314.58 718.56,-327.13 735.41,-337.15 756.39,-342.42 774.66,-345.18"/>
+<polygon fill="#000000" stroke="#000000" points="774.04,-348.63 784.4,-346.43 774.93,-341.69 774.04,-348.63"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node20" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="890.95,-318.27 745.18,-318.27 745.18,-294 890.95,-294 890.95,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="818.07" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge20" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M621.18,-255.75C648.04,-264.62 685.31,-276.42 718.56,-285.13 726.35,-287.18 734.53,-289.16 742.7,-291.05"/>
+<polygon fill="#000000" stroke="#000000" points="741.8,-294.44 752.33,-293.22 743.34,-287.61 741.8,-294.44"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge22" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M427.56,-360.73C510.34,-374.29 635.44,-395.49 682.56,-407.13 712.55,-414.55 745.6,-425.08 771.44,-433.87"/>
+<polygon fill="#000000" stroke="#000000" points="770.01,-437.08 780.61,-437.02 772.29,-430.46 770.01,-437.08"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node8" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="626.68,-360.27 539.41,-360.27 539.41,-336 626.68,-336 626.68,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="583.05" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge21" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M444.03,-348.13C472.48,-348.13 502.73,-348.13 527.64,-348.13"/>
+<polygon fill="#000000" stroke="#000000" points="527.53,-351.64 537.53,-348.14 527.53,-344.64 527.53,-351.64"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node16" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node16"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="669.43,-318.27 496.66,-318.27 496.66,-294 669.43,-294 669.43,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="583.05" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge23" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M419.21,-335.53C444.97,-330.88 474.38,-325.57 501.05,-320.76"/>
+<polygon fill="#000000" stroke="#000000" points="501.59,-324.22 510.81,-319 500.35,-317.33 501.59,-324.22"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge24" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M677.15,-436.92C687.01,-437.86 697.09,-438.81 707.12,-439.75"/>
+<polygon fill="#000000" stroke="#000000" points="706.6,-443.22 716.88,-440.68 707.26,-436.25 706.6,-443.22"/>
+</g>
+<!-- get_acc -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node21" class="node">
+<title>get_acc</title>
+<polygon fill="#777777" stroke="#777777" points="1079.34,-400.27 1025.34,-400.27 1025.34,-376 1079.34,-376 1079.34,-400.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-384.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_acc</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_acc -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge25" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_acc</title>
+<path fill="none" stroke="#000000" d="M863.1,-264.85C881.64,-267.2 902.4,-272.77 917.58,-285.13 948.44,-310.27 922.74,-341.97 953.58,-367.13 970.26,-380.74 993.71,-386.09 1013.46,-388"/>
+<polygon fill="#000000" stroke="#000000" points="1013.16,-391.48 1023.37,-388.66 1013.63,-384.5 1013.16,-391.48"/>
+</g>
+<!-- get_r -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node22" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="1079.34,-358.27 1025.34,-358.27 1025.34,-334 1079.34,-334 1079.34,-358.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-342.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_r -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge26" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M862.89,-267.52C880.77,-270.38 901.08,-275.6 917.58,-285.13 938.29,-297.1 932.88,-313.15 953.58,-325.13 971.74,-335.65 994.56,-340.92 1013.58,-343.55"/>
+<polygon fill="#000000" stroke="#000000" points="1013.01,-347.01 1023.35,-344.69 1013.82,-340.05 1013.01,-347.01"/>
+</g>
+<!-- icrf_to_iau_moon -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node23" class="node">
+<title>icrf_to_iau_moon</title>
+<polygon fill="#777777" stroke="#777777" points="1103.47,-316.27 1001.2,-316.27 1001.2,-292 1103.47,-292 1103.47,-316.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-300.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_to_iau_moon</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge27" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon</title>
+<path fill="none" stroke="#000000" d="M863.3,-271.75C899.08,-277.91 949.87,-286.66 989.64,-293.51"/>
+<polygon fill="#000000" stroke="#000000" points="988.87,-296.93 999.32,-295.18 990.06,-290.03 988.87,-296.93"/>
+</g>
+<!-- j2000_to_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node24" class="node">
+<title>j2000_to_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1099.72,-274.27 1004.95,-274.27 1004.95,-250 1099.72,-250 1099.72,-274.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-258.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">j2000_to_frame</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;j2000_to_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge28" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;j2000_to_frame</title>
+<path fill="none" stroke="#000000" d="M863.3,-263.75C900.16,-263.44 952.95,-262.98 993.21,-262.64"/>
+<polygon fill="#000000" stroke="#000000" points="993,-266.14 1002.97,-262.55 992.94,-259.14 993,-266.14"/>
+</g>
+<!-- proc~pines_gravity -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node27" class="node">
+<title>proc~pines_gravity</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node27"><a xlink:href="../proc/pines_gravity.html" xlink:title="pines_gravity">
+<polygon fill="#d9534f" stroke="#d9534f" points="1272.49,-234.27 1190.47,-234.27 1190.47,-210 1272.49,-210 1272.49,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1231.48" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pines_gravity</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pines_gravity -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge29" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pines_gravity</title>
+<path fill="none" stroke="#000000" d="M863.13,-255.45C889.32,-250.57 923.23,-244.76 953.58,-241.13 1031.75,-231.79 1122.93,-226.64 1178.67,-224.13"/>
+<polygon fill="#000000" stroke="#000000" points="1178.66,-227.63 1188.5,-223.7 1178.35,-220.64 1178.66,-227.63"/>
+</g>
+<!-- proc~pointmass_gravity_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node28" class="node">
+<title>proc~pointmass_gravity_gradient</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node28"><a xlink:href="../proc/pointmass_gravity_gradient.html" xlink:title="pointmass_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1131.6,-152.27 973.08,-152.27 973.08,-128 1131.6,-128 1131.6,-152.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-136.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pointmass_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge30" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M863.1,-263.42C881.64,-261.07 902.4,-255.5 917.58,-243.13 948.44,-218 922.74,-186.3 953.58,-161.13 956.47,-158.78 959.57,-156.66 962.81,-154.78"/>
+<polygon fill="#000000" stroke="#000000" points="964.18,-158.01 971.58,-150.43 961.07,-151.73 964.18,-158.01"/>
+</g>
+<!-- proc~third_body_gravity_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node29" class="node">
+<title>proc~third_body_gravity_gradient</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node29"><a xlink:href="../proc/third_body_gravity_gradient.html" xlink:title="third_body_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1132.35,-194.27 972.33,-194.27 972.33,-170 1132.35,-170 1132.35,-194.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-178.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge31" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M863.07,-260.12C880.79,-257.16 900.92,-252.03 917.58,-243.13 937.26,-232.62 934.17,-219.14 953.58,-208.13 960.15,-204.41 967.27,-201.21 974.57,-198.45"/>
+<polygon fill="#000000" stroke="#000000" points="975.62,-201.79 983.93,-195.21 973.33,-195.17 975.62,-201.79"/>
+</g>
+<!-- third_body_gravity -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node30" class="node">
+<title>third_body_gravity</title>
+<polygon fill="#777777" stroke="#777777" points="1107.22,-442.27 997.45,-442.27 997.45,-418 1107.22,-418 1107.22,-442.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1052.34" y="-426.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;third_body_gravity -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge32" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;third_body_gravity</title>
+<path fill="none" stroke="#000000" d="M862.9,-263.82C881.85,-265.91 902.98,-271.56 917.58,-285.13 959.6,-324.22 911.59,-370.02 953.58,-409.13 962.58,-417.51 974.08,-422.86 986.01,-426.22"/>
+<polygon fill="#000000" stroke="#000000" points="985.02,-429.58 995.55,-428.43 986.6,-422.76 985.02,-429.58"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge33" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M664.77,-318.69C670.99,-321.04 677,-323.83 682.56,-327.13 703.7,-339.69 697.42,-356.58 718.56,-369.13 734.96,-378.88 755.28,-384.13 773.19,-386.95"/>
+<polygon fill="#000000" stroke="#000000" points="772.67,-390.41 783.05,-388.28 773.6,-383.48 772.67,-390.41"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge34" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M653.96,-318.74C693.18,-325.8 740.82,-334.39 774.46,-340.46"/>
+<polygon fill="#000000" stroke="#000000" points="773.79,-343.89 784.25,-342.22 775.03,-337 773.79,-343.89"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge35" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M669.83,-306.13C690.63,-306.13 712.84,-306.13 733.54,-306.13"/>
+<polygon fill="#000000" stroke="#000000" points="733.35,-309.64 743.35,-306.14 733.35,-302.64 733.35,-309.64"/>
+</g>
+<!-- proc~cross -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node25" class="node">
+<title>proc~cross</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node25"><a xlink:href="../proc/cross.html" xlink:title="cross">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1258.48,-129.27 1204.48,-129.27 1204.48,-105 1258.48,-105 1258.48,-129.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1231.48" y="-113.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge36" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross</title>
+<path fill="none" stroke="#000000" d="M1151.5,-107.77C1166.26,-109.52 1180.66,-111.23 1193.03,-112.7"/>
+<polygon fill="#000000" stroke="#000000" points="1192.38,-116.14 1202.72,-113.84 1193.2,-109.19 1192.38,-116.14"/>
+</g>
+<!-- proc~cross_matrix -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node26" class="node">
+<title>proc~cross_matrix</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node26"><a xlink:href="../proc/cross_matrix.html" xlink:title="cross_matrix">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1270.62,-87.27 1192.35,-87.27 1192.35,-63 1270.62,-63 1270.62,-87.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1231.48" y="-71.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross_matrix</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge37" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix</title>
+<path fill="none" stroke="#000000" d="M1151.5,-84.5C1161.6,-83.3 1171.53,-82.12 1180.77,-81.03"/>
+<polygon fill="#000000" stroke="#000000" points="1181.02,-84.52 1190.54,-79.87 1180.2,-77.57 1181.02,-84.52"/>
+</g>
+<!-- proc~outer -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node31" class="node">
+<title>proc~outer</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node31"><a xlink:href="../proc/outer.html" xlink:title="outer">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1365.87,-213.27 1311.87,-213.27 1311.87,-189 1365.87,-189 1365.87,-213.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1338.87" y="-197.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">outer</text>
+</a>
+</g>
+</g>
+<!-- proc~pines_gravity&#45;&gt;proc~outer -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge38" class="edge">
+<title>proc~pines_gravity&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1272.93,-214.08C1281.89,-212.29 1291.35,-210.41 1300.19,-208.64"/>
+<polygon fill="#000000" stroke="#000000" points="1300.76,-212.1 1309.89,-206.71 1299.39,-205.23 1300.76,-212.1"/>
+</g>
+<!-- proc~point_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_node32" class="node">
+<title>proc~point_gradient</title>
+<g id="a_proc~~compute_jacobian_stm~~CallsGraph_node32"><a xlink:href="../proc/point_gradient.html" xlink:title="point_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1275.87,-192.27 1187.1,-192.27 1187.1,-168 1275.87,-168 1275.87,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1231.48" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">point_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge39" class="edge">
+<title>proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1113.1,-152.74C1125.66,-155.46 1138.83,-158.35 1151.1,-161.13 1159.08,-162.95 1167.5,-164.91 1175.76,-166.86"/>
+<polygon fill="#000000" stroke="#000000" points="1174.84,-170.24 1185.38,-169.15 1176.46,-163.43 1174.84,-170.24"/>
+</g>
+<!-- proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge40" class="edge">
+<title>proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1132.84,-181.24C1147.21,-181.08 1161.91,-180.91 1175.39,-180.76"/>
+<polygon fill="#000000" stroke="#000000" points="1175.41,-184.26 1185.37,-180.64 1175.33,-177.26 1175.41,-184.26"/>
+</g>
+<!-- proc~point_gradient&#45;&gt;proc~outer -->
+<g id="proc~~compute_jacobian_stm~~CallsGraph_edge41" class="edge">
+<title>proc~point_gradient&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1276.26,-188.86C1284.32,-190.46 1292.66,-192.13 1300.5,-193.69"/>
+<polygon fill="#000000" stroke="#000000" points="1299.58,-197.07 1310.07,-195.59 1300.94,-190.21 1299.58,-197.07"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproccompute_jacobian_stmCallsGraph = svgPanZoom('#proccompute_jacobian_stmCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~compute_jacobian_stm~~CalledByGraph Pages: 1 -->
+<svg id="proccompute_jacobian_stmCalledByGraph" width="641pt" height="45pt"
+ viewBox="0.00 0.00 641.00 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~compute_jacobian_stm~~CalledByGraph" class="graph" transform="scale(0.600834 0.600834) rotate(0) translate(4 70.27)">
+<title>proc~~compute_jacobian_stm~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-70.27 1062.85,-70.27 1062.85,4 -4,4"/>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node1" class="node">
+<title>proc~compute_jacobian_stm</title>
+<polygon fill="none" stroke="black" points="1058.85,-45.27 845.58,-45.27 845.58,-21 1058.85,-21 1058.85,-45.27"/>
+<text xml:space="preserve" text-anchor="middle" x="952.22" y="-29.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%compute_jacobian_stm</text>
+</g>
+<!-- proc~equilibrate -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node2" class="node">
+<title>proc~equilibrate</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node2"><a xlink:href="../proc/equilibrate.html" xlink:title="equilibrate">
+<polygon fill="#d9534f" stroke="#d9534f" points="751.08,-66.27 681.81,-66.27 681.81,-42 751.08,-42 751.08,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">equilibrate</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge1" class="edge">
+<title>proc~equilibrate&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M751.44,-51.08C773.54,-49.1 803.8,-46.38 834.07,-43.66"/>
+<polygon fill="#000000" stroke="#000000" points="834.06,-47.17 843.71,-42.79 833.43,-40.2 834.06,-47.17"/>
+</g>
+<!-- proc~equilibrate_scales -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node3" class="node">
+<title>proc~equilibrate_scales</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node3"><a xlink:href="../proc/equilibrate_scales.html" xlink:title="mission_type%equilibrate_scales">
+<polygon fill="#d9534f" stroke="#d9534f" points="809.58,-24.27 623.31,-24.27 623.31,0 809.58,0 809.58,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%equilibrate_scales</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge2" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M809.84,-20.43C817.73,-21.14 825.78,-21.87 833.83,-22.59"/>
+<polygon fill="#000000" stroke="#000000" points="833.42,-26.07 843.7,-23.48 834.05,-19.1 833.42,-26.07"/>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node4" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node4"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="535.94,-66.27 435.92,-66.27 435.92,-42 535.94,-42 535.94,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="485.93" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~equilibrate -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge3" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~equilibrate</title>
+<path fill="none" stroke="#000000" d="M536.23,-54.13C575.94,-54.13 631.34,-54.13 669.99,-54.13"/>
+<polygon fill="#000000" stroke="#000000" points="669.9,-57.64 679.9,-54.14 669.9,-50.64 669.9,-57.64"/>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node5" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node5"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="587.31,-24.27 384.54,-24.27 384.54,0 587.31,0 587.31,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="485.93" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge4" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales</title>
+<path fill="none" stroke="#000000" d="M587.49,-12.13C595.55,-12.13 603.7,-12.13 611.78,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="611.62,-15.64 621.62,-12.14 611.62,-8.64 611.62,-15.64"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node6" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node6"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="340.67,-66.27 148.4,-66.27 148.4,-42 340.67,-42 340.67,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge5" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M340.83,-54.13C368.99,-54.13 399.02,-54.13 424.35,-54.13"/>
+<polygon fill="#000000" stroke="#000000" points="424.11,-57.64 434.11,-54.14 424.11,-50.64 424.11,-57.64"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node7" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node7"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="348.54,-24.27 140.52,-24.27 140.52,0 348.54,0 348.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge6" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M348.79,-12.13C356.79,-12.13 364.89,-12.13 372.94,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="372.77,-15.64 382.77,-12.14 372.77,-8.64 372.77,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_node8" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~compute_jacobian_stm~~CalledByGraph_node8"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-45.27 0,-45.27 0,-21 104.52,-21 104.52,-45.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-29.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge7" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M105,-38.85C115.07,-39.96 125.96,-41.16 137.07,-42.38"/>
+<polygon fill="#000000" stroke="#000000" points="136.39,-45.83 146.71,-43.45 137.16,-38.87 136.39,-45.83"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~compute_jacobian_stm~~CalledByGraph_edge8" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M105,-27.42C112.57,-26.59 120.6,-25.7 128.83,-24.79"/>
+<polygon fill="#000000" stroke="#000000" points="129.11,-28.29 138.66,-23.71 128.34,-21.33 129.11,-28.29"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproccompute_jacobian_stmCalledByGraph = svgPanZoom('#proccompute_jacobian_stmCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">compute_jacobian_stm</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">jac</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">  </span><span class="c">!! opt var vector (scaled)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">jac</span><span class="w">  </span><span class="c">!! the nonzero Jacobian elements (scaled)</span>
+
+<span class="w">    </span><span class="c">! for each of the 8 segments of a rev: its start node, and the node whose epoch sets its final epoch</span>
+<span class="w">    </span><span class="c">! (nodes of a rev: 1 periapsis, 2 quarter, 3 apoapsis, 4 three-quarter, 5 next periapsis)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">start_node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tf_node</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:,:,:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">blk</span><span class="w">  </span><span class="c">!! (6,14,n_blocks) the nonzero blocks [unscaled]</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span><span class="w">  </span><span class="c">!! sparsity pattern</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">keep</span><span class="w">  </span><span class="c">!! the full-problem column of each column</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">removed</span><span class="w">  </span><span class="c">!! the full-problem columns that are removed</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">is_removed</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">drdot</span><span class="w">  </span><span class="c">!! d(rdot)/d(initial rotating-frame state)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_0</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">v</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sgn</span><span class="p">,</span><span class="w"> </span><span class="n">rmag</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">irev</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">,</span><span class="w"> </span><span class="n">ib</span><span class="p">,</span><span class="w"> </span><span class="n">js</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">cs</span><span class="p">,</span><span class="w"> </span><span class="n">ck</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span><span class="p">,</span><span class="w"> </span><span class="n">n_full</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">fc</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">cc</span><span class="p">,</span><span class="w"> </span><span class="n">rr</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n_segs</span><span class="o">=</span><span class="n">n_segs</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_full</span><span class="p">,</span><span class="w"> </span><span class="n">full_problem</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+
+<span class="w">    </span><span class="c">! set the segment inputs, and propagate them all with their STMs:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="c">!$OMP PARALLEL DO</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">propagate_stm</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="w">    </span><span class="c">!$OMP END PARALLEL DO</span>
+
+<span class="w">    </span><span class="c">! assemble the blocks (unscaled; times in days):</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">blk</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="n">me</span><span class="p">%</span><span class="n">n_revs</span><span class="p">))</span>
+<span class="w">    </span><span class="n">blk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">        </span><span class="n">irev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">iseg</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">8</span><span class="w">           </span><span class="c">! 0-based rev</span>
+<span class="w">        </span><span class="n">l</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">8</span><span class="o">*</span><span class="n">irev</span><span class="w">        </span><span class="c">! segment in the rev (1-8)</span>
+<span class="w">        </span><span class="n">ib</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">iseg</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="w">           </span><span class="c">! constraint block</span>
+<span class="w">        </span><span class="n">sgn</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">merge</span><span class="p">(</span><span class="n">one</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">one</span><span class="p">,</span><span class="w"> </span><span class="nb">mod</span><span class="p">(</span><span class="n">iseg</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">js</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="o">*</span><span class="n">irev</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">start_node</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w">  </span><span class="c">! start node</span>
+<span class="w">        </span><span class="n">ks</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="o">*</span><span class="n">irev</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tf_node</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w">     </span><span class="c">! node that sets the final epoch</span>
+<span class="w">        </span><span class="n">cs</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">js</span><span class="o">-</span><span class="n">ib</span><span class="p">)</span><span class="o">*</span><span class="mi">7</span><span class="w">               </span><span class="c">! column offset of the start node in the block (0 or 7)</span>
+<span class="w">        </span><span class="n">ck</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ks</span><span class="o">-</span><span class="n">ib</span><span class="p">)</span><span class="o">*</span><span class="mi">7</span><span class="w">               </span><span class="c">! column offset of the final-epoch node</span>
+<span class="w">        </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">seg</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">))</span>
+<span class="w">            </span><span class="n">blk</span><span class="p">(:,</span><span class="n">cs</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">cs</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blk</span><span class="p">(:,</span><span class="n">cs</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">cs</span><span class="o">+</span><span class="mi">7</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">sgn</span><span class="o">*</span><span class="n">seg</span><span class="p">%</span><span class="n">dxf_dx0</span>
+<span class="w">            </span><span class="n">blk</span><span class="p">(:,</span><span class="n">cs</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">blk</span><span class="p">(:,</span><span class="n">cs</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w">      </span><span class="o">+</span><span class="w"> </span><span class="n">sgn</span><span class="o">*</span><span class="n">seg</span><span class="p">%</span><span class="n">dxf_dt0</span><span class="o">*</span><span class="n">day2sec</span>
+<span class="w">            </span><span class="n">blk</span><span class="p">(:,</span><span class="n">ck</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">blk</span><span class="p">(:,</span><span class="n">ck</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ib</span><span class="p">)</span><span class="w">      </span><span class="o">+</span><span class="w"> </span><span class="n">sgn</span><span class="o">*</span><span class="n">seg</span><span class="p">%</span><span class="n">dxf_dtf</span><span class="o">*</span><span class="n">day2sec</span>
+<span class="w">        </span><span class="k">end associate</span>
+<span class="k">    end do</span>
+
+<span class="w">    </span><span class="c">! the optional rdot=0 constraint (a function of the first inertial state, which</span>
+<span class="w">    </span><span class="c">! is N(t0) times the rotating-frame state). [only the state columns are in the pattern]</span>
+<span class="w">    </span><span class="n">drdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">constrain_initial_rdot</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">)</span>
+<span class="w">        </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">x0</span><span class="p">(</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">        </span><span class="n">rmag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">norm2</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">earth_moon_frame_matrices</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">et_ref</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="mi">1</span><span class="p">)%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="o">*</span><span class="n">day2sec</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="n">n_0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">drdot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">matmul</span><span class="p">([</span><span class="n">v</span><span class="o">/</span><span class="n">rmag</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">dot_product</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="o">*</span><span class="n">r</span><span class="o">/</span><span class="n">rmag</span><span class="o">**</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="o">/</span><span class="n">rmag</span><span class="p">],</span><span class="w"> </span><span class="n">n_0</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="w">    </span><span class="c">! map each column of the problem to its full-problem column:</span>
+<span class="w">    </span><span class="n">removed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">removed_columns</span><span class="p">()</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">is_removed</span><span class="p">(</span><span class="n">n_full</span><span class="p">))</span>
+<span class="w">    </span><span class="n">is_removed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">is_removed</span><span class="p">(</span><span class="n">removed</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">keep</span><span class="p">(</span><span class="n">n_full</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">count</span><span class="p">(</span><span class="n">is_removed</span><span class="p">)))</span><span class="w">  </span><span class="c">! (a loop: no large temporaries on the stack)</span>
+<span class="w">    </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_full</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">is_removed</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">keep</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">    end do</span>
+
+<span class="w">    </span><span class="c">! fill the values in the sparsity pattern order, and scale them:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">jac</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">)))</span>
+<span class="w">    </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">)</span>
+<span class="w">        </span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+<span class="w">        </span><span class="n">fc</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">keep</span><span class="p">(</span><span class="n">icol</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">constrain_initial_rdot</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="n">row</span><span class="o">==</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">jac</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">drdot</span><span class="p">(</span><span class="n">fc</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="c">! (columns 2-7: the first node's state)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">ib</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">6</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">rr</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">6</span><span class="o">*</span><span class="p">(</span><span class="n">ib</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">fc</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">7</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">cc</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">fc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">7</span><span class="o">*</span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">jac</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blk</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">node</span><span class="o">-</span><span class="n">ib</span><span class="p">)</span><span class="o">*</span><span class="mi">7</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cc</span><span class="p">,</span><span class="w"> </span><span class="n">ib</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        </span><span class="n">jac</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">jac</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="p">(</span><span class="n">icol</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">fscale</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="k">    end subroutine </span><span class="n">compute_jacobian_stm</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

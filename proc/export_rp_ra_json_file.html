@@ -1,0 +1,903 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>export_rp_ra_json_file &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>export_rp_ra_json_file
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 3.2% of total for procedures.">131 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">export_rp_ra_json_file</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/export_rp_ra_json_file.html#src">export_rp_ra_json_file</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine export_rp_ra_json_file(me, et, rmag, rdot, filename)  
+</h2>
+        <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='https://jacobwilliams.github.io/bspline-fortran/'>bspline_module</a></li>
+                  <li class="list-inline-item">root_module</li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~export_rp_ra_json_file~~UsesGraph Pages: 1 -->
+<svg id="procexport_rp_ra_json_fileUsesGraph" width="345pt" height="74pt"
+ viewBox="0.00 0.00 345.00 74.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~export_rp_ra_json_file~~UsesGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 70.27)">
+<title>proc~~export_rp_ra_json_file~~UsesGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-70.27 341.29,-70.27 341.29,4 -4,4"/>
+<!-- proc~export_rp_ra_json_file -->
+<g id="proc~~export_rp_ra_json_file~~UsesGraph_node1" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<polygon fill="none" stroke="black" points="337.29,-45.27 131.52,-45.27 131.52,-21 337.29,-21 337.29,-45.27"/>
+<text xml:space="preserve" text-anchor="middle" x="234.41" y="-29.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%export_rp_ra_json_file</text>
+</g>
+<!-- bspline_module -->
+<g id="proc~~export_rp_ra_json_file~~UsesGraph_node2" class="node">
+<title>bspline_module</title>
+<g id="a_proc~~export_rp_ra_json_file~~UsesGraph_node2"><a xlink:href="https://jacobwilliams.github.io/bspline-fortran/" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="95.52,-66.27 0,-66.27 0,-42 95.52,-42 95.52,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="47.76" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;bspline_module -->
+<g id="proc~~export_rp_ra_json_file~~UsesGraph_edge1" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M131.09,-44.77C122.91,-45.7 114.84,-46.62 107.14,-47.5"/>
+<polygon fill="#000000" stroke="#000000" points="106.8,-44.01 97.26,-48.62 107.59,-50.97 106.8,-44.01"/>
+</g>
+<!-- root_module -->
+<g id="proc~~export_rp_ra_json_file~~UsesGraph_node3" class="node">
+<title>root_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="86.89,-24.27 8.62,-24.27 8.62,0 86.89,0 86.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="47.76" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">root_module</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;root_module -->
+<g id="proc~~export_rp_ra_json_file~~UsesGraph_edge2" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;root_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M131.09,-21.5C119.73,-20.21 108.57,-18.94 98.31,-17.77"/>
+<polygon fill="#000000" stroke="#000000" points="98.99,-14.32 88.65,-16.67 98.19,-21.28 98.99,-14.32"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 511.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <p>Export the rp/ra file.</p>
+<div class="alert alert-info">
+<p class="alert-title h4">Note</p>
+<p>It is assumed that all the data is present in the segments needed to propagate.</p>
+</div>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~70"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-et~21"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rmag~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>rmag</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rdot~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>rdot</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-filename~10"></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+                <p>file name [without extension]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~export_rp_ra_json_file~~CallsGraph Pages: 1 -->
+<svg id="procexport_rp_ra_json_fileCallsGraph" width="308pt" height="200pt"
+ viewBox="0.00 0.00 308.00 200.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~export_rp_ra_json_file~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 196.27)">
+<title>proc~~export_rp_ra_json_file~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-196.27 303.79,-196.27 303.79,4 -4,4"/>
+<!-- proc~export_rp_ra_json_file -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node1" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<polygon fill="none" stroke="black" points="205.77,-108.27 0,-108.27 0,-84 205.77,-84 205.77,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="102.89" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%export_rp_ra_json_file</text>
+</g>
+<!-- add -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node2" class="node">
+<title>add</title>
+<polygon fill="#777777" stroke="#777777" points="297.78,-192.27 243.78,-192.27 243.78,-168 297.78,-168 297.78,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="270.78" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">add</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;add -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_edge1" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;add</title>
+<path fill="none" stroke="#000000" d="M128.72,-108.71C156.9,-122.98 203.06,-146.35 234.86,-162.45"/>
+<polygon fill="#000000" stroke="#000000" points="233.19,-165.53 243.7,-166.93 236.35,-159.29 233.19,-165.53"/>
+</g>
+<!-- destroy -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node3" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="297.78,-150.27 243.78,-150.27 243.78,-126 297.78,-126 297.78,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="270.78" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;destroy -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_edge2" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M153.66,-108.74C178.97,-115.14 209.21,-122.8 232.49,-128.69"/>
+<polygon fill="#000000" stroke="#000000" points="231.61,-132.08 242.17,-131.14 233.33,-125.3 231.61,-132.08"/>
+</g>
+<!-- evaluate -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node4" class="node">
+<title>evaluate</title>
+<polygon fill="#777777" stroke="#777777" points="299.79,-108.27 241.77,-108.27 241.77,-84 299.79,-84 299.79,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="270.78" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">evaluate</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;evaluate -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_edge3" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;evaluate</title>
+<path fill="none" stroke="#000000" d="M206.12,-96.14C214.5,-96.14 222.61,-96.14 230.07,-96.14"/>
+<polygon fill="#000000" stroke="#000000" points="230.07,-99.64 240.07,-96.14 230.07,-92.64 230.07,-99.64"/>
+</g>
+<!-- initialize -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node5" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="298.67,-66.27 242.9,-66.27 242.9,-42 298.67,-42 298.67,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="270.78" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;initialize -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_edge4" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M153.66,-83.53C178.64,-77.21 208.43,-69.67 231.59,-63.8"/>
+<polygon fill="#000000" stroke="#000000" points="232.39,-67.21 241.23,-61.36 230.68,-60.42 232.39,-67.21"/>
+</g>
+<!-- solve -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_node6" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="297.78,-24.27 243.78,-24.27 243.78,0 297.78,0 297.78,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="270.78" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~export_rp_ra_json_file&#45;&gt;solve -->
+<g id="proc~~export_rp_ra_json_file~~CallsGraph_edge5" class="edge">
+<title>proc~export_rp_ra_json_file&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M128.72,-83.56C156.9,-69.29 203.06,-45.92 234.86,-29.82"/>
+<polygon fill="#000000" stroke="#000000" points="236.35,-32.98 243.7,-25.34 233.19,-26.74 236.35,-32.98"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~export_rp_ra_json_file~~CalledByGraph Pages: 1 -->
+<svg id="procexport_rp_ra_json_fileCalledByGraph" width="620pt" height="32pt"
+ viewBox="0.00 0.00 620.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~export_rp_ra_json_file~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 616.06,-28.27 616.06,4 -4,4"/>
+<!-- proc~export_rp_ra_json_file -->
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph_node1" class="node">
+<title>proc~export_rp_ra_json_file</title>
+<polygon fill="none" stroke="black" points="612.06,-24.27 406.29,-24.27 406.29,0 612.06,0 612.06,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="509.18" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%export_rp_ra_json_file</text>
+</g>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph_node2" class="node">
+<title>proc~export_trajectory_json_file</title>
+<g id="a_proc~~export_rp_ra_json_file~~CalledByGraph_node2"><a xlink:href="../proc/export_trajectory_json_file.html" xlink:title="mission_type%export_trajectory_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="370.29,-24.27 140.52,-24.27 140.52,0 370.29,0 370.29,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="255.4" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_trajectory_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file -->
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph_edge1" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~export_rp_ra_json_file</title>
+<path fill="none" stroke="#000000" d="M370.5,-12.13C378.55,-12.13 386.66,-12.13 394.71,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="394.51,-15.64 404.51,-12.14 394.51,-8.64 394.51,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph_node3" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~export_rp_ra_json_file~~CalledByGraph_node3"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~export_rp_ra_json_file~~CalledByGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M104.8,-12.13C112.4,-12.13 120.5,-12.13 128.84,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.83,-15.64 138.83,-12.14 128.83,-8.64 128.83,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">export_rp_ra_json_file</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">et</span><span class="p">,</span><span class="n">rmag</span><span class="p">,</span><span class="n">rdot</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">use </span><span class="n">root_module</span>
+<span class="w">    </span><span class="k">use </span><span class="n">bspline_module</span>
+
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rmag</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rdot</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="c">!! file name [without extension]</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">extends</span><span class="p">(</span><span class="n">chandrupatla_solver</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">my_solver</span>
+<span class="w">        </span><span class="c">!! the solver to use for the root finding</span>
+<span class="w">    </span><span class="k">end type </span><span class="n">my_solver</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et0</span><span class="p">,</span><span class="w"> </span><span class="n">etf</span><span class="p">,</span><span class="w"> </span><span class="n">et_root</span><span class="p">,</span><span class="w"> </span><span class="n">rdot_root</span><span class="p">,</span><span class="w"> </span><span class="n">initial_et</span><span class="p">,</span><span class="w"> </span><span class="n">final_et</span><span class="p">,</span><span class="w"> </span><span class="n">rdot0</span><span class="p">,</span><span class="w"> </span><span class="n">rdotf</span><span class="p">,</span><span class="w"> </span><span class="n">rmag_root</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et_for_rp</span><span class="p">,</span><span class="w"> </span><span class="n">et_for_ra</span><span class="p">,</span><span class="w"> </span><span class="n">rp_vec</span><span class="p">,</span><span class="w"> </span><span class="n">ra_vec</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">f</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">my_solver</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">solver</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">bspline_1d</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rdot_spline</span><span class="p">,</span><span class="w"> </span><span class="n">rmag_spline</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">json</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">finished</span><span class="w"> </span><span class="c">!! to indicate the arrays are done</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_rp</span><span class="p">,</span><span class="w"> </span><span class="n">n_ra</span><span class="p">,</span><span class="w"> </span><span class="n">n_rp_et</span><span class="p">,</span><span class="w"> </span><span class="n">n_ra_et</span><span class="w"> </span><span class="c">!! counters for array sizes</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">kx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w">  </span><span class="c">!! spline order (cubic bspline)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="c">!! interpolate value only</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">et_step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">360</span><span class="mf">0.0_wp</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="mf">4.0_wp</span><span class="w"> </span><span class="c">!! et step size [should be an input] (sec)</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">chunk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="c">!! chunk size for expanding the arrays</span>
+
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Generating ra/rp file.'</span>
+
+<span class="w">    </span><span class="c">! error check to make sure et is strictly increasing.</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">et</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'error in et point '</span><span class="p">,</span><span class="w"> </span><span class="n">i</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'et(i)  '</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="s1">'et(i-1)'</span><span class="p">,</span><span class="w"> </span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">error stop</span>
+<span class="k">        end if</span>
+<span class="k">    end do</span>
+<span class="w">    </span><span class="c">! first spline rmag and rdot as a functions of et:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">rdot_spline</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">et</span><span class="p">,</span><span class="n">rdot</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">iflag</span><span class="p">,.</span><span class="n">false</span><span class="p">.);</span><span class="w"> </span><span class="k">call </span><span class="n">check_spline</span><span class="p">(</span><span class="s1">'rdot'</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">rmag_spline</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">et</span><span class="p">,</span><span class="n">rmag</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">iflag</span><span class="p">,.</span><span class="n">false</span><span class="p">.);</span><span class="w"> </span><span class="k">call </span><span class="n">check_spline</span><span class="p">(</span><span class="s1">'rmag'</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">et_for_rp</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">et_for_ra</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">rp_vec</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">ra_vec</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="c">! arrays to hold results</span>
+
+<span class="w">    </span><span class="c">! step through the trajectory and find all the rdot roots (periapsis and apoapsis):</span>
+<span class="w">    </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">rdot_func</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">et</span><span class="p">)</span>
+<span class="w">    </span><span class="n">initial_et</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">final_et</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">et</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="n">et0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initial_et</span>
+<span class="w">    </span><span class="n">n_rp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n_ra</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n_rp_et</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">n_ra_et</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">do</span>
+<span class="k">        </span><span class="n">etf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">final_et</span><span class="p">,</span><span class="w"> </span><span class="n">et0</span><span class="o">+</span><span class="n">et_step</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! if there is a root on this interval (change of sign of rdot):</span>
+<span class="w">        </span><span class="n">rdot0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdot_func</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span><span class="w"> </span><span class="n">et0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">rdotf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rdot_func</span><span class="p">(</span><span class="n">solver</span><span class="p">,</span><span class="w"> </span><span class="n">etf</span><span class="p">)</span>
+<span class="w">        </span><span class="n">finished</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etf</span><span class="o">==</span><span class="n">et</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="c">! the last step</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rdot0</span><span class="o">*</span><span class="n">rdotf</span><span class="o">&lt;=</span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w">  </span><span class="c">! there is a root on this interval</span>
+<span class="w">            </span><span class="c">! find the root:</span>
+<span class="w">            </span><span class="k">call </span><span class="n">solver</span><span class="p">%</span><span class="n">solve</span><span class="p">(</span><span class="n">et0</span><span class="p">,</span><span class="n">etf</span><span class="p">,</span><span class="n">et_root</span><span class="p">,</span><span class="n">rdot_root</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="w">            </span><span class="n">rmag_root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rmag_func</span><span class="p">(</span><span class="n">et_root</span><span class="p">)</span><span class="w">  </span><span class="c">! get corresponding rmag at the root</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rdotf</span><span class="o">&gt;</span><span class="n">rdot0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! increasing - periapsis</span>
+<span class="w">                </span><span class="c">! et_for_rp = [et_for_rp, et_root]</span>
+<span class="w">                </span><span class="c">! rp_vec    = [rp_vec, rmag_root]</span>
+<span class="w">                </span><span class="k">call </span><span class="n">add_to</span><span class="p">(</span><span class="n">et_for_rp</span><span class="p">,</span><span class="w"> </span><span class="n">et_root</span><span class="p">,</span><span class="w"> </span><span class="n">n_rp_et</span><span class="p">,</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">,</span><span class="w"> </span><span class="n">finished</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">add_to</span><span class="p">(</span><span class="n">rp_vec</span><span class="p">,</span><span class="w"> </span><span class="n">rmag_root</span><span class="p">,</span><span class="w"> </span><span class="n">n_rp</span><span class="p">,</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">,</span><span class="w"> </span><span class="n">finished</span><span class="p">)</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c">! decreasing - apoapsis</span>
+<span class="w">                </span><span class="c">!et_for_ra = [et_for_ra, et_root]</span>
+<span class="w">                </span><span class="c">!ra_vec    = [ra_vec, rmag_root]</span>
+<span class="w">                </span><span class="k">call </span><span class="n">add_to</span><span class="p">(</span><span class="n">et_for_ra</span><span class="p">,</span><span class="w"> </span><span class="n">et_root</span><span class="p">,</span><span class="w"> </span><span class="n">n_ra_et</span><span class="p">,</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">,</span><span class="w"> </span><span class="n">finished</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="n">add_to</span><span class="p">(</span><span class="n">ra_vec</span><span class="p">,</span><span class="w"> </span><span class="n">rmag_root</span><span class="p">,</span><span class="w"> </span><span class="n">n_ra</span><span class="p">,</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">,</span><span class="w"> </span><span class="n">finished</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end if</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">finished</span><span class="p">)</span><span class="w"> </span><span class="k">exit</span>
+<span class="k">        </span><span class="n">et0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">etf</span><span class="w"> </span><span class="c">! set up for next step</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">! output results to file:</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">compress_vectors</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'et_for_rp'</span><span class="p">,</span><span class="w"> </span><span class="n">et_for_rp</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'rp_vec'</span><span class="p">,</span><span class="w">    </span><span class="n">rp_vec</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'et_for_ra'</span><span class="p">,</span><span class="w"> </span><span class="n">et_for_ra</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">add</span><span class="p">(</span><span class="s1">'ra_vec'</span><span class="p">,</span><span class="w">    </span><span class="n">ra_vec</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="k">print</span><span class="p">(</span><span class="nb">trim</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">//</span><span class="s1">'_rp_ra.json'</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">json</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+
+<span class="w">    </span><span class="k">contains</span>
+
+<span class="k">        pure subroutine </span><span class="n">add_to</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">,</span><span class="w"> </span><span class="n">finished</span><span class="p">)</span>
+<span class="w">            </span><span class="c">!! resize an array in chunks</span>
+
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:),</span><span class="w"> </span><span class="k">allocatable</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">vec</span>
+<span class="w">                </span><span class="c">!! the vector to add to</span>
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">val</span>
+<span class="w">                </span><span class="c">!! the value to add</span>
+<span class="w">            </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span>
+<span class="w">                </span><span class="c">!! counter for last element added to vec.</span>
+<span class="w">                </span><span class="c">!! must be initialized to size(vec)</span>
+<span class="w">                </span><span class="c">!! (or 0 if not allocated) before first call</span>
+<span class="w">            </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">chunk_size</span>
+<span class="w">                </span><span class="c">!! allocate vec in blocks of this size (&gt;0)</span>
+<span class="w">            </span><span class="kt">logical</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">finished</span>
+<span class="w">                </span><span class="c">!! set to true to return vec</span>
+<span class="w">                </span><span class="c">!! as its correct size (n)</span>
+
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="k">dimension</span><span class="p">(:),</span><span class="w"> </span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tmp</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                    </span><span class="c">! have to add another chunk:</span>
+<span class="w">                    </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">tmp</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">chunk_size</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">tmp</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">size</span><span class="p">(</span><span class="n">vec</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vec</span>
+<span class="w">                    </span><span class="k">call </span><span class="nb">move_alloc</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">vec</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end if</span>
+<span class="k">                </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="c">! the first element:</span>
+<span class="w">                </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">vec</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">))</span>
+<span class="w">                </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">            </span><span class="n">vec</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">finished</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">                </span><span class="c">! set vec to actual size (n):</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="w"> </span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+<span class="w">                </span><span class="k">allocate</span><span class="w"> </span><span class="p">(</span><span class="n">tmp</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">                </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vec</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">)</span>
+<span class="w">                </span><span class="k">call </span><span class="nb">move_alloc</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">vec</span><span class="p">)</span>
+<span class="w">            </span><span class="k">end if</span>
+
+<span class="k">        end subroutine </span><span class="n">add_to</span>
+
+<span class="w">        </span><span class="k">subroutine </span><span class="n">check_spline</span><span class="p">(</span><span class="k">case</span><span class="p">)</span><span class="w"> </span><span class="c">!! error checking for splines</span>
+<span class="w">            </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=*</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="c">!! case name</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iflag</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                select case</span><span class="w"> </span><span class="p">(</span><span class="n">iflag</span><span class="p">)</span>
+<span class="w">                </span><span class="k">case</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="k">error stop case</span><span class="o">//</span><span class="s1">' : bspline error: iknot out of range.'</span>
+<span class="w">                </span><span class="k">case</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="k">error stop case</span><span class="o">//</span><span class="s1">' : bspline error: nx out of range.'</span>
+<span class="w">                </span><span class="k">case</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"> </span><span class="k">error stop case</span><span class="o">//</span><span class="s1">' : bspline error: kx out of range.'</span>
+<span class="w">                </span><span class="k">case</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span><span class="w"> </span><span class="k">error stop case</span><span class="o">//</span><span class="s1">' : bspline error: x not strictly increasing.'</span>
+<span class="w">                </span><span class="k">end select</span>
+<span class="k">            end if</span>
+<span class="k">        end subroutine </span><span class="n">check_spline</span>
+
+<span class="w">        </span><span class="k">function </span><span class="n">rdot_func</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c">!! compute rdot from spline</span>
+<span class="w">            </span><span class="k">class</span><span class="p">(</span><span class="n">root_solver</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rdot_func</span>
+<span class="w">            </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span>
+<span class="w">            </span><span class="k">call </span><span class="n">rdot_spline</span><span class="p">%</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">rdot_func</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iflag</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'error evaluating bspline for rdot.'</span>
+<span class="w">        </span><span class="k">end function </span><span class="n">rdot_func</span>
+<span class="w">        </span><span class="k">function </span><span class="n">rmag_func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w">  </span><span class="c">!! compute rmag from spline</span>
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">            </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rmag_func</span>
+<span class="w">            </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iflag</span>
+<span class="w">            </span><span class="k">call </span><span class="n">rmag_spline</span><span class="p">%</span><span class="n">evaluate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="n">rmag_func</span><span class="p">,</span><span class="n">iflag</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">iflag</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'error evaluating bspline for rmag.'</span>
+<span class="w">        </span><span class="k">end function </span><span class="n">rmag_func</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">export_rp_ra_json_file</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

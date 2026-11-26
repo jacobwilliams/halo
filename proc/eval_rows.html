@@ -1,0 +1,944 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>eval_rows &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>eval_rows
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.7% of total for procedures.">68 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_eclipse_opt_submodule.html'>halo_eclipse_opt_submodule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">eval_rows</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/eval_rows.html#src">eval_rows</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2> subroutine eval_rows(d, ks, jac, ok, only)  
+</h2>
+    
+
+    <p>The eclipse rows (and, optionally, their partials, in the order of the rows' columns),
+for the <code>x</code> already in the segments. The rows (segments) are done in parallel.</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~3"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jac~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>jac</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ok~3"></span>
+              logical,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ok</strong></td>
+            <td>
+                <p>false if a row couldn't be evaluated (see <a href="../proc/row_ks.html">row_ks</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-only"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>only</strong></td>
+            <td>
+                <p>evaluate only these rows (the others' <code>ks</code> are 0,
+and their partials are not set)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~eval_rows~~CallsGraph Pages: 1 -->
+<svg id="proceval_rowsCallsGraph" width="588pt" height="410pt"
+ viewBox="0.00 0.00 588.00 410.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~eval_rows~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 406.27)">
+<title>proc~~eval_rows~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-406.27 583.81,-406.27 583.81,4 -4,4"/>
+<!-- proc~eval_rows -->
+<g id="proc~~eval_rows~~CallsGraph_node1" class="node">
+<title>proc~eval_rows</title>
+<polygon fill="none" stroke="black" points="63.27,-286.27 0,-286.27 0,-262 63.27,-262 63.27,-286.27"/>
+<text xml:space="preserve" text-anchor="middle" x="31.63" y="-270.53" font-family="Helvetica,sans-Serif" font-size="10.50">eval_rows</text>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~eval_rows~~CallsGraph_node2" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node2"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="153.27,-286.27 99.27,-286.27 99.27,-262 153.27,-262 153.27,-286.27"/>
+<text xml:space="preserve" text-anchor="middle" x="126.27" y="-270.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~eval_rows~~CallsGraph_edge1" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M63.74,-274.13C71.44,-274.13 79.77,-274.13 87.74,-274.13"/>
+<polygon fill="#000000" stroke="#000000" points="87.53,-277.64 97.53,-274.14 87.53,-270.64 87.53,-277.64"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~eval_rows~~CallsGraph_node3" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node3"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="360.92,-360.27 191.9,-360.27 191.9,-336 360.92,-336 360.92,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="276.41" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~eval_rows~~CallsGraph_edge2" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M138.38,-286.55C149.93,-298.69 169.1,-316.81 189.27,-327.13 192.49,-328.78 195.84,-330.31 199.28,-331.71"/>
+<polygon fill="#000000" stroke="#000000" points="197.78,-334.89 208.37,-335.07 200.2,-328.32 197.78,-334.89"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~eval_rows~~CallsGraph_node4" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node4"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="326.04,-318.27 226.77,-318.27 226.77,-294 326.04,-294 326.04,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="276.41" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~eval_rows~~CallsGraph_edge3" class="edge">
+<title>proc~row_ks&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M153.75,-279.86C170.9,-283.56 193.96,-288.54 215.38,-293.17"/>
+<polygon fill="#000000" stroke="#000000" points="214.4,-296.54 224.92,-295.23 215.88,-289.7 214.4,-296.54"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~eval_rows~~CallsGraph_node5" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node5"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="363.54,-171.27 189.27,-171.27 189.27,-147 363.54,-147 363.54,-171.27"/>
+<text xml:space="preserve" text-anchor="middle" x="276.41" y="-155.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~propagate_segment -->
+<g id="proc~~eval_rows~~CallsGraph_edge4" class="edge">
+<title>proc~row_ks&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M141.58,-261.67C154,-250.96 172.57,-235.22 189.27,-222.13 208.83,-206.8 231.55,-190.24 248.74,-177.95"/>
+<polygon fill="#000000" stroke="#000000" points="250.32,-181.12 256.43,-172.47 246.25,-175.42 250.32,-181.12"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~eval_rows~~CallsGraph_node6" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node6"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="362.79,-255.27 190.02,-255.27 190.02,-231 362.79,-231 362.79,-255.27"/>
+<text xml:space="preserve" text-anchor="middle" x="276.41" y="-239.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~eval_rows~~CallsGraph_edge5" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M153.75,-268.59C167.88,-265.64 186.02,-261.84 203.94,-258.09"/>
+<polygon fill="#000000" stroke="#000000" points="204.49,-261.55 213.56,-256.08 203.06,-254.7 204.49,-261.55"/>
+</g>
+<!-- apparent_position -->
+<g id="proc~~eval_rows~~CallsGraph_node7" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="543.06,-402.27 436.29,-402.27 436.29,-378 543.06,-378 543.06,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="proc~~eval_rows~~CallsGraph_edge6" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M326.43,-312.56C339.15,-315.67 352.39,-320.29 363.54,-327.13 384.49,-340 378.54,-356.35 399.54,-369.13 407.36,-373.9 416.17,-377.58 425.14,-380.42"/>
+<polygon fill="#000000" stroke="#000000" points="424.05,-383.75 434.63,-383.09 425.95,-377.02 424.05,-383.75"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="proc~~eval_rows~~CallsGraph_node8" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="552.06,-360.27 427.29,-360.27 427.29,-336 552.06,-336 552.06,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="proc~~eval_rows~~CallsGraph_edge7" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M326.41,-315.88C353,-321.16 386.38,-327.8 415.95,-333.68"/>
+<polygon fill="#000000" stroke="#000000" points="415.1,-337.08 425.59,-335.59 416.46,-330.21 415.1,-337.08"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="proc~~eval_rows~~CallsGraph_node10" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="572.69,-318.27 406.67,-318.27 406.67,-294 572.69,-294 572.69,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="proc~~eval_rows~~CallsGraph_edge8" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M326.41,-306.13C346.93,-306.13 371.49,-306.13 395.23,-306.13"/>
+<polygon fill="#000000" stroke="#000000" points="394.91,-309.64 404.91,-306.14 394.91,-302.64 394.91,-309.64"/>
+</g>
+<!-- first_call -->
+<g id="proc~~eval_rows~~CallsGraph_node9" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="517.56,-66.27 461.79,-66.27 461.79,-42 517.56,-42 517.56,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~eval_rows~~CallsGraph_edge9" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M291.74,-146.59C313.53,-128.18 356.95,-94 399.54,-75.13 415.45,-68.09 434.04,-63.23 450.12,-59.98"/>
+<polygon fill="#000000" stroke="#000000" points="450.64,-63.44 459.82,-58.16 449.35,-56.56 450.64,-63.44"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~eval_rows~~CallsGraph_node11" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="522.81,-276.27 456.54,-276.27 456.54,-252 522.81,-252 522.81,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~eval_rows~~CallsGraph_edge10" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M294,-171.69C321.92,-192.63 377.42,-233.34 399.54,-243.13 413.9,-249.5 430.46,-254.08 445.37,-257.3"/>
+<polygon fill="#000000" stroke="#000000" points="444.42,-260.68 454.91,-259.21 445.8,-253.82 444.42,-260.68"/>
+</g>
+<!-- integrate -->
+<g id="proc~~eval_rows~~CallsGraph_node12" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="519.81,-24.27 459.54,-24.27 459.54,0 519.81,0 519.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~eval_rows~~CallsGraph_edge11" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M285.56,-146.86C303.15,-121.4 347.34,-62.76 399.54,-33.13 414.23,-24.8 432.07,-19.77 447.92,-16.73"/>
+<polygon fill="#000000" stroke="#000000" points="448.27,-20.22 457.55,-15.1 447.11,-13.32 448.27,-20.22"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~eval_rows~~CallsGraph_node13" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node13"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="527.69,-150.27 451.67,-150.27 451.67,-126 527.69,-126 527.69,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="proc~~eval_rows~~CallsGraph_edge12" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M363.95,-150.53C389.86,-147.96 417.35,-145.22 439.91,-142.98"/>
+<polygon fill="#000000" stroke="#000000" points="440.12,-146.48 449.72,-142.01 439.43,-139.51 440.12,-146.48"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~eval_rows~~CallsGraph_node14" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~eval_rows~~CallsGraph_node14"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="579.81,-108.27 399.54,-108.27 399.54,-84 579.81,-84 579.81,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~eval_rows~~CallsGraph_edge13" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M311.07,-146.54C335.44,-137.68 369.27,-125.88 399.54,-117.13 406.26,-115.19 413.29,-113.3 420.35,-111.5"/>
+<polygon fill="#000000" stroke="#000000" points="421.07,-114.92 429.93,-109.1 419.38,-108.13 421.07,-114.92"/>
+</g>
+<!-- transform -->
+<g id="proc~~eval_rows~~CallsGraph_node15" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="521.69,-234.27 457.67,-234.27 457.67,-210 521.69,-210 521.69,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~eval_rows~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M311.07,-171.73C335.44,-180.59 369.27,-192.39 399.54,-201.13 414.75,-205.53 431.62,-209.69 446.56,-213.12"/>
+<polygon fill="#000000" stroke="#000000" points="445.54,-216.48 456.06,-215.27 447.08,-209.65 445.54,-216.48"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~eval_rows~~CallsGraph_node16" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="562.56,-192.27 416.79,-192.27 416.79,-168 562.56,-168 562.56,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="489.68" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eval_rows~~CallsGraph_edge15" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M363.95,-167.74C377.57,-169.09 391.63,-170.49 405.18,-171.84"/>
+<polygon fill="#000000" stroke="#000000" points="404.62,-175.3 414.91,-172.8 405.31,-168.33 404.62,-175.3"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~eval_rows~~CallsGraph_edge16" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M363.03,-251.65C391.12,-254.44 421.16,-257.42 444.82,-259.78"/>
+<polygon fill="#000000" stroke="#000000" points="444.42,-263.25 454.72,-260.76 445.12,-256.29 444.42,-263.25"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~eval_rows~~CallsGraph_edge17" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M363.03,-234.62C391.51,-231.79 421.99,-228.76 445.81,-226.4"/>
+<polygon fill="#000000" stroke="#000000" points="446.15,-229.88 455.75,-225.41 445.46,-222.91 446.15,-229.88"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eval_rows~~CallsGraph_edge18" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M311.07,-230.54C335.44,-221.68 369.27,-209.88 399.54,-201.13 406.26,-199.19 413.29,-197.3 420.35,-195.5"/>
+<polygon fill="#000000" stroke="#000000" points="421.07,-198.92 429.93,-193.1 419.38,-192.13 421.07,-198.92"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~eval_rows~~CalledByGraph Pages: 1 -->
+<svg id="proceval_rowsCalledByGraph" width="641pt" height="185pt"
+ viewBox="0.00 0.00 641.00 185.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~eval_rows~~CalledByGraph" class="graph" transform="scale(0.788564 0.788564) rotate(0) translate(4 230.27)">
+<title>proc~~eval_rows~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-230.27 808.87,-230.27 808.87,4 -4,4"/>
+<!-- proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_node1" class="node">
+<title>proc~eval_rows</title>
+<polygon fill="none" stroke="black" points="804.87,-125.27 741.6,-125.27 741.6,-101 804.87,-101 804.87,-125.27"/>
+<text xml:space="preserve" text-anchor="middle" x="773.23" y="-109.54" font-family="Helvetica,sans-Serif" font-size="10.50">eval_rows</text>
+</g>
+<!-- proc~eclipse_fc -->
+<g id="proc~~eval_rows~~CalledByGraph_node2" class="node">
+<title>proc~eclipse_fc</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node2"><a xlink:href="../proc/eclipse_fc.html" xlink:title="eclipse_fc">
+<polygon fill="#d9534f" stroke="#d9534f" points="697.35,-226.27 633.33,-226.27 633.33,-202 697.35,-202 697.35,-226.27"/>
+<text xml:space="preserve" text-anchor="middle" x="665.34" y="-210.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_fc</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge1" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M692.99,-201.69C697.39,-199.14 701.76,-196.26 705.6,-193.13 726.33,-176.24 745.36,-152.15 757.73,-134.83"/>
+<polygon fill="#000000" stroke="#000000" points="760.5,-136.97 763.34,-126.76 754.75,-132.97 760.5,-136.97"/>
+</g>
+<!-- proc~eclipse_gjac -->
+<g id="proc~~eval_rows~~CalledByGraph_node3" class="node">
+<title>proc~eclipse_gjac</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node3"><a xlink:href="../proc/eclipse_gjac.html" xlink:title="eclipse_gjac">
+<polygon fill="#d9534f" stroke="#d9534f" points="703.72,-184.27 626.95,-184.27 626.95,-160 703.72,-160 703.72,-184.27"/>
+<text xml:space="preserve" text-anchor="middle" x="665.34" y="-168.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_gjac</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_gjac&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge2" class="edge">
+<title>proc~eclipse_gjac&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M688.8,-159.62C703.68,-151.33 723.44,-140.32 739.99,-131.1"/>
+<polygon fill="#000000" stroke="#000000" points="741.46,-134.29 748.49,-126.37 738.05,-128.18 741.46,-134.29"/>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~eval_rows~~CalledByGraph_node4" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node4"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="468.81,-124.27 368.79,-124.27 368.79,-100 468.81,-100 468.81,-124.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-108.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge3" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M469.12,-114.42C526.09,-116.73 622.64,-119.62 705.6,-117.14 713.55,-116.9 722.03,-116.5 730.18,-116.04"/>
+<polygon fill="#000000" stroke="#000000" points="730.12,-119.55 739.89,-115.46 729.7,-112.57 730.12,-119.55"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="proc~~eval_rows~~CalledByGraph_node5" class="node">
+<title>proc~newton_finish</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node5"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="589.08,-104.27 504.81,-104.27 504.81,-80 589.08,-80 589.08,-104.27"/>
+<text xml:space="preserve" text-anchor="middle" x="546.94" y="-88.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~eval_rows~~CalledByGraph_edge8" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M469.29,-104.29C477.08,-103.05 485.17,-101.77 493.03,-100.52"/>
+<polygon fill="#000000" stroke="#000000" points="493.52,-103.99 502.85,-98.97 492.42,-97.08 493.52,-103.99"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge4" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M589.34,-96.01C629.32,-99.75 689.57,-105.39 729.87,-109.17"/>
+<polygon fill="#000000" stroke="#000000" points="729.39,-112.64 739.67,-110.09 730.04,-105.67 729.39,-112.64"/>
+</g>
+<!-- proc~newton_func -->
+<g id="proc~~eval_rows~~CalledByGraph_node6" class="node">
+<title>proc~newton_func</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node6"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="704.85,-66.27 625.83,-66.27 625.83,-42 704.85,-42 704.85,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="665.34" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="proc~~eval_rows~~CalledByGraph_edge9" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M586.38,-79.59C595.62,-76.57 605.61,-73.31 615.26,-70.16"/>
+<polygon fill="#000000" stroke="#000000" points="616.09,-73.57 624.51,-67.14 613.91,-66.92 616.09,-73.57"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge5" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M688.8,-66.65C703.68,-74.94 723.44,-85.95 739.99,-95.17"/>
+<polygon fill="#000000" stroke="#000000" points="738.05,-98.09 748.49,-99.9 741.46,-91.98 738.05,-98.09"/>
+</g>
+<!-- proc~newton_grad -->
+<g id="proc~~eval_rows~~CalledByGraph_node7" class="node">
+<title>proc~newton_grad</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node7"><a xlink:href="../proc/newton_grad.html" xlink:title="newton_grad">
+<polygon fill="#d9534f" stroke="#d9534f" points="705.6,-24.27 625.08,-24.27 625.08,0 705.6,0 705.6,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="665.34" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_grad</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_grad&#45;&gt;proc~eval_rows -->
+<g id="proc~~eval_rows~~CalledByGraph_edge6" class="edge">
+<title>proc~newton_grad&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M692.99,-24.58C697.39,-27.13 701.76,-30.01 705.6,-33.13 726.33,-50.03 745.36,-74.12 757.73,-91.44"/>
+<polygon fill="#000000" stroke="#000000" points="754.75,-93.3 763.34,-99.51 760.5,-89.3 754.75,-93.3"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~eval_rows~~CalledByGraph_node8" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node8"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="332.79,-124.27 140.52,-124.27 140.52,-100 332.79,-100 332.79,-124.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.65" y="-108.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~eval_rows~~CalledByGraph_edge7" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.27,-112.14C341.32,-112.14 349.31,-112.14 356.99,-112.14"/>
+<polygon fill="#000000" stroke="#000000" points="356.85,-115.64 366.85,-112.14 356.85,-108.64 356.85,-115.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~eval_rows~~CalledByGraph_node9" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~eval_rows~~CalledByGraph_node9"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-124.27 0,-124.27 0,-100 104.52,-100 104.52,-124.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-108.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~eval_rows~~CalledByGraph_edge10" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M104.55,-112.14C112.23,-112.14 120.38,-112.14 128.71,-112.14"/>
+<polygon fill="#000000" stroke="#000000" points="128.64,-115.64 138.64,-112.14 128.64,-108.64 128.64,-115.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproceval_rowsCalledByGraph = svgPanZoom('#proceval_rowsCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">eval_rows</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">jac</span><span class="p">,</span><span class="w"> </span><span class="n">ok</span><span class="p">,</span><span class="w"> </span><span class="k">only</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_opt_data</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">d</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ks</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">jac</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ok</span><span class="w">  </span><span class="c">!! false if a row couldn't be evaluated (see [[row_ks]])</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">),</span><span class="k">optional</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="c">!! evaluate only these rows (the others' `ks` are 0,</span>
+<span class="w">                                                     </span><span class="c">!! and their partials are not set)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">offset</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">first_nz</span><span class="w">  </span><span class="c">!! index in `jac` of each row's first nonzero, minus 1</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">fp</span><span class="p">,</span><span class="w"> </span><span class="n">fm</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0r</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span>
+<span class="w">    </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ok_k</span><span class="p">,</span><span class="w"> </span><span class="n">all_ok</span>
+
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">first_nz</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)))</span>
+<span class="w">    </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)</span>
+<span class="w">        </span><span class="n">first_nz</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">offset</span>
+<span class="w">        </span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">ncol</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="k">    </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_fd_step</span>
+<span class="w">    </span><span class="n">all_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+
+<span class="c">!$OMP PARALLEL DO PRIVATE(k,j,t0,tf,dt,x0r,xp,tp0,tpf,fp,fm,ok_k) SCHEDULE(dynamic)</span>
+<span class="w">    </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="k">only</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="k">only</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                </span><span class="n">ks</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">                </span><span class="k">cycle</span>
+<span class="k">            end if</span>
+<span class="k">        end if</span>
+<span class="k">        associate</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">),</span><span class="w"> </span><span class="n">seg</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">iseg</span><span class="p">))</span>
+<span class="w">            </span><span class="n">t0</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span>
+<span class="w">            </span><span class="n">tf</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">tf</span>
+<span class="w">            </span><span class="n">x0r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">x0_rotating</span>
+<span class="w">            </span><span class="n">ks</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row_ks</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">x0r</span><span class="p">,</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span><span class="w"> </span><span class="n">all_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">jac</span><span class="p">))</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                do </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">%</span><span class="n">ncol</span>
+<span class="w">                    </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">%</span><span class="n">xscale</span><span class="p">(</span><span class="n">row</span><span class="p">%</span><span class="n">col</span><span class="p">(</span><span class="n">j</span><span class="p">))</span><span class="w">  </span><span class="c">! the unscaled change [days, km or km/s]</span>
+<span class="w">                    </span><span class="k">call </span><span class="n">perturbed</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">x0r</span><span class="p">,</span><span class="w"> </span><span class="o">+</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">fp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row_ks</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">,</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span><span class="w"> </span><span class="n">all_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">                    </span><span class="k">call </span><span class="n">perturbed</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">x0r</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">fm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">row_ks</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">,</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">ok_k</span><span class="p">)</span><span class="w"> </span><span class="n">all_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">                    </span><span class="n">jac</span><span class="p">(</span><span class="n">first_nz</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">+</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">fp</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">fm</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">2.0_wp</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end do</span>
+<span class="k">            end if</span>
+<span class="k">        end associate</span>
+<span class="k">    end do</span>
+<span class="c">!$OMP END PARALLEL DO</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">present</span><span class="p">(</span><span class="n">ok</span><span class="p">))</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">all_ok</span>
+
+<span class="w">    </span><span class="k">contains</span>
+
+<span class="k">        pure subroutine </span><span class="n">perturbed</span><span class="p">(</span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">x0r</span><span class="p">,</span><span class="w"> </span><span class="n">delta</span><span class="p">,</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">)</span>
+<span class="w">        </span><span class="c">!! the segment's inputs with variable `j` of the row changed by `delta`</span>
+<span class="w">        </span><span class="c">!! (everything is passed in: an internal procedure would see the host's</span>
+<span class="w">        </span><span class="c">!! variables, not the OpenMP thread's private copies)</span>
+<span class="w">        </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_row</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">row</span>
+<span class="w">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">j</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">t0</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">,</span><span class="w"> </span><span class="n">delta</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x0r</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tp0</span><span class="p">,</span><span class="w"> </span><span class="n">tpf</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">xp</span>
+<span class="w">        </span><span class="n">tp0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="p">;</span><span class="w"> </span><span class="n">tpf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="p">;</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0r</span>
+<span class="w">        </span><span class="k">select case</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="p">%</span><span class="nb">kind</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="n">tp0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t0</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">delta</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="p">%</span><span class="n">tf_with_t0</span><span class="p">)</span><span class="w"> </span><span class="n">tpf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tf</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">delta</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="mi">6</span><span class="p">)</span>
+<span class="w">            </span><span class="n">xp</span><span class="p">(</span><span class="n">row</span><span class="p">%</span><span class="nb">kind</span><span class="p">(</span><span class="n">j</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x0r</span><span class="p">(</span><span class="n">row</span><span class="p">%</span><span class="nb">kind</span><span class="p">(</span><span class="n">j</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">delta</span>
+<span class="w">        </span><span class="k">end select</span>
+<span class="k">        end subroutine </span><span class="n">perturbed</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">eval_rows</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

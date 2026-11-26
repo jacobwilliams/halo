@@ -1,0 +1,2840 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>halo_eclipse_opt_submodule &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>halo_eclipse_opt_submodule
+      <small>Submodule</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="17.5% of total for modules and submodules.">835 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">halo_eclipse_opt_submodule</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#variable-start_node">start_node</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#variable-tf_node">tf_node</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#type-eclipse_row">eclipse_row</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#type-eclipse_opt_data">eclipse_opt_data</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#type-eclipse_newton_type">eclipse_newton_type</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-step_limits">step_limits</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-epochs_in_range">epochs_in_range</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-ks_aggregate">ks_aggregate</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-row_ks">row_ks</a>
+        </div>
+      </div>
+    </div>
+
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#subs-0"
+         aria-expanded="false" aria-controls="subs-0">
+         <h4 class="card-header bg-primary text-white">Subroutines</h4>
+      </a>
+      <div id="subs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-eclipse_fc">eclipse_fc</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-eclipse_gjac">eclipse_gjac</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-eval_rows">eval_rows</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-newton_finish">newton_finish</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-newton_func">newton_func</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-newton_grad">newton_grad</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-newton_export">newton_export</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-equilibrate">equilibrate</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-union_columns">union_columns</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-scale_row_columns">scale_row_columns</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-find_rows">find_rows</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-row_columns">row_columns</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-merge_rows">merge_rows</a>
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-report_change">report_change</a>
+        </div>
+      </div>
+    </div>
+
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#modsubs-0"
+         aria-expanded="false" aria-controls="modsubs-0">
+         <h4 class="card-header bg-primary text-white">Module Subroutines</h4>
+      </a>
+      <div id="modsubs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_eclipse_opt_submodule.html#proc-eclipse_optimize">eclipse_optimize</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Eclipse optimization: moves a converged solution out of the Earth's shadow.</p>
+<p>Starting from the converged solution <code>x0</code>, it finds the closest continuous trajectory
+(in halo's scaled variables) that stays out of the shadow near the eclipses:</p>
+<ul>
+<li>minimize <script type="math/tex"> \frac{1}{2} \lVert \mathbf{x} - \mathbf{x}_0 \rVert^2 </script>
+</li>
+<li>subject to the continuity constraints <script type="math/tex"> \mathbf{c}(\mathbf{x}) = \mathbf{0} </script> (halo's)</li>
+<li>and, for each segment that comes near the shadow, <script type="math/tex"> \mathrm{KS}(\phi_k) \ge \phi_{min} </script>
+</li>
+</ul>
+<p>with the SQP solver <a href="https://github.com/jacobwilliams/sqpopt">sqpopt</a>. <script type="math/tex"> \phi </script> is the
+cubic shadow model (Williams et al., 2023), which is smooth inside and outside the
+shadow. <script type="math/tex"> \phi_k </script> are its values at samples every <code>eclipse_opt_sample_step</code> seconds
+from the segment's start, across the part of the segment near the shadow, and KS is
+their Kreisselmeier-Steinhauser aggregate
+<script type="math/tex"> \mathrm{KS} = \phi_{lo} - \frac{1}{\rho} \ln \sum_k e^{-\rho(\phi_k - \phi_{lo})} </script>,
+<script type="math/tex"> \phi_{lo} = \min_k \phi_k </script>: a smooth lower bound of the smallest sample (within
+<script type="math/tex"> \ln(N)/\rho </script> of it), so the constraint keeps every sample at or above
+<script type="math/tex"> \phi_{min} </script>. One row per segment, not one per sample: the samples of a segment all
+depend on the same few variables (its start node), and a row for each would make the
+QP's working sets dependent (sqpopt's direct method then cycles).</p>
+<p>Following the 2023 paper's process, the constraints are added only where the trajectory
+comes near the shadow, and the trajectory is checked again after each optimization (with
+new rows where needed). Each pass ends with a Newton solve of the continuity constraints
+and the eclipse rows at their bound, as equalities (<code>eclipse_opt_newton_finish</code>), to
+bring the defects back to the usual level without undoing the eclipse fix.</p>
+<p>The continuity rows of the Jacobian are halo's analytic ones. The eclipse rows (7
+nonzeros each: the epoch and state of the segment's start node; the samples are at fixed
+offsets from the start) are computed by central differences, propagating only that
+segment.</p>
+<p>See <code>docs/eclipse_optimization_plan.md</code>.</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item">sqpopt_problem_module</li>
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item">sqpopt_types_module</li>
+                  <li class="list-inline-item">sqpopt_qp_solver_module</li>
+                  <li class="list-inline-item">sqpopt_options_module</li>
+                  <li class="list-inline-item">sqpopt_module</li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <ul class="list-inline">
+                <li><h5>Ancestors:</h5></li>
+                  <li class="list-inline-item"><a href='halo_module.html'>halo_module</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: module~~halo_eclipse_opt_submodule~~UsesGraph Pages: 1 -->
+<svg id="modulehalo_eclipse_opt_submoduleUsesGraph" width="641pt" height="414pt"
+ viewBox="0.00 0.00 641.00 414.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph" class="graph" transform="scale(0.569844 0.569844) rotate(0) translate(4 722.27)">
+<title>module~~halo_eclipse_opt_submodule~~UsesGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-722.27 1120.87,-722.27 1120.87,4 -4,4"/>
+<!-- module~halo_eclipse_opt_submodule -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node1" class="node">
+<title>module~halo_eclipse_opt_submodule</title>
+<polygon fill="none" stroke="black" points="1116.87,-150.27 952.35,-150.27 952.35,-126 1116.87,-126 1116.87,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1034.61" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50">halo_eclipse_opt_submodule</text>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node2" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node2"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="93.27,-426.27 0,-426.27 0,-402 93.27,-402 93.27,-426.27"/>
+<text xml:space="preserve" text-anchor="middle" x="46.63" y="-410.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge1" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1016.43,-150.73C994.49,-165.99 954.76,-190.91 916.35,-201.13 614.91,-281.34 504.31,-104.09 214.78,-220.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M212.78,-220.13C178.12,-235.88 158.89,-215.23 129.27,-239.13 80.78,-278.27 59.66,-352.84 51.74,-390.75"/>
+<polygon fill="#000000" stroke="#000000" points="48.38,-389.71 49.9,-400.19 55.25,-391.05 48.38,-389.71"/>
+</g>
+<!-- module~halo_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node3" class="node">
+<title>module~halo_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node3"><a xlink:href="../module/halo_module.html" xlink:title="halo_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="881.85,-516.27 801.33,-516.27 801.33,-492 881.85,-492 881.85,-516.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-500.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;module~halo_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge7" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;module~halo_module</title>
+<path fill="none" stroke="#000000" d="M1027.03,-150.73C999.14,-204.19 890.34,-412.64 854.28,-481.74"/>
+<polygon fill="#000000" stroke="#000000" points="851.36,-479.76 849.84,-490.25 857.57,-483 851.36,-479.76"/>
+</g>
+<!-- sqpopt_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node4" class="node">
+<title>sqpopt_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="888.23,-192.27 794.96,-192.27 794.96,-168 888.23,-168 888.23,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sqpopt_module</text>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge2" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M976.3,-150.74C952.11,-156.06 924,-162.24 899.82,-167.55"/>
+<polygon fill="#000000" stroke="#000000" points="899.15,-164.12 890.13,-169.68 900.65,-170.95 899.15,-164.12"/>
+</g>
+<!-- sqpopt_options_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node5" class="node">
+<title>sqpopt_options_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="910.35,-150.27 772.83,-150.27 772.83,-126 910.35,-126 910.35,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sqpopt_options_module</text>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_options_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge3" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_options_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M952.05,-138.13C942.13,-138.13 932.02,-138.13 922.13,-138.13"/>
+<polygon fill="#000000" stroke="#000000" points="922.18,-134.64 912.18,-138.14 922.18,-141.64 922.18,-134.64"/>
+</g>
+<!-- sqpopt_problem_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node6" class="node">
+<title>sqpopt_problem_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="912.98,-108.27 770.21,-108.27 770.21,-84 912.98,-84 912.98,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sqpopt_problem_module</text>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_problem_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge4" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_problem_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M976.3,-125.53C955.71,-121.01 932.29,-115.86 910.86,-111.15"/>
+<polygon fill="#000000" stroke="#000000" points="911.86,-107.78 901.34,-109.05 910.36,-114.62 911.86,-107.78"/>
+</g>
+<!-- sqpopt_qp_solver_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node7" class="node">
+<title>sqpopt_qp_solver_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="916.35,-66.27 766.83,-66.27 766.83,-42 916.35,-42 916.35,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sqpopt_qp_solver_module</text>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_qp_solver_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge5" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_qp_solver_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1013.5,-125.59C990.65,-111.76 951.9,-89.55 916.35,-75.13 912.05,-73.39 907.55,-71.73 902.98,-70.17"/>
+<polygon fill="#000000" stroke="#000000" points="904.32,-66.92 893.73,-67.16 902.16,-73.58 904.32,-66.92"/>
+</g>
+<!-- sqpopt_types_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node8" class="node">
+<title>sqpopt_types_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="905.1,-24.27 778.08,-24.27 778.08,0 905.1,0 905.1,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="841.59" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">sqpopt_types_module</text>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_types_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge6" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;sqpopt_types_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M1023.31,-125.79C1004.39,-103.9 961.82,-58.2 916.35,-33.13 913.66,-31.65 910.85,-30.26 907.97,-28.96"/>
+<polygon fill="#000000" stroke="#000000" points="909.28,-25.72 898.7,-25.23 906.66,-32.21 909.28,-25.72"/>
+</g>
+<!-- bspline_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node9" class="node">
+<title>bspline_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node9"><a xlink:href="https://jacobwilliams.github.io/bspline-fortran/" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="261.54,-375.27 166.02,-375.27 166.02,-351 261.54,-351 261.54,-375.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-359.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;bspline_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge8" class="edge">
+<title>module~halo_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M634.07,-340.13C578.44,-320.91 561.98,-323.82 503.31,-319.13 428.43,-313.16 406.4,-298.07 334.29,-319.13 316.07,-324.46 315.72,-334.61 298.29,-342.13 290.28,-345.59 281.58,-348.56 272.93,-351.09"/>
+<polygon fill="#000000" stroke="#000000" points="272.23,-347.66 263.5,-353.66 274.07,-354.41 272.23,-347.66"/>
+</g>
+<!-- ddeabm_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node10" class="node">
+<title>ddeabm_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node10"><a xlink:href="https://jacobwilliams.github.io/ddeabm/" xlink:title="ddeabm_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="685.83,-558.27 584.31,-558.27 584.31,-534 685.83,-534 685.83,-558.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-542.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ddeabm_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;ddeabm_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge9" class="edge">
+<title>module~halo_module&#45;&gt;ddeabm_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M801.16,-512.23C771.75,-518.27 731.02,-526.64 697.38,-533.55"/>
+<polygon fill="#000000" stroke="#000000" points="696.84,-530.08 687.75,-535.52 698.25,-536.94 696.84,-530.08"/>
+</g>
+<!-- fortran_astrodynamics_toolkit -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node11" class="node">
+<title>fortran_astrodynamics_toolkit</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node11"><a xlink:href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/" xlink:title="fortran_astrodynamics_toolkit">
+<polygon fill="#337ab7" stroke="#337ab7" points="298.29,-516.27 129.27,-516.27 129.27,-492 298.29,-492 298.29,-516.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-500.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fortran_astrodynamics_toolkit</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge10" class="edge">
+<title>module~halo_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M835.75,-516.37C823.44,-545.58 787.81,-619.04 730.83,-647.13 654.49,-684.78 623.57,-659.21 539.31,-647.13 445.33,-633.67 419.95,-628.08 334.29,-587.13 298.23,-569.9 261.1,-542.27 237.99,-523.67"/>
+<polygon fill="#000000" stroke="#000000" points="240.41,-521.13 230.45,-517.51 235.98,-526.55 240.41,-521.13"/>
+</g>
+<!-- json_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node12" class="node">
+<title>json_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node12"><a xlink:href="https://jacobwilliams.github.io/json-fortran/" xlink:title="json_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="458.31,-578.27 379.29,-578.27 379.29,-554 458.31,-554 458.31,-578.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-562.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">json_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;json_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge11" class="edge">
+<title>module~halo_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M825.04,-516.62C804.77,-532.02 767.56,-557.34 730.83,-567.13 641.19,-591.03 531.78,-582.4 469.51,-574.14"/>
+<polygon fill="#000000" stroke="#000000" points="470.33,-570.72 459.95,-572.82 469.37,-577.66 470.33,-570.72"/>
+</g>
+<!-- module~astro_partials_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node13" class="node">
+<title>module~astro_partials_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node13"><a xlink:href="../module/astro_partials_module.html" xlink:title="astro_partials_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="483.06,-394.27 354.54,-394.27 354.54,-370 483.06,-370 483.06,-394.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-378.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">astro_partials_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~astro_partials_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge12" class="edge">
+<title>module~halo_module&#45;&gt;module~astro_partials_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M634.07,-340.13C619.7,-335.17 539.21,-352.92 481.1,-366.86"/>
+<polygon fill="#000000" stroke="#000000" points="480.54,-363.4 471.64,-369.15 482.18,-370.2 480.54,-363.4"/>
+</g>
+<!-- module~config_file_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node14" class="node">
+<title>module~config_file_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node14"><a xlink:href="../module/config_file_module.html" xlink:title="config_file_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="691.08,-516.27 579.06,-516.27 579.06,-492 691.08,-492 691.08,-516.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-500.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">config_file_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~config_file_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge13" class="edge">
+<title>module~halo_module&#45;&gt;module~config_file_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M801.16,-504.13C773.23,-504.13 735.08,-504.13 702.5,-504.13"/>
+<polygon fill="#000000" stroke="#000000" points="702.74,-500.64 692.74,-504.14 702.74,-507.64 702.74,-500.64"/>
+</g>
+<!-- module~halo_utilities_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node15" class="node">
+<title>module~halo_utilities_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node15"><a xlink:href="../module/halo_utilities_module.html" xlink:title="halo_utilities_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="697.08,-436.27 573.06,-436.27 573.06,-412 697.08,-412 697.08,-436.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-420.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_utilities_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~halo_utilities_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge14" class="edge">
+<title>module~halo_module&#45;&gt;module~halo_utilities_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M818.44,-491.68C796.66,-479.81 762.2,-462.03 730.83,-450.13 720.89,-446.36 710.16,-442.89 699.64,-439.79"/>
+<polygon fill="#000000" stroke="#000000" points="700.8,-436.48 690.23,-437.11 698.89,-443.21 700.8,-436.48"/>
+</g>
+<!-- module~parameters_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node16" class="node">
+<title>module~parameters_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node16"><a xlink:href="../module/parameters_module.html" xlink:title="parameters_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="478.56,-516.27 359.04,-516.27 359.04,-492 478.56,-492 478.56,-516.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-500.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parameters_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge15" class="edge">
+<title>module~halo_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M800.97,-494.68C780.21,-490.2 754.3,-485.36 730.83,-483.13 646.09,-475.1 624.11,-475.74 539.31,-483.13 523.2,-484.54 506,-486.99 489.81,-489.73"/>
+<polygon fill="#000000" stroke="#000000" points="489.53,-486.23 480.29,-491.41 490.74,-493.12 489.53,-486.23"/>
+</g>
+<!-- module~splined_ephemeris_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node17" class="node">
+<title>module~splined_ephemeris_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node17"><a xlink:href="../module/splined_ephemeris_module.html" xlink:title="splined_ephemeris_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="497.69,-436.27 339.92,-436.27 339.92,-412 497.69,-412 497.69,-436.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-420.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splined_ephemeris_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~splined_ephemeris_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge16" class="edge">
+<title>module~halo_module&#45;&gt;module~splined_ephemeris_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M634.07,-340.13C573.1,-319.06 563.96,-381.16 503.31,-403.13 498.09,-405.03 492.62,-406.81 487.09,-408.48"/>
+<polygon fill="#000000" stroke="#000000" points="486.52,-405.01 477.88,-411.13 488.45,-411.73 486.52,-405.01"/>
+</g>
+<!-- module~splined_moon_frame_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node18" class="node">
+<title>module~splined_moon_frame_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node18"><a xlink:href="../module/splined_moon_frame_module.html" xlink:title="splined_moon_frame_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="503.31,-352.27 334.29,-352.27 334.29,-328 503.31,-328 503.31,-352.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-336.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splined_moon_frame_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~splined_moon_frame_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge17" class="edge">
+<title>module~halo_module&#45;&gt;module~splined_moon_frame_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M634.07,-340.13C596.39,-327.11 552.71,-324.99 514.65,-326.93"/>
+<polygon fill="#000000" stroke="#000000" points="514.83,-323.41 505.07,-327.52 515.26,-330.4 514.83,-323.41"/>
+</g>
+<!-- module~text_buffer_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node19" class="node">
+<title>module~text_buffer_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node19"><a xlink:href="../module/text_buffer_module.html" xlink:title="text_buffer_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="475.94,-272.27 361.67,-272.27 361.67,-248 475.94,-248 475.94,-272.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-256.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">text_buffer_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~text_buffer_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge18" class="edge">
+<title>module~halo_module&#45;&gt;module~text_buffer_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M830.77,-491.79C803.88,-459.14 725.11,-370.91 636.07,-340.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M634.07,-340.13C593.47,-326.1 577.32,-341.15 539.31,-321.13 519.56,-310.74 522.49,-297.54 503.31,-286.13 497.31,-282.57 490.78,-279.45 484.1,-276.72"/>
+<polygon fill="#000000" stroke="#000000" points="485.53,-273.52 474.94,-273.29 483.08,-280.08 485.53,-273.52"/>
+</g>
+<!-- nlesolver_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node20" class="node">
+<title>nlesolver_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node20"><a xlink:href="https://jacobwilliams.github.io/nlesolver-fortran/" xlink:title="nlesolver_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="688.08,-312.27 582.06,-312.27 582.06,-288 688.08,-288 688.08,-312.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-296.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">nlesolver_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;nlesolver_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge19" class="edge">
+<title>module~halo_module&#45;&gt;nlesolver_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M836.51,-491.55C825.28,-458.91 790.68,-370.98 730.83,-326.13 721.52,-319.16 710.44,-314.05 699.2,-310.32"/>
+<polygon fill="#000000" stroke="#000000" points="700.46,-307.04 689.88,-307.57 698.48,-313.76 700.46,-307.04"/>
+</g>
+<!-- numerical_differentiation_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node21" class="node">
+<title>numerical_differentiation_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node21"><a xlink:href="https://jacobwilliams.github.io/NumDiff/" xlink:title="numerical_differentiation_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="730.83,-718.27 539.31,-718.27 539.31,-694 730.83,-694 730.83,-718.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-702.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">numerical_differentiation_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;numerical_differentiation_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge20" class="edge">
+<title>module~halo_module&#45;&gt;numerical_differentiation_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M836.47,-516.58C825.14,-548.85 790.31,-635.81 730.83,-680.13 726.25,-683.55 721.24,-686.52 715.99,-689.1"/>
+<polygon fill="#000000" stroke="#000000" points="714.83,-685.79 707.06,-692.99 717.63,-692.2 714.83,-685.79"/>
+</g>
+<!-- pyplot_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node22" class="node">
+<title>pyplot_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node22"><a xlink:href="https://jacobwilliams.github.io/pyplot-fortran/" xlink:title="pyplot_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="680.21,-638.27 589.94,-638.27 589.94,-614 680.21,-614 680.21,-638.27"/>
+<text xml:space="preserve" text-anchor="middle" x="635.07" y="-622.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pyplot_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;pyplot_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge21" class="edge">
+<title>module~halo_module&#45;&gt;pyplot_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M829.76,-516.74C811.45,-537.27 772.31,-577.84 730.83,-600.13 718.74,-606.63 704.89,-611.62 691.57,-615.39"/>
+<polygon fill="#000000" stroke="#000000" points="690.81,-611.97 682.03,-617.9 692.59,-618.74 690.81,-611.97"/>
+</g>
+<!-- module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node25" class="node">
+<title>module~halo_kinds_module</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node25"><a xlink:href="../module/halo_kinds_module.html" xlink:title="halo_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="270.54,-426.27 157.02,-426.27 157.02,-402 270.54,-402 270.54,-426.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-410.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_kinds_module</text>
+</a>
+</g>
+</g>
+<!-- module~astro_partials_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge22" class="edge">
+<title>module~astro_partials_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M354.12,-392.17C331.24,-395.78 305.36,-399.86 282.17,-403.51"/>
+<polygon fill="#000000" stroke="#000000" points="281.85,-400.02 272.52,-405.03 282.94,-406.93 281.85,-400.02"/>
+</g>
+<!-- module~config_file_module&#45;&gt;json_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge23" class="edge">
+<title>module~config_file_module&#45;&gt;json_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M578.69,-515.31C565.7,-518.23 551.96,-521.57 539.31,-525.13 514,-532.26 486.18,-541.7 463.76,-549.73"/>
+<polygon fill="#000000" stroke="#000000" points="462.86,-546.33 454.65,-553.02 465.24,-552.92 462.86,-546.33"/>
+</g>
+<!-- module~config_file_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge24" class="edge">
+<title>module~config_file_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M578.61,-504.13C551.57,-504.13 518.76,-504.13 490,-504.13"/>
+<polygon fill="#000000" stroke="#000000" points="490.29,-500.64 480.29,-504.14 490.29,-507.64 490.29,-500.64"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge26" class="edge">
+<title>module~halo_utilities_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M417.8,-464.13C327.88,-471.64 304.59,-472.85 214.78,-464.13"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge25" class="edge">
+<title>module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M417.8,-464.13C368.72,-468.23 313.97,-479.42 273.71,-488.92"/>
+<polygon fill="#000000" stroke="#000000" points="273.14,-485.46 264.23,-491.19 274.77,-492.26 273.14,-485.46"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge28" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M574.1,-436.75C562.25,-440.29 550.14,-444.71 539.31,-450.13 521.19,-459.21 521.28,-468.75 503.31,-478.13 496.36,-481.77 488.81,-484.99 481.19,-487.83"/>
+<polygon fill="#000000" stroke="#000000" points="480.15,-484.48 471.86,-491.08 482.45,-491.09 480.15,-484.48"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge29" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M572.67,-424.13C552.96,-424.13 530.71,-424.13 509.41,-424.13"/>
+<polygon fill="#000000" stroke="#000000" points="509.56,-420.64 499.56,-424.14 509.56,-427.64 509.56,-420.64"/>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge27" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M582.95,-436.7C539.78,-446.58 476.18,-459.43 419.8,-464.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M417.8,-464.13C358.82,-469.06 292.61,-447.43 252.31,-431.07"/>
+<polygon fill="#000000" stroke="#000000" points="253.88,-427.93 243.3,-427.31 251.18,-434.39 253.88,-427.93"/>
+</g>
+<!-- module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge30" class="edge">
+<title>module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M358.81,-504.13C343.49,-504.13 326.6,-504.13 309.94,-504.13"/>
+<polygon fill="#000000" stroke="#000000" points="309.98,-500.64 299.98,-504.14 309.98,-507.64 309.98,-500.64"/>
+</g>
+<!-- module~parameters_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge31" class="edge">
+<title>module~parameters_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M367.17,-491.57C356.03,-487.94 344.52,-483.48 334.29,-478.13 316.32,-468.75 315.74,-460.45 298.29,-450.13 286.19,-442.98 272.4,-436.44 259.56,-430.96"/>
+<polygon fill="#000000" stroke="#000000" points="261.04,-427.79 250.46,-427.2 258.36,-434.26 261.04,-427.79"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge34" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M370.72,-436.67C320.55,-449.45 244.37,-467.01 214.78,-464.13"/>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M212.78,-464.13C168.45,-459.83 119.9,-443.66 86.99,-430.86"/>
+<polygon fill="#000000" stroke="#000000" points="88.45,-427.67 77.86,-427.23 85.86,-434.18 88.45,-427.67"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;bspline_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge32" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M365.07,-411.53C354.82,-408.89 344.19,-406.03 334.29,-403.13 309.86,-395.99 282.95,-387.07 260.86,-379.48"/>
+<polygon fill="#000000" stroke="#000000" points="262.14,-376.22 251.55,-376.25 259.85,-382.83 262.14,-376.22"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge33" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M367.17,-436.7C356.03,-440.33 344.52,-444.79 334.29,-450.13 316.32,-459.52 316.26,-468.75 298.29,-478.13 291.34,-481.77 283.79,-484.99 276.17,-487.83"/>
+<polygon fill="#000000" stroke="#000000" points="275.13,-484.48 266.84,-491.08 277.43,-491.09 275.13,-484.48"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge35" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M339.6,-420.28C320.72,-419.35 300.71,-418.37 282.37,-417.46"/>
+<polygon fill="#000000" stroke="#000000" points="282.56,-413.97 272.4,-416.97 282.22,-420.96 282.56,-413.97"/>
+</g>
+<!-- module~splined_moon_frame_module&#45;&gt;bspline_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge36" class="edge">
+<title>module~splined_moon_frame_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M334.05,-349.62C313.7,-351.93 292.36,-354.35 273.46,-356.49"/>
+<polygon fill="#000000" stroke="#000000" points="273.08,-353.01 263.53,-357.61 273.86,-359.96 273.08,-353.01"/>
+</g>
+<!-- csv_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node23" class="node">
+<title>csv_module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="251.04,-333.27 176.52,-333.27 176.52,-309 251.04,-309 251.04,-333.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-317.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">csv_module</text>
+</g>
+<!-- module~splined_moon_frame_module&#45;&gt;csv_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge37" class="edge">
+<title>module~splined_moon_frame_module&#45;&gt;csv_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M334.05,-332.3C309.72,-330.02 283.99,-327.61 262.67,-325.62"/>
+<polygon fill="#000000" stroke="#000000" points="263.11,-322.14 252.83,-324.7 262.46,-329.11 263.11,-322.14"/>
+</g>
+<!-- module~splined_moon_frame_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge38" class="edge">
+<title>module~splined_moon_frame_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M357.71,-352.75C349.7,-355.15 341.7,-357.94 334.29,-361.13 316.86,-368.66 315.33,-375.76 298.29,-384.13 288.13,-389.13 276.92,-393.73 266.1,-397.75"/>
+<polygon fill="#000000" stroke="#000000" points="265.11,-394.38 256.89,-401.05 267.48,-400.97 265.11,-394.38"/>
+</g>
+<!-- module~text_buffer_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge40" class="edge">
+<title>module~text_buffer_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M379.74,-247.55C329.56,-231.82 244.21,-208.34 214.78,-220.13"/>
+</g>
+<!-- ieee_arithmetic -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_node24" class="node">
+<title>ieee_arithmetic</title>
+<g id="a_module~~halo_eclipse_opt_submodule~~UsesGraph_node24"><a xlink:href="http://fortranwiki.org/fortran/show/ieee_arithmetic" xlink:title="ieee_arithmetic">
+<polygon fill="#337ab7" stroke="#337ab7" points="261.17,-272.27 166.4,-272.27 166.4,-248 261.17,-248 261.17,-272.27"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-256.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ieee_arithmetic</text>
+</a>
+</g>
+</g>
+<!-- module~text_buffer_module&#45;&gt;ieee_arithmetic -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge39" class="edge">
+<title>module~text_buffer_module&#45;&gt;ieee_arithmetic</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M361.25,-260.13C333.61,-260.13 300.4,-260.13 272.6,-260.13"/>
+<polygon fill="#000000" stroke="#000000" points="272.96,-256.64 262.96,-260.14 272.96,-263.64 272.96,-256.64"/>
+</g>
+<!-- module~text_buffer_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge41" class="edge">
+<title>module~text_buffer_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M394.38,-272.76C376.32,-283.36 351.59,-299.84 334.29,-319.13 312.25,-343.73 323.44,-362.74 298.29,-384.13 292.24,-389.28 285.24,-393.57 277.92,-397.14"/>
+<polygon fill="#000000" stroke="#000000" points="276.93,-393.75 269.18,-400.97 279.74,-400.17 276.93,-393.75"/>
+</g>
+<!-- module~halo_kinds_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_eclipse_opt_submodule~~UsesGraph_edge42" class="edge">
+<title>module~halo_kinds_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M156.87,-414.13C140.14,-414.13 121.78,-414.13 104.97,-414.13"/>
+<polygon fill="#000000" stroke="#000000" points="105.12,-410.64 95.12,-414.14 105.12,-417.64 105.12,-410.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulehalo_eclipse_opt_submoduleUsesGraph = svgPanZoom('#modulehalo_eclipse_opt_submoduleUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 511.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      
+      <br>
+
+
+        <section>
+          <h2>Variables</h2>
+            <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-start_node"></span>
+              integer,
+            </td>
+              <td>private,</td>
+            <td>
+parameter,               dimension(8)
+            </td>
+            <td>::</td>
+            <td><strong>start_node</strong></td>
+<td> =</td>
+                <td>[1, 2, 2, 3, 3, 4, 4, 5]</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tf_node"></span>
+              integer,
+            </td>
+              <td>private,</td>
+            <td>
+parameter,               dimension(8)
+            </td>
+            <td>::</td>
+            <td><strong>tf_node</strong></td>
+<td> =</td>
+                <td>[1, 1, 3, 3, 3, 3, 5, 5]</td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+        </section>
+        <br>
+
+
+
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-eclipse_row"></span>
+      <h3>
+        type&nbsp;::&nbsp;
+        <a href='../type/eclipse_row.html'>eclipse_row</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>an eclipse constraint: the KS aggregate of the shadow function at the samples
+<code>k_lo</code> to <code>k_hi</code> of a segment (sample <code>k</code> is <code>k*eclipse_opt_sample_step</code> seconds
+from the segment's start, along its direction of propagation)</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iseg"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iseg</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k_lo"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k_lo</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-k_hi"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>k_hi</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tf_with_t0"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tf_with_t0</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+<p>if the segment's final epoch moves with its start node's epoch</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ncol"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ncol</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>number of variables it depends on</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-col"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(7)
+            </td>
+            <td>::</td>
+            <td><strong>col</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>their indices in <code>x</code></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kind"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(7)
+            </td>
+            <td>::</td>
+            <td><strong>kind</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>0: the start node's epoch, 1-6: its state</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-eclipse_opt_data"></span>
+      <h3>
+        type&nbsp;::&nbsp;
+        <a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>the data the sqpopt functions need</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission"></span>
+              type(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x0"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x0</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the solution before the optimization (scaled)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-r"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>r</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the optimization's variables are <code>x/r</code> (see <code>eclipse_opt_epoch_scale</code>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rows"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>rows</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-m_halo"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m_halo</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>number of halo's constraints</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-icol"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>icol</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the columns of halo's Jacobian nonzeros</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-irow"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>irow</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the rows of halo's Jacobian nonzeros</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w"></span>
+              real(kind=wp),
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>w</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>weights of halo's constraint rows in the optimization
+(see <code>eclipse_opt_equilibrate</code>; 1 otherwise)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nnz_halo"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nnz_halo</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>number of nonzeros of halo's Jacobian</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-single"></span>
+              logical,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>single</strong></td>
+<td> =</td>
+                <td>.false.</td>
+            <td>
+<p>one eclipse row for all the segments: the KS aggregate of the
+segments' rows (see <code>eclipse_opt_single_row</code>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ucol"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>ucol</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>with <code>single</code>: the row's columns (the union of the segments')</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-upos"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>upos</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>with <code>single</code>: the index in <code>ucol</code> of each segment row's column</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-eclipse_newton_type"></span>
+      <h3>
+        type, extends(nlesolver_type)&nbsp;::&nbsp;
+        <a href='../type/eclipse_newton_type.html'>eclipse_newton_type</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>the Newton finish (see <a href="../proc/newton_finish.html">newton_finish</a>): halo's continuity constraints, then
+the active eclipse rows as equalities</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+              <td>public,</td>
+            <td>
+              pointer
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+<td>=&gt; </td>
+                <td>null()</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-active"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>active</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the indices in <code>d%rows</code> of the rows that are equalities</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mask"></span>
+              logical,
+            </td>
+              <td>public,</td>
+            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>mask</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>the same, as a mask of <code>d%rows</code></p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-step_limits"></span> <h3> function <a href='../proc/step_limits.html'>step_limits</a>(d) result(lim)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The largest change of each of the optimization's variables in one sqpopt iteration
+(<code>problem%set_max_step</code>), from the limits in physical units (<code>eclipse_opt_max_step_*</code>):
+a variable's unscaled value is <code>y*r*xscale</code> (plus its offset), so its limit is
+<code>limit/(r*xscale)</code>. A variable without a limit gets <code>sqpopt_infinity</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~6"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp), dimension(:), allocatable</small>
+    </h4>
+    <p>(allocatable: sized by the problem, so not on the stack)</p>
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-epochs_in_range"></span> <h3> function <a href='../proc/epochs_in_range.html'>epochs_in_range</a>(d, x) result(ok)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>If all the node epochs of <code>x</code> (halo's scaled variables) are within the range of the
+splined ephemeris (2 periods before the reference epoch to 2 periods after the last rev,
+see <a href="../proc/initialize_the_mission.html">initialize_the_mission</a>), less a margin of half a period. A trial point of the
+optimization can be far off.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~7"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~9"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-ks_aggregate"></span> <h3>pure function <a href='../proc/ks_aggregate.html'>ks_aggregate</a>(ks, rho) result(agg)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The KS aggregate of values <code>ks</code>: <script type="math/tex"> k_{lo} - \frac{1}{\rho} \ln \sum_k e^{-\rho (k_k - k_{lo})} </script>.
+Of the segments' KS rows, it is exactly the KS of all their samples.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~8"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rho~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rho</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-row_ks"></span> <h3> function <a href='../proc/row_ks.html'>row_ks</a>(mission, seg, row, t0, tf, x0_rotating, ok) result(ks)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The KS aggregate of the shadow function at a row's samples, for the given start epoch,
+final epoch [days] and initial rotating-frame state (a copy of the segment is propagated,
+with output every <code>eclipse_opt_sample_step</code> seconds).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission~2"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-seg"></span>
+              type(<a href='../type/segment.html'>segment</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>seg</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-row~2"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>row</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t0~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tf~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tf</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x0_rotating"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>x0_rotating</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ok~7"></span>
+              logical,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ok</strong></td>
+            <td>
+<p>false if the segment has none of the row's samples (e.g., a trial point
+that moved its epochs far): the row can't be evaluated there</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+        <section>
+          <h2>Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-eclipse_fc"></span> <h3> subroutine <a href='../proc/eclipse_fc.html'>eclipse_fc</a>(x, f, c, status, data)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The objective and the constraints for sqpopt: halo's continuity constraints, then the
+eclipse rows.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-c"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>c</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-status"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>status</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data"></span>
+              class(*),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>data</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-eclipse_gjac"></span> <h3> subroutine <a href='../proc/eclipse_gjac.html'>eclipse_gjac</a>(x, g, jac_val, accuracy, status, data)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The gradient of the objective and the Jacobian values for sqpopt: halo's analytic
+Jacobian, then the eclipse rows (central differences).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-g"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>g</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jac_val"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>jac_val</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-accuracy"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>accuracy</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-status~2"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>status</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-data~2"></span>
+              class(*),
+            </td>
+<td>intent(inout),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>data</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-eval_rows"></span> <h3> subroutine <a href='../proc/eval_rows.html'>eval_rows</a>(d, ks, jac, ok, only)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The eclipse rows (and, optionally, their partials, in the order of the rows' columns),
+for the <code>x</code> already in the segments. The rows (segments) are done in parallel.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~3"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ks~4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>ks</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jac~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>jac</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ok~3"></span>
+              logical,
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ok</strong></td>
+            <td>
+<p>false if a row couldn't be evaluated (see <a href="../proc/row_ks.html">row_ks</a>)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-only"></span>
+              logical,
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>only</strong></td>
+            <td>
+<p>evaluate only these rows (the others' <code>ks</code> are 0,
+and their partials are not set)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-newton_finish"></span> <h3> subroutine <a href='../proc/newton_finish.html'>newton_finish</a>(d, x)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The Newton finish (<code>eclipse_opt_newton_finish</code>): from the optimization's point, solve
+halo's continuity constraints and, as equalities <script type="math/tex"> \mathrm{KS}_k = \phi_{min} </script>, the
+eclipse rows that are at or near their bound (<script type="math/tex"> \mathrm{KS}_k < \phi_{min} </script> plus
+<code>eclipse_opt_newton_active_tol</code>), with halo's minimum-norm Newton solver (nlesolver, with
+halo's sparse linear solver). The optimization's point is near feasible but its
+continuity isn't converged; a solve of the continuity alone (<code>eclipse_opt_polish</code>) moves
+the trajectory back into the shadow, but with the active rows held at their bound it
+can't. A row left free that falls below its bound is added to the equalities, and the
+solve repeated (from where it ended).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~4"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~4"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>the optimization's point (halo's scaled variables); replaced by the solution</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-newton_func"></span> <h3> subroutine <a href='../proc/newton_func.html'>newton_func</a>(me, x, f)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The Newton finish's functions: halo's continuity constraints, then <code>KS - phi_min</code> of
+the active eclipse rows. A point that can't be evaluated (outside the splined
+ephemeris, or an integrator failure) gets large values, so the line search backs off.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~2"></span>
+              class(nlesolver_type),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>halo's scaled variables</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+<p>the functions</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-newton_grad"></span> <h3> subroutine <a href='../proc/newton_grad.html'>newton_grad</a>(me, x, g)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The Newton finish's Jacobian: halo's analytic one, then the active eclipse rows
+(central differences, see <a href="../proc/eval_rows.html">eval_rows</a>).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~3"></span>
+              class(nlesolver_type),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~6"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>halo's scaled variables</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-g~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>g</strong></td>
+            <td>
+<p>the Jacobian's nonzeros</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-newton_export"></span> <h3> subroutine <a href='../proc/newton_export.html'>newton_export</a>(me, x, f, iter)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The Newton finish's iteration printout.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~4"></span>
+              class(nlesolver_type),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~7"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>the variables</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-f~3"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+<p>the functions</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iter"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iter</strong></td>
+            <td>
+<p>the iteration</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-equilibrate"></span> <h3> subroutine <a href='../proc/equilibrate.html'>equilibrate</a>(d, x)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Equilibrate the continuity Jacobian at <code>x</code> for the optimization (<code>eclipse_opt_equilibrate</code>):
+alternately normalize its rows (weights <code>w</code>) and its columns (the variables' factors <code>r</code>,
+the optimization's variables being <code>x/r</code>), a few times, so that the rows and the columns
+all have 2-norms near 1. This lowers the condition number of the KKT systems of sqpopt's
+QP subproblems (for 100 revolutions, J's condition number goes from 8e4 to 7e2). The
+objective, <code>|x/r - x0/r|^2/2</code>, is then measured in these units.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~5"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~8"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-union_columns"></span> <h3> subroutine <a href='../proc/union_columns.html'>union_columns</a>(d)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>With <code>single</code>: the columns of the single eclipse row (the union of the segment rows'),
+and where each segment row's column is in them.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~8"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-scale_row_columns"></span> <h3> subroutine <a href='../proc/scale_row_columns.html'>scale_row_columns</a>(d, jac)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Multiply the eclipse rows' partials by the optimization's variable scaling <code>r</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-d~9"></span>
+              type(<a href='../type/eclipse_opt_data.html'>eclipse_opt_data</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>d</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-jac~5"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>jac</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-find_rows"></span> <h3> subroutine <a href='../proc/find_rows.html'>find_rows</a>(mission, x, rows, phimin, shadow_min)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Check the shadow function along the whole trajectory (every <code>eclipse_opt_detect_step</code>
+seconds), and make the rows of the segments that come near the shadow (where the shadow
+function, with the constraints' bubble, is below <code>eclipse_opt_detect_phi</code>).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission~3"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~10"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rows~2"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>rows</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-phimin~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>phimin</strong></td>
+            <td>
+<p>the smallest shadow function (no bubble) along the trajectory</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-shadow_min~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>shadow_min</strong></td>
+            <td>
+<p>the time in the shadow [min] (approximate: the number of points
+in the shadow times the step)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-row_columns"></span> <h3> subroutine <a href='../proc/row_columns.html'>row_columns</a>(iseg, full2red, row)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>The variables a row of segment <code>iseg</code> depends on: the epoch and state of its start node.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iseg~3"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iseg</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-full2red~2"></span>
+              integer,
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>full2red</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-row~3"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>row</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-merge_rows"></span> <h3> subroutine <a href='../proc/merge_rows.html'>merge_rows</a>(rows, new)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Add the new rows: a segment already in the list gets the union of the sample ranges.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rows~3"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>rows</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-new~2"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>new</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-report_change"></span> <h3> subroutine <a href='../proc/report_change.html'>report_change</a>(mission, x0, x)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Print how far the optimization moved the solution.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission~4"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x0~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x0</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~11"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+        <section>
+          <h2>Module Subroutines</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-eclipse_optimize"></span> <h3>module subroutine <a href='../proc/eclipse_optimize.html'>eclipse_optimize</a>(me, x)  
+    <a href="../interface/eclipse_optimize.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+</h3></div>
+    <div class="card-body">
+          
+  <p>Move a converged solution out of the Earth's shadow (see the module documentation).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me"></span>
+              class(<a href='../type/my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+<p>the converged solution (scaled); replaced by the result</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

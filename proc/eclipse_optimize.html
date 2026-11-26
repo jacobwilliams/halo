@@ -1,0 +1,1926 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>eclipse_optimize &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>eclipse_optimize
+      <small>Module Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 4.2% of total for procedures.">170 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_eclipse_opt_submodule.html'>halo_eclipse_opt_submodule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">eclipse_optimize</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/eclipse_optimize.html#src">eclipse_optimize</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>module subroutine eclipse_optimize(me, x)  
+    <a href="../interface/eclipse_optimize.html"><button type="button" class="btn btn-info depwarn">Interface &rarr;</button></a>
+</h2>
+    
+
+    <p>Move a converged solution out of the Earth's shadow (see the module documentation).</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me"></span>
+              class(<a href='../type/my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>the converged solution (scaled); replaced by the result</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~eclipse_optimize~~CallsGraph Pages: 1 -->
+<svg id="proceclipse_optimizeCallsGraph" width="641pt" height="410pt"
+ viewBox="0.00 0.00 641.00 410.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~eclipse_optimize~~CallsGraph" class="graph" transform="scale(0.339975 0.339975) rotate(0) translate(4 1202.27)">
+<title>proc~~eclipse_optimize~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-1202.27 1881.43,-1202.27 1881.43,4 -4,4"/>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node1" class="node">
+<title>proc~eclipse_optimize</title>
+<polygon fill="none" stroke="black" points="100.02,-545.27 0,-545.27 0,-521 100.02,-521 100.02,-545.27"/>
+<text xml:space="preserve" text-anchor="middle" x="50.01" y="-529.53" font-family="Helvetica,sans-Serif" font-size="10.50">eclipse_optimize</text>
+</g>
+<!-- c -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node2" class="node">
+<title>c</title>
+<polygon fill="#777777" stroke="#777777" points="225.4,-1198.27 171.4,-1198.27 171.4,-1174 225.4,-1174 225.4,-1198.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-1182.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">c</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;c -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge1" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;c</title>
+<path fill="none" stroke="#000000" d="M51.07,-545.71C51.68,-625.27 58.57,-1058.77 136.02,-1160.13 142.08,-1168.07 151.03,-1173.61 160.22,-1177.46"/>
+<polygon fill="#000000" stroke="#000000" points="158.96,-1180.73 169.55,-1180.76 161.29,-1174.13 158.96,-1180.73"/>
+</g>
+<!-- destroy -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node3" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="430.42,-1080.27 376.42,-1080.27 376.42,-1056 430.42,-1056 430.42,-1080.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-1064.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;destroy -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge2" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M52.06,-545.71C57.58,-608.96 84.82,-892.06 136.02,-961.13 190.97,-1035.28 305.79,-1058.14 365.14,-1065.12"/>
+<polygon fill="#000000" stroke="#000000" points="364.41,-1068.56 374.73,-1066.15 365.16,-1061.6 364.41,-1068.56"/>
+</g>
+<!-- get_results -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node4" class="node">
+<title>get_results</title>
+<polygon fill="#777777" stroke="#777777" points="232.66,-444.27 164.14,-444.27 164.14,-420 232.66,-420 232.66,-444.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-428.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_results</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;get_results -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge3" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;get_results</title>
+<path fill="none" stroke="#000000" d="M61.27,-520.57C76.09,-503.16 105.12,-471.75 136.02,-453.13 141.33,-449.94 147.19,-447.14 153.12,-444.73"/>
+<polygon fill="#000000" stroke="#000000" points="154.18,-448.07 162.34,-441.31 151.75,-441.5 154.18,-448.07"/>
+</g>
+<!-- get_solution -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node5" class="node">
+<title>get_solution</title>
+<polygon fill="#777777" stroke="#777777" points="236.41,-402.27 160.39,-402.27 160.39,-378 236.41,-378 236.41,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_solution</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;get_solution -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge4" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;get_solution</title>
+<path fill="none" stroke="#000000" d="M56.34,-520.82C67.54,-496.36 95.82,-441.44 136.02,-411.13 140.24,-407.95 144.97,-405.24 149.89,-402.91"/>
+<polygon fill="#000000" stroke="#000000" points="150.83,-406.31 158.74,-399.27 148.16,-399.84 150.83,-406.31"/>
+</g>
+<!-- initialize -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node6" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="431.31,-1038.27 375.54,-1038.27 375.54,-1014 431.31,-1014 431.31,-1038.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-1022.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;initialize -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge5" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M50.47,-545.49C48.9,-595.68 49.11,-787.31 136.02,-905.13 191.43,-980.25 304.55,-1009.87 363.98,-1020.61"/>
+<polygon fill="#000000" stroke="#000000" points="363.18,-1024.03 373.63,-1022.26 364.36,-1017.13 363.18,-1024.03"/>
+</g>
+<!-- proc~constraint_violations -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node7" class="node">
+<title>proc~constraint_violations</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node7"><a xlink:href="../proc/constraint_violations.html" xlink:title="mission_type%constraint_violations">
+<polygon fill="#d9534f" stroke="#d9534f" points="745.83,-681.27 546.06,-681.27 546.06,-657 745.83,-657 745.83,-681.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-665.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%constraint_violations</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~constraint_violations -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge6" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M56.29,-545.43C67.21,-569.11 94.74,-620.61 136.02,-642.13 202.8,-676.96 405.81,-677.41 534.34,-673.8"/>
+<polygon fill="#000000" stroke="#000000" points="534.37,-677.3 544.26,-673.51 534.16,-670.3 534.37,-677.3"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node8" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node8"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="1212.87,-647.27 1013.85,-647.27 1013.85,-623 1212.87,-623 1212.87,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge7" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M73.36,-545.74C90.09,-554.58 113.82,-565.9 136.02,-572.13 205.29,-591.6 225.18,-584.18 296.79,-591.13 548.67,-615.61 845.72,-627.34 1002.56,-632.21"/>
+<polygon fill="#000000" stroke="#000000" points="1001.99,-635.69 1012.09,-632.5 1002.2,-628.69 1001.99,-635.69"/>
+</g>
+<!-- proc~equilibrate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node9" class="node">
+<title>proc~equilibrate</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node9"><a xlink:href="../proc/equilibrate.html" xlink:title="equilibrate">
+<polygon fill="#d9534f" stroke="#d9534f" points="233.04,-486.27 163.77,-486.27 163.77,-462 233.04,-462 233.04,-486.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-470.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">equilibrate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~equilibrate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge8" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~equilibrate</title>
+<path fill="none" stroke="#000000" d="M82.06,-520.62C103.43,-512.01 132.08,-500.46 155.48,-491.03"/>
+<polygon fill="#000000" stroke="#000000" points="156.78,-494.28 164.75,-487.3 154.16,-487.79 156.78,-494.28"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node10" class="node">
+<title>proc~eval_rows</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node10"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="677.58,-1003.27 614.31,-1003.27 614.31,-979 677.58,-979 677.58,-1003.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-987.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~eval_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge9" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M51.29,-545.42C53.16,-617.1 66.02,-980.94 136.02,-1062.13 245.57,-1189.21 353.49,-1173.44 510.06,-1113.13 562.48,-1092.95 607.18,-1041.91 629.58,-1012.64"/>
+<polygon fill="#000000" stroke="#000000" points="632.22,-1014.95 635.39,-1004.84 626.61,-1010.76 632.22,-1014.95"/>
+</g>
+<!-- proc~find_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node11" class="node">
+<title>proc~find_rows</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node11"><a xlink:href="../proc/find_rows.html" xlink:title="find_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="676.45,-961.27 615.43,-961.27 615.43,-937 676.45,-937 676.45,-961.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-945.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge10" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M51.66,-545.52C55.46,-613.19 76.6,-938.1 136.02,-1015.13 187.77,-1082.23 442.02,-1139.63 510.06,-1089.13 554.43,-1056.2 505.37,-1007.52 546.06,-970.13 561.44,-956.01 583.88,-950.47 603.5,-948.6"/>
+<polygon fill="#000000" stroke="#000000" points="603.69,-952.1 613.45,-947.97 603.24,-945.11 603.69,-952.1"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node12" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node12"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="745.08,-601.27 546.81,-601.27 546.81,-577 745.08,-577 745.08,-601.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-585.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge11" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M100.26,-544.73C111.93,-547.15 124.37,-549.47 136.02,-551.13 272.77,-570.63 431.71,-580.47 535.1,-585.19"/>
+<polygon fill="#000000" stroke="#000000" points="534.83,-588.68 544.97,-585.63 535.14,-581.69 534.83,-588.68"/>
+</g>
+<!-- proc~ks_aggregate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node13" class="node">
+<title>proc~ks_aggregate</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node13"><a xlink:href="../proc/ks_aggregate.html" xlink:title="ks_aggregate">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="239.79,-360.27 157.02,-360.27 157.02,-336 239.79,-336 239.79,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ks_aggregate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~ks_aggregate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge12" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~ks_aggregate</title>
+<path fill="none" stroke="#000000" d="M53.97,-520.87C61.9,-490.62 86.45,-411.83 136.02,-369.13 139.19,-366.4 142.74,-364.02 146.49,-361.94"/>
+<polygon fill="#000000" stroke="#000000" points="147.8,-365.19 155.37,-357.78 144.83,-358.85 147.8,-365.19"/>
+</g>
+<!-- proc~merge_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node14" class="node">
+<title>proc~merge_rows</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node14"><a xlink:href="../proc/merge_rows.html" xlink:title="merge_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="236.41,-318.27 160.39,-318.27 160.39,-294 236.41,-294 236.41,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">merge_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~merge_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge13" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~merge_rows</title>
+<path fill="none" stroke="#000000" d="M52.56,-520.71C57.63,-485.26 76.96,-382.65 136.02,-327.13 140.02,-323.38 144.71,-320.29 149.7,-317.76"/>
+<polygon fill="#000000" stroke="#000000" points="150.98,-321.01 158.81,-313.88 148.24,-314.57 150.98,-321.01"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node15" class="node">
+<title>proc~newton_finish</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node15"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="240.54,-896.27 156.27,-896.27 156.27,-872 240.54,-872 240.54,-896.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-880.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge14" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M53.64,-545.76C62.05,-584.69 90.43,-705.8 136.02,-797.13 148.07,-821.28 166.34,-846.17 179.81,-863.11"/>
+<polygon fill="#000000" stroke="#000000" points="176.77,-864.91 185.78,-870.48 182.2,-860.51 176.77,-864.91"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node16" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node16"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="975.22,-841.27 784.45,-841.27 784.45,-817 975.22,-817 975.22,-841.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-825.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge15" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M54.74,-545.45C63.72,-572.82 89.37,-638.72 136.02,-669.13 276.72,-760.87 345.84,-687.85 510.06,-723.13 541.15,-729.81 731.02,-785.5 825.51,-813.37"/>
+<polygon fill="#000000" stroke="#000000" points="824.24,-816.64 834.82,-816.12 826.22,-809.93 824.24,-816.64"/>
+</g>
+<!-- proc~report_change -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node17" class="node">
+<title>proc~report_change</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node17"><a xlink:href="../proc/report_change.html" xlink:title="report_change">
+<polygon fill="#d9534f" stroke="#d9534f" points="690.33,-517.27 601.56,-517.27 601.56,-493 690.33,-493 690.33,-517.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-501.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">report_change</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~report_change -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge16" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~report_change</title>
+<path fill="none" stroke="#000000" d="M100.37,-530.81C210.31,-525.63 474.66,-513.16 589.8,-507.73"/>
+<polygon fill="#000000" stroke="#000000" points="589.79,-511.24 599.61,-507.27 589.46,-504.25 589.79,-511.24"/>
+</g>
+<!-- proc~step_limits -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node18" class="node">
+<title>proc~step_limits</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node18"><a xlink:href="../proc/step_limits.html" xlink:title="step_limits">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="679.83,-559.27 612.06,-559.27 612.06,-535 679.83,-535 679.83,-559.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-543.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">step_limits</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~step_limits -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge17" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~step_limits</title>
+<path fill="none" stroke="#000000" d="M100.37,-534.3C213.85,-536.97 491.84,-543.53 600.44,-546.09"/>
+<polygon fill="#000000" stroke="#000000" points="600.03,-549.58 610.11,-546.31 600.2,-542.58 600.03,-549.58"/>
+</g>
+<!-- proc~union_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node19" class="node">
+<title>proc~union_columns</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node19"><a xlink:href="../proc/union_columns.html" xlink:title="union_columns">
+<polygon fill="#d9534f" stroke="#d9534f" points="244.29,-276.27 152.52,-276.27 152.52,-252 244.29,-252 244.29,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">union_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~union_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge18" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~union_columns</title>
+<path fill="none" stroke="#000000" d="M51.58,-520.58C54.07,-480.43 67.29,-353.83 136.02,-285.13 138.01,-283.15 140.19,-281.35 142.51,-279.72"/>
+<polygon fill="#000000" stroke="#000000" points="143.79,-283.02 150.71,-275 140.3,-276.96 143.79,-283.02"/>
+</g>
+<!-- set_bounds -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node20" class="node">
+<title>set_bounds</title>
+<polygon fill="#777777" stroke="#777777" points="234.16,-234.27 162.64,-234.27 162.64,-210 234.16,-210 234.16,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_bounds</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_bounds -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge19" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_bounds</title>
+<path fill="none" stroke="#000000" d="M50.85,-520.72C50.96,-476.57 57.33,-325.41 136.02,-243.13 140.4,-238.56 145.82,-234.98 151.61,-232.18"/>
+<polygon fill="#000000" stroke="#000000" points="152.88,-235.44 160.88,-228.49 150.29,-228.93 152.88,-235.44"/>
+</g>
+<!-- set_functions -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node21" class="node">
+<title>set_functions</title>
+<polygon fill="#777777" stroke="#777777" points="239.04,-192.27 157.77,-192.27 157.77,-168 239.04,-168 239.04,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_functions</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_functions -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge20" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_functions</title>
+<path fill="none" stroke="#000000" d="M52.59,-520.8C59.77,-466.59 90.9,-249.97 136.02,-201.13 139.24,-197.64 143.07,-194.73 147.22,-192.31"/>
+<polygon fill="#000000" stroke="#000000" points="148.45,-195.6 155.97,-188.13 145.44,-189.28 148.45,-195.6"/>
+</g>
+<!-- set_jacobian_sparsity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node22" class="node">
+<title>set_jacobian_sparsity</title>
+<polygon fill="#777777" stroke="#777777" points="260.79,-150.27 136.02,-150.27 136.02,-126 260.79,-126 260.79,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_jacobian_sparsity</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_jacobian_sparsity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge21" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_jacobian_sparsity</title>
+<path fill="none" stroke="#000000" d="M52.2,-520.85C58.1,-462.63 85.82,-214.96 136.02,-159.13 136.49,-158.61 136.97,-158.1 137.47,-157.6"/>
+<polygon fill="#000000" stroke="#000000" points="139.54,-160.43 145.29,-151.53 135.24,-154.9 139.54,-160.43"/>
+</g>
+<!-- set_max_step -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node23" class="node">
+<title>set_max_step</title>
+<polygon fill="#777777" stroke="#777777" points="240.16,-108.27 156.64,-108.27 156.64,-84 240.16,-84 240.16,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_max_step</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_max_step -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge22" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_max_step</title>
+<path fill="none" stroke="#000000" d="M51.91,-520.75C56.66,-458.46 80.77,-179.96 136.02,-117.13 138.87,-113.9 142.23,-111.16 145.9,-108.85"/>
+<polygon fill="#000000" stroke="#000000" points="147.47,-111.97 154.81,-104.33 144.3,-105.73 147.47,-111.97"/>
+</g>
+<!-- set_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node24" class="node">
+<title>set_problem_size</title>
+<polygon fill="#777777" stroke="#777777" points="249.54,-66.27 147.27,-66.27 147.27,-42 249.54,-42 249.54,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_problem_size</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge23" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_problem_size</title>
+<path fill="none" stroke="#000000" d="M51.65,-520.84C55.32,-455.05 75.63,-145.06 136.02,-75.13 136.7,-74.35 137.4,-73.6 138.14,-72.87"/>
+<polygon fill="#000000" stroke="#000000" points="139.92,-75.91 145.72,-67.04 135.66,-70.36 139.92,-75.91"/>
+</g>
+<!-- solve -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node25" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="430.42,-798.27 376.42,-798.27 376.42,-774 430.42,-774 430.42,-798.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-782.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;solve -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge24" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M51.67,-545.53C54.42,-583.37 68.24,-698.01 136.02,-751.13 202.69,-803.39 308.81,-799.12 364.88,-792.23"/>
+<polygon fill="#000000" stroke="#000000" points="365.1,-795.73 374.55,-790.94 364.18,-788.79 365.1,-795.73"/>
+</g>
+<!-- status -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node26" class="node">
+<title>status</title>
+<polygon fill="#777777" stroke="#777777" points="430.42,-756.27 376.42,-756.27 376.42,-732 430.42,-732 430.42,-756.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-740.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;status -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge25" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M52.54,-545.71C57.44,-580.02 76.13,-675.5 136.02,-718.13 204.59,-766.95 309.48,-759.71 364.98,-751.29"/>
+<polygon fill="#000000" stroke="#000000" points="365.23,-754.8 374.55,-749.74 364.11,-747.89 365.23,-754.8"/>
+</g>
+<!-- status_message -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node27" class="node">
+<title>status_message</title>
+<polygon fill="#777777" stroke="#777777" points="246.54,-24.27 150.27,-24.27 150.27,0 246.54,0 246.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="198.4" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status_message</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;status_message -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge26" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;status_message</title>
+<path fill="none" stroke="#000000" d="M51.45,-520.65C54.15,-450.91 70.56,-110.1 136.02,-33.13 137.44,-31.46 139.01,-29.92 140.68,-28.5"/>
+<polygon fill="#000000" stroke="#000000" points="142.2,-31.7 148.56,-23.23 138.3,-25.88 142.2,-31.7"/>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge29" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M725.37,-681.65C732.86,-685.13 739.87,-689.55 745.83,-695.13 782.74,-729.74 745,-768.45 781.83,-803.13 785.09,-806.21 788.68,-808.93 792.49,-811.33"/>
+<polygon fill="#000000" stroke="#000000" points="790.58,-814.27 801.04,-815.96 793.91,-808.12 790.58,-814.27"/>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node32" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node32"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="977.85,-761.27 781.83,-761.27 781.83,-737 977.85,-737 977.85,-761.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-745.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~get_problem_arrays -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge27" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M699.92,-681.72C714.88,-685.64 731.09,-690.23 745.83,-695.13 778.36,-705.96 814.33,-720.75 840.65,-732.11"/>
+<polygon fill="#000000" stroke="#000000" points="839,-735.2 849.56,-735.98 841.79,-728.78 839,-735.2"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node35" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node35"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="1200.49,-815.27 1026.22,-815.27 1026.22,-791 1200.49,-791 1200.49,-815.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-799.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~propagate_segment -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge28" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M722.94,-681.67C731.2,-685.14 739.05,-689.54 745.83,-695.13 774.34,-718.68 751.55,-748.91 781.83,-770.13 818.29,-795.69 931,-802.42 1014.73,-803.74"/>
+<polygon fill="#000000" stroke="#000000" points="1014.52,-807.24 1024.57,-803.87 1014.61,-800.24 1014.52,-807.24"/>
+</g>
+<!-- proc~segs_to_propagate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node39" class="node">
+<title>proc~segs_to_propagate</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node39"><a xlink:href="../proc/segs_to_propagate.html" xlink:title="mission_type%segs_to_propagate">
+<polygon fill="#d9534f" stroke="#d9534f" points="974.85,-681.27 784.83,-681.27 784.83,-657 974.85,-657 974.85,-681.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-665.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%segs_to_propagate</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~segs_to_propagate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge30" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~segs_to_propagate</title>
+<path fill="none" stroke="#000000" d="M746.3,-669.13C755.2,-669.13 764.24,-669.13 773.19,-669.13"/>
+<polygon fill="#000000" stroke="#000000" points="772.96,-672.64 782.96,-669.14 772.96,-665.64 772.96,-672.64"/>
+</g>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node30" class="node">
+<title>proc~compute_jacobian_stm</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node30"><a xlink:href="../proc/compute_jacobian_stm.html" xlink:title="mission_type%compute_jacobian_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="510.06,-477.27 296.79,-477.27 296.79,-453 510.06,-453 510.06,-477.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-461.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%compute_jacobian_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge31" class="edge">
+<title>proc~equilibrate&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M233.39,-472.63C248.04,-471.98 266.12,-471.18 284.96,-470.34"/>
+<polygon fill="#000000" stroke="#000000" points="285.09,-473.84 294.93,-469.9 284.78,-466.85 285.09,-473.84"/>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node38" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node38"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="906.84,-1001.27 852.84,-1001.27 852.84,-977 906.84,-977 906.84,-1001.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-985.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge32" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M677.74,-990.87C719.92,-990.51 795.63,-989.85 841.15,-989.46"/>
+<polygon fill="#000000" stroke="#000000" points="841.1,-992.96 851.07,-989.37 841.04,-985.96 841.1,-992.96"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge33" class="edge">
+<title>proc~find_rows&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M676.61,-951.02C698.75,-950.72 728.12,-946.41 745.83,-928.13 808.69,-863.28 718.39,-792.43 781.83,-728.13 844.16,-664.97 898.9,-730.65 977.85,-690.13 997.43,-680.09 994.36,-666.36 1013.85,-656.13 1016.89,-654.54 1020.04,-653.07 1023.27,-651.71"/>
+<polygon fill="#000000" stroke="#000000" points="1024.26,-655.07 1032.38,-648.26 1021.79,-648.52 1024.26,-655.07"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge37" class="edge">
+<title>proc~find_rows&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M676.6,-949.45C697.88,-948.22 726.16,-943.43 745.83,-928.13 774.39,-905.93 753.87,-878.09 781.83,-855.13 785.8,-851.87 790.15,-849.02 794.73,-846.52"/>
+<polygon fill="#000000" stroke="#000000" points="796.18,-849.71 803.7,-842.25 793.17,-843.38 796.18,-849.71"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node31" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node31"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="1197.87,-1031.27 1028.85,-1031.27 1028.85,-1007 1197.87,-1007 1197.87,-1031.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-1015.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge34" class="edge">
+<title>proc~find_rows&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M676.79,-950.64C697.37,-952.79 724.7,-957.94 745.83,-970.13 766.54,-982.09 760.12,-1000.11 781.83,-1010.13 862.92,-1047.58 967.53,-1042.83 1037.12,-1033.35"/>
+<polygon fill="#000000" stroke="#000000" points="1037.51,-1036.83 1046.91,-1031.94 1036.52,-1029.9 1037.51,-1036.83"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node33" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node33"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1162.99,-980.27 1063.72,-980.27 1063.72,-956 1162.99,-956 1162.99,-980.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-964.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge35" class="edge">
+<title>proc~find_rows&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M676.77,-950.35C752.11,-953.43 951.26,-961.56 1052.07,-965.67"/>
+<polygon fill="#000000" stroke="#000000" points="1051.63,-969.16 1061.77,-966.07 1051.92,-962.16 1051.63,-969.16"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~propagate_segment -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge36" class="edge">
+<title>proc~find_rows&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M676.79,-947.63C697.37,-945.48 724.7,-940.33 745.83,-928.13 766.54,-916.18 761.01,-899.91 781.83,-888.13 859.07,-844.45 896.41,-885.38 977.85,-850.13 995.96,-842.3 995.81,-832.14 1013.85,-824.13 1017.87,-822.35 1022.05,-820.71 1026.32,-819.21"/>
+<polygon fill="#000000" stroke="#000000" points="1027.2,-822.61 1035.65,-816.22 1025.06,-815.94 1027.2,-822.61"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node36" class="node">
+<title>proc~removed_columns</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node36"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="973.72,-563.27 785.95,-563.27 785.95,-539 973.72,-539 973.72,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge38" class="edge">
+<title>proc~find_rows&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M676.87,-951.27C699.15,-951.1 728.58,-946.85 745.83,-928.13 830.87,-835.88 726.5,-760.75 781.83,-648.13 797.64,-615.96 828.39,-588.09 851.05,-570.59"/>
+<polygon fill="#000000" stroke="#000000" points="853.08,-573.44 858.98,-564.64 848.88,-567.84 853.08,-573.44"/>
+</g>
+<!-- proc~row_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node37" class="node">
+<title>proc~row_columns</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node37"><a xlink:href="../proc/row_columns.html" xlink:title="row_columns">
+<polygon fill="#d9534f" stroke="#d9534f" points="920.1,-921.27 839.58,-921.27 839.58,-897 920.1,-897 920.1,-921.27"/>
+<text xml:space="preserve" text-anchor="middle" x="879.84" y="-905.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~row_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge39" class="edge">
+<title>proc~find_rows&#45;&gt;proc~row_columns</title>
+<path fill="none" stroke="#000000" d="M676.79,-943.99C715.02,-937.39 781.85,-925.86 828.13,-917.88"/>
+<polygon fill="#000000" stroke="#000000" points="828.68,-921.34 837.94,-916.19 827.49,-914.44 828.68,-921.34"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge40" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M745.58,-595.09C811.46,-599.51 899.98,-606.3 977.85,-615.13 992.34,-616.78 1007.66,-618.79 1022.58,-620.91"/>
+<polygon fill="#000000" stroke="#000000" points="1021.99,-624.36 1032.39,-622.32 1022.99,-617.43 1021.99,-624.36"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge41" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M723.84,-576.53C745.17,-573.04 768.5,-569.22 790.43,-565.62"/>
+<polygon fill="#000000" stroke="#000000" points="790.96,-569.08 800.26,-564.01 789.83,-562.17 790.96,-569.08"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;destroy -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge42" class="edge">
+<title>proc~newton_finish&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M202.88,-896.33C212.34,-927.09 241.57,-1008.19 296.79,-1047.13 316.52,-1061.05 343.21,-1066.27 364.83,-1068.03"/>
+<polygon fill="#000000" stroke="#000000" points="364.54,-1071.52 374.73,-1068.59 364.94,-1064.53 364.54,-1071.52"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;initialize -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge43" class="edge">
+<title>proc~newton_finish&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M209.07,-896.5C231.4,-924.95 285.52,-993.12 296.79,-1000.13 317.08,-1012.77 343.13,-1019.27 364.28,-1022.61"/>
+<polygon fill="#000000" stroke="#000000" points="363.58,-1026.04 373.96,-1023.95 364.54,-1019.11 363.58,-1026.04"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge45" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M209.2,-896.47C225.19,-915.57 258.94,-951.7 296.79,-967.13 400.25,-1009.34 535.33,-1003.19 602.78,-996.45"/>
+<polygon fill="#000000" stroke="#000000" points="603.1,-999.94 612.67,-995.4 602.36,-992.98 603.1,-999.94"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge46" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M231.96,-871.51C250.72,-864.56 274.86,-856.14 296.79,-850.13 390.05,-824.58 440.88,-874.69 510.06,-807.13 561.9,-756.51 503.51,-706.78 546.06,-648.13 559.5,-629.62 580.68,-615.87 600,-606.32"/>
+<polygon fill="#000000" stroke="#000000" points="601.22,-609.61 608.81,-602.22 598.26,-603.27 601.22,-609.61"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge48" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M240.93,-878.39C305.89,-869.63 435.55,-852.99 546.06,-844.13 621.81,-838.07 707.47,-834.27 772.91,-832.02"/>
+<polygon fill="#000000" stroke="#000000" points="772.67,-835.53 782.55,-831.7 772.43,-828.54 772.67,-835.53"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;solve -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge49" class="edge">
+<title>proc~newton_finish&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M212.48,-871.77C230.2,-855.68 263.48,-827.77 296.79,-812.13 318.33,-802.02 344.25,-795.57 365.02,-791.62"/>
+<polygon fill="#000000" stroke="#000000" points="365.55,-795.08 374.79,-789.89 364.33,-788.18 365.55,-795.08"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;status -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge50" class="edge">
+<title>proc~newton_finish&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M205.76,-871.65C219.01,-846.95 252.16,-791.93 296.79,-765.13 317.35,-752.79 343.82,-747.55 365.12,-745.38"/>
+<polygon fill="#000000" stroke="#000000" points="365.16,-748.89 374.85,-744.6 364.6,-741.92 365.16,-748.89"/>
+</g>
+<!-- kt -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node29" class="node">
+<title>kt</title>
+<polygon fill="#777777" stroke="#777777" points="430.42,-958.27 376.42,-958.27 376.42,-934 430.42,-934 430.42,-958.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-942.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">kt</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;kt -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge44" class="edge">
+<title>proc~newton_finish&#45;&gt;kt</title>
+<path fill="none" stroke="#000000" d="M225.32,-896.74C244.64,-905.72 271.88,-917.5 296.79,-925.13 318.91,-931.91 344.32,-937.04 364.68,-940.54"/>
+<polygon fill="#000000" stroke="#000000" points="364.08,-943.99 374.52,-942.16 365.22,-937.08 364.08,-943.99"/>
+</g>
+<!-- proc~newton_func -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node34" class="node">
+<title>proc~newton_func</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node34"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="442.93,-916.27 363.91,-916.27 363.91,-892 442.93,-892 442.93,-916.27"/>
+<text xml:space="preserve" text-anchor="middle" x="403.42" y="-900.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge47" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M240.98,-888.23C273.29,-891.41 318.22,-895.84 352.48,-899.21"/>
+<polygon fill="#000000" stroke="#000000" points="351.86,-902.67 362.15,-900.17 352.54,-895.7 351.86,-902.67"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge52" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M913.43,-816.52C934.57,-806.79 961.18,-791.38 977.85,-770.13 1010.64,-728.33 974.52,-691.86 1013.85,-656.13 1014.64,-655.41 1015.45,-654.72 1016.28,-654.04"/>
+<polygon fill="#000000" stroke="#000000" points="1018.2,-656.97 1024.5,-648.45 1014.26,-651.18 1018.2,-656.97"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node28" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="1156.99,-773.27 1069.72,-773.27 1069.72,-749 1156.99,-749 1156.99,-773.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-757.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge51" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M912.72,-816.56C939.43,-806.34 978.73,-792.04 1013.85,-782.13 1028.2,-778.09 1043.92,-774.41 1058.5,-771.3"/>
+<polygon fill="#000000" stroke="#000000" points="1058.83,-774.8 1067.91,-769.34 1057.41,-767.95 1058.83,-774.8"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node40" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node40"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1199.74,-857.27 1026.97,-857.27 1026.97,-833 1199.74,-833 1199.74,-857.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-841.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge53" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M975.68,-835.69C988.72,-836.59 1002.12,-837.52 1015.2,-838.42"/>
+<polygon fill="#000000" stroke="#000000" points="1014.87,-841.91 1025.08,-839.1 1015.35,-834.92 1014.87,-841.91"/>
+</g>
+<!-- proc~report_change&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge54" class="edge">
+<title>proc~report_change&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M687.67,-492.51C755.08,-474.31 891.03,-449.32 977.85,-512.13 1016.8,-540.31 977.73,-582.41 1013.85,-614.13 1014.65,-614.84 1015.48,-615.53 1016.32,-616.19"/>
+<polygon fill="#000000" stroke="#000000" points="1014.35,-619.09 1024.62,-621.69 1018.21,-613.25 1014.35,-619.09"/>
+</g>
+<!-- proc~report_change&#45;&gt;proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge55" class="edge">
+<title>proc~report_change&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M690.56,-513.79C722.57,-520.14 766.81,-528.91 804.36,-536.36"/>
+<polygon fill="#000000" stroke="#000000" points="803.3,-539.72 813.79,-538.23 804.66,-532.85 803.3,-539.72"/>
+</g>
+<!-- proc~step_limits&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge56" class="edge">
+<title>proc~step_limits&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M680.07,-540.61C754,-526.8 929.71,-498.39 977.85,-530.13 1011.76,-552.49 982.47,-588.34 1013.85,-614.13 1014.99,-615.07 1016.16,-615.97 1017.36,-616.83"/>
+<polygon fill="#000000" stroke="#000000" points="1015.41,-619.74 1025.77,-621.94 1019.04,-613.75 1015.41,-619.74"/>
+</g>
+<!-- proc~step_limits&#45;&gt;proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge57" class="edge">
+<title>proc~step_limits&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M680.17,-547.71C704.92,-548.14 740.17,-548.74 774.13,-549.33"/>
+<polygon fill="#000000" stroke="#000000" points="774,-552.83 784.06,-549.5 774.12,-545.83 774,-552.83"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge58" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M493.01,-452.53C635.38,-434.38 906.37,-409.1 977.85,-468.13 1029.38,-510.69 965.85,-567.63 1013.85,-614.13 1014.49,-614.75 1015.14,-615.35 1015.8,-615.93"/>
+<polygon fill="#000000" stroke="#000000" points="1013.68,-618.72 1023.82,-621.78 1017.8,-613.06 1013.68,-618.72"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge60" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M417.29,-477.46C440.83,-499.28 493.29,-544.63 546.06,-568.13 550.09,-569.93 554.29,-571.58 558.58,-573.09"/>
+<polygon fill="#000000" stroke="#000000" points="557.35,-576.37 567.94,-576.09 559.49,-569.7 557.35,-576.37"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge62" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M408.34,-477.55C421.16,-515.99 465.69,-633.91 546.06,-690.13 620.47,-742.2 673.25,-678.54 745.83,-733.13 772.85,-753.45 755.63,-778.77 781.83,-800.13 787.64,-804.87 794.21,-808.84 801.12,-812.16"/>
+<polygon fill="#000000" stroke="#000000" points="799.49,-815.26 810.06,-815.97 802.24,-808.83 799.49,-815.26"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~removed_columns -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge63" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M510.39,-459.98C578.71,-459.34 668.84,-463.56 745.83,-484.13 784.42,-494.45 824.88,-516.71 850.89,-532.75"/>
+<polygon fill="#000000" stroke="#000000" points="848.84,-535.6 859.17,-537.96 852.57,-529.67 848.84,-535.6"/>
+</g>
+<!-- proc~earth_moon_frame_matrices -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node50" class="node">
+<title>proc~earth_moon_frame_matrices</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node50"><a xlink:href="../proc/earth_moon_frame_matrices.html" xlink:title="earth_moon_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1421.64,-363.27 1256.37,-363.27 1256.37,-339 1421.64,-339 1421.64,-363.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-347.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">earth_moon_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge59" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M417.12,-452.84C440.39,-431.24 492.44,-387.16 546.06,-370.13 789.04,-293 1095.35,-317.6 1245.89,-337.06"/>
+<polygon fill="#000000" stroke="#000000" points="1245.02,-340.47 1255.39,-338.31 1245.94,-333.53 1245.02,-340.47"/>
+</g>
+<!-- proc~propagate_segment_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node53" class="node">
+<title>proc~propagate_segment_stm</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node53"><a xlink:href="../proc/propagate_segment_stm.html" xlink:title="segment%propagate_segment_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="1212.87,-605.27 1013.85,-605.27 1013.85,-581 1212.87,-581 1212.87,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge61" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm</title>
+<path fill="none" stroke="#000000" d="M432.94,-452.51C520.11,-415.93 788.61,-318.31 977.85,-413.13 1044.34,-446.45 1086.39,-529.96 1103.53,-570.44"/>
+<polygon fill="#000000" stroke="#000000" points="1100.2,-571.52 1107.22,-579.45 1106.68,-568.87 1100.2,-571.52"/>
+</g>
+<!-- fill_vector -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node44" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="1144.99,-689.27 1081.72,-689.27 1081.72,-665 1144.99,-665 1144.99,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge64" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M940.73,-736.56C953.28,-732.97 966.22,-728.53 977.85,-723.13 995.52,-714.94 995.97,-705.87 1013.85,-698.13 1031.62,-690.44 1052.45,-685.48 1070.37,-682.32"/>
+<polygon fill="#000000" stroke="#000000" points="1070.85,-685.78 1080.17,-680.73 1069.74,-678.87 1070.85,-685.78"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node49" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node49"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1156.24,-731.27 1070.47,-731.27 1070.47,-707 1156.24,-707 1156.24,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1113.36" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge65" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M978.02,-736.54C1005.67,-732.96 1034.77,-729.19 1058.79,-726.08"/>
+<polygon fill="#000000" stroke="#000000" points="1059.18,-729.56 1068.64,-724.8 1058.28,-722.61 1059.18,-729.56"/>
+</g>
+<!-- apparent_position -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node41" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="1392.39,-1022.27 1285.62,-1022.27 1285.62,-998 1392.39,-998 1392.39,-1022.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-1006.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge66" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M1163.44,-977.35C1195.93,-983.45 1238.86,-991.52 1274.02,-998.12"/>
+<polygon fill="#000000" stroke="#000000" points="1273.18,-1001.52 1283.65,-999.93 1274.47,-994.64 1273.18,-1001.52"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node43" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="1401.39,-980.27 1276.62,-980.27 1276.62,-956 1401.39,-956 1401.39,-980.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-964.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge67" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M1163.44,-968.13C1193.11,-968.13 1231.51,-968.13 1264.73,-968.13"/>
+<polygon fill="#000000" stroke="#000000" points="1264.72,-971.64 1274.72,-968.14 1264.72,-964.64 1264.72,-971.64"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node46" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="1422.01,-938.27 1255.99,-938.27 1255.99,-914 1422.01,-914 1422.01,-938.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-922.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge68" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M1163.44,-958.92C1191.62,-953.63 1227.66,-946.86 1259.67,-940.85"/>
+<polygon fill="#000000" stroke="#000000" points="1260.13,-944.32 1269.31,-939.04 1258.84,-937.44 1260.13,-944.32"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge71" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M443.41,-905.47C464.43,-907.7 490.09,-913 510.06,-925.13 531.95,-938.44 524.26,-956.69 546.06,-970.13 562.93,-980.54 584.15,-985.85 602.61,-988.54"/>
+<polygon fill="#000000" stroke="#000000" points="602.12,-992 612.47,-989.74 602.97,-985.05 602.12,-992"/>
+</g>
+<!-- constraint_violations -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node42" class="node">
+<title>constraint_violations</title>
+<polygon fill="#777777" stroke="#777777" points="706.45,-919.27 585.43,-919.27 585.43,-895 706.45,-895 706.45,-919.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-903.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">constraint_violations</text>
+</g>
+<!-- proc~newton_func&#45;&gt;constraint_violations -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge69" class="edge">
+<title>proc~newton_func&#45;&gt;constraint_violations</title>
+<path fill="none" stroke="#000000" d="M443.34,-904.62C478.53,-905.06 531.23,-905.72 573.92,-906.25"/>
+<polygon fill="#000000" stroke="#000000" points="573.83,-909.75 583.88,-906.37 573.92,-902.75 573.83,-909.75"/>
+</g>
+<!-- proc~epochs_in_range -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node51" class="node">
+<title>proc~epochs_in_range</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node51"><a xlink:href="../proc/epochs_in_range.html" xlink:title="epochs_in_range">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="696.7,-877.27 595.18,-877.27 595.18,-853 696.7,-853 696.7,-877.27"/>
+<text xml:space="preserve" text-anchor="middle" x="645.94" y="-861.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">epochs_in_range</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~epochs_in_range -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge70" class="edge">
+<title>proc~newton_func&#45;&gt;proc~epochs_in_range</title>
+<path fill="none" stroke="#000000" d="M443.34,-897.83C481.25,-891.68 539.48,-882.24 583.62,-875.08"/>
+<polygon fill="#000000" stroke="#000000" points="584,-878.56 593.31,-873.51 582.88,-871.65 584,-878.56"/>
+</g>
+<!-- first_call -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node45" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="1366.89,-605.27 1311.12,-605.27 1311.12,-581 1366.89,-581 1366.89,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge72" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M1200.9,-791.34C1205.24,-788.76 1209.28,-785.72 1212.87,-782.13 1266.89,-728.17 1195.42,-668.68 1248.87,-614.13 1261.95,-600.79 1281.82,-595.27 1299.47,-593.2"/>
+<polygon fill="#000000" stroke="#000000" points="1299.75,-596.69 1309.44,-592.41 1299.2,-589.72 1299.75,-596.69"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node47" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1372.14,-773.27 1305.87,-773.27 1305.87,-749 1372.14,-749 1372.14,-773.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-757.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge73" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1181.46,-790.53C1218.02,-783.67 1262.2,-775.37 1294.3,-769.34"/>
+<polygon fill="#000000" stroke="#000000" points="1294.87,-772.8 1304.05,-767.51 1293.58,-765.92 1294.87,-772.8"/>
+</g>
+<!-- integrate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node48" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="1369.14,-731.27 1308.87,-731.27 1308.87,-707 1369.14,-707 1369.14,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge74" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M1195.08,-790.58C1201.3,-788.23 1207.31,-785.44 1212.87,-782.13 1234.01,-769.58 1227.87,-752.92 1248.87,-740.13 1263.4,-731.29 1281.36,-726.17 1297.35,-723.21"/>
+<polygon fill="#000000" stroke="#000000" points="1297.74,-726.69 1307.06,-721.65 1296.63,-719.77 1297.74,-726.69"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node52" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node52"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1377.01,-689.27 1300.99,-689.27 1300.99,-665 1377.01,-665 1377.01,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge75" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M1199.65,-790.72C1204.36,-788.3 1208.82,-785.47 1212.87,-782.13 1244.25,-756.34 1217.77,-724.26 1248.87,-698.13 1260.2,-688.61 1275.09,-683.24 1289.43,-680.26"/>
+<polygon fill="#000000" stroke="#000000" points="1289.98,-683.72 1299.26,-678.6 1288.81,-676.81 1289.98,-683.72"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node54" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node54"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1429.14,-647.27 1248.87,-647.27 1248.87,-623 1429.14,-623 1429.14,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge76" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M1200.62,-791.05C1205.03,-788.54 1209.16,-785.6 1212.87,-782.13 1255.43,-742.38 1206.73,-696.34 1248.87,-656.13 1249.62,-655.41 1250.4,-654.72 1251.19,-654.04"/>
+<polygon fill="#000000" stroke="#000000" points="1252.91,-657.12 1259.08,-648.51 1248.89,-651.38 1252.91,-657.12"/>
+</g>
+<!-- transform -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node55" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="1371.01,-857.27 1306.99,-857.27 1306.99,-833 1371.01,-833 1371.01,-857.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-841.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge77" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1181.46,-815.74C1218.47,-822.69 1263.31,-831.11 1295.5,-837.15"/>
+<polygon fill="#000000" stroke="#000000" points="1294.79,-840.58 1305.26,-838.99 1296.08,-833.7 1294.79,-840.58"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node56" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1411.89,-815.27 1266.12,-815.27 1266.12,-791 1411.89,-791 1411.89,-815.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-799.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge78" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1200.83,-803.13C1218.47,-803.13 1237.01,-803.13 1254.54,-803.13"/>
+<polygon fill="#000000" stroke="#000000" points="1254.39,-806.64 1264.39,-803.14 1254.39,-799.64 1254.39,-806.64"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge79" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M946.96,-563.71C957.69,-567.18 968.37,-571.58 977.85,-577.13 997.64,-588.74 993.77,-603.04 1013.85,-614.13 1016.56,-615.63 1019.36,-617.02 1022.23,-618.31"/>
+<polygon fill="#000000" stroke="#000000" points="1020.89,-621.54 1031.48,-621.99 1023.48,-615.04 1020.89,-621.54"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge80" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M906.95,-992.52C933.81,-996 977.27,-1001.63 1017.31,-1006.82"/>
+<polygon fill="#000000" stroke="#000000" points="1016.62,-1010.26 1026.99,-1008.07 1017.52,-1003.32 1016.62,-1010.26"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge81" class="edge">
+<title>proc~row_ks&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M906.95,-986.77C941.91,-983.6 1004.98,-977.88 1052.04,-973.61"/>
+<polygon fill="#000000" stroke="#000000" points="1052.18,-977.11 1061.82,-972.72 1051.55,-970.14 1052.18,-977.11"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~propagate_segment -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge82" class="edge">
+<title>proc~row_ks&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M907.01,-979.22C928.82,-969.71 959.23,-953.36 977.85,-930.13 1008.98,-891.32 976.67,-857.19 1013.85,-824.13 1014.65,-823.42 1015.47,-822.73 1016.3,-822.07"/>
+<polygon fill="#000000" stroke="#000000" points="1018.21,-825 1024.58,-816.54 1014.32,-819.18 1018.21,-825"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge83" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M901.72,-976.58C921.41,-964.7 951.71,-946.34 977.85,-930.13 1014.28,-907.55 1055.97,-881.11 1083.16,-863.79"/>
+<polygon fill="#000000" stroke="#000000" points="1085,-866.77 1091.55,-858.44 1081.23,-860.87 1085,-866.77"/>
+</g>
+<!-- proc~segs_to_propagate&#45;&gt;proc~define_problem_size -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge84" class="edge">
+<title>proc~segs_to_propagate&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M966.72,-656.52C982.61,-654.19 999.31,-651.74 1015.51,-649.36"/>
+<polygon fill="#000000" stroke="#000000" points="1015.74,-652.86 1025.12,-647.95 1014.72,-645.94 1015.74,-652.86"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge85" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1195.08,-832.58C1201.3,-830.23 1207.31,-827.44 1212.87,-824.13 1234.01,-811.58 1227.87,-794.92 1248.87,-782.13 1262.51,-773.84 1279.16,-768.82 1294.36,-765.78"/>
+<polygon fill="#000000" stroke="#000000" points="1294.89,-769.24 1304.14,-764.08 1293.69,-762.34 1294.89,-769.24"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge86" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1200.19,-845.13C1232.7,-845.13 1268.32,-845.13 1295.2,-845.13"/>
+<polygon fill="#000000" stroke="#000000" points="1295,-848.64 1305,-845.14 1295,-841.64 1295,-848.64"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge87" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1181.46,-832.53C1206.12,-827.9 1234.25,-822.62 1259.8,-817.82"/>
+<polygon fill="#000000" stroke="#000000" points="1260.28,-821.29 1269.46,-816.01 1258.99,-814.41 1260.28,-821.29"/>
+</g>
+<!-- get_rv -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node57" class="node">
+<title>get_rv</title>
+<polygon fill="#777777" stroke="#777777" points="1590.9,-399.27 1536.9,-399.27 1536.9,-375 1590.9,-375 1590.9,-399.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-383.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge88" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv</title>
+<path fill="none" stroke="#000000" d="M1417.96,-363.73C1454.26,-369.59 1495.79,-376.3 1525.06,-381.02"/>
+<polygon fill="#000000" stroke="#000000" points="1524.49,-384.48 1534.92,-382.62 1525.61,-377.57 1524.49,-384.48"/>
+</g>
+<!-- get_rv_derivative -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node58" class="node">
+<title>get_rv_derivative</title>
+<polygon fill="#777777" stroke="#777777" points="1615.41,-357.27 1512.39,-357.27 1512.39,-333 1615.41,-333 1615.41,-357.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-341.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv_derivative</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge89" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative</title>
+<path fill="none" stroke="#000000" d="M1422.05,-348.93C1448.09,-348.23 1476.44,-347.46 1500.83,-346.81"/>
+<polygon fill="#000000" stroke="#000000" points="1500.68,-350.31 1510.58,-346.54 1500.49,-343.31 1500.68,-350.31"/>
+</g>
+<!-- proc~two_body_rotating_frame_matrices -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node60" class="node">
+<title>proc~two_body_rotating_frame_matrices</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node60"><a xlink:href="../proc/two_body_rotating_frame_matrices.html" xlink:title="two_body_rotating_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1662.66,-315.27 1465.14,-315.27 1465.14,-291 1662.66,-291 1662.66,-315.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-299.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge90" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M1398.26,-338.55C1419.33,-334.01 1443.3,-328.84 1465.14,-324.13 1474.23,-322.18 1483.79,-320.12 1493.23,-318.09"/>
+<polygon fill="#000000" stroke="#000000" points="1493.7,-321.57 1502.74,-316.05 1492.23,-314.73 1493.7,-321.57"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;first_call -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge91" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M1213.1,-593.13C1243.74,-593.13 1275.69,-593.13 1299.62,-593.13"/>
+<polygon fill="#000000" stroke="#000000" points="1299.49,-596.64 1309.49,-593.14 1299.49,-589.64 1299.49,-596.64"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;icrf_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge92" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1201.53,-605.75C1205.6,-608.14 1209.42,-610.91 1212.87,-614.13 1255.43,-653.89 1206.73,-699.93 1248.87,-740.13 1261.11,-751.82 1278.58,-757.41 1294.82,-759.97"/>
+<polygon fill="#000000" stroke="#000000" points="1293.93,-763.39 1304.28,-761.11 1294.77,-756.44 1293.93,-763.39"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;integrate -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge93" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M1199.65,-605.55C1204.36,-607.97 1208.82,-610.8 1212.87,-614.13 1244.25,-639.93 1217.77,-672.01 1248.87,-698.13 1262.32,-709.43 1280.77,-714.89 1297.39,-717.45"/>
+<polygon fill="#000000" stroke="#000000" points="1296.67,-720.88 1307.02,-718.6 1297.51,-713.93 1296.67,-720.88"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge95" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M1125.76,-580.8C1161.79,-541.81 1273.52,-420.91 1318.73,-371.99"/>
+<polygon fill="#000000" stroke="#000000" points="1321.12,-374.57 1325.33,-364.85 1315.98,-369.81 1321.12,-374.57"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~identity_stm -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge96" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M1195.08,-605.69C1201.3,-608.04 1207.31,-610.83 1212.87,-614.13 1234.01,-626.69 1227.87,-643.35 1248.87,-656.13 1261.19,-663.64 1275.98,-668.46 1289.93,-671.56"/>
+<polygon fill="#000000" stroke="#000000" points="1288.91,-674.92 1299.4,-673.4 1290.25,-668.05 1288.91,-674.92"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge97" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M1181.46,-605.74C1206.12,-610.37 1234.25,-615.65 1259.8,-620.45"/>
+<polygon fill="#000000" stroke="#000000" points="1258.99,-623.86 1269.46,-622.26 1260.28,-616.98 1258.99,-623.86"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;transform -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge98" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1202.4,-605.59C1206.19,-608.03 1209.72,-610.86 1212.87,-614.13 1278.47,-682.43 1184,-755.15 1248.87,-824.13 1260.73,-836.75 1278.62,-842.43 1295.27,-844.79"/>
+<polygon fill="#000000" stroke="#000000" points="1294.7,-848.25 1305.01,-845.79 1295.42,-841.29 1294.7,-848.25"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge99" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1202.24,-605.75C1206.07,-608.14 1209.65,-610.92 1212.87,-614.13 1266.89,-668.1 1195.42,-727.59 1248.87,-782.13 1251.09,-784.4 1253.5,-786.44 1256.07,-788.27"/>
+<polygon fill="#000000" stroke="#000000" points="1254.24,-791.26 1264.63,-793.3 1257.78,-785.22 1254.24,-791.26"/>
+</g>
+<!-- proc~ballistic_derivs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node59" class="node">
+<title>proc~ballistic_derivs</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node59"><a xlink:href="../proc/ballistic_derivs.html" xlink:title="ballistic_derivs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1383.76,-563.27 1294.24,-563.27 1294.24,-539 1383.76,-539 1383.76,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1339" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ballistic_derivs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge94" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs</title>
+<path fill="none" stroke="#000000" d="M1181.46,-580.53C1213.89,-574.44 1252.33,-567.22 1283,-561.46"/>
+<polygon fill="#000000" stroke="#000000" points="1283.25,-564.98 1292.43,-559.69 1281.96,-558.1 1283.25,-564.98"/>
+</g>
+<!-- get_acc -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node61" class="node">
+<title>get_acc</title>
+<polygon fill="#777777" stroke="#777777" points="1590.9,-689.27 1536.9,-689.27 1536.9,-665 1590.9,-665 1590.9,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_acc</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_acc -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge100" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_acc</title>
+<path fill="none" stroke="#000000" d="M1384.03,-553.39C1399.72,-556.15 1416.6,-561.6 1429.14,-572.13 1460.24,-598.26 1433.78,-630.32 1465.14,-656.13 1481.76,-669.81 1505.2,-675.17 1524.97,-677.05"/>
+<polygon fill="#000000" stroke="#000000" points="1524.69,-680.54 1534.9,-677.71 1525.15,-673.56 1524.69,-680.54"/>
+</g>
+<!-- get_r -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node62" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="1590.9,-647.27 1536.9,-647.27 1536.9,-623 1590.9,-623 1590.9,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_r -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge101" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M1383.83,-555.82C1398.99,-558.86 1415.56,-563.87 1429.14,-572.13 1450.14,-584.92 1444.01,-601.56 1465.14,-614.13 1483.3,-624.94 1506.29,-630.22 1525.42,-632.78"/>
+<polygon fill="#000000" stroke="#000000" points="1524.92,-636.25 1535.25,-633.89 1525.7,-629.29 1524.92,-636.25"/>
+</g>
+<!-- icrf_to_iau_moon -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node63" class="node">
+<title>icrf_to_iau_moon</title>
+<polygon fill="#777777" stroke="#777777" points="1615.03,-605.27 1512.76,-605.27 1512.76,-581 1615.03,-581 1615.03,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_to_iau_moon</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge102" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon</title>
+<path fill="none" stroke="#000000" d="M1384.04,-559.43C1417.5,-565.74 1463.94,-574.49 1501.12,-581.49"/>
+<polygon fill="#000000" stroke="#000000" points="1500.37,-584.91 1510.85,-583.33 1501.67,-578.04 1500.37,-584.91"/>
+</g>
+<!-- j2000_to_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node64" class="node">
+<title>j2000_to_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1611.28,-563.27 1516.51,-563.27 1516.51,-539 1611.28,-539 1611.28,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">j2000_to_frame</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;j2000_to_frame -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge103" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;j2000_to_frame</title>
+<path fill="none" stroke="#000000" d="M1384.04,-551.13C1418.65,-551.13 1467.15,-551.13 1504.92,-551.13"/>
+<polygon fill="#000000" stroke="#000000" points="1504.75,-554.64 1514.75,-551.14 1504.75,-547.64 1504.75,-554.64"/>
+</g>
+<!-- proc~pines_gravity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node67" class="node">
+<title>proc~pines_gravity</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node67"><a xlink:href="../proc/pines_gravity.html" xlink:title="pines_gravity">
+<polygon fill="#d9534f" stroke="#d9534f" points="1784.05,-523.27 1702.03,-523.27 1702.03,-499 1784.05,-499 1784.05,-523.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1743.04" y="-507.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pines_gravity</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pines_gravity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge104" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pines_gravity</title>
+<path fill="none" stroke="#000000" d="M1384.16,-542.64C1408.05,-538.32 1438.12,-533.32 1465.14,-530.13 1543.33,-520.91 1634.5,-515.72 1690.24,-513.18"/>
+<polygon fill="#000000" stroke="#000000" points="1690.23,-516.68 1700.06,-512.74 1689.92,-509.69 1690.23,-516.68"/>
+</g>
+<!-- proc~pointmass_gravity_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node68" class="node">
+<title>proc~pointmass_gravity_gradient</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node68"><a xlink:href="../proc/pointmass_gravity_gradient.html" xlink:title="pointmass_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1643.16,-441.27 1484.64,-441.27 1484.64,-417 1643.16,-417 1643.16,-441.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-425.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pointmass_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge105" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1351.45,-538.67C1372.01,-517.08 1417.52,-472.86 1465.14,-450.13 1468.69,-448.44 1472.39,-446.88 1476.16,-445.44"/>
+<polygon fill="#000000" stroke="#000000" points="1477.24,-448.77 1485.56,-442.21 1474.97,-442.15 1477.24,-448.77"/>
+</g>
+<!-- proc~third_body_gravity_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node69" class="node">
+<title>proc~third_body_gravity_gradient</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node69"><a xlink:href="../proc/third_body_gravity_gradient.html" xlink:title="third_body_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1643.91,-483.27 1483.89,-483.27 1483.89,-459 1643.91,-459 1643.91,-483.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-467.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge106" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1365.93,-538.61C1390.93,-526.86 1430.04,-509.3 1465.14,-497.13 1475.84,-493.43 1487.36,-489.93 1498.6,-486.79"/>
+<polygon fill="#000000" stroke="#000000" points="1499.52,-490.16 1508.24,-484.16 1497.68,-483.41 1499.52,-490.16"/>
+</g>
+<!-- third_body_gravity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node70" class="node">
+<title>third_body_gravity</title>
+<polygon fill="#777777" stroke="#777777" points="1618.78,-731.27 1509.01,-731.27 1509.01,-707 1618.78,-707 1618.78,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1563.9" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;third_body_gravity -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge107" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;third_body_gravity</title>
+<path fill="none" stroke="#000000" d="M1383.85,-552.41C1399.9,-555.01 1417.06,-560.61 1429.14,-572.13 1471.28,-612.34 1422.61,-658.35 1465.14,-698.13 1474.12,-706.53 1485.61,-711.89 1497.54,-715.25"/>
+<polygon fill="#000000" stroke="#000000" points="1496.55,-718.61 1507.08,-717.46 1498.13,-711.79 1496.55,-718.61"/>
+</g>
+<!-- proc~cross -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node65" class="node">
+<title>proc~cross</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node65"><a xlink:href="../proc/cross.html" xlink:title="cross">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1770.04,-336.27 1716.04,-336.27 1716.04,-312 1770.04,-312 1770.04,-336.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1743.04" y="-320.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge108" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross</title>
+<path fill="none" stroke="#000000" d="M1663.06,-314.77C1677.82,-316.52 1692.22,-318.23 1704.59,-319.7"/>
+<polygon fill="#000000" stroke="#000000" points="1703.94,-323.14 1714.28,-320.84 1704.76,-316.19 1703.94,-323.14"/>
+</g>
+<!-- proc~cross_matrix -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node66" class="node">
+<title>proc~cross_matrix</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node66"><a xlink:href="../proc/cross_matrix.html" xlink:title="cross_matrix">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1782.18,-294.27 1703.91,-294.27 1703.91,-270 1782.18,-270 1782.18,-294.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1743.04" y="-278.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross_matrix</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge109" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix</title>
+<path fill="none" stroke="#000000" d="M1663.06,-291.5C1673.16,-290.3 1683.09,-289.12 1692.33,-288.03"/>
+<polygon fill="#000000" stroke="#000000" points="1692.58,-291.52 1702.1,-286.87 1691.76,-284.57 1692.58,-291.52"/>
+</g>
+<!-- proc~outer -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node71" class="node">
+<title>proc~outer</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node71"><a xlink:href="../proc/outer.html" xlink:title="outer">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1877.43,-502.27 1823.43,-502.27 1823.43,-478 1877.43,-478 1877.43,-502.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1850.43" y="-486.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">outer</text>
+</a>
+</g>
+</g>
+<!-- proc~pines_gravity&#45;&gt;proc~outer -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge110" class="edge">
+<title>proc~pines_gravity&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1784.49,-503.08C1793.45,-501.29 1802.91,-499.41 1811.75,-497.64"/>
+<polygon fill="#000000" stroke="#000000" points="1812.32,-501.1 1821.45,-495.71 1810.95,-494.23 1812.32,-501.1"/>
+</g>
+<!-- proc~point_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_node72" class="node">
+<title>proc~point_gradient</title>
+<g id="a_proc~~eclipse_optimize~~CallsGraph_node72"><a xlink:href="../proc/point_gradient.html" xlink:title="point_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1787.43,-481.27 1698.66,-481.27 1698.66,-457 1787.43,-457 1787.43,-481.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1743.04" y="-465.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">point_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge111" class="edge">
+<title>proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1624.66,-441.74C1637.22,-444.46 1650.39,-447.35 1662.66,-450.13 1670.64,-451.95 1679.06,-453.91 1687.32,-455.86"/>
+<polygon fill="#000000" stroke="#000000" points="1686.4,-459.24 1696.94,-458.15 1688.02,-452.43 1686.4,-459.24"/>
+</g>
+<!-- proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge112" class="edge">
+<title>proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1644.4,-470.24C1658.77,-470.08 1673.47,-469.91 1686.95,-469.76"/>
+<polygon fill="#000000" stroke="#000000" points="1686.97,-473.26 1696.93,-469.64 1686.89,-466.26 1686.97,-473.26"/>
+</g>
+<!-- proc~point_gradient&#45;&gt;proc~outer -->
+<g id="proc~~eclipse_optimize~~CallsGraph_edge113" class="edge">
+<title>proc~point_gradient&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1787.82,-477.86C1795.88,-479.46 1804.22,-481.13 1812.06,-482.69"/>
+<polygon fill="#000000" stroke="#000000" points="1811.14,-486.07 1821.63,-484.59 1812.5,-479.21 1811.14,-486.07"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panproceclipse_optimizeCallsGraph = svgPanZoom('#proceclipse_optimizeCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~eclipse_optimize~~CalledByGraph Pages: 1 -->
+<svg id="proceclipse_optimizeCalledByGraph" width="477pt" height="32pt"
+ viewBox="0.00 0.00 477.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~eclipse_optimize~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~eclipse_optimize~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 472.81,-28.27 472.81,4 -4,4"/>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~eclipse_optimize~~CalledByGraph_node1" class="node">
+<title>proc~eclipse_optimize</title>
+<polygon fill="none" stroke="black" points="468.81,-24.27 368.79,-24.27 368.79,0 468.81,0 468.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">eclipse_optimize</text>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~eclipse_optimize~~CalledByGraph_node2" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~eclipse_optimize~~CalledByGraph_node2"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="332.79,-24.27 140.52,-24.27 140.52,0 332.79,0 332.79,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~eclipse_optimize~~CalledByGraph_edge1" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.27,-12.13C341.32,-12.13 349.31,-12.13 356.99,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="356.85,-15.64 366.85,-12.14 356.85,-8.64 356.85,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~eclipse_optimize~~CalledByGraph_node3" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~eclipse_optimize~~CalledByGraph_node3"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~eclipse_optimize~~CalledByGraph_edge2" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M104.55,-12.13C112.23,-12.13 120.38,-12.13 128.71,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.64,-15.64 138.64,-12.14 128.64,-8.64 128.64,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">module subroutine </span><span class="n">eclipse_optimize</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">my_solver_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">),</span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="c">!! the converged solution (scaled); replaced by the result</span>
+
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_opt_data</span><span class="p">),</span><span class="k">target</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">d</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">sqpopt_problem_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">problem</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">sqpopt_options_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="k">options</span>
+<span class="k">    type</span><span class="p">(</span><span class="n">sqpopt_qp_solver_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">qp_solver</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">sqpopt_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">sqp</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">sqpopt_results_type</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">res</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_row</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">new</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">lambda</span><span class="p">,</span><span class="w"> </span><span class="n">x_lb</span><span class="p">,</span><span class="w"> </span><span class="n">x_ub</span><span class="p">,</span><span class="w"> </span><span class="n">c_lb</span><span class="p">,</span><span class="w"> </span><span class="n">c_ub</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">limits</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span><span class="p">,</span><span class="w"> </span><span class="n">irow_all</span><span class="p">,</span><span class="w"> </span><span class="n">icol_all</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">mt</span><span class="p">,</span><span class="w"> </span><span class="n">iouter</span><span class="p">,</span><span class="w"> </span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">nnz</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="n">shadow_min</span>
+<span class="w">    </span><span class="kt">character</span><span class="p">(</span><span class="nb">len</span><span class="o">=</span><span class="p">:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">message</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">(</span><span class="n">int64</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">count0</span><span class="p">,</span><span class="w"> </span><span class="n">count1</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span>
+
+<span class="w">    </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">jacobian_mode</span><span class="w"> </span><span class="o">/=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">error stop</span><span class="w"> </span><span class="s1">'eclipse optimization requires jacobian_mode=2'</span>
+
+<span class="w">    </span><span class="k">call </span><span class="nb">system_clock</span><span class="p">(</span><span class="n">count0</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">)</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">mission</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">mission</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">)</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">x0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="c">! the optimization's own scaling of the variables: y = x/r</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">r</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_epoch_scale</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        where</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">x_is_epoch</span><span class="p">)</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_epoch_scale</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">xscale</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    </span><span class="n">d</span><span class="p">%</span><span class="n">m_halo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">single</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_single_row</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span><span class="p">)</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">irow</span><span class="p">)</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">icol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icol</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">irow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">w</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="w">    </span><span class="n">d</span><span class="p">%</span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">one</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_equilibrate</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">equilibrate</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">%</span><span class="n">soft_fail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span><span class="w">  </span><span class="c">! (a trial point can be far off: an integrator failure is reported to sqpopt)</span>
+
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">''</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Eclipse optimization'</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">sqpopt_solve</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! TEMPORARY experiment: solve halo's problem (continuity only) with sqpopt</span>
+<span class="w">        </span><span class="k">allocate</span><span class="p">(</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   (sqpopt_solve: the continuity constraints only, from the initial guess)'</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        call </span><span class="n">find_rows</span><span class="p">(</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="n">shadow_min</span><span class="p">)</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,F8.4,A,F8.1,A,I0,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   converged solution: min phi = '</span><span class="p">,</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">,</span><span class="w"> </span><span class="n">shadow_min</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                          </span><span class="s1">' min in the shadow, '</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">new</span><span class="p">),</span><span class="w"> </span><span class="s1">' segments near the shadow'</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    do </span><span class="n">iouter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_outer</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">merge_rows</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">)</span>
+<span class="w">        </span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nr</span><span class="o">==</span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">sqpopt_solve</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   nothing near the shadow: no optimization needed'</span>
+<span class="w">            </span><span class="k">exit</span>
+<span class="k">        end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">single</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">mt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="k">call </span><span class="n">union_columns</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,I0,A,I0,A,I0,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   pass '</span><span class="p">,</span><span class="w"> </span><span class="n">iouter</span><span class="p">,</span><span class="w"> </span><span class="s1">': 1 eclipse constraint ('</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span><span class="p">,</span><span class="w"> </span><span class="s1">' segments, '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                          </span><span class="nb">sum</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">%</span><span class="n">k_hi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">%</span><span class="n">k_lo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="s1">' samples)'</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">mt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nr</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,I0,A,I0,A,I0,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   pass '</span><span class="p">,</span><span class="w"> </span><span class="n">iouter</span><span class="p">,</span><span class="w"> </span><span class="s1">': '</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span><span class="p">,</span><span class="w"> </span><span class="s1">' eclipse constraints ('</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                          </span><span class="nb">sum</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">%</span><span class="n">k_hi</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">%</span><span class="n">k_lo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="s1">' samples)'</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">nr</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            allocate</span><span class="p">(</span><span class="n">ks</span><span class="p">(</span><span class="n">nr</span><span class="p">))</span>
+<span class="w">            </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">eval_rows</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">ks</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,F8.4,A,F8.4)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   smallest eclipse constraint (KS) at the start: '</span><span class="p">,</span><span class="w"> </span><span class="nb">minval</span><span class="p">(</span><span class="n">ks</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                       </span><span class="s1">', their aggregate: '</span><span class="p">,</span><span class="w"> </span><span class="n">ks_aggregate</span><span class="p">(</span><span class="n">ks</span><span class="p">,</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_ks_rho</span><span class="p">)</span>
+<span class="w">            </span><span class="k">deallocate</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="w">        </span><span class="c">! the problem: halo's continuity rows (equalities), then the eclipse rows</span>
+<span class="w">        </span><span class="c">! (inequalities, KS &gt;= phi_min)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">single</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">nnz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">ucol</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">nnz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">sum</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">%</span><span class="n">ncol</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        allocate</span><span class="p">(</span><span class="n">irow_all</span><span class="p">(</span><span class="n">nnz</span><span class="p">),</span><span class="w"> </span><span class="n">icol_all</span><span class="p">(</span><span class="n">nnz</span><span class="p">))</span>
+<span class="w">        </span><span class="n">irow_all</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">irow</span>
+<span class="w">        </span><span class="n">icol_all</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icol</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">single</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">irow_all</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="o">+</span><span class="mi">1</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">icol_all</span><span class="p">(</span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span><span class="o">+</span><span class="mi">1</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">ucol</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">nnz_halo</span>
+<span class="w">            </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span>
+<span class="w">                </span><span class="n">irow_all</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">ncol</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">k</span>
+<span class="w">                </span><span class="n">icol_all</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">ncol</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">col</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">ncol</span><span class="p">)</span>
+<span class="w">                </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">rows</span><span class="p">(</span><span class="n">k</span><span class="p">)%</span><span class="n">ncol</span>
+<span class="w">            </span><span class="k">end do</span>
+<span class="k">        end if</span>
+<span class="k">        allocate</span><span class="p">(</span><span class="n">x_lb</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">x_ub</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="w"> </span><span class="n">c_lb</span><span class="p">(</span><span class="n">mt</span><span class="p">),</span><span class="w"> </span><span class="n">c_ub</span><span class="p">(</span><span class="n">mt</span><span class="p">),</span><span class="w"> </span><span class="n">lambda</span><span class="p">(</span><span class="n">mt</span><span class="p">))</span>
+<span class="w">        </span><span class="n">x_lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">sqpopt_infinity</span>
+<span class="w">        </span><span class="n">x_ub</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">sqpopt_infinity</span>
+<span class="w">        </span><span class="n">c_lb</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">        </span><span class="n">c_ub</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">        </span><span class="n">c_lb</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_phi_min</span>
+<span class="w">        </span><span class="n">c_ub</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="p">:)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqpopt_infinity</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">problem</span><span class="p">%</span><span class="n">set_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">=</span><span class="n">mt</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">problem</span><span class="p">%</span><span class="n">set_bounds</span><span class="p">(</span><span class="n">x_lb</span><span class="p">,</span><span class="w"> </span><span class="n">x_ub</span><span class="p">,</span><span class="w"> </span><span class="n">c_lb</span><span class="p">,</span><span class="w"> </span><span class="n">c_ub</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">problem</span><span class="p">%</span><span class="n">set_jacobian_sparsity</span><span class="p">(</span><span class="n">nnz</span><span class="p">,</span><span class="w"> </span><span class="n">irow_all</span><span class="p">,</span><span class="w"> </span><span class="n">icol_all</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">problem</span><span class="p">%</span><span class="n">set_functions</span><span class="p">(</span><span class="n">fc</span><span class="o">=</span><span class="n">eclipse_fc</span><span class="p">,</span><span class="w"> </span><span class="n">gjac</span><span class="o">=</span><span class="n">eclipse_gjac</span><span class="p">,</span><span class="w"> </span><span class="k">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_step_epoch</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_step_position</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_step_velocity</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">limits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">step_limits</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">problem</span><span class="p">%</span><span class="n">set_max_step</span><span class="p">(</span><span class="n">limits</span><span class="p">)</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="k">        options</span><span class="p">%</span><span class="n">max_iter</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_iter</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">print_level</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_print_level</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">hessian_mode</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_hessian_mode</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">direct_qp</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_qp</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">direct_least_squares</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_least_squares</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">qp_solver_mode</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_qp_solver_mode</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">linesearch_mode</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_linesearch_mode</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">lbfgs_memory</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_lbfgs_memory</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">scaling</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_scaling</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">ctol</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_ctol</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">ktol</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_ktol</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">elastic_multiplier_limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_elastic_multiplier_limit</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">scaling_max_gradient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_scaling_max_gradient</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">hessian_scale0</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_hessian_scale0</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">inertia_control</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_inertia_control</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">merit_mode</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_merit_mode</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">restoration_mode</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_restoration_mode</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">max_time</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_max_time</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">linear_solver</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_linear_solver</span>
+<span class="w">        </span><span class="k">options</span><span class="p">%</span><span class="n">factorization_threads</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_factorization_threads</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">max_step</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_qp_max_step</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">direct_max_changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_max_changes</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">direct_tol</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_tol</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">sparse_qp</span><span class="p">%</span><span class="n">basis_rel_tol</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_basis_rel_tol</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">sparse_qp</span><span class="p">%</span><span class="n">basis_repair</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_basis_repair</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">sparse_qp</span><span class="p">%</span><span class="n">basis_eq_slack_weight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_basis_eq_slack_weight</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">direct_relative_tol</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_relative_tol</span>
+<span class="w">        </span><span class="n">qp_solver</span><span class="p">%</span><span class="n">direct_accept_inexact</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_direct_accept_inexact</span>
+
+<span class="w">        </span><span class="k">call </span><span class="n">sqp</span><span class="p">%</span><span class="n">initialize</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span><span class="w"> </span><span class="k">options</span><span class="o">=</span><span class="k">options</span><span class="p">,</span><span class="w"> </span><span class="n">qp_solver</span><span class="o">=</span><span class="n">qp_solver</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">sqp</span><span class="p">%</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">d</span><span class="p">%</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="n">istat</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">sqp</span><span class="p">%</span><span class="n">get_solution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">lambda</span><span class="p">)</span>
+<span class="w">        </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">r</span>
+<span class="w">        </span><span class="k">call </span><span class="n">sqp</span><span class="p">%</span><span class="n">get_results</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   sqpopt: '</span><span class="o">//</span><span class="n">sqp</span><span class="p">%</span><span class="n">status_message</span><span class="p">()</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,I0,A,I0,A,I0,A,ES10.3,A,ES10.3,A,F9.2,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   sqpopt: '</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">%</span><span class="n">iterations</span><span class="p">,</span><span class="w"> </span><span class="s1">' iterations, '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">res</span><span class="p">%</span><span class="n">n_eval_fc</span><span class="p">,</span><span class="w"> </span><span class="s1">' fc, '</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">%</span><span class="n">n_eval_gjac</span><span class="p">,</span><span class="w"> </span><span class="s1">' gjac, f = '</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">%</span><span class="n">f</span><span class="p">,</span><span class="w"> </span><span class="s1">', infeasibility = '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">            </span><span class="n">res</span><span class="p">%</span><span class="n">feasibility_error</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="p">%</span><span class="nb">time</span><span class="p">,</span><span class="w"> </span><span class="s1">' s'</span>
+<span class="w">        </span><span class="k">call </span><span class="n">sqp</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">deallocate</span><span class="p">(</span><span class="n">irow_all</span><span class="p">,</span><span class="w"> </span><span class="n">icol_all</span><span class="p">,</span><span class="w"> </span><span class="n">x_lb</span><span class="p">,</span><span class="w"> </span><span class="n">x_ub</span><span class="p">,</span><span class="w"> </span><span class="n">c_lb</span><span class="p">,</span><span class="w"> </span><span class="n">c_ub</span><span class="p">,</span><span class="w"> </span><span class="n">lambda</span><span class="p">)</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">sqpopt_solve</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">            </span><span class="c">! TEMPORARY experiment: how well sqpopt alone converged halo's problem</span>
+<span class="w">            </span><span class="k">block</span>
+<span class="k">                </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">c</span>
+<span class="w">                </span><span class="k">allocate</span><span class="p">(</span><span class="n">c</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="w">                </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">constraint_violations</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w">  </span><span class="c">! (propagates the segments at x)</span>
+<span class="w">                </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,ES12.4,A,ES12.4,A,ES10.2)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   sqpopt_solve: halo''s constraint norm '</span><span class="p">,</span><span class="w"> </span><span class="nb">norm2</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                    </span><span class="s1">', largest |c| '</span><span class="p">,</span><span class="w"> </span><span class="nb">maxval</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)),</span><span class="w"> </span><span class="s1">' (nlesolver_tol '</span><span class="p">,</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">nlesolver_tol</span>
+<span class="w">            </span><span class="k">end block</span>
+<span class="k">            exit</span>
+<span class="k">        end if</span>
+
+<span class="w">        </span><span class="c">! converge the continuity, with the eclipse rows at their bound held there:</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_newton_finish</span><span class="p">)</span><span class="w"> </span><span class="k">call </span><span class="n">newton_finish</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">        </span><span class="c">! re-converge the continuity (only):</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_polish</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   polish (Newton, continuity only):'</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">solve</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">status</span><span class="p">(</span><span class="n">istat</span><span class="o">=</span><span class="n">istat</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<span class="w">            </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   polish: '</span><span class="o">//</span><span class="n">message</span>
+<span class="w">        </span><span class="k">end if</span>
+
+<span class="w">        </span><span class="c">! check the whole trajectory:</span>
+<span class="w">        </span><span class="k">call </span><span class="n">find_rows</span><span class="p">(</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">,</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="n">shadow_min</span><span class="p">)</span>
+<span class="w">        </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,I0,A,F8.4,A,F8.1,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   after pass '</span><span class="p">,</span><span class="w"> </span><span class="n">iouter</span><span class="p">,</span><span class="w"> </span><span class="s1">': min phi = '</span><span class="p">,</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="s1">', '</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                                          </span><span class="n">shadow_min</span><span class="p">,</span><span class="w"> </span><span class="s1">' min in the shadow'</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">phimin</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   eclipse free'</span>
+<span class="w">            </span><span class="k">exit</span>
+<span class="k">        end if</span>
+
+<span class="k">    end do</span>
+
+<span class="k">    </span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">%</span><span class="n">soft_fail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+<span class="w">    </span><span class="k">call </span><span class="n">report_change</span><span class="p">(</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">%</span><span class="n">x0</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="nb">system_clock</span><span class="p">(</span><span class="n">count1</span><span class="p">)</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A,F10.2,A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">'   eclipse optimization wall time: '</span><span class="p">,</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">count1</span><span class="o">-</span><span class="n">count0</span><span class="p">,</span><span class="n">wp</span><span class="p">)</span><span class="o">/</span><span class="kt">real</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span><span class="n">wp</span><span class="p">),</span><span class="w"> </span><span class="s1">' s'</span>
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">''</span>
+
+<span class="w">    </span><span class="k">end associate</span>
+
+<span class="k">    end subroutine </span><span class="n">eclipse_optimize</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

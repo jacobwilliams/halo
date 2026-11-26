@@ -1,0 +1,642 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>destroy_trajectory &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>destroy_trajectory
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.3% of total for procedures.">11 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">destroy_trajectory</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/destroy_trajectory.html#src">destroy_trajectory</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public pure subroutine destroy_trajectory(me)  
+</h2>
+    
+
+    <p>Destroy a trajectory (deallocate the data arrays).</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/trajectory.html'>trajectory</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~32"></span>
+              class(<a href='../type/trajectory.html'>trajectory</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~destroy_trajectory~~CalledByGraph Pages: 1 -->
+<svg id="procdestroy_trajectoryCalledByGraph" width="641pt" height="195pt"
+ viewBox="0.00 0.00 641.00 195.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~destroy_trajectory~~CalledByGraph" class="graph" transform="scale(0.490189 0.490189) rotate(0) translate(4 394.27)">
+<title>proc~~destroy_trajectory~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-394.27 1303.66,-394.27 1303.66,4 -4,4"/>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node1" class="node">
+<title>proc~destroy_trajectory</title>
+<polygon fill="none" stroke="black" points="1299.66,-288.27 1130.64,-288.27 1130.64,-264 1299.66,-264 1299.66,-288.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1215.15" y="-272.53" font-family="Helvetica,sans-Serif" font-size="10.50">trajectory%destroy_trajectory</text>
+</g>
+<!-- proc~export_trajectory_json_file -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node2" class="node">
+<title>proc~export_trajectory_json_file</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node2"><a xlink:href="../proc/export_trajectory_json_file.html" xlink:title="mission_type%export_trajectory_json_file">
+<polygon fill="#d9534f" stroke="#d9534f" points="598.56,-390.27 368.79,-390.27 368.79,-366 598.56,-366 598.56,-390.27"/>
+<text xml:space="preserve" text-anchor="middle" x="483.67" y="-374.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%export_trajectory_json_file</text>
+</a>
+</g>
+</g>
+<!-- proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge1" class="edge">
+<title>proc~export_trajectory_json_file&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M598.92,-377.04C657.31,-376.58 729.49,-376.13 794.09,-376.13 794.09,-376.13 794.09,-376.13 909.23,-376.13 1013.43,-376.13 1128.13,-322.76 1182.37,-294"/>
+<polygon fill="#000000" stroke="#000000" points="1183.92,-297.14 1191.06,-289.32 1180.59,-290.98 1183.92,-297.14"/>
+</g>
+<!-- proc~find_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node3" class="node">
+<title>proc~find_rows</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node3"><a xlink:href="../proc/find_rows.html" xlink:title="find_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="707.2,-268.27 646.18,-268.27 646.18,-244 707.2,-244 707.2,-268.27"/>
+<text xml:space="preserve" text-anchor="middle" x="676.69" y="-252.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge2" class="edge">
+<title>proc~find_rows&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M707.69,-257.25C785.25,-260.14 995.05,-267.97 1118.94,-272.59"/>
+<polygon fill="#000000" stroke="#000000" points="1118.65,-276.08 1128.77,-272.95 1118.91,-269.08 1118.65,-276.08"/>
+</g>
+<!-- proc~generate_eclipse_data -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node4" class="node">
+<title>proc~generate_eclipse_data</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node4"><a xlink:href="../proc/generate_eclipse_data.html" xlink:title="mission_type%generate_eclipse_data">
+<polygon fill="#d9534f" stroke="#d9534f" points="589.18,-348.27 378.16,-348.27 378.16,-324 589.18,-324 589.18,-348.27"/>
+<text xml:space="preserve" text-anchor="middle" x="483.67" y="-332.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%generate_eclipse_data</text>
+</a>
+</g>
+</g>
+<!-- proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge3" class="edge">
+<title>proc~generate_eclipse_data&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M589.58,-335.63C649.49,-335.38 726,-335.13 794.09,-335.13 794.09,-335.13 794.09,-335.13 909.23,-335.13 1000.41,-335.13 1104.18,-309.39 1164.12,-291.91"/>
+<polygon fill="#000000" stroke="#000000" points="1165.1,-295.27 1173.7,-289.08 1163.11,-288.56 1165.1,-295.27"/>
+</g>
+<!-- proc~iteration_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node5" class="node">
+<title>proc~iteration_trajectory</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node5"><a xlink:href="../proc/iteration_trajectory.html" xlink:title="iteration_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="1094.64,-127.27 981.12,-127.27 981.12,-103 1094.64,-103 1094.64,-127.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.88" y="-111.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iteration_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~iteration_trajectory&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge4" class="edge">
+<title>proc~iteration_trajectory&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M1052.63,-127.77C1082.97,-155.63 1155.81,-222.54 1192.4,-256.16"/>
+<polygon fill="#000000" stroke="#000000" points="1189.61,-258.35 1199.35,-262.54 1194.35,-253.19 1189.61,-258.35"/>
+</g>
+<!-- proc~plot_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node6" class="node">
+<title>proc~plot_trajectory</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node6"><a xlink:href="../proc/plot_trajectory.html" xlink:title="mission_type%plot_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="320.41,-308.27 152.89,-308.27 152.89,-284 320.41,-284 320.41,-308.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.65" y="-292.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%plot_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~plot_trajectory&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge5" class="edge">
+<title>proc~plot_trajectory&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M320.82,-296.13C408.93,-296.13 552.12,-296.13 675.69,-296.13 675.69,-296.13 675.69,-296.13 909.23,-296.13 979.63,-296.13 1058.97,-290.76 1119.07,-285.58"/>
+<polygon fill="#000000" stroke="#000000" points="1119.28,-289.08 1128.94,-284.72 1118.67,-282.11 1119.28,-289.08"/>
+</g>
+<!-- proc~row_ks -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node7" class="node">
+<title>proc~row_ks</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node7"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1064.88,-209.27 1010.88,-209.27 1010.88,-185 1064.88,-185 1064.88,-209.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.88" y="-193.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge6" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M1065.12,-208.96C1094.5,-222.21 1142.4,-243.79 1175.94,-258.91"/>
+<polygon fill="#000000" stroke="#000000" points="1174.35,-262.03 1184.9,-262.95 1177.22,-255.65 1174.35,-262.03"/>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node8" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node8"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="533.68,-237.27 433.66,-237.27 433.66,-213 533.68,-213 533.68,-237.27"/>
+<text xml:space="preserve" text-anchor="middle" x="483.67" y="-221.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge8" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M533.87,-233.12C565.1,-238.19 605.04,-244.67 634.58,-249.46"/>
+<polygon fill="#000000" stroke="#000000" points="633.82,-252.88 644.25,-251.03 634.94,-245.97 633.82,-252.88"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node9" class="node">
+<title>proc~eval_rows</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node9"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="939.87,-159.27 876.6,-159.27 876.6,-135 939.87,-135 939.87,-159.27"/>
+<text xml:space="preserve" text-anchor="middle" x="908.23" y="-143.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge16" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M534.14,-223.2C602.94,-219.46 730.85,-208.68 835.35,-178.13 847.51,-174.58 860.34,-169.5 871.75,-164.49"/>
+<polygon fill="#000000" stroke="#000000" points="873.15,-167.7 880.8,-160.37 870.25,-161.32 873.15,-167.7"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node15" class="node">
+<title>proc~newton_finish</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node15"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="718.83,-188.27 634.56,-188.27 634.56,-164 718.83,-164 718.83,-188.27"/>
+<text xml:space="preserve" text-anchor="middle" x="676.69" y="-172.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge21" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M533.87,-212.52C561.17,-205.51 595.13,-196.8 622.98,-189.66"/>
+<polygon fill="#000000" stroke="#000000" points="623.82,-193.05 632.64,-187.18 622.08,-186.27 623.82,-193.05"/>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge12" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M940.13,-159.24C958.14,-166.29 980.97,-175.23 999.93,-182.66"/>
+<polygon fill="#000000" stroke="#000000" points="998.58,-185.89 1009.17,-186.28 1001.13,-179.37 998.58,-185.89"/>
+</g>
+<!-- proc~halo_export -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node10" class="node">
+<title>proc~halo_export</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node10"><a xlink:href="../proc/halo_export.html" xlink:title="halo_export">
+<polygon fill="#d9534f" stroke="#d9534f" points="945.12,-117.27 871.35,-117.27 871.35,-93 945.12,-93 945.12,-117.27"/>
+<text xml:space="preserve" text-anchor="middle" x="908.23" y="-101.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_export</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_export&#45;&gt;proc~iteration_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge10" class="edge">
+<title>proc~halo_export&#45;&gt;proc~iteration_trajectory</title>
+<path fill="none" stroke="#000000" d="M945.47,-107.97C953.07,-108.57 961.32,-109.22 969.64,-109.87"/>
+<polygon fill="#000000" stroke="#000000" points="969.24,-113.35 979.48,-110.64 969.79,-106.37 969.24,-113.35"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node11" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node11"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-328.27 0,-328.27 0,-304 104.52,-304 104.52,-328.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-312.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge7" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~export_trajectory_json_file</title>
+<path fill="none" stroke="#000000" d="M96.03,-328.72C110.1,-332.51 125.89,-336.39 140.52,-339.13 211.76,-352.51 292.26,-361.96 357.27,-368.21"/>
+<polygon fill="#000000" stroke="#000000" points="356.61,-371.66 366.89,-369.12 357.26,-364.69 356.61,-371.66"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge9" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~generate_eclipse_data</title>
+<path fill="none" stroke="#000000" d="M104.63,-318.53C168.97,-321.52 281.14,-326.75 366.63,-330.73"/>
+<polygon fill="#000000" stroke="#000000" points="366.32,-334.22 376.47,-331.19 366.64,-327.23 366.32,-334.22"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~plot_trajectory -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge11" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~plot_trajectory</title>
+<path fill="none" stroke="#000000" d="M104.55,-310.51C116.12,-309.24 128.76,-307.86 141.48,-306.46"/>
+<polygon fill="#000000" stroke="#000000" points="141.59,-309.97 151.15,-305.4 140.83,-303.01 141.59,-309.97"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node12" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node12"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="332.79,-247.27 140.52,-247.27 140.52,-223 332.79,-223 332.79,-247.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.65" y="-231.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge20" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M79.1,-303.65C96.39,-295.38 119.72,-284.39 140.52,-275.13 158.11,-267.31 177.7,-259 194.5,-252"/>
+<polygon fill="#000000" stroke="#000000" points="195.8,-255.25 203.7,-248.19 193.12,-248.79 195.8,-255.25"/>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge13" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.09,-231.24C363.07,-230.02 395.33,-228.7 422.19,-227.6"/>
+<polygon fill="#000000" stroke="#000000" points="421.98,-231.12 431.83,-227.21 421.7,-224.12 421.98,-231.12"/>
+</g>
+<!-- proc~eclipse_fc -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node13" class="node">
+<title>proc~eclipse_fc</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node13"><a xlink:href="../proc/eclipse_fc.html" xlink:title="eclipse_fc">
+<polygon fill="#d9534f" stroke="#d9534f" points="827.1,-108.27 763.08,-108.27 763.08,-84 827.1,-84 827.1,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="795.09" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_fc</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_fc&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge14" class="edge">
+<title>proc~eclipse_fc&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M823.56,-108.74C837.56,-115.16 854.79,-123.07 869.96,-130.03"/>
+<polygon fill="#000000" stroke="#000000" points="868.15,-133.05 878.7,-134.04 871.07,-126.69 868.15,-133.05"/>
+</g>
+<!-- proc~eclipse_gjac -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node14" class="node">
+<title>proc~eclipse_gjac</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node14"><a xlink:href="../proc/eclipse_gjac.html" xlink:title="eclipse_gjac">
+<polygon fill="#d9534f" stroke="#d9534f" points="833.47,-66.27 756.7,-66.27 756.7,-42 833.47,-42 833.47,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="795.09" y="-50.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_gjac</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_gjac&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge15" class="edge">
+<title>proc~eclipse_gjac&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M823.37,-66.57C827.6,-69.09 831.76,-71.96 835.35,-75.14 856.14,-93.51 850.91,-107.37 871.35,-126.14 872.09,-126.82 872.86,-127.49 873.66,-128.15"/>
+<polygon fill="#000000" stroke="#000000" points="871.32,-130.78 881.47,-133.8 875.42,-125.11 871.32,-130.78"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge17" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M719.27,-172.32C751.1,-169.23 796.08,-164.53 835.35,-159.13 844.99,-157.81 855.33,-156.2 865.07,-154.59"/>
+<polygon fill="#000000" stroke="#000000" points="865.38,-158.09 874.67,-152.98 864.22,-151.19 865.38,-158.09"/>
+</g>
+<!-- proc~newton_func -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node16" class="node">
+<title>proc~newton_func</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node16"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="834.6,-150.27 755.58,-150.27 755.58,-126 834.6,-126 834.6,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="795.09" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge22" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M716.13,-163.59C725.37,-160.57 735.36,-157.31 745.01,-154.16"/>
+<polygon fill="#000000" stroke="#000000" points="745.84,-157.57 754.26,-151.14 743.66,-150.92 745.84,-157.57"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge18" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M834.96,-141.28C844.68,-142.07 855.15,-142.92 865.02,-143.72"/>
+<polygon fill="#000000" stroke="#000000" points="864.5,-147.19 874.75,-144.5 865.06,-140.21 864.5,-147.19"/>
+</g>
+<!-- proc~newton_grad -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_node17" class="node">
+<title>proc~newton_grad</title>
+<g id="a_proc~~destroy_trajectory~~CalledByGraph_node17"><a xlink:href="../proc/newton_grad.html" xlink:title="newton_grad">
+<polygon fill="#d9534f" stroke="#d9534f" points="835.35,-24.27 754.83,-24.27 754.83,0 835.35,0 835.35,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="795.09" y="-8.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_grad</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_grad&#45;&gt;proc~eval_rows -->
+<g id="proc~~destroy_trajectory~~CalledByGraph_edge19" class="edge">
+<title>proc~newton_grad&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M825.28,-24.62C828.99,-27.07 832.48,-29.89 835.35,-33.14 864.72,-66.33 842.62,-92.39 871.35,-126.14 871.69,-126.53 872.04,-126.93 872.4,-127.31"/>
+<polygon fill="#000000" stroke="#000000" points="869.89,-129.77 879.76,-133.62 874.44,-124.46 869.89,-129.77"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocdestroy_trajectoryCalledByGraph = svgPanZoom('#procdestroy_trajectoryCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">pure subroutine </span><span class="n">destroy_trajectory</span><span class="p">(</span><span class="n">me</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">trajectory</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">et</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">x</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">x</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">y</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">y</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">z</span><span class="w"> </span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">z</span><span class="w"> </span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vx</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vx</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vy</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vy</span><span class="p">)</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">allocated</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vz</span><span class="p">))</span><span class="w"> </span><span class="k">deallocate</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">vz</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">destroy_trajectory</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

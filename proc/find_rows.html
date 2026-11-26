@@ -1,0 +1,936 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>find_rows &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>find_rows
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.9% of total for procedures.">76 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_eclipse_opt_submodule.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_eclipse_opt_submodule.f90.html'>halo_eclipse_opt_submodule.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_eclipse_opt_submodule.html'>halo_eclipse_opt_submodule</a></li>
+            <li class="breadcrumb-item active" aria-current="page">find_rows</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/find_rows.html#src">find_rows</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2> subroutine find_rows(mission, x, rows, phimin, shadow_min)  
+</h2>
+    
+
+    <p>Check the shadow function along the whole trajectory (every <code>eclipse_opt_detect_step</code>
+seconds), and make the rows of the segments that come near the shadow (where the shadow
+function, with the constraints' bubble, is below <code>eclipse_opt_detect_phi</code>).</p>
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mission~3"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mission</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~10"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rows~2"></span>
+              type(<a href='../type/eclipse_row.html'>eclipse_row</a>),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:), allocatable
+            </td>
+            <td>::</td>
+            <td><strong>rows</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-phimin~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>phimin</strong></td>
+            <td>
+                <p>the smallest shadow function (no bubble) along the trajectory</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-shadow_min~2"></span>
+              real(kind=wp),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>shadow_min</strong></td>
+            <td>
+                <p>the time in the shadow [min] (approximate: the number of points
+in the shadow times the step)</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~find_rows~~CallsGraph Pages: 1 -->
+<svg id="procfind_rowsCallsGraph" width="641pt" height="244pt"
+ viewBox="0.00 0.00 641.00 244.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~find_rows~~CallsGraph" class="graph" transform="scale(0.858007 0.858007) rotate(0) translate(4 280.27)">
+<title>proc~~find_rows~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-280.27 743.08,-280.27 743.08,4 -4,4"/>
+<!-- proc~find_rows -->
+<g id="proc~~find_rows~~CallsGraph_node1" class="node">
+<title>proc~find_rows</title>
+<polygon fill="none" stroke="black" points="61.02,-156.27 0,-156.27 0,-132 61.02,-132 61.02,-156.27"/>
+<text xml:space="preserve" text-anchor="middle" x="30.51" y="-140.53" font-family="Helvetica,sans-Serif" font-size="10.50">find_rows</text>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~find_rows~~CallsGraph_node2" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~find_rows~~CallsGraph_node2"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="522.81,-276.27 323.79,-276.27 323.79,-252 522.81,-252 522.81,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~define_problem_size -->
+<g id="proc~~find_rows~~CallsGraph_edge1" class="edge">
+<title>proc~find_rows&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M41.14,-156.66C52.76,-170.82 73.68,-193.44 97.02,-205.13 107.73,-210.5 242.83,-233.96 335.51,-249.64"/>
+<polygon fill="#000000" stroke="#000000" points="334.66,-253.04 345.1,-251.26 335.82,-246.14 334.66,-253.04"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="proc~~find_rows~~CallsGraph_node3" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_proc~~find_rows~~CallsGraph_node3"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="276.91,-116.27 107.89,-116.27 107.89,-92 276.91,-92 276.91,-116.27"/>
+<text xml:space="preserve" text-anchor="middle" x="192.4" y="-100.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~destroy_trajectory -->
+<g id="proc~~find_rows~~CallsGraph_edge2" class="edge">
+<title>proc~find_rows&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M61.21,-136.71C80.55,-131.87 106.48,-125.38 130.1,-119.47"/>
+<polygon fill="#000000" stroke="#000000" points="130.8,-122.9 139.65,-117.08 129.1,-116.11 130.8,-122.9"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="proc~~find_rows~~CallsGraph_node4" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_proc~~find_rows~~CallsGraph_node4"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="242.04,-74.27 142.77,-74.27 142.77,-50 242.04,-50 242.04,-74.27"/>
+<text xml:space="preserve" text-anchor="middle" x="192.4" y="-58.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~get_sun_fraction -->
+<g id="proc~~find_rows~~CallsGraph_edge3" class="edge">
+<title>proc~find_rows&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M41.43,-131.52C53.17,-117.5 74.05,-95.22 97.02,-83.14 107.6,-77.57 119.6,-73.47 131.41,-70.46"/>
+<polygon fill="#000000" stroke="#000000" points="132.19,-73.87 141.15,-68.23 130.62,-67.05 132.19,-73.87"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="proc~~find_rows~~CallsGraph_node5" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_proc~~find_rows~~CallsGraph_node5"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="510.44,-150.27 336.17,-150.27 336.17,-126 510.44,-126 510.44,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~propagate_segment -->
+<g id="proc~~find_rows~~CallsGraph_edge4" class="edge">
+<title>proc~find_rows&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M61.2,-143.68C116.52,-142.83 237.58,-140.97 324.28,-139.64"/>
+<polygon fill="#000000" stroke="#000000" points="324.28,-143.14 334.23,-139.49 324.18,-136.14 324.28,-143.14"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~find_rows~~CallsGraph_node6" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~find_rows~~CallsGraph_node6"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="287.79,-196.27 97.02,-196.27 97.02,-172 287.79,-172 287.79,-196.27"/>
+<text xml:space="preserve" text-anchor="middle" x="192.4" y="-180.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~find_rows~~CallsGraph_edge5" class="edge">
+<title>proc~find_rows&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M61.21,-151.56C80.55,-156.4 106.48,-162.89 130.1,-168.8"/>
+<polygon fill="#000000" stroke="#000000" points="129.1,-172.16 139.65,-171.19 130.8,-165.37 129.1,-172.16"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="proc~~find_rows~~CallsGraph_node7" class="node">
+<title>proc~removed_columns</title>
+<g id="a_proc~~find_rows~~CallsGraph_node7"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="286.29,-276.27 98.52,-276.27 98.52,-252 286.29,-252 286.29,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="192.4" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~removed_columns -->
+<g id="proc~~find_rows~~CallsGraph_edge6" class="edge">
+<title>proc~find_rows&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M36.75,-156.58C45.92,-176.83 66.81,-216.77 97.02,-238.13 101.96,-241.63 107.36,-244.66 112.99,-247.28"/>
+<polygon fill="#000000" stroke="#000000" points="111.34,-250.38 121.92,-250.99 114.02,-243.92 111.34,-250.38"/>
+</g>
+<!-- proc~row_columns -->
+<g id="proc~~find_rows~~CallsGraph_node8" class="node">
+<title>proc~row_columns</title>
+<g id="a_proc~~find_rows~~CallsGraph_node8"><a xlink:href="../proc/row_columns.html" xlink:title="row_columns">
+<polygon fill="#d9534f" stroke="#d9534f" points="232.66,-32.27 152.14,-32.27 152.14,-8 232.66,-8 232.66,-32.27"/>
+<text xml:space="preserve" text-anchor="middle" x="192.4" y="-16.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~row_columns -->
+<g id="proc~~find_rows~~CallsGraph_edge7" class="edge">
+<title>proc~find_rows&#45;&gt;proc~row_columns</title>
+<path fill="none" stroke="#000000" d="M35.75,-131.74C43.94,-109.79 64.05,-64.26 97.02,-41.13 109.72,-32.22 125.56,-27.01 140.61,-23.99"/>
+<polygon fill="#000000" stroke="#000000" points="141.13,-27.45 150.41,-22.33 139.96,-20.55 141.13,-27.45"/>
+</g>
+<!-- apparent_position -->
+<g id="proc~~find_rows~~CallsGraph_node9" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="476.69,-108.27 369.92,-108.27 369.92,-84 476.69,-84 476.69,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="proc~~find_rows~~CallsGraph_edge8" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M242.51,-69.43C276.44,-74.47 321.89,-81.22 358.6,-86.67"/>
+<polygon fill="#000000" stroke="#000000" points="357.79,-90.09 368.19,-88.1 358.82,-83.17 357.79,-90.09"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="proc~~find_rows~~CallsGraph_node10" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="485.69,-66.27 360.92,-66.27 360.92,-42 485.69,-42 485.69,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="proc~~find_rows~~CallsGraph_edge9" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M242.51,-60.42C273.68,-59.33 314.58,-57.9 349.5,-56.68"/>
+<polygon fill="#000000" stroke="#000000" points="349.22,-60.19 359.09,-56.34 348.98,-53.2 349.22,-60.19"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="proc~~find_rows~~CallsGraph_node13" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="506.31,-24.27 340.29,-24.27 340.29,0 506.31,0 506.31,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="proc~~find_rows~~CallsGraph_edge10" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M242.32,-51.25C278.44,-43.21 321.69,-33.59 323.79,-33.13 332.72,-31.19 342.11,-29.16 351.39,-27.17"/>
+<polygon fill="#000000" stroke="#000000" points="352.11,-30.6 361.16,-25.08 350.64,-23.75 352.11,-30.6"/>
+</g>
+<!-- first_call -->
+<g id="proc~~find_rows~~CallsGraph_node12" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="676.83,-66.27 621.06,-66.27 621.06,-42 676.83,-42 676.83,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="proc~~find_rows~~CallsGraph_edge11" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M505.02,-125.58C511.24,-123.23 517.25,-120.44 522.81,-117.14 543.95,-104.58 537.81,-87.92 558.81,-75.14 574.15,-65.8 593.3,-60.61 609.92,-57.73"/>
+<polygon fill="#000000" stroke="#000000" points="610.07,-61.25 619.44,-56.31 609.03,-54.33 610.07,-61.25"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~find_rows~~CallsGraph_node14" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="682.08,-276.27 615.81,-276.27 615.81,-252 682.08,-252 682.08,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="proc~~find_rows~~CallsGraph_edge12" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M509.59,-150.55C514.3,-152.97 518.76,-155.8 522.81,-159.13 554.19,-184.93 527.71,-217.01 558.81,-243.13 571.45,-253.75 588.49,-259.21 604.29,-261.95"/>
+<polygon fill="#000000" stroke="#000000" points="603.61,-265.39 614,-263.29 604.57,-258.45 603.61,-265.39"/>
+</g>
+<!-- integrate -->
+<g id="proc~~find_rows~~CallsGraph_node15" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="679.08,-24.27 618.81,-24.27 618.81,0 679.08,0 679.08,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="proc~~find_rows~~CallsGraph_edge13" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M509.59,-125.72C514.3,-123.3 518.76,-120.47 522.81,-117.14 554.19,-91.34 527.71,-59.26 558.81,-33.13 572.26,-21.84 590.71,-16.38 607.33,-13.82"/>
+<polygon fill="#000000" stroke="#000000" points="607.45,-17.34 616.96,-12.67 606.61,-10.39 607.45,-17.34"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~find_rows~~CallsGraph_node16" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~find_rows~~CallsGraph_node16"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="686.96,-150.27 610.94,-150.27 610.94,-126 686.96,-126 686.96,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="proc~~find_rows~~CallsGraph_edge14" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M510.77,-138.13C540.72,-138.13 573.23,-138.13 599.09,-138.13"/>
+<polygon fill="#000000" stroke="#000000" points="598.95,-141.64 608.95,-138.14 598.95,-134.64 598.95,-141.64"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~find_rows~~CallsGraph_node18" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~find_rows~~CallsGraph_node18"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="739.08,-108.27 558.81,-108.27 558.81,-84 739.08,-84 739.08,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-92.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~find_rows~~CallsGraph_edge15" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M491.4,-125.53C516.06,-120.9 544.19,-115.62 569.74,-110.82"/>
+<polygon fill="#000000" stroke="#000000" points="570.22,-114.29 579.4,-109.01 568.93,-107.41 570.22,-114.29"/>
+</g>
+<!-- transform -->
+<g id="proc~~find_rows~~CallsGraph_node19" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="680.96,-234.27 616.94,-234.27 616.94,-210 680.96,-210 680.96,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="proc~~find_rows~~CallsGraph_edge16" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M505.02,-150.69C511.24,-153.04 517.25,-155.83 522.81,-159.13 543.95,-171.69 537.81,-188.35 558.81,-201.13 572.91,-209.72 590.23,-214.79 605.84,-217.79"/>
+<polygon fill="#000000" stroke="#000000" points="604.9,-221.18 615.34,-219.38 606.06,-214.28 604.9,-221.18"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~find_rows~~CallsGraph_node20" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="721.83,-192.27 576.06,-192.27 576.06,-168 721.83,-168 721.83,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="648.95" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~find_rows~~CallsGraph_edge17" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M491.4,-150.74C516.06,-155.37 544.19,-160.65 569.74,-165.45"/>
+<polygon fill="#000000" stroke="#000000" points="568.93,-168.86 579.4,-167.26 570.22,-161.98 568.93,-168.86"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~find_rows~~CallsGraph_edge19" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M255.49,-196.71C266.61,-200.21 277.83,-204.62 287.79,-210.13 306.78,-220.64 304.5,-233.19 323.79,-243.13 326.88,-244.73 330.08,-246.2 333.36,-247.56"/>
+<polygon fill="#000000" stroke="#000000" points="332.03,-250.8 342.63,-251 334.47,-244.24 332.03,-250.8"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~find_rows~~CallsGraph_node11" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="466.94,-192.27 379.67,-192.27 379.67,-168 466.94,-168 466.94,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~find_rows~~CallsGraph_edge18" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M288.16,-182.48C315.43,-182 344.23,-181.5 368.13,-181.08"/>
+<polygon fill="#000000" stroke="#000000" points="367.99,-184.58 377.93,-180.91 367.87,-177.59 367.99,-184.58"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~find_rows~~CallsGraph_node17" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~find_rows~~CallsGraph_node17"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="509.69,-234.27 336.92,-234.27 336.92,-210 509.69,-210 509.69,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="423.3" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~find_rows~~CallsGraph_edge20" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M269.31,-196.74C290.36,-200.23 313.39,-204.05 335.04,-207.65"/>
+<polygon fill="#000000" stroke="#000000" points="334.28,-211.07 344.72,-209.26 335.43,-204.17 334.28,-211.07"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~find_rows~~CallsGraph_edge21" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M286.51,-264.13C294.84,-264.13 303.34,-264.13 311.81,-264.13"/>
+<polygon fill="#000000" stroke="#000000" points="311.8,-267.64 321.8,-264.14 311.8,-260.64 311.8,-267.64"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~find_rows~~CallsGraph_edge22" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M491.4,-234.74C527.96,-241.6 572.14,-249.9 604.24,-255.93"/>
+<polygon fill="#000000" stroke="#000000" points="603.52,-259.35 613.99,-257.76 604.81,-252.47 603.52,-259.35"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~find_rows~~CallsGraph_edge23" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M510.13,-222.13C542.64,-222.13 578.26,-222.13 605.14,-222.13"/>
+<polygon fill="#000000" stroke="#000000" points="604.94,-225.64 614.94,-222.14 604.94,-218.64 604.94,-225.64"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~find_rows~~CallsGraph_edge24" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M491.4,-209.53C516.06,-204.9 544.19,-199.62 569.74,-194.82"/>
+<polygon fill="#000000" stroke="#000000" points="570.22,-198.29 579.4,-193.01 568.93,-191.41 570.22,-198.29"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocfind_rowsCallsGraph = svgPanZoom('#procfind_rowsCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~find_rows~~CalledByGraph Pages: 1 -->
+<svg id="procfind_rowsCalledByGraph" width="574pt" height="32pt"
+ viewBox="0.00 0.00 574.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~find_rows~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~find_rows~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 569.83,-28.27 569.83,4 -4,4"/>
+<!-- proc~find_rows -->
+<g id="proc~~find_rows~~CalledByGraph_node1" class="node">
+<title>proc~find_rows</title>
+<polygon fill="none" stroke="black" points="565.83,-24.27 504.81,-24.27 504.81,0 565.83,0 565.83,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="535.32" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">find_rows</text>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~find_rows~~CalledByGraph_node2" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~find_rows~~CalledByGraph_node2"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="468.81,-24.27 368.79,-24.27 368.79,0 468.81,0 468.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="418.8" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="proc~~find_rows~~CalledByGraph_edge1" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M469.03,-12.13C477,-12.13 485.19,-12.13 492.95,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="492.8,-15.64 502.8,-12.14 492.8,-8.64 492.8,-15.64"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~find_rows~~CalledByGraph_node3" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~find_rows~~CalledByGraph_node3"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="332.79,-24.27 140.52,-24.27 140.52,0 332.79,0 332.79,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~find_rows~~CalledByGraph_edge2" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.27,-12.13C341.32,-12.13 349.31,-12.13 356.99,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="356.85,-15.64 366.85,-12.14 356.85,-8.64 356.85,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~find_rows~~CalledByGraph_node4" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~find_rows~~CalledByGraph_node4"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~find_rows~~CalledByGraph_edge3" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M104.55,-12.13C112.23,-12.13 120.38,-12.13 128.71,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.64,-15.64 138.64,-12.14 128.64,-8.64 128.64,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">find_rows</span><span class="p">(</span><span class="n">mission</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">rows</span><span class="p">,</span><span class="w"> </span><span class="n">phimin</span><span class="p">,</span><span class="w"> </span><span class="n">shadow_min</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">mission</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span>
+<span class="w">    </span><span class="k">type</span><span class="p">(</span><span class="n">eclipse_row</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="p">,</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rows</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">phimin</span><span class="w">      </span><span class="c">!! the smallest shadow function (no bubble) along the trajectory</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">shadow_min</span><span class="w">  </span><span class="c">!! the time in the shadow [min] (approximate: the number of points</span>
+<span class="w">                                        </span><span class="c">!! in the shadow times the step)</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n_segs</span><span class="p">,</span><span class="w"> </span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">n_full</span><span class="p">,</span><span class="w"> </span><span class="n">nk</span><span class="p">,</span><span class="w"> </span><span class="n">kmax</span><span class="p">,</span><span class="w"> </span><span class="n">nr</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg_phimin</span><span class="p">,</span><span class="w"> </span><span class="n">seg_lo</span><span class="p">,</span><span class="w"> </span><span class="n">seg_hi</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg_nshadow</span><span class="p">,</span><span class="w"> </span><span class="n">full2red</span><span class="p">,</span><span class="w"> </span><span class="n">removed</span>
+<span class="w">    </span><span class="kt">logical</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">seg_near</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">phi0</span><span class="p">,</span><span class="w"> </span><span class="n">phib</span><span class="p">,</span><span class="w"> </span><span class="n">step</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">rv</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n_segs</span><span class="o">=</span><span class="n">n_segs</span><span class="p">)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_full</span><span class="p">,</span><span class="w"> </span><span class="n">full_problem</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+<span class="w">    </span><span class="k">call </span><span class="n">mission</span><span class="p">%</span><span class="n">put_x_in_segments</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">seg_phimin</span><span class="p">(</span><span class="n">n_segs</span><span class="p">),</span><span class="w"> </span><span class="n">seg_lo</span><span class="p">(</span><span class="n">n_segs</span><span class="p">),</span><span class="w"> </span><span class="n">seg_hi</span><span class="p">(</span><span class="n">n_segs</span><span class="p">),</span><span class="w"> </span><span class="n">seg_nshadow</span><span class="p">(</span><span class="n">n_segs</span><span class="p">),</span><span class="w"> </span><span class="n">seg_near</span><span class="p">(</span><span class="n">n_segs</span><span class="p">))</span>
+<span class="w">    </span><span class="n">seg_phimin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">huge</span><span class="p">(</span><span class="n">one</span><span class="p">);</span><span class="w"> </span><span class="n">seg_lo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">huge</span><span class="p">(</span><span class="n">one</span><span class="p">);</span><span class="w"> </span><span class="n">seg_hi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="nb">huge</span><span class="p">(</span><span class="n">one</span><span class="p">);</span><span class="w"> </span><span class="n">seg_nshadow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">seg_near</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">false</span><span class="p">.</span>
+
+<span class="c">!$OMP PARALLEL DO PRIVATE(iseg,i,n,dt,phi0,phib,rv) SCHEDULE(dynamic)</span>
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">        </span><span class="k">associate</span><span class="w"> </span><span class="p">(</span><span class="n">seg</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">))</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">propagate</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">tstep</span><span class="o">=</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_detect_step</span><span class="p">)</span>
+<span class="w">            </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">)</span>
+<span class="w">            </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n</span>
+<span class="w">                </span><span class="n">rv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w">  </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">z</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">                      </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vx</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vy</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">vz</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+<span class="w">                </span><span class="n">phi0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_sun_fraction</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">rv</span><span class="p">,</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_bubble</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">phib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_sun_fraction</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">eph</span><span class="p">,</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">rv</span><span class="p">,</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_bubble</span><span class="p">)</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="k">                    </span><span class="n">phib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phi0</span>
+<span class="w">                </span><span class="k">end if</span>
+<span class="k">                </span><span class="n">seg_phimin</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">seg_phimin</span><span class="p">(</span><span class="n">iseg</span><span class="p">),</span><span class="w"> </span><span class="n">phi0</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">phi0</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="n">seg_nshadow</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seg_nshadow</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">phib</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_detect_phi</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                    </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">abs</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">et</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="w">  </span><span class="c">! [sec from the start]</span>
+<span class="w">                    </span><span class="n">seg_near</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="n">true</span><span class="p">.</span>
+<span class="w">                    </span><span class="n">seg_lo</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">seg_lo</span><span class="p">(</span><span class="n">iseg</span><span class="p">),</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">seg_hi</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="n">seg_hi</span><span class="p">(</span><span class="n">iseg</span><span class="p">),</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span>
+<span class="w">                </span><span class="k">end if</span>
+<span class="k">            end do</span>
+<span class="k">            call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_inertial</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">            </span><span class="k">call </span><span class="n">seg</span><span class="p">%</span><span class="n">traj_se_rotating</span><span class="p">%</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">        </span><span class="k">end associate</span>
+<span class="k">    end do</span>
+<span class="c">!$OMP END PARALLEL DO</span>
+
+<span class="w">    </span><span class="n">phimin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">minval</span><span class="p">(</span><span class="n">seg_phimin</span><span class="p">)</span>
+<span class="w">    </span><span class="n">shadow_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">seg_nshadow</span><span class="p">),</span><span class="n">wp</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_detect_step</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">6</span><span class="mf">0.0_wp</span>
+
+<span class="w">    </span><span class="c">! the map from the full problem's columns to x:</span>
+<span class="w">    </span><span class="n">removed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">removed_columns</span><span class="p">()</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">full2red</span><span class="p">(</span><span class="n">n_full</span><span class="p">))</span>
+<span class="w">    </span><span class="n">full2red</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="n">nk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_full</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">removed</span><span class="o">==</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="k">cycle</span>
+<span class="k">        </span><span class="n">nk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nk</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="n">full2red</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nk</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">! the rows: the samples across the near-shadow part of each flagged segment, padded by one</span>
+<span class="w">    </span><span class="c">! sample on each side (and not past the segment's last full step)</span>
+<span class="w">    </span><span class="n">step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">eclipse_opt_sample_step</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">rows</span><span class="p">(</span><span class="nb">count</span><span class="p">(</span><span class="n">seg_near</span><span class="p">)))</span>
+<span class="w">    </span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">    </span><span class="k">do </span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">n_segs</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(.</span><span class="nb">not</span><span class="p">.</span><span class="w"> </span><span class="n">seg_near</span><span class="p">(</span><span class="n">iseg</span><span class="p">))</span><span class="w"> </span><span class="k">cycle</span>
+<span class="k">        associate</span><span class="w"> </span><span class="p">(</span><span class="n">seg</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">mission</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">iseg</span><span class="p">))</span>
+<span class="w">            </span><span class="n">kmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">floor</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">seg</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">tf</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">seg</span><span class="p">%</span><span class="k">data</span><span class="p">%</span><span class="n">t0</span><span class="p">)</span><span class="o">*</span><span class="n">day2sec</span><span class="o">/</span><span class="n">step</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1.0e-6_wp</span><span class="p">)</span>
+<span class="w">            </span><span class="n">nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="n">rows</span><span class="p">(</span><span class="n">nr</span><span class="p">)%</span><span class="n">iseg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iseg</span>
+<span class="w">            </span><span class="n">rows</span><span class="p">(</span><span class="n">nr</span><span class="p">)%</span><span class="n">k_lo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">floor</span><span class="p">(</span><span class="n">seg_lo</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="n">rows</span><span class="p">(</span><span class="n">nr</span><span class="p">)%</span><span class="n">k_hi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">min</span><span class="p">(</span><span class="n">kmax</span><span class="p">,</span><span class="w"> </span><span class="nb">ceiling</span><span class="p">(</span><span class="n">seg_hi</span><span class="p">(</span><span class="n">iseg</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">call </span><span class="n">row_columns</span><span class="p">(</span><span class="n">iseg</span><span class="p">,</span><span class="w"> </span><span class="n">full2red</span><span class="p">,</span><span class="w"> </span><span class="n">rows</span><span class="p">(</span><span class="n">nr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">end associate</span>
+<span class="k">    end do</span>
+
+<span class="k">    end subroutine </span><span class="n">find_rows</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

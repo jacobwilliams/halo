@@ -1,0 +1,763 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>moon_pa_frame &ndash; halo </title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>moon_pa_frame
+      <small>Derived Type</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 3.4% of total for derived types.</p>Including implementation: 83 statements,  3.1% of total for derived types.">11 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/splined_moon_frame_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/splined_moon_frame_module.f90.html'>splined_moon_frame_module.f90</a></li>
+                <li class="breadcrumb-item"><a href='../module/splined_moon_frame_module.html'>splined_moon_frame_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">moon_pa_frame</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#vars-0"
+         aria-expanded="false" aria-controls="vars-0">
+         <h4 class="card-header bg-primary text-white">Variables</h4>
+      </a>
+      <div id="vars-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/moon_pa_frame.html#variable-inbvx~2">inbvx</a>
+            <a class="list-group-item" href="../type/moon_pa_frame.html#variable-w0~2">w0</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#boundprocs-0"
+         aria-expanded="false" aria-controls="boundprocs-0">
+         <h4 class="card-header bg-primary text-white">Type-Bound Procedures</h4>
+      </a>
+      <div id="boundprocs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../type/moon_pa_frame.html#boundprocedure-initialize~2">initialize</a>
+            <a class="list-group-item" href="../type/moon_pa_frame.html#boundprocedure-j2000_to_frame">j2000_to_frame</a>
+            <a class="list-group-item" href="../type/moon_pa_frame.html#boundprocedure-frame_to_j2000">frame_to_j2000</a>
+            <a class="list-group-item" href="../type/moon_pa_frame.html#boundprocedure-destroy~4">destroy</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../type/moon_pa_frame.html#src">moon_pa_frame</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2 id="type-def-statement">
+        type, public :: moon_pa_frame</h2>
+    <p>The interface to the splined MOON_PA frame: only the evaluation workspace
+(the splines themselves are global). Make a copy for each thread.</p>
+<br>      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Inherited by</h3>
+        </div>
+        <div class="card-body">
+          <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: type~~moon_pa_frame~~InheritedByGraph Pages: 1 -->
+<svg id="typemoon_pa_frameInheritedByGraph" width="641pt" height="72pt"
+ viewBox="0.00 0.00 641.00 72.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="type~~moon_pa_frame~~InheritedByGraph" class="graph" transform="scale(0.88892 0.88892) rotate(0) translate(4 77.27)">
+<title>type~~moon_pa_frame~~InheritedByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-77.27 717.1,-77.27 717.1,4 -4,4"/>
+<!-- type~moon_pa_frame -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node1" class="node">
+<title>type~moon_pa_frame</title>
+<polygon fill="none" stroke="black" points="98.52,-48.27 0,-48.27 0,-24 98.52,-24 98.52,-48.27"/>
+<text xml:space="preserve" text-anchor="middle" x="49.26" y="-32.53" font-family="Helvetica,sans-Serif" font-size="10.50">moon_pa_frame</text>
+</g>
+<!-- type~mission_type -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node2" class="node">
+<title>type~mission_type</title>
+<g id="a_type~~moon_pa_frame~~InheritedByGraph_node2"><a xlink:href="../type/mission_type.html" xlink:title="mission_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="375.06,-48.27 294.54,-48.27 294.54,-24 375.06,-24 375.06,-48.27"/>
+<text xml:space="preserve" text-anchor="middle" x="334.8" y="-32.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~moon_pa_frame -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge1" class="edge">
+<title>type~mission_type&#45;&gt;type~moon_pa_frame</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M294.08,-39.23C288.2,-39.59 282.22,-39.91 276.54,-40.13 205.47,-42.92 187.59,-43.81 116.52,-41.13 114.45,-41.06 112.34,-40.97 110.21,-40.86"/>
+<polygon fill="#000000" stroke="#000000" points="110.42,-37.37 100.24,-40.3 110.03,-44.36 110.42,-37.37"/>
+<text xml:space="preserve" text-anchor="middle" x="207.03" y="-44.97" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- type~segment -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node3" class="node">
+<title>type~segment</title>
+<g id="a_type~~moon_pa_frame~~InheritedByGraph_node3"><a xlink:href="../type/segment.html" xlink:title="segment">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="236.04,-24.27 178.02,-24.27 178.02,0 236.04,0 236.04,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="207.03" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment</text>
+</a>
+</g>
+</g>
+<!-- type~mission_type&#45;&gt;type~segment -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge5" class="edge">
+<title>type~mission_type&#45;&gt;type~segment</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M294.35,-28.61C279.31,-25.74 262.18,-22.47 247.17,-19.6"/>
+<polygon fill="#000000" stroke="#000000" points="248.14,-16.23 237.66,-17.79 246.83,-23.1 248.14,-16.23"/>
+<text xml:space="preserve" text-anchor="middle" x="265.29" y="-27.08" font-family="Helvetica,sans-Serif" font-size="9.50">segs</text>
+</g>
+<!-- type~segment&#45;&gt;type~moon_pa_frame -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge2" class="edge">
+<title>type~segment&#45;&gt;type~moon_pa_frame</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M177.82,-16.48C158.91,-19.39 133.29,-23.34 109.98,-26.93"/>
+<polygon fill="#000000" stroke="#000000" points="109.6,-23.45 100.25,-28.43 110.67,-30.37 109.6,-23.45"/>
+<text xml:space="preserve" text-anchor="middle" x="138.27" y="-27.8" font-family="Helvetica,sans-Serif" font-size="9.50">moon_pa</text>
+</g>
+<!-- type~eclipse_opt_data -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node4" class="node">
+<title>type~eclipse_opt_data</title>
+<g id="a_type~~moon_pa_frame~~InheritedByGraph_node4"><a xlink:href="../type/eclipse_opt_data.html" xlink:title="eclipse_opt_data">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="549.33,-73.27 448.56,-73.27 448.56,-49 549.33,-49 549.33,-73.27"/>
+<text xml:space="preserve" text-anchor="middle" x="498.94" y="-57.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_opt_data</text>
+</a>
+</g>
+</g>
+<!-- type~eclipse_opt_data&#45;&gt;type~mission_type -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge3" class="edge">
+<title>type~eclipse_opt_data&#45;&gt;type~mission_type</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M448.42,-53.5C428.87,-50.49 406.44,-47.03 386.76,-43.99"/>
+<polygon fill="#000000" stroke="#000000" points="387.45,-40.56 377.03,-42.49 386.38,-47.47 387.45,-40.56"/>
+<text xml:space="preserve" text-anchor="middle" x="411.81" y="-52.36" font-family="Helvetica,sans-Serif" font-size="9.50">mission</text>
+</g>
+<!-- type~my_solver_type -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node5" class="node">
+<title>type~my_solver_type</title>
+<g id="a_type~~moon_pa_frame~~InheritedByGraph_node5"><a xlink:href="../type/my_solver_type.html" xlink:title="my_solver_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="545.95,-31.27 451.93,-31.27 451.93,-7 545.95,-7 545.95,-31.27"/>
+<text xml:space="preserve" text-anchor="middle" x="498.94" y="-15.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type</text>
+</a>
+</g>
+</g>
+<!-- type~my_solver_type&#45;&gt;type~mission_type -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge4" class="edge">
+<title>type~my_solver_type&#45;&gt;type~mission_type</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M451.59,-19.58C433.3,-20.19 412.13,-21.43 393.06,-23.88 390.9,-24.16 388.71,-24.48 386.5,-24.83"/>
+<polygon fill="#000000" stroke="#000000" points="386.12,-21.34 376.88,-26.52 387.34,-28.23 386.12,-21.34"/>
+<text xml:space="preserve" text-anchor="middle" x="411.81" y="-26.11" font-family="Helvetica,sans-Serif" font-size="9.50">mission</text>
+</g>
+<!-- type~eclipse_newton_type -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_node6" class="node">
+<title>type~eclipse_newton_type</title>
+<g id="a_type~~moon_pa_frame~~InheritedByGraph_node6"><a xlink:href="../type/eclipse_newton_type.html" xlink:title="eclipse_newton_type">
+<polygon fill="#5cb85c" stroke="#5cb85c" points="713.1,-73.27 591.33,-73.27 591.33,-49 713.1,-49 713.1,-73.27"/>
+<text xml:space="preserve" text-anchor="middle" x="652.21" y="-57.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_newton_type</text>
+</a>
+</g>
+</g>
+<!-- type~eclipse_newton_type&#45;&gt;type~eclipse_opt_data -->
+<g id="type~~moon_pa_frame~~InheritedByGraph_edge6" class="edge">
+<title>type~eclipse_newton_type&#45;&gt;type~eclipse_opt_data</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M590.99,-61.13C581.16,-61.13 570.97,-61.13 561.12,-61.13"/>
+<polygon fill="#000000" stroke="#000000" points="561.26,-57.64 551.26,-61.14 561.26,-64.64 561.26,-57.64"/>
+<text xml:space="preserve" text-anchor="middle" x="570.33" y="-63.36" font-family="Helvetica,sans-Serif" font-size="9.50">d</text>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var pantypemoon_pa_frameInheritedByGraph = svgPanZoom('#typemoon_pa_frameInheritedByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#InheritedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="InheritedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="184pt" height="32pt"
+ viewBox="0.00 0.00 184.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 179.88,-28.27 179.88,4 -4,4"/>
+<!-- Type -->
+<g id="node1" class="node">
+<title>Type</title>
+<polygon fill="#5cb85c" stroke="#5cb85c" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node2" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="175.88,-24.27 72.12,-24.27 72.12,0 175.88,0 175.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="124" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a derived type to the parent type which it
+extends. Dashed arrows point from a derived type to the other
+types it contains as a components, with a label listing the name(s) of
+said component(s).
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    <br>
+
+    <section>
+    <h2>Components</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-inbvx~2"></span>
+              integer,
+            </td>
+              <td>private,</td>
+            <td>
+              dimension(n_splines)
+            </td>
+            <td>::</td>
+            <td><strong>inbvx</strong></td>
+<td> =</td>
+                <td>1</td>
+            <td>
+                <p><code>db1val</code>'s interval index for each spline</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w0~2"></span>
+              real(kind=wp),
+            </td>
+              <td>private,</td>
+            <td>
+              dimension(3*kx)
+            </td>
+            <td>::</td>
+            <td><strong>w0</strong></td>
+<td> =</td>
+                <td>0.0_wp</td>
+            <td>
+                <p><code>db1val</code> work array</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+
+
+      <section>
+        <h2>Type-Bound Procedures</h2>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-initialize~2"></span>
+      <h3>
+          procedure, public ::
+  <strong>initialize</strong> => <a href='/home/runner/work/halo/halo/doc/proc/initialize_moon_pa_frame.html'>initialize_moon_pa_frame</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  subroutine <a href='../proc/initialize_moon_pa_frame.html'>initialize_moon_pa_frame</a>(me, filename, et0, etf)  
+</h3>
+    
+
+  <p>Read the table and compute the (global) splines, for the time span <code>[et0, etf]</code>:
+the rows from the last one at or before <code>et0</code> to the first one at or after
+<code>etf</code> (as in <code>moonframe</code>). Then the object's workspace is reset; copies of
+the object (<code>allocate(..., source=...)</code>) can be used by other threads.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='moon_pa_frame.html'>moon_pa_frame</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              character(len=*),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>filename</strong></td>
+            <td>
+<p>csv file with the ephemeris time, roll, pitch and yaw (rad)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et0</strong></td>
+            <td>
+<p>start ephemeris time of the span to spline [sec]</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>etf</strong></td>
+            <td>
+<p>end ephemeris time of the span to spline [sec]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-j2000_to_frame"></span>
+      <h3>
+          procedure, public ::
+  <strong>j2000_to_frame</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  function <a href='../proc/j2000_to_frame.html'>j2000_to_frame</a>(me, et) result(rot)  
+</h3>
+    
+
+  <p>The rotation matrix from J2000 to the MOON_PA frame at <code>et</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='moon_pa_frame.html'>moon_pa_frame</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+<p>ephemeris time [sec]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp), dimension(3,3)</small>
+    </h4>
+    
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-frame_to_j2000"></span>
+      <h3>
+          procedure, public ::
+  <strong>frame_to_j2000</strong>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  function <a href='../proc/frame_to_j2000.html'>frame_to_j2000</a>(me, et) result(rot)  
+</h3>
+    
+
+  <p>The rotation matrix from the MOON_PA frame to J2000 at <code>et</code>.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='moon_pa_frame.html'>moon_pa_frame</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+<p>ephemeris time [sec]</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp), dimension(3,3)</small>
+    </h4>
+    
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+          <div class="row">
+              <div class="card mt-3">
+    <div class="card-header codesum">
+      <span class="anchor" id="boundprocedure-destroy~4"></span>
+      <h3>
+          procedure, public ::
+  <strong>destroy</strong> => <a href='/home/runner/work/halo/halo/doc/proc/destroy_moon_pa_frame.html'>destroy_moon_pa_frame</a>
+        
+      </h3>
+    </div>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  subroutine <a href='../proc/destroy_moon_pa_frame.html'>destroy_moon_pa_frame</a>(me)  
+</h3>
+    
+
+  <p>Reset the object's workspace (the global splines are kept).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='moon_pa_frame.html'>moon_pa_frame</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          </li>
+      </ul>
+  </div>
+
+          </div>
+      </section>
+
+    <section>
+    <h3><span class="anchor" id="src"></span>Source Code</h3>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">type</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">moon_pa_frame</span>
+<span class="w">        </span><span class="c">!! The interface to the splined MOON_PA frame: only the evaluation workspace</span>
+<span class="w">        </span><span class="c">!! (the splines themselves are global). Make a copy for each thread.</span>
+<span class="w">        </span><span class="k">private</span>
+<span class="k">        </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(</span><span class="n">n_splines</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">inbvx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">  </span><span class="c">!! `db1val`'s interval index for each spline</span>
+<span class="w">        </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">kx</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">w0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0_wp</span><span class="w">    </span><span class="c">!! `db1val` work array</span>
+<span class="w">    </span><span class="k">contains</span>
+<span class="k">        private</span>
+<span class="k">        procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">initialize</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">initialize_moon_pa_frame</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">j2000_to_frame</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">frame_to_j2000</span>
+<span class="w">        </span><span class="k">procedure</span><span class="p">,</span><span class="k">public</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">destroy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">destroy_moon_pa_frame</span>
+<span class="w">    </span><span class="k">end type </span><span class="n">moon_pa_frame</span>
+</pre></div>
+
+    </section>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

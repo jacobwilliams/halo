@@ -1,0 +1,677 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>halo_utilities_module &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>halo_utilities_module
+      <small>Module</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.5% of total for modules and submodules.">26 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_utilities_module.f90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_utilities_module.f90.html'>halo_utilities_module.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">halo_utilities_module</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+
+  <div class="row">
+    <div class="col-md-3">
+        <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#funcs-0"
+         aria-expanded="false" aria-controls="funcs-0">
+         <h4 class="card-header bg-primary text-white">Functions</h4>
+      </a>
+      <div id="funcs-0" class="collapse">
+        <div class="list-group list-group-flush">
+            <a class="list-group-item" href="../module/halo_utilities_module.html#proc-get_sun_fraction">get_sun_fraction</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  </div>
+
+    </div>
+
+    <div class="col-md-9" id='text'>
+      <p>Various astrodynamics utilities.</p>
+<p>The lighting routines it used to have (<code>apparent_position</code>, <code>cubic_shadow_model</code>,
+and the frame conversion to the solar system barycenter) are now in the Fortran
+Astrodynamics Toolkit's <code>lighting_module</code>.</p>
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/'>fortran_astrodynamics_toolkit</a></li>
+                  <li class="list-inline-item"><a href='parameters_module.html'>parameters_module</a></li>
+                  <li class="list-inline-item"><a href='splined_ephemeris_module.html'>splined_ephemeris_module</a></li>
+                  <li class="list-inline-item"><a href='halo_kinds_module.html'>halo_kinds_module</a></li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: module~~halo_utilities_module~~UsesGraph Pages: 1 -->
+<svg id="modulehalo_utilities_moduleUsesGraph" width="641pt" height="189pt"
+ viewBox="0.00 0.00 641.00 189.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~halo_utilities_module~~UsesGraph" class="graph" transform="scale(0.971094 0.971094) rotate(0) translate(4 190.58)">
+<title>module~~halo_utilities_module~~UsesGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-190.58 656.08,-190.58 656.08,4 -4,4"/>
+<!-- module~halo_utilities_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_node1" class="node">
+<title>module~halo_utilities_module</title>
+<polygon fill="none" stroke="black" points="652.08,-125.91 528.06,-125.91 528.06,-101.64 652.08,-101.64 652.08,-125.91"/>
+<text xml:space="preserve" text-anchor="middle" x="590.07" y="-110.18" font-family="Helvetica,sans-Serif" font-size="10.50">halo_utilities_module</text>
+</g>
+<!-- fortran_astrodynamics_toolkit -->
+<g id="module~~halo_utilities_module~~UsesGraph_node2" class="node">
+<title>fortran_astrodynamics_toolkit</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node2"><a xlink:href="https://jacobwilliams.github.io/Fortran-Astrodynamics-Toolkit/" xlink:title="fortran_astrodynamics_toolkit">
+<polygon fill="#337ab7" stroke="#337ab7" points="298.29,-167.91 129.27,-167.91 129.27,-143.64 298.29,-143.64 298.29,-167.91"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-152.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fortran_astrodynamics_toolkit</text>
+</a>
+</g>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge1" class="edge">
+<title>module~halo_utilities_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M574.9,-126.37C557.05,-141.3 524.75,-165.35 492.06,-174.78 417.95,-196.14 328.29,-183.42 271.38,-170.85"/>
+<polygon fill="#000000" stroke="#000000" points="272.46,-167.5 261.93,-168.68 270.9,-174.32 272.46,-167.5"/>
+</g>
+<!-- iso_fortran_env -->
+<g id="module~~halo_utilities_module~~UsesGraph_node3" class="node">
+<title>iso_fortran_env</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node3"><a xlink:href="http://fortranwiki.org/fortran/show/iso_fortran_env" xlink:title="iso_fortran_env">
+<polygon fill="#337ab7" stroke="#337ab7" points="93.27,-85.91 0,-85.91 0,-61.64 93.27,-61.64 93.27,-85.91"/>
+<text xml:space="preserve" text-anchor="middle" x="46.63" y="-70.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">iso_fortran_env</text>
+</a>
+</g>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge2" class="edge">
+<title>module~halo_utilities_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M573.22,-101.28C554.78,-87.36 522.88,-65.17 492.06,-52.78 410.48,-19.96 385.77,-21.71 298.29,-12.78 223.56,-5.14 200.56,10.92 129.27,-12.78 105.27,-20.75 82.62,-38.84 67.29,-53.26"/>
+<polygon fill="#000000" stroke="#000000" points="64.94,-50.67 60.24,-60.16 69.84,-55.67 64.94,-50.67"/>
+</g>
+<!-- module~halo_kinds_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_node4" class="node">
+<title>module~halo_kinds_module</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node4"><a xlink:href="../module/halo_kinds_module.html" xlink:title="halo_kinds_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="270.54,-125.91 157.02,-125.91 157.02,-101.64 270.54,-101.64 270.54,-125.91"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-110.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_kinds_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge3" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M527.68,-113.78C460.2,-113.78 352.11,-113.78 282.29,-113.78"/>
+<polygon fill="#000000" stroke="#000000" points="282.51,-110.28 272.51,-113.78 282.51,-117.28 282.51,-110.28"/>
+</g>
+<!-- module~parameters_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_node5" class="node">
+<title>module~parameters_module</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node5"><a xlink:href="../module/parameters_module.html" xlink:title="parameters_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="472.94,-165.91 353.42,-165.91 353.42,-141.64 472.94,-141.64 472.94,-165.91"/>
+<text xml:space="preserve" text-anchor="middle" x="413.18" y="-150.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">parameters_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~parameters_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge4" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~parameters_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M534.21,-126.32C517.12,-130.23 498.09,-134.58 480.31,-138.65"/>
+<polygon fill="#000000" stroke="#000000" points="479.58,-135.23 470.61,-140.87 481.14,-142.05 479.58,-135.23"/>
+</g>
+<!-- module~splined_ephemeris_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_node6" class="node">
+<title>module~splined_ephemeris_module</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node6"><a xlink:href="../module/splined_ephemeris_module.html" xlink:title="splined_ephemeris_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="492.06,-85.91 334.29,-85.91 334.29,-61.64 492.06,-61.64 492.06,-85.91"/>
+<text xml:space="preserve" text-anchor="middle" x="413.18" y="-70.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">splined_ephemeris_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge5" class="edge">
+<title>module~halo_utilities_module&#45;&gt;module~splined_ephemeris_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M534.21,-101.23C517.12,-97.32 498.09,-92.97 480.31,-88.9"/>
+<polygon fill="#000000" stroke="#000000" points="481.14,-85.5 470.61,-86.68 479.58,-92.32 481.14,-85.5"/>
+</g>
+<!-- module~halo_kinds_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge6" class="edge">
+<title>module~halo_kinds_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M160.98,-101.23C143.12,-96.9 123.02,-92.03 104.76,-87.61"/>
+<polygon fill="#000000" stroke="#000000" points="105.68,-84.23 95.13,-85.28 104.03,-91.04 105.68,-84.23"/>
+</g>
+<!-- module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge7" class="edge">
+<title>module~parameters_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M352.95,-154.38C339.38,-154.51 324.61,-154.66 309.95,-154.81"/>
+<polygon fill="#000000" stroke="#000000" points="310.25,-151.31 300.29,-154.91 310.32,-158.31 310.25,-151.31"/>
+</g>
+<!-- module~parameters_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge8" class="edge">
+<title>module~parameters_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M352.95,-141.77C330.6,-137.25 305.02,-132.06 281.99,-127.4"/>
+<polygon fill="#000000" stroke="#000000" points="282.9,-124.01 272.4,-125.45 281.51,-130.87 282.9,-124.01"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge10" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;fortran_astrodynamics_toolkit</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M392.32,-86.36C370.14,-99.94 332.81,-121.43 298.29,-134.78 293.41,-136.66 288.29,-138.43 283.11,-140.07"/>
+<polygon fill="#000000" stroke="#000000" points="282.45,-136.62 273.86,-142.83 284.45,-143.32 282.45,-136.62"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;iso_fortran_env -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge11" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;iso_fortran_env</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M333.97,-73.78C265.28,-73.78 166.94,-73.78 105.22,-73.78"/>
+<polygon fill="#000000" stroke="#000000" points="105.27,-70.28 95.27,-73.78 105.27,-77.28 105.27,-70.28"/>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge12" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;module~halo_kinds_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M349.99,-86.38C328.43,-90.74 304.17,-95.66 282.21,-100.11"/>
+<polygon fill="#000000" stroke="#000000" points="281.55,-96.67 272.45,-102.09 282.95,-103.53 281.55,-96.67"/>
+</g>
+<!-- bspline_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_node7" class="node">
+<title>bspline_module</title>
+<g id="a_module~~halo_utilities_module~~UsesGraph_node7"><a xlink:href="https://jacobwilliams.github.io/bspline-fortran/" xlink:title="bspline_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="261.54,-45.91 166.02,-45.91 166.02,-21.64 261.54,-21.64 261.54,-45.91"/>
+<text xml:space="preserve" text-anchor="middle" x="213.78" y="-30.18" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">bspline_module</text>
+</a>
+</g>
+</g>
+<!-- module~splined_ephemeris_module&#45;&gt;bspline_module -->
+<g id="module~~halo_utilities_module~~UsesGraph_edge9" class="edge">
+<title>module~splined_ephemeris_module&#45;&gt;bspline_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M349.99,-61.17C325.4,-56.19 297.3,-50.5 273.11,-45.59"/>
+<polygon fill="#000000" stroke="#000000" points="273.92,-42.19 263.42,-43.63 272.53,-49.05 273.92,-42.19"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panmodulehalo_utilities_moduleUsesGraph = svgPanZoom('#modulehalo_utilities_moduleUsesGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsesGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsesGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 511.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+          <div class="card">
+      <h3 class="card-header card-title bg-light">Used by</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: module~~halo_utilities_module~~UsedByGraph Pages: 1 -->
+<svg id="modulehalo_utilities_moduleUsedByGraph" width="449pt" height="32pt"
+ viewBox="0.00 0.00 449.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="module~~halo_utilities_module~~UsedByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>module~~halo_utilities_module~~UsedByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 445.06,-28.27 445.06,4 -4,4"/>
+<!-- module~halo_utilities_module -->
+<g id="module~~halo_utilities_module~~UsedByGraph_node1" class="node">
+<title>module~halo_utilities_module</title>
+<polygon fill="none" stroke="black" points="124.02,-24.27 0,-24.27 0,0 124.02,0 124.02,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="62.01" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">halo_utilities_module</text>
+</g>
+<!-- module~halo_module -->
+<g id="module~~halo_utilities_module~~UsedByGraph_node2" class="node">
+<title>module~halo_module</title>
+<g id="a_module~~halo_utilities_module~~UsedByGraph_node2"><a xlink:href="../module/halo_module.html" xlink:title="halo_module">
+<polygon fill="#337ab7" stroke="#337ab7" points="240.54,-24.27 160.02,-24.27 160.02,0 240.54,0 240.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="200.28" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_module</text>
+</a>
+</g>
+</g>
+<!-- module~halo_module&#45;&gt;module~halo_utilities_module -->
+<g id="module~~halo_utilities_module~~UsedByGraph_edge1" class="edge">
+<title>module~halo_module&#45;&gt;module~halo_utilities_module</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M159.87,-12.13C152.25,-12.13 144.04,-12.13 135.74,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="135.93,-8.64 125.93,-12.14 135.93,-15.64 135.93,-8.64"/>
+</g>
+<!-- module~halo_eclipse_opt_submodule -->
+<g id="module~~halo_utilities_module~~UsedByGraph_node3" class="node">
+<title>module~halo_eclipse_opt_submodule</title>
+<g id="a_module~~halo_utilities_module~~UsedByGraph_node3"><a xlink:href="../module/halo_eclipse_opt_submodule.html" xlink:title="halo_eclipse_opt_submodule">
+<polygon fill="#5bc0de" stroke="#5bc0de" points="441.06,-24.27 276.54,-24.27 276.54,0 441.06,0 441.06,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="358.8" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_eclipse_opt_submodule</text>
+</a>
+</g>
+</g>
+<!-- module~halo_eclipse_opt_submodule&#45;&gt;module~halo_module -->
+<g id="module~~halo_utilities_module~~UsedByGraph_edge2" class="edge">
+<title>module~halo_eclipse_opt_submodule&#45;&gt;module~halo_module</title>
+<path fill="none" stroke="#000000" d="M276.33,-12.13C268.14,-12.13 260,-12.13 252.27,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="252.4,-8.64 242.4,-12.14 252.4,-15.64 252.4,-8.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#UsedByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="UsedByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="511pt" height="32pt"
+ viewBox="0.00 0.00 511.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 506.88,-28.27 506.88,4 -4,4"/>
+<!-- Module -->
+<g id="node1" class="node">
+<title>Module</title>
+<polygon fill="#337ab7" stroke="#337ab7" points="54,-24.27 0,-24.27 0,0 54,0 54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="27" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Module</text>
+</g>
+<!-- Submodule -->
+<g id="node2" class="node">
+<title>Submodule</title>
+<polygon fill="#5bc0de" stroke="#5bc0de" points="144.13,-24.27 71.87,-24.27 71.87,0 144.13,0 144.13,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="108" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Submodule</text>
+</g>
+<!-- Subroutine -->
+<g id="node3" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="231.63,-24.27 162.37,-24.27 162.37,0 231.63,0 231.63,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="197" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node4" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="306.26,-24.27 249.74,-24.27 249.74,0 306.26,0 306.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Program -->
+<g id="node5" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="381.26,-24.27 324.74,-24.27 324.74,0 381.26,0 381.26,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="353" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node6" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="502.88,-24.27 399.12,-24.27 399.12,0 502.88,0 502.88,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="451" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a submodule to the (sub)module which it is
+descended from. Dashed arrows point from a module or program unit to 
+modules which it uses.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+
+      <br>
+
+
+
+
+
+
+
+        <section>
+          <h2>Functions</h2>
+              <div class="card">
+    <div class="card-header codesum"><span class="anchor" id="proc-get_sun_fraction"></span> <h3>public  function <a href='../proc/get_sun_fraction.html'>get_sun_fraction</a>(eph, et, rv, rbubble) result(phi)  
+</h3></div>
+    <div class="card-body">
+          
+  <p>Compute the "sun fraction" for eclipses by the Earth, using the circular
+cubic shadow model (the apparent positions of the Sun and the Earth).</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-eph~4"></span>
+              class(jpl_ephemeris),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>eph</strong></td>
+            <td>
+<p>the ephemeris</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-et~9"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>et</strong></td>
+            <td>
+<p>observer ephemeris time (sec)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rv~6"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(6)
+            </td>
+            <td>::</td>
+            <td><strong>rv</strong></td>
+            <td>
+<p>state of the spacecraft !! (j2000-moon frame)</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-rbubble"></span>
+              real(kind=wp),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>rbubble</strong></td>
+            <td>
+<p>eclipse bubble [km]. see the reference.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=wp)</small>
+    </h4>
+    <p>circular cubic sun frac value.</p>
+<ul>
+<li>
+<blockquote>
+<p>0 no eclipse,</p>
+</blockquote>
+</li>
+<li>&lt;0 eclipse,</li>
+<li>=0 on the eclipse line</li>
+</ul>
+
+    </div>
+  </div>
+
+        </section>
+        <br>
+
+
+
+
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,1142 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>equilibrate_scales &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>equilibrate_scales
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 1.1% of total for procedures.">43 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">equilibrate_scales</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/equilibrate_scales.html#src">equilibrate_scales</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  subroutine equilibrate_scales(me, x)  
+</h2>
+    
+
+    <p>Set the opt var scales from the sensitivities (<code>xscale_mode=2</code>): the Jacobian is
+computed at <code>x</code> (as the solver does, see <code>jacobian_mode</code>), and each variable's
+scale is divided by the norm of its column, so the columns of the scaled
+Jacobian all have unit norm. A unit change of any scaled variable then gives the
+same size change in the (scaled) constraints, so the solver's minimum-norm steps
+weigh each variable by its effect, not its units. (With the scales from the
+magnitudes, the 1e5 km position scale makes the positions at periapsis, where they
+are most sensitive, the cheapest variables to change.) The epoch scales are also
+multiplied by <code>epoch_scale_factor</code>.</p>
+<p><code>x</code> (scaled), and the scaled perturbations for the finite differences, are
+updated for the new scales.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~48"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~23"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>opt var vector (scaled): in with the old scales, out with the new</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~equilibrate_scales~~CallsGraph Pages: 1 -->
+<svg id="procequilibrate_scalesCallsGraph" width="641pt" height="196pt"
+ viewBox="0.00 0.00 641.00 196.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~equilibrate_scales~~CallsGraph" class="graph" transform="scale(0.401594 0.401594) rotate(0) translate(4 485.27)">
+<title>proc~~equilibrate_scales~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-485.27 1592.14,-485.27 1592.14,4 -4,4"/>
+<!-- proc~equilibrate_scales -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node1" class="node">
+<title>proc~equilibrate_scales</title>
+<polygon fill="none" stroke="black" points="186.27,-379.27 0,-379.27 0,-355 186.27,-355 186.27,-379.27"/>
+<text xml:space="preserve" text-anchor="middle" x="93.13" y="-363.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%equilibrate_scales</text>
+</g>
+<!-- compute_jacobian -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node2" class="node">
+<title>compute_jacobian</title>
+<polygon fill="#777777" stroke="#777777" points="383.79,-481.27 274.02,-481.27 274.02,-457 383.79,-457 383.79,-481.27"/>
+<text xml:space="preserve" text-anchor="middle" x="328.9" y="-465.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_jacobian</text>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;compute_jacobian -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge1" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;compute_jacobian</title>
+<path fill="none" stroke="#000000" d="M109.68,-379.67C132.8,-397.66 178.28,-430.56 222.27,-448.13 234.89,-453.17 248.85,-457.04 262.38,-460"/>
+<polygon fill="#000000" stroke="#000000" points="261.63,-463.42 272.12,-461.98 263.02,-456.56 261.63,-463.42"/>
+</g>
+<!-- proc~cache -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node3" class="node">
+<title>proc~cache</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node3"><a xlink:href="../proc/cache.html" xlink:title="segment%cache">
+<polygon fill="#d9534f" stroke="#d9534f" points="378.91,-439.27 278.89,-439.27 278.89,-415 378.91,-415 378.91,-439.27"/>
+<text xml:space="preserve" text-anchor="middle" x="328.9" y="-423.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%cache</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~cache -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge2" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~cache</title>
+<path fill="none" stroke="#000000" d="M140.64,-379.69C164.94,-386.2 195.18,-394.21 222.27,-401.13 236.85,-404.86 252.59,-408.79 267.35,-412.43"/>
+<polygon fill="#000000" stroke="#000000" points="266.4,-415.8 276.95,-414.79 268.07,-409 266.4,-415.8"/>
+</g>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node4" class="node">
+<title>proc~compute_jacobian_stm</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node4"><a xlink:href="../proc/compute_jacobian_stm.html" xlink:title="mission_type%compute_jacobian_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="435.54,-359.27 222.27,-359.27 222.27,-335 435.54,-335 435.54,-359.27"/>
+<text xml:space="preserve" text-anchor="middle" x="328.9" y="-343.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%compute_jacobian_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge3" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M186.53,-359.23C194.42,-358.56 202.47,-357.87 210.52,-357.18"/>
+<polygon fill="#000000" stroke="#000000" points="210.72,-360.67 220.39,-356.33 210.12,-353.7 210.72,-360.67"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node5" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node5"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="669.81,-437.27 471.54,-437.27 471.54,-413 669.81,-413 669.81,-437.27"/>
+<text xml:space="preserve" text-anchor="middle" x="570.67" y="-421.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge4" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M186.59,-377.01C255.32,-384.52 351.36,-395.37 435.54,-406.13 447.33,-407.64 459.69,-409.3 471.94,-410.98"/>
+<polygon fill="#000000" stroke="#000000" points="471.25,-414.42 481.64,-412.32 472.21,-407.48 471.25,-414.42"/>
+</g>
+<!-- proc~uncache -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node6" class="node">
+<title>proc~uncache</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node6"><a xlink:href="../proc/uncache.html" xlink:title="segment%uncache">
+<polygon fill="#d9534f" stroke="#d9534f" points="385.66,-317.27 272.14,-317.27 272.14,-293 385.66,-293 385.66,-317.27"/>
+<text xml:space="preserve" text-anchor="middle" x="328.9" y="-301.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%uncache</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~uncache -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge5" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~uncache</title>
+<path fill="none" stroke="#000000" d="M129.72,-354.55C155.26,-345.81 190.61,-334.32 222.27,-326.13 234.59,-322.95 247.83,-319.97 260.62,-317.32"/>
+<polygon fill="#000000" stroke="#000000" points="261.13,-320.79 270.23,-315.38 259.74,-313.93 261.13,-320.79"/>
+</g>
+<!-- set_dpert -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node7" class="node">
+<title>set_dpert</title>
+<polygon fill="#777777" stroke="#777777" points="359.41,-275.27 298.39,-275.27 298.39,-251 359.41,-251 359.41,-275.27"/>
+<text xml:space="preserve" text-anchor="middle" x="328.9" y="-259.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_dpert</text>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;set_dpert -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge6" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;set_dpert</title>
+<path fill="none" stroke="#000000" d="M109.24,-354.58C132.17,-336.2 177.82,-302.18 222.27,-284.13 242.69,-275.85 266.7,-270.74 286.67,-267.64"/>
+<polygon fill="#000000" stroke="#000000" points="286.99,-271.13 296.4,-266.25 286,-264.2 286.99,-271.13"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge9" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M397.72,-359.73C410.59,-363.25 423.71,-367.66 435.54,-373.13 453.45,-381.42 453.7,-390.69 471.54,-399.13 479.69,-403 488.51,-406.35 497.4,-409.25"/>
+<polygon fill="#000000" stroke="#000000" points="496.2,-412.55 506.79,-412.12 498.25,-405.85 496.2,-412.55"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node8" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node8"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="1139.85,-402.27 940.83,-402.27 940.83,-378 1139.85,-378 1139.85,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge7" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M435.92,-346.09C551.52,-346.02 741.82,-348.99 904.83,-366.13 925.53,-368.31 947.84,-371.82 968.23,-375.48"/>
+<polygon fill="#000000" stroke="#000000" points="967.38,-378.89 977.85,-377.25 968.65,-372 967.38,-378.89"/>
+</g>
+<!-- proc~earth_moon_frame_matrices -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node9" class="node">
+<title>proc~earth_moon_frame_matrices</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node9"><a xlink:href="../proc/earth_moon_frame_matrices.html" xlink:title="earth_moon_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1122.97,-360.27 957.7,-360.27 957.7,-336 1122.97,-336 1122.97,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">earth_moon_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge8" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M435.78,-335.52C447.83,-334.54 459.94,-333.71 471.54,-333.13 663.88,-323.65 712.55,-322.45 904.83,-333.13 918.25,-333.88 932.39,-335.04 946.26,-336.4"/>
+<polygon fill="#000000" stroke="#000000" points="945.49,-339.84 955.8,-337.37 946.2,-332.87 945.49,-339.84"/>
+</g>
+<!-- proc~propagate_segment_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node10" class="node">
+<title>proc~propagate_segment_stm</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node10"><a xlink:href="../proc/propagate_segment_stm.html" xlink:title="segment%propagate_segment_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="904.83,-234.27 705.81,-234.27 705.81,-210 904.83,-210 904.83,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="805.32" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge10" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm</title>
+<path fill="none" stroke="#000000" d="M414.25,-334.51C421.62,-332.18 428.82,-329.41 435.54,-326.13 454.52,-316.88 452.65,-304.57 471.54,-295.13 541.21,-260.32 627.24,-242.01 694.38,-232.43"/>
+<polygon fill="#000000" stroke="#000000" points="694.48,-235.95 703.91,-231.12 693.53,-229.02 694.48,-235.95"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node11" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node11"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="666.06,-193.27 475.29,-193.27 475.29,-169 666.06,-169 666.06,-193.27"/>
+<text xml:space="preserve" text-anchor="middle" x="570.67" y="-177.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge11" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M423,-334.6C427.46,-332.19 431.68,-329.39 435.54,-326.13 469.74,-297.29 441.75,-265.51 471.54,-232.13 484.79,-217.29 503.4,-206.1 520.86,-198.05"/>
+<polygon fill="#000000" stroke="#000000" points="521.79,-201.46 529.56,-194.26 519,-195.04 521.79,-201.46"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node12" class="node">
+<title>proc~removed_columns</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node12"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="899.2,-399.27 711.43,-399.27 711.43,-375 899.2,-375 899.2,-399.27"/>
+<text xml:space="preserve" text-anchor="middle" x="805.32" y="-383.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~removed_columns -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge12" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M435.84,-357.85C447.88,-358.99 459.97,-360.11 471.54,-361.13 547.94,-367.89 634.28,-374.61 699.87,-379.53"/>
+<polygon fill="#000000" stroke="#000000" points="699.3,-382.99 709.53,-380.25 699.82,-376.01 699.3,-382.99"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge13" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M670.23,-422.23C736.62,-419.75 826.11,-415.4 904.83,-408.13 916.77,-407.03 929.29,-405.66 941.67,-404.16"/>
+<polygon fill="#000000" stroke="#000000" points="942,-407.65 951.49,-402.94 941.13,-400.7 942,-407.65"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge14" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M648.82,-412.53C670.22,-409.04 693.62,-405.22 715.63,-401.62"/>
+<polygon fill="#000000" stroke="#000000" points="716.19,-405.08 725.49,-400.01 715.06,-398.17 716.19,-405.08"/>
+</g>
+<!-- get_rv -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node15" class="node">
+<title>get_rv</title>
+<polygon fill="#777777" stroke="#777777" points="1301.61,-444.27 1247.61,-444.27 1247.61,-420 1301.61,-420 1301.61,-444.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-428.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge15" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv</title>
+<path fill="none" stroke="#000000" d="M1122.06,-360.69C1128.28,-363.04 1134.29,-365.83 1139.85,-369.13 1160.99,-381.69 1154.72,-398.56 1175.85,-411.13 1194.01,-421.94 1217,-427.22 1236.13,-429.78"/>
+<polygon fill="#000000" stroke="#000000" points="1235.63,-433.25 1245.96,-430.89 1236.41,-426.29 1235.63,-433.25"/>
+</g>
+<!-- get_rv_derivative -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node16" class="node">
+<title>get_rv_derivative</title>
+<polygon fill="#777777" stroke="#777777" points="1326.12,-402.27 1223.1,-402.27 1223.1,-378 1326.12,-378 1326.12,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv_derivative</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge16" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative</title>
+<path fill="none" stroke="#000000" d="M1111.03,-360.74C1143.04,-366.53 1180.69,-373.33 1211.7,-378.94"/>
+<polygon fill="#000000" stroke="#000000" points="1210.84,-382.34 1221.31,-380.68 1212.09,-375.45 1210.84,-382.34"/>
+</g>
+<!-- proc~two_body_rotating_frame_matrices -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node23" class="node">
+<title>proc~two_body_rotating_frame_matrices</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node23"><a xlink:href="../proc/two_body_rotating_frame_matrices.html" xlink:title="two_body_rotating_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1373.37,-360.27 1175.85,-360.27 1175.85,-336 1373.37,-336 1373.37,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge17" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M1123.23,-348.13C1136.63,-348.13 1150.69,-348.13 1164.62,-348.13"/>
+<polygon fill="#000000" stroke="#000000" points="1164.23,-351.64 1174.23,-348.14 1164.23,-344.64 1164.23,-351.64"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge22" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M870.41,-234.74C882.8,-239.34 894.97,-245.6 904.83,-254.13 932.18,-277.81 912.28,-304.92 940.83,-327.13 942.98,-328.81 945.24,-330.36 947.58,-331.79"/>
+<polygon fill="#000000" stroke="#000000" points="945.8,-334.81 956.28,-336.35 949.04,-328.61 945.8,-334.81"/>
+</g>
+<!-- first_call -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node14" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="1068.22,-318.27 1012.45,-318.27 1012.45,-294 1068.22,-294 1068.22,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;first_call -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge18" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M858.05,-234.72C873.63,-239.61 890.41,-246.02 904.83,-254.13 923.23,-264.49 921.91,-275.75 940.83,-285.13 959.51,-294.4 982.16,-299.59 1001.03,-302.49"/>
+<polygon fill="#000000" stroke="#000000" points="1000.34,-305.93 1010.73,-303.81 1001.29,-298.99 1000.34,-305.93"/>
+</g>
+<!-- icrf_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node17" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1073.47,-108.27 1007.2,-108.27 1007.2,-84 1073.47,-84 1073.47,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;icrf_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge19" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M891.61,-209.72C896.32,-207.3 900.78,-204.47 904.83,-201.13 936.21,-175.34 909.45,-142.93 940.83,-117.13 956.04,-104.63 976.94,-99.06 995.57,-96.75"/>
+<polygon fill="#000000" stroke="#000000" points="995.67,-100.26 1005.3,-95.84 995.02,-93.29 995.67,-100.26"/>
+</g>
+<!-- integrate -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node18" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="1070.47,-276.27 1010.2,-276.27 1010.2,-252 1070.47,-252 1070.47,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;integrate -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge20" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M876.23,-234.74C916.17,-241.93 964.84,-250.71 998.57,-256.79"/>
+<polygon fill="#000000" stroke="#000000" points="997.89,-260.22 1008.35,-258.55 999.13,-253.33 997.89,-260.22"/>
+</g>
+<!-- proc~ballistic_derivs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node19" class="node">
+<title>proc~ballistic_derivs</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node19"><a xlink:href="../proc/ballistic_derivs.html" xlink:title="ballistic_derivs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1085.1,-234.27 995.58,-234.27 995.58,-210 1085.1,-210 1085.1,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ballistic_derivs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge21" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs</title>
+<path fill="none" stroke="#000000" d="M905.14,-222.13C931.99,-222.13 960.12,-222.13 983.65,-222.13"/>
+<polygon fill="#000000" stroke="#000000" points="983.64,-225.64 993.64,-222.14 983.64,-218.64 983.64,-225.64"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node20" class="node">
+<title>proc~identity_stm</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node20"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1078.35,-192.27 1002.33,-192.27 1002.33,-168 1078.35,-168 1078.35,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~identity_stm -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge23" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M876.23,-209.53C913.17,-202.88 957.58,-194.87 990.73,-188.9"/>
+<polygon fill="#000000" stroke="#000000" points="991.25,-192.36 1000.47,-187.14 990.01,-185.47 991.25,-192.36"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node22" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node22"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1130.47,-150.27 950.2,-150.27 950.2,-126 1130.47,-126 1130.47,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge24" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M887.04,-209.58C893.26,-207.23 899.27,-204.44 904.83,-201.13 925.97,-188.58 919.69,-171.69 940.83,-159.13 943.18,-157.74 945.6,-156.44 948.09,-155.22"/>
+<polygon fill="#000000" stroke="#000000" points="949.43,-158.46 957.23,-151.29 946.66,-152.03 949.43,-158.46"/>
+</g>
+<!-- transform -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node24" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="1072.35,-66.27 1008.33,-66.27 1008.33,-42 1072.35,-42 1072.35,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;transform -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge25" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M893.49,-209.52C897.56,-207.13 901.38,-204.36 904.83,-201.13 947.39,-161.38 898.27,-114.89 940.83,-75.13 955.72,-61.23 977.45,-55.63 996.72,-53.66"/>
+<polygon fill="#000000" stroke="#000000" points="996.77,-57.17 1006.5,-52.98 996.28,-50.18 996.77,-57.17"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node25" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1113.22,-24.27 967.45,-24.27 967.45,0 1113.22,0 1113.22,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1040.34" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge26" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M894.2,-209.52C898.03,-207.13 901.61,-204.35 904.83,-201.13 958.85,-147.17 886.81,-87.1 940.83,-33.13 945.51,-28.46 950.95,-24.71 956.83,-21.72"/>
+<polygon fill="#000000" stroke="#000000" points="957.86,-25.08 965.69,-17.94 955.12,-18.64 957.86,-25.08"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge28" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M598.62,-193.67C625.68,-206.24 668.6,-226.12 705.81,-243.13 794.1,-283.5 824.99,-277.92 904.83,-333.13 923.44,-346.01 920.95,-358.33 940.83,-369.13 943.67,-370.68 946.62,-372.11 949.65,-373.44"/>
+<polygon fill="#000000" stroke="#000000" points="948.17,-376.62 958.76,-377 950.72,-370.1 948.17,-376.62"/>
+</g>
+<!-- extract_vector -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node13" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="848.95,-192.27 761.68,-192.27 761.68,-168 848.95,-168 848.95,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="805.32" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge27" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M666.3,-180.73C694.75,-180.61 725,-180.48 749.91,-180.37"/>
+<polygon fill="#000000" stroke="#000000" points="749.81,-183.87 759.8,-180.33 749.78,-176.87 749.81,-183.87"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node21" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node21"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="891.7,-87.27 718.93,-87.27 718.93,-63 891.7,-63 891.7,-87.27"/>
+<text xml:space="preserve" text-anchor="middle" x="805.32" y="-71.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge29" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M599.28,-168.56C640.81,-149.63 719.52,-113.77 766.41,-92.41"/>
+<polygon fill="#000000" stroke="#000000" points="767.73,-95.65 775.38,-88.32 764.83,-89.28 767.73,-95.65"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge30" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M899.42,-388.33C909.28,-388.46 919.36,-388.59 929.39,-388.72"/>
+<polygon fill="#000000" stroke="#000000" points="929.1,-392.22 939.15,-388.85 929.19,-385.22 929.1,-392.22"/>
+</g>
+<!-- get_acc -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node26" class="node">
+<title>get_acc</title>
+<polygon fill="#777777" stroke="#777777" points="1301.61,-318.27 1247.61,-318.27 1247.61,-294 1301.61,-294 1301.61,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_acc</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_acc -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge31" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_acc</title>
+<path fill="none" stroke="#000000" d="M1085.27,-225.33C1103.17,-228.15 1123.46,-233.4 1139.85,-243.13 1160.99,-255.69 1154.72,-272.56 1175.85,-285.13 1194.01,-295.94 1217,-301.22 1236.13,-303.78"/>
+<polygon fill="#000000" stroke="#000000" points="1235.63,-307.25 1245.96,-304.89 1236.41,-300.29 1235.63,-307.25"/>
+</g>
+<!-- get_r -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node27" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="1301.61,-276.27 1247.61,-276.27 1247.61,-252 1301.61,-252 1301.61,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_r -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge32" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M1085.57,-230.13C1129.15,-238.01 1195,-249.92 1236.1,-257.35"/>
+<polygon fill="#000000" stroke="#000000" points="1235.29,-260.76 1245.75,-259.1 1236.54,-253.87 1235.29,-260.76"/>
+</g>
+<!-- icrf_to_iau_moon -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node28" class="node">
+<title>icrf_to_iau_moon</title>
+<polygon fill="#777777" stroke="#777777" points="1325.74,-234.27 1223.47,-234.27 1223.47,-210 1325.74,-210 1325.74,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_to_iau_moon</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge33" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon</title>
+<path fill="none" stroke="#000000" d="M1085.57,-222.13C1121.27,-222.13 1171.92,-222.13 1211.66,-222.13"/>
+<polygon fill="#000000" stroke="#000000" points="1211.57,-225.64 1221.57,-222.14 1211.57,-218.64 1211.57,-225.64"/>
+</g>
+<!-- j2000_to_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node29" class="node">
+<title>j2000_to_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1321.99,-192.27 1227.22,-192.27 1227.22,-168 1321.99,-168 1321.99,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">j2000_to_frame</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;j2000_to_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge34" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;j2000_to_frame</title>
+<path fill="none" stroke="#000000" d="M1085.57,-214.14C1122.43,-207.47 1175.22,-197.93 1215.48,-190.65"/>
+<polygon fill="#000000" stroke="#000000" points="1216.04,-194.1 1225.26,-188.88 1214.8,-187.21 1216.04,-194.1"/>
+</g>
+<!-- proc~pines_gravity -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node32" class="node">
+<title>proc~pines_gravity</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node32"><a xlink:href="../proc/pines_gravity.html" xlink:title="pines_gravity">
+<polygon fill="#d9534f" stroke="#d9534f" points="1494.76,-152.27 1412.74,-152.27 1412.74,-128 1494.76,-128 1494.76,-152.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1453.75" y="-136.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pines_gravity</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pines_gravity -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge35" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pines_gravity</title>
+<path fill="none" stroke="#000000" d="M1085.27,-218.94C1103.17,-216.12 1123.46,-210.87 1139.85,-201.13 1160.99,-188.58 1153.88,-170.17 1175.85,-159.13 1247.71,-123.05 1343.55,-125.94 1401.57,-132.32"/>
+<polygon fill="#000000" stroke="#000000" points="1400.8,-135.75 1411.15,-133.45 1401.63,-128.8 1400.8,-135.75"/>
+</g>
+<!-- proc~pointmass_gravity_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node33" class="node">
+<title>proc~pointmass_gravity_gradient</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node33"><a xlink:href="../proc/pointmass_gravity_gradient.html" xlink:title="pointmass_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1353.87,-112.27 1195.35,-112.27 1195.35,-88 1353.87,-88 1353.87,-112.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-96.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pointmass_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge36" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1085.17,-221.17C1103.68,-218.78 1124.46,-213.25 1139.85,-201.13 1168.91,-178.27 1147.37,-149.72 1175.85,-126.13 1179.76,-122.9 1184.03,-120.06 1188.54,-117.57"/>
+<polygon fill="#000000" stroke="#000000" points="1189.87,-120.82 1197.36,-113.32 1186.83,-114.51 1189.87,-120.82"/>
+</g>
+<!-- proc~third_body_gravity_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node34" class="node">
+<title>proc~third_body_gravity_gradient</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node34"><a xlink:href="../proc/third_body_gravity_gradient.html" xlink:title="third_body_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1354.62,-70.27 1194.6,-70.27 1194.6,-46 1354.62,-46 1354.62,-70.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-54.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge37" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1085.14,-222.42C1104.09,-220.32 1125.22,-214.68 1139.85,-201.13 1181.33,-162.73 1134.4,-117.58 1175.85,-79.13 1178.59,-76.6 1181.55,-74.34 1184.69,-72.33"/>
+<polygon fill="#000000" stroke="#000000" points="1186.08,-75.55 1193.23,-67.73 1182.77,-69.39 1186.08,-75.55"/>
+</g>
+<!-- third_body_gravity -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node35" class="node">
+<title>third_body_gravity</title>
+<polygon fill="#777777" stroke="#777777" points="1329.49,-28.27 1219.72,-28.27 1219.72,-4 1329.49,-4 1329.49,-28.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1274.61" y="-12.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;third_body_gravity -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge38" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;third_body_gravity</title>
+<path fill="none" stroke="#000000" d="M1085.59,-222.89C1104.63,-220.89 1125.71,-215.19 1139.85,-201.13 1192.78,-148.53 1122.96,-89.78 1175.85,-37.13 1184.66,-28.37 1196.18,-22.86 1208.22,-19.48"/>
+<polygon fill="#000000" stroke="#000000" points="1208.91,-22.91 1217.88,-17.27 1207.35,-16.09 1208.91,-22.91"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge39" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M892.1,-82.87C927.22,-86.03 966.37,-89.56 995.46,-92.18"/>
+<polygon fill="#000000" stroke="#000000" points="995.1,-95.66 1005.37,-93.07 995.72,-88.69 995.1,-95.66"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge40" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M892.1,-67.4C927.68,-64.2 967.38,-60.62 996.59,-57.99"/>
+<polygon fill="#000000" stroke="#000000" points="996.87,-61.48 1006.52,-57.09 996.24,-54.5 996.87,-61.48"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge41" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M843.45,-62.52C870.31,-53.65 907.58,-41.85 940.83,-33.13 948.62,-31.09 956.8,-29.11 964.97,-27.22"/>
+<polygon fill="#000000" stroke="#000000" points="965.61,-30.66 974.6,-25.05 964.07,-23.83 965.61,-30.66"/>
+</g>
+<!-- proc~cross -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node30" class="node">
+<title>proc~cross</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node30"><a xlink:href="../proc/cross.html" xlink:title="cross">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1480.75,-381.27 1426.75,-381.27 1426.75,-357 1480.75,-357 1480.75,-381.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1453.75" y="-365.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge42" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross</title>
+<path fill="none" stroke="#000000" d="M1373.77,-359.77C1388.53,-361.52 1402.93,-363.23 1415.3,-364.7"/>
+<polygon fill="#000000" stroke="#000000" points="1414.65,-368.14 1424.99,-365.84 1415.47,-361.19 1414.65,-368.14"/>
+</g>
+<!-- proc~cross_matrix -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node31" class="node">
+<title>proc~cross_matrix</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node31"><a xlink:href="../proc/cross_matrix.html" xlink:title="cross_matrix">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1492.89,-339.27 1414.62,-339.27 1414.62,-315 1492.89,-315 1492.89,-339.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1453.75" y="-323.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross_matrix</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge43" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix</title>
+<path fill="none" stroke="#000000" d="M1373.77,-336.5C1383.87,-335.3 1393.8,-334.12 1403.04,-333.03"/>
+<polygon fill="#000000" stroke="#000000" points="1403.29,-336.52 1412.81,-331.87 1402.47,-329.57 1403.29,-336.52"/>
+</g>
+<!-- proc~outer -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node36" class="node">
+<title>proc~outer</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node36"><a xlink:href="../proc/outer.html" xlink:title="outer">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1588.14,-131.27 1534.14,-131.27 1534.14,-107 1588.14,-107 1588.14,-131.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1561.14" y="-115.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">outer</text>
+</a>
+</g>
+</g>
+<!-- proc~pines_gravity&#45;&gt;proc~outer -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge44" class="edge">
+<title>proc~pines_gravity&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1495.2,-132.08C1504.16,-130.29 1513.62,-128.41 1522.46,-126.64"/>
+<polygon fill="#000000" stroke="#000000" points="1523.03,-130.1 1532.16,-124.71 1521.66,-123.23 1523.03,-130.1"/>
+</g>
+<!-- proc~point_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_node37" class="node">
+<title>proc~point_gradient</title>
+<g id="a_proc~~equilibrate_scales~~CallsGraph_node37"><a xlink:href="../proc/point_gradient.html" xlink:title="point_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1498.14,-110.27 1409.37,-110.27 1409.37,-86 1498.14,-86 1498.14,-110.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1453.75" y="-94.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">point_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge45" class="edge">
+<title>proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1354.34,-99.25C1369.07,-99.08 1384.16,-98.91 1397.97,-98.75"/>
+<polygon fill="#000000" stroke="#000000" points="1397.75,-102.26 1407.71,-98.64 1397.67,-95.26 1397.75,-102.26"/>
+</g>
+<!-- proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge46" class="edge">
+<title>proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1335.37,-70.74C1347.93,-73.46 1361.1,-76.35 1373.37,-79.13 1381.35,-80.95 1389.77,-82.91 1398.03,-84.86"/>
+<polygon fill="#000000" stroke="#000000" points="1397.11,-88.24 1407.65,-87.15 1398.73,-81.43 1397.11,-88.24"/>
+</g>
+<!-- proc~point_gradient&#45;&gt;proc~outer -->
+<g id="proc~~equilibrate_scales~~CallsGraph_edge47" class="edge">
+<title>proc~point_gradient&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M1498.53,-106.86C1506.59,-108.46 1514.93,-110.13 1522.77,-111.69"/>
+<polygon fill="#000000" stroke="#000000" points="1521.85,-115.07 1532.34,-113.59 1523.21,-108.21 1521.85,-115.07"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocequilibrate_scalesCallsGraph = svgPanZoom('#procequilibrate_scalesCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~equilibrate_scales~~CalledByGraph Pages: 1 -->
+<svg id="procequilibrate_scalesCalledByGraph" width="641pt" height="25pt"
+ viewBox="0.00 0.00 641.00 25.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~equilibrate_scales~~CalledByGraph" class="graph" transform="scale(0.784021 0.784021) rotate(0) translate(4 28.27)">
+<title>proc~~equilibrate_scales~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 813.58,-28.27 813.58,4 -4,4"/>
+<!-- proc~equilibrate_scales -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_node1" class="node">
+<title>proc~equilibrate_scales</title>
+<polygon fill="none" stroke="black" points="809.58,-24.27 623.31,-24.27 623.31,0 809.58,0 809.58,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%equilibrate_scales</text>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_node2" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~equilibrate_scales~~CalledByGraph_node2"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="587.31,-24.27 384.54,-24.27 384.54,0 587.31,0 587.31,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="485.93" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_edge1" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales</title>
+<path fill="none" stroke="#000000" d="M587.49,-12.13C595.55,-12.13 603.7,-12.13 611.78,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="611.62,-15.64 621.62,-12.14 611.62,-8.64 611.62,-15.64"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_node3" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~equilibrate_scales~~CalledByGraph_node3"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="348.54,-24.27 140.52,-24.27 140.52,0 348.54,0 348.54,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_edge2" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M348.79,-12.13C356.79,-12.13 364.89,-12.13 372.94,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="372.77,-15.64 382.77,-12.14 372.77,-8.64 372.77,-15.64"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_node4" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~equilibrate_scales~~CalledByGraph_node4"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~equilibrate_scales~~CalledByGraph_edge3" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M105,-12.13C112.57,-12.13 120.6,-12.13 128.83,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.65,-15.64 138.65,-12.14 128.65,-8.64 128.65,-15.64"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocequilibrate_scalesCalledByGraph = svgPanZoom('#procequilibrate_scalesCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">subroutine </span><span class="n">equilibrate_scales</span><span class="p">(</span><span class="n">me</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="w">  </span><span class="c">!! opt var vector (scaled): in with the old scales, out with the new</span>
+
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">jac</span><span class="w">  </span><span class="c">!! the nonzero Jacobian elements (scaled)</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">colnorm</span><span class="w">  </span><span class="c">!! norm of each column of the scaled Jacobian</span>
+<span class="w">    </span><span class="kt">real</span><span class="p">(</span><span class="n">wp</span><span class="p">),</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x_unscaled</span><span class="p">,</span><span class="w"> </span><span class="n">new_scale</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">irow</span><span class="p">,</span><span class="w"> </span><span class="n">icol</span>
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">k</span>
+
+<span class="w">    </span><span class="k">write</span><span class="p">(</span><span class="o">*</span><span class="p">,</span><span class="s1">'(A)'</span><span class="p">)</span><span class="w"> </span><span class="s1">' * Scaling the variables by their sensitivities (Jacobian at the initial guess)'</span>
+
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">cache</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">jacobian_mode</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">        call </span><span class="n">me</span><span class="p">%</span><span class="n">compute_jacobian_stm</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">jac</span><span class="p">)</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="k">        call </span><span class="n">me</span><span class="p">%</span><span class="n">compute_jacobian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">jac</span><span class="p">)</span>
+<span class="w">    </span><span class="k">end if</span>
+<span class="k">    do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">)</span>
+<span class="w">        </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">segs</span><span class="p">(</span><span class="n">i</span><span class="p">)%</span><span class="n">uncache</span><span class="p">()</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="k">    call </span><span class="n">me</span><span class="p">%</span><span class="n">get_sparsity_pattern</span><span class="p">(</span><span class="n">irow</span><span class="p">,</span><span class="n">icol</span><span class="p">)</span>
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">colnorm</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="w">    </span><span class="n">colnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zero</span>
+<span class="w">    </span><span class="k">do </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">jac</span><span class="p">)</span>
+<span class="w">        </span><span class="n">colnorm</span><span class="p">(</span><span class="n">icol</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">colnorm</span><span class="p">(</span><span class="n">icol</span><span class="p">(</span><span class="n">k</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">jac</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+<span class="w">    </span><span class="k">end do</span>
+<span class="k">    </span><span class="n">colnorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">sqrt</span><span class="p">(</span><span class="n">colnorm</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">new_scale</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<span class="w">    </span><span class="k">do </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">colnorm</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">            </span><span class="n">new_scale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">colnorm</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="k">            </span><span class="n">new_scale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w">  </span><span class="c">! (no constraint depends on it: keep it)</span>
+<span class="w">        </span><span class="k">end if</span>
+<span class="k">        if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">x_is_epoch</span><span class="p">(</span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="n">new_scale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_scale</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">epoch_scale_factor</span>
+<span class="w">    </span><span class="k">end do</span>
+
+<span class="w">    </span><span class="c">! x and the perturbations with the new scales:</span>
+<span class="w">    </span><span class="n">x_unscaled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xoffset</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">dpert_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">dpert_</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">new_scale</span><span class="w">  </span><span class="c">! (dpert_ is scaled: the unscaled perturbations are kept)</span>
+<span class="w">    </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">new_scale</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">x_unscaled</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xoffset</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">xscale</span>
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">set_dpert</span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">dpert_</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">end subroutine </span><span class="n">equilibrate_scales</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

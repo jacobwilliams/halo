@@ -1,0 +1,763 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>removed_columns &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>removed_columns
+      <small>Function</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.3% of total for procedures.">14 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">removed_columns</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="card card-primary">
+      <div class="card-header text-left"><h3 class="card-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/removed_columns.html#src">removed_columns</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public  function removed_columns(me) result(cols_to_remove)  
+</h2>
+    
+
+    <p>The columns (optimization variables) of the full problem that are removed
+(fixed) by the problem options. The full problem has 7 columns per node
+(<code>[t, rx, ry, rz, vx, vy, vz]</code>), with nodes in time order.</p>
+
+    <h3>Type Bound</h3>
+    <p><a href='../type/mission_type.html'>mission_type</a></p>
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~45"></span>
+              class(<a href='../type/mission_type.html'>mission_type</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <h3>Return Value
+        <small>
+          <span class="anchor" id="variable-cols_to_remove~2"></span>
+          integer, dimension(:), allocatable
+        </small>
+      </h3>
+      
+    <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~removed_columns~~CallsGraph Pages: 1 -->
+<svg id="procremoved_columnsCallsGraph" width="431pt" height="32pt"
+ viewBox="0.00 0.00 431.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~removed_columns~~CallsGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>proc~~removed_columns~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 426.79,-28.27 426.79,4 -4,4"/>
+<!-- proc~removed_columns -->
+<g id="proc~~removed_columns~~CallsGraph_node1" class="node">
+<title>proc~removed_columns</title>
+<polygon fill="none" stroke="black" points="187.77,-24.27 0,-24.27 0,0 187.77,0 187.77,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="93.88" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%removed_columns</text>
+</g>
+<!-- proc~define_problem_size -->
+<g id="proc~~removed_columns~~CallsGraph_node2" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_proc~~removed_columns~~CallsGraph_node2"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="422.79,-24.27 223.77,-24.27 223.77,0 422.79,0 422.79,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="323.28" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="proc~~removed_columns~~CallsGraph_edge1" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M188.03,-12.13C195.95,-12.13 204.01,-12.13 212.04,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="211.86,-15.64 221.86,-12.14 211.86,-8.64 211.86,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: proc~~removed_columns~~CalledByGraph Pages: 1 -->
+<svg id="procremoved_columnsCalledByGraph" width="641pt" height="136pt"
+ viewBox="0.00 0.00 641.00 136.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="proc~~removed_columns~~CalledByGraph" class="graph" transform="scale(0.420358 0.420358) rotate(0) translate(4 318.36)">
+<title>proc~~removed_columns~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-318.36 1520.89,-318.36 1520.89,4 -4,4"/>
+<!-- proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_node1" class="node">
+<title>proc~removed_columns</title>
+<polygon fill="none" stroke="black" points="1516.89,-234.36 1329.12,-234.36 1329.12,-210.09 1516.89,-210.09 1516.89,-234.36"/>
+<text xml:space="preserve" text-anchor="middle" x="1423.01" y="-218.62" font-family="Helvetica,sans-Serif" font-size="10.50">mission_type%removed_columns</text>
+</g>
+<!-- proc~compute_jacobian_stm -->
+<g id="proc~~removed_columns~~CalledByGraph_node2" class="node">
+<title>proc~compute_jacobian_stm</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node2"><a xlink:href="../proc/compute_jacobian_stm.html" xlink:title="mission_type%compute_jacobian_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="1058.85,-192.36 845.58,-192.36 845.58,-168.09 1058.85,-168.09 1058.85,-192.36"/>
+<text xml:space="preserve" text-anchor="middle" x="952.22" y="-176.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%compute_jacobian_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_edge1" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M1059.3,-189.73C1136.53,-196.64 1240.62,-205.97 1317.49,-212.86"/>
+<polygon fill="#000000" stroke="#000000" points="1316.84,-216.31 1327.12,-213.72 1317.47,-209.34 1316.84,-216.31"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_node4" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node4"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="1293.12,-114.36 1094.85,-114.36 1094.85,-90.09 1293.12,-90.09 1293.12,-114.36"/>
+<text xml:space="preserve" text-anchor="middle" x="1193.99" y="-98.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge9" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M1010.05,-167.65C1025.96,-163.75 1043.18,-159.16 1058.85,-154.22 1091.19,-144.02 1126.97,-130.01 1153.43,-119.1"/>
+<polygon fill="#000000" stroke="#000000" points="1154.52,-122.44 1162.4,-115.37 1151.83,-115.98 1154.52,-122.44"/>
+</g>
+<!-- proc~find_rows -->
+<g id="proc~~removed_columns~~CalledByGraph_node3" class="node">
+<title>proc~find_rows</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node3"><a xlink:href="../proc/find_rows.html" xlink:title="find_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="982.73,-314.36 921.71,-314.36 921.71,-290.09 982.73,-290.09 982.73,-314.36"/>
+<text xml:space="preserve" text-anchor="middle" x="952.22" y="-298.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_edge2" class="edge">
+<title>proc~find_rows&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M982.89,-304.34C1042.67,-307.78 1181.42,-311.62 1293.12,-283.22 1328.97,-274.11 1366.87,-254.85 1392.23,-240.4"/>
+<polygon fill="#000000" stroke="#000000" points="1393.76,-243.56 1400.64,-235.5 1390.24,-237.51 1393.76,-243.56"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_edge3" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M1218.85,-114.84C1259.3,-136.22 1341.45,-179.64 1387.94,-204.21"/>
+<polygon fill="#000000" stroke="#000000" points="1386.3,-207.31 1396.78,-208.89 1389.57,-201.12 1386.3,-207.31"/>
+</g>
+<!-- proc~report_change -->
+<g id="proc~~removed_columns~~CalledByGraph_node5" class="node">
+<title>proc~report_change</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node5"><a xlink:href="../proc/report_change.html" xlink:title="report_change">
+<polygon fill="#d9534f" stroke="#d9534f" points="1238.37,-274.36 1149.6,-274.36 1149.6,-250.09 1238.37,-250.09 1238.37,-274.36"/>
+<text xml:space="preserve" text-anchor="middle" x="1193.99" y="-258.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">report_change</text>
+</a>
+</g>
+</g>
+<!-- proc~report_change&#45;&gt;proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_edge4" class="edge">
+<title>proc~report_change&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M1238.76,-254.51C1267.36,-249.47 1305.6,-242.73 1339.75,-236.71"/>
+<polygon fill="#000000" stroke="#000000" points="1339.95,-240.23 1349.19,-235.05 1338.73,-233.34 1339.95,-240.23"/>
+</g>
+<!-- proc~step_limits -->
+<g id="proc~~removed_columns~~CalledByGraph_node6" class="node">
+<title>proc~step_limits</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node6"><a xlink:href="../proc/step_limits.html" xlink:title="step_limits">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="986.1,-234.36 918.33,-234.36 918.33,-210.09 986.1,-210.09 986.1,-234.36"/>
+<text xml:space="preserve" text-anchor="middle" x="952.22" y="-218.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">step_limits</text>
+</a>
+</g>
+</g>
+<!-- proc~step_limits&#45;&gt;proc~removed_columns -->
+<g id="proc~~removed_columns~~CalledByGraph_edge5" class="edge">
+<title>proc~step_limits&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M986.55,-222.22C1054.57,-222.22 1211.82,-222.22 1317.53,-222.22"/>
+<polygon fill="#000000" stroke="#000000" points="1317.36,-225.72 1327.36,-222.22 1317.36,-218.72 1317.36,-225.72"/>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="proc~~removed_columns~~CalledByGraph_node7" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node7"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="535.93,-196.36 435.91,-196.36 435.91,-172.09 535.93,-172.09 535.93,-196.36"/>
+<text xml:space="preserve" text-anchor="middle" x="485.92" y="-180.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="proc~~removed_columns~~CalledByGraph_edge8" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M500.32,-196.83C523.36,-217.63 572.89,-258.6 623.31,-276.22 721.76,-310.64 846.63,-309.18 910.11,-305.52"/>
+<polygon fill="#000000" stroke="#000000" points="909.96,-309.04 919.72,-304.91 909.52,-302.05 909.96,-309.04"/>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge10" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M507.24,-171.67C533.1,-156.46 579.66,-131.58 623.31,-121.22 779.73,-84.09 967.05,-86.44 1083.06,-93.11"/>
+<polygon fill="#000000" stroke="#000000" points="1082.7,-96.59 1092.89,-93.7 1083.12,-89.61 1082.7,-96.59"/>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~report_change -->
+<g id="proc~~removed_columns~~CalledByGraph_edge15" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~report_change</title>
+<path fill="none" stroke="#000000" d="M521.46,-196.82C548.74,-206.22 587.96,-218.55 623.31,-225.22 809.7,-260.37 1035.77,-263.65 1138.04,-263.06"/>
+<polygon fill="#000000" stroke="#000000" points="1137.81,-266.56 1147.79,-262.99 1137.76,-259.56 1137.81,-266.56"/>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~step_limits -->
+<g id="proc~~removed_columns~~CalledByGraph_edge16" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~step_limits</title>
+<path fill="none" stroke="#000000" d="M536.33,-193.06C562.16,-197.37 594.35,-202.25 623.31,-205.22 724.26,-215.58 843.38,-219.75 906.58,-221.33"/>
+<polygon fill="#000000" stroke="#000000" points="906.49,-224.83 916.57,-221.57 906.66,-217.84 906.49,-224.83"/>
+</g>
+<!-- proc~equilibrate -->
+<g id="proc~~removed_columns~~CalledByGraph_node8" class="node">
+<title>proc~equilibrate</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node8"><a xlink:href="../proc/equilibrate.html" xlink:title="equilibrate">
+<polygon fill="#d9534f" stroke="#d9534f" points="751.08,-196.36 681.81,-196.36 681.81,-172.09 751.08,-172.09 751.08,-196.36"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-180.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">equilibrate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~equilibrate -->
+<g id="proc~~removed_columns~~CalledByGraph_edge18" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~equilibrate</title>
+<path fill="none" stroke="#000000" d="M536.23,-184.22C575.94,-184.22 631.34,-184.22 669.99,-184.22"/>
+<polygon fill="#000000" stroke="#000000" points="669.9,-187.72 679.9,-184.22 669.9,-180.72 669.9,-187.72"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="proc~~removed_columns~~CalledByGraph_node12" class="node">
+<title>proc~newton_finish</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node12"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="758.58,-154.36 674.31,-154.36 674.31,-130.09 758.58,-130.09 758.58,-154.36"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-138.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="proc~~removed_columns~~CalledByGraph_edge22" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M536.23,-175.16C573.61,-168.29 624.87,-158.87 663,-151.86"/>
+<polygon fill="#000000" stroke="#000000" points="663.19,-155.38 672.39,-150.13 661.93,-148.5 663.19,-155.38"/>
+</g>
+<!-- proc~equilibrate&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~removed_columns~~CalledByGraph_edge6" class="edge">
+<title>proc~equilibrate&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M751.44,-183.64C773.54,-183.26 803.8,-182.74 834.07,-182.23"/>
+<polygon fill="#000000" stroke="#000000" points="833.76,-185.73 843.7,-182.06 833.64,-178.73 833.76,-185.73"/>
+</g>
+<!-- proc~equilibrate_scales -->
+<g id="proc~~removed_columns~~CalledByGraph_node9" class="node">
+<title>proc~equilibrate_scales</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node9"><a xlink:href="../proc/equilibrate_scales.html" xlink:title="mission_type%equilibrate_scales">
+<polygon fill="#d9534f" stroke="#d9534f" points="809.58,-74.36 623.31,-74.36 623.31,-50.09 809.58,-50.09 809.58,-74.36"/>
+<text xml:space="preserve" text-anchor="middle" x="716.45" y="-58.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%equilibrate_scales</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm -->
+<g id="proc~~removed_columns~~CalledByGraph_edge7" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M742.46,-74.85C784.29,-95.96 868.53,-138.48 916.22,-162.56"/>
+<polygon fill="#000000" stroke="#000000" points="914.52,-165.62 925.03,-167 917.68,-159.37 914.52,-165.62"/>
+</g>
+<!-- proc~equilibrate_scales&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge11" class="edge">
+<title>proc~equilibrate_scales&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M809.88,-68.56C878.6,-73.44 974.63,-80.62 1058.85,-88.22 1066.79,-88.94 1074.98,-89.71 1083.23,-90.51"/>
+<polygon fill="#000000" stroke="#000000" points="1082.69,-93.98 1092.98,-91.47 1083.37,-87.01 1082.69,-93.98"/>
+</g>
+<!-- proc~initialize_the_mission -->
+<g id="proc~~removed_columns~~CalledByGraph_node10" class="node">
+<title>proc~initialize_the_mission</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node10"><a xlink:href="../proc/initialize_the_mission.html" xlink:title="mission_type%initialize_the_mission">
+<polygon fill="#d9534f" stroke="#d9534f" points="587.31,-55.36 384.54,-55.36 384.54,-31.09 587.31,-31.09 587.31,-55.36"/>
+<text xml:space="preserve" text-anchor="middle" x="485.92" y="-39.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%initialize_the_mission</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge12" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M587.47,-41.58C599.55,-41.43 611.71,-41.31 623.31,-41.22 817.22,-39.8 868.05,-32.58 1058.85,-67.22 1086.06,-72.16 1115.87,-79.72 1140.46,-86.55"/>
+<polygon fill="#000000" stroke="#000000" points="1139.33,-89.86 1149.9,-89.21 1141.23,-83.13 1139.33,-89.86"/>
+</g>
+<!-- proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales -->
+<g id="proc~~removed_columns~~CalledByGraph_edge19" class="edge">
+<title>proc~initialize_the_mission&#45;&gt;proc~equilibrate_scales</title>
+<path fill="none" stroke="#000000" d="M587.49,-51.58C595.55,-52.25 603.7,-52.93 611.78,-53.6"/>
+<polygon fill="#000000" stroke="#000000" points="611.37,-57.08 621.62,-54.42 611.95,-50.1 611.37,-57.08"/>
+</g>
+<!-- proc~initialize_the_solver -->
+<g id="proc~~removed_columns~~CalledByGraph_node11" class="node">
+<title>proc~initialize_the_solver</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node11"><a xlink:href="../proc/initialize_the_solver.html" xlink:title="my_solver_type%initialize_the_solver">
+<polygon fill="#d9534f" stroke="#d9534f" points="348.54,-55.36 140.52,-55.36 140.52,-31.09 348.54,-31.09 348.54,-55.36"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-39.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%initialize_the_solver</text>
+</a>
+</g>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge13" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M320.13,-30.59C465.06,-8.69 793.72,28.09 1058.85,-37.22 1097.45,-46.73 1138.02,-68.23 1164.3,-83.91"/>
+<polygon fill="#000000" stroke="#000000" points="1162.32,-86.8 1172.68,-89.01 1165.96,-80.82 1162.32,-86.8"/>
+</g>
+<!-- proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission -->
+<g id="proc~~removed_columns~~CalledByGraph_edge20" class="edge">
+<title>proc~initialize_the_solver&#45;&gt;proc~initialize_the_mission</title>
+<path fill="none" stroke="#000000" d="M348.79,-43.22C356.79,-43.22 364.89,-43.22 372.94,-43.22"/>
+<polygon fill="#000000" stroke="#000000" points="372.77,-46.72 382.77,-43.22 372.77,-39.72 372.77,-46.72"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~get_sparsity_pattern -->
+<g id="proc~~removed_columns~~CalledByGraph_edge14" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M758.99,-139.43C823.3,-135.03 950.81,-125.97 1058.85,-116.22 1066.79,-115.5 1074.98,-114.73 1083.23,-113.93"/>
+<polygon fill="#000000" stroke="#000000" points="1083.37,-117.43 1092.98,-112.97 1082.69,-110.47 1083.37,-117.43"/>
+</g>
+<!-- interface~eclipse_optimize -->
+<g id="proc~~removed_columns~~CalledByGraph_node13" class="node">
+<title>interface~eclipse_optimize</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node13"><a xlink:href="../interface/eclipse_optimize.html" xlink:title="my_solver_type%eclipse_optimize">
+<polygon fill="#a7506f" stroke="#a7506f" points="340.66,-156.36 148.39,-156.36 148.39,-132.09 340.66,-132.09 340.66,-156.36"/>
+<text xml:space="preserve" text-anchor="middle" x="244.53" y="-140.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">my_solver_type%eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="proc~~removed_columns~~CalledByGraph_edge17" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M320.95,-156.82C354.27,-162.39 392.92,-168.85 424.33,-174.1"/>
+<polygon fill="#000000" stroke="#000000" points="423.62,-177.53 434.06,-175.72 424.77,-170.62 423.62,-177.53"/>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="proc~~removed_columns~~CalledByGraph_node14" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_proc~~removed_columns~~CalledByGraph_node14"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-76.36 0,-76.36 0,-52.09 104.52,-52.09 104.52,-76.36"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-60.62" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;proc~initialize_the_solver -->
+<g id="proc~~removed_columns~~CalledByGraph_edge21" class="edge">
+<title>proc~halo_solver_main&#45;&gt;proc~initialize_the_solver</title>
+<path fill="none" stroke="#000000" d="M105,-58.51C112.57,-57.68 120.6,-56.79 128.83,-55.88"/>
+<polygon fill="#000000" stroke="#000000" points="129.11,-59.37 138.66,-54.8 128.34,-52.41 129.11,-59.37"/>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="proc~~removed_columns~~CalledByGraph_edge23" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M82.99,-76.72C115.43,-90.36 167.53,-112.27 203.54,-127.41"/>
+<polygon fill="#000000" stroke="#000000" points="201.73,-130.44 212.3,-131.09 204.44,-123.99 201.73,-130.44"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var panprocremoved_columnsCalledByGraph = svgPanZoom('#procremoved_columnsCalledByGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
+
+    
+    
+
+    
+    
+
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="hl codehilite"><pre><span></span><span class="w">    </span><span class="k">function </span><span class="n">removed_columns</span><span class="p">(</span><span class="n">me</span><span class="p">)</span><span class="w"> </span><span class="k">result</span><span class="p">(</span><span class="n">cols_to_remove</span><span class="p">)</span>
+
+<span class="w">    </span><span class="k">implicit none</span>
+
+<span class="k">    class</span><span class="p">(</span><span class="n">mission_type</span><span class="p">),</span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">me</span>
+<span class="w">    </span><span class="kt">integer</span><span class="p">,</span><span class="k">dimension</span><span class="p">(:),</span><span class="k">allocatable</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">cols_to_remove</span>
+
+<span class="w">    </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="w">  </span><span class="c">!! number of optimization variables in the full problem</span>
+
+<span class="w">    </span><span class="k">call </span><span class="n">me</span><span class="p">%</span><span class="n">define_problem_size</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">full_problem</span><span class="o">=</span><span class="p">.</span><span class="n">true</span><span class="p">.)</span>
+
+<span class="w">    </span><span class="k">allocate</span><span class="p">(</span><span class="n">cols_to_remove</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_initial_time</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">        </span><span class="n">cols_to_remove</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cols_to_remove</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_initial_r</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">        </span><span class="n">cols_to_remove</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cols_to_remove</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_ry_at_end_of_rev</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="w">        </span><span class="c">! remove Ry at end of specified rev</span>
+<span class="w">        </span><span class="c">! e.g. rev 1 : SEG8 Ry (km) : column 31</span>
+<span class="w">        </span><span class="c">!</span>
+<span class="w">        </span><span class="c">! patch point: [t rx ry rz vx vy vz]</span>
+<span class="w">        </span><span class="c">!                    ^^</span>
+<span class="w">        </span><span class="n">cols_to_remove</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cols_to_remove</span><span class="p">,</span><span class="w"> </span><span class="n">me</span><span class="p">%</span><span class="n">fix_ry_at_end_of_rev</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">5</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">]</span>
+<span class="w">    </span><span class="k">end if</span>
+
+<span class="k">    if</span><span class="w"> </span><span class="p">(</span><span class="n">me</span><span class="p">%</span><span class="n">fix_final_ry_and_vx</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="w">        </span><span class="n">cols_to_remove</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">cols_to_remove</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">]]</span><span class="w"> </span><span class="c">! last segment Ry &amp; Vx</span>
+
+<span class="w">    </span><span class="k">end function </span><span class="n">removed_columns</span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>

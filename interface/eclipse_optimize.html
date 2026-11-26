@@ -1,0 +1,1701 @@
+<!-- -*- mode: jinja2 -*- -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="Halo orbit solver with modern Fortran">
+    <meta name="author" content="Jacob Williams" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>eclipse_optimize &ndash; halo</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
+    <link href="../css/local.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <script src="../js/svg-pan-zoom.min.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">halo </a>
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/absint.html">Abstract Interfaces</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
+            </ul>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
+        </div>
+      </nav>
+    </div>
+
+    <div class="container">
+  <div class="row">
+    <h1>eclipse_optimize
+      <small>Interface</small>
+      
+    </h1>
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 0.1% of total for procedures.">6 statements</a>
+            </li>
+
+            <li class="list-inline-item" id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/halo_module.F90"> Source File</a>
+            </li>
+        </ul>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='../sourcefile/halo_module.f90.html'>halo_module.F90</a></li>
+                <li class="breadcrumb-item"><a href='../module/halo_module.html'>halo_module</a></li>
+            <li class="breadcrumb-item active" aria-current="page">eclipse_optimize</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+    <em>None</em>
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2>interface</h2>
+      
+      <br>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Calls</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: interface~~eclipse_optimize~~CallsGraph Pages: 1 -->
+<svg id="interfaceeclipse_optimizeCallsGraph" width="641pt" height="366pt"
+ viewBox="0.00 0.00 641.00 366.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~eclipse_optimize~~CallsGraph" class="graph" transform="scale(0.30326 0.30326) rotate(0) translate(4 1202.27)">
+<title>interface~~eclipse_optimize~~CallsGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-1202.27 2109.7,-1202.27 2109.7,4 -4,4"/>
+<!-- interface~eclipse_optimize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node1" class="node">
+<title>interface~eclipse_optimize</title>
+<polygon fill="none" stroke="black" points="192.27,-545.27 0,-545.27 0,-521 192.27,-521 192.27,-545.27"/>
+<text xml:space="preserve" text-anchor="middle" x="96.13" y="-529.53" font-family="Helvetica,sans-Serif" font-size="10.50">my_solver_type%eclipse_optimize</text>
+</g>
+<!-- proc~eclipse_optimize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node2" class="node">
+<title>proc~eclipse_optimize</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node2"><a xlink:href="../proc/eclipse_optimize.html" xlink:title="eclipse_optimize">
+<polygon fill="#d9534f" stroke="#d9534f" points="328.29,-545.27 228.27,-545.27 228.27,-521 328.29,-521 328.29,-545.27"/>
+<text xml:space="preserve" text-anchor="middle" x="278.28" y="-529.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eclipse_optimize</text>
+</a>
+</g>
+</g>
+<!-- interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge1" class="edge">
+<title>interface~eclipse_optimize&#45;&gt;proc~eclipse_optimize</title>
+<path fill="none" stroke="#000000" stroke-dasharray="5,2" d="M192.75,-533.13C200.8,-533.13 208.79,-533.13 216.47,-533.13"/>
+<polygon fill="#000000" stroke="#000000" points="216.33,-536.64 226.33,-533.14 216.33,-529.64 216.33,-536.64"/>
+</g>
+<!-- c -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node3" class="node">
+<title>c</title>
+<polygon fill="#777777" stroke="#777777" points="453.67,-1198.27 399.67,-1198.27 399.67,-1174 453.67,-1174 453.67,-1198.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-1182.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">c</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;c -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge2" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;c</title>
+<path fill="none" stroke="#000000" d="M279.34,-545.71C279.95,-625.27 286.84,-1058.77 364.29,-1160.13 370.35,-1168.07 379.3,-1173.61 388.49,-1177.46"/>
+<polygon fill="#000000" stroke="#000000" points="387.23,-1180.73 397.82,-1180.76 389.56,-1174.13 387.23,-1180.73"/>
+</g>
+<!-- destroy -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node4" class="node">
+<title>destroy</title>
+<polygon fill="#777777" stroke="#777777" points="658.69,-1080.27 604.69,-1080.27 604.69,-1056 658.69,-1056 658.69,-1080.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-1064.54" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">destroy</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;destroy -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge3" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M280.33,-545.71C285.85,-608.96 313.09,-892.06 364.29,-961.13 419.24,-1035.28 534.06,-1058.14 593.41,-1065.12"/>
+<polygon fill="#000000" stroke="#000000" points="592.68,-1068.56 603,-1066.15 593.43,-1061.6 592.68,-1068.56"/>
+</g>
+<!-- get_results -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node5" class="node">
+<title>get_results</title>
+<polygon fill="#777777" stroke="#777777" points="460.93,-444.27 392.41,-444.27 392.41,-420 460.93,-420 460.93,-444.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-428.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_results</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;get_results -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge4" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;get_results</title>
+<path fill="none" stroke="#000000" d="M289.54,-520.57C304.36,-503.16 333.39,-471.75 364.29,-453.13 369.6,-449.94 375.46,-447.14 381.39,-444.73"/>
+<polygon fill="#000000" stroke="#000000" points="382.45,-448.07 390.61,-441.31 380.02,-441.5 382.45,-448.07"/>
+</g>
+<!-- get_solution -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node6" class="node">
+<title>get_solution</title>
+<polygon fill="#777777" stroke="#777777" points="464.68,-402.27 388.66,-402.27 388.66,-378 464.68,-378 464.68,-402.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-386.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_solution</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;get_solution -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge5" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;get_solution</title>
+<path fill="none" stroke="#000000" d="M284.61,-520.82C295.81,-496.36 324.09,-441.44 364.29,-411.13 368.51,-407.95 373.24,-405.24 378.16,-402.91"/>
+<polygon fill="#000000" stroke="#000000" points="379.1,-406.31 387.01,-399.27 376.43,-399.84 379.1,-406.31"/>
+</g>
+<!-- initialize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node7" class="node">
+<title>initialize</title>
+<polygon fill="#777777" stroke="#777777" points="659.58,-1038.27 603.81,-1038.27 603.81,-1014 659.58,-1014 659.58,-1038.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-1022.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">initialize</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;initialize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge6" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M278.74,-545.49C277.17,-595.68 277.38,-787.31 364.29,-905.13 419.7,-980.25 532.82,-1009.87 592.25,-1020.61"/>
+<polygon fill="#000000" stroke="#000000" points="591.45,-1024.03 601.9,-1022.26 592.63,-1017.13 591.45,-1024.03"/>
+</g>
+<!-- proc~constraint_violations -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node8" class="node">
+<title>proc~constraint_violations</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node8"><a xlink:href="../proc/constraint_violations.html" xlink:title="mission_type%constraint_violations">
+<polygon fill="#d9534f" stroke="#d9534f" points="974.1,-681.27 774.33,-681.27 774.33,-657 974.1,-657 974.1,-681.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-665.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%constraint_violations</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~constraint_violations -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge7" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~constraint_violations</title>
+<path fill="none" stroke="#000000" d="M284.56,-545.43C295.48,-569.11 323.01,-620.61 364.29,-642.13 431.07,-676.96 634.08,-677.41 762.61,-673.8"/>
+<polygon fill="#000000" stroke="#000000" points="762.64,-677.3 772.53,-673.51 762.43,-670.3 762.64,-677.3"/>
+</g>
+<!-- proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node9" class="node">
+<title>proc~define_problem_size</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node9"><a xlink:href="../proc/define_problem_size.html" xlink:title="mission_type%define_problem_size">
+<polygon fill="#d9534f" stroke="#d9534f" points="1441.14,-647.27 1242.12,-647.27 1242.12,-623 1441.14,-623 1441.14,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%define_problem_size</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge8" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M301.63,-545.74C318.36,-554.58 342.09,-565.9 364.29,-572.13 433.56,-591.6 453.45,-584.18 525.06,-591.13 776.94,-615.61 1073.99,-627.34 1230.83,-632.21"/>
+<polygon fill="#000000" stroke="#000000" points="1230.26,-635.69 1240.36,-632.5 1230.47,-628.69 1230.26,-635.69"/>
+</g>
+<!-- proc~equilibrate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node10" class="node">
+<title>proc~equilibrate</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node10"><a xlink:href="../proc/equilibrate.html" xlink:title="equilibrate">
+<polygon fill="#d9534f" stroke="#d9534f" points="461.31,-486.27 392.04,-486.27 392.04,-462 461.31,-462 461.31,-486.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-470.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">equilibrate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~equilibrate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge9" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~equilibrate</title>
+<path fill="none" stroke="#000000" d="M310.33,-520.62C331.7,-512.01 360.35,-500.46 383.75,-491.03"/>
+<polygon fill="#000000" stroke="#000000" points="385.05,-494.28 393.02,-487.3 382.43,-487.79 385.05,-494.28"/>
+</g>
+<!-- proc~eval_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node11" class="node">
+<title>proc~eval_rows</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node11"><a xlink:href="../proc/eval_rows.html" xlink:title="eval_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="905.85,-1003.27 842.58,-1003.27 842.58,-979 905.85,-979 905.85,-1003.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-987.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">eval_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~eval_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge10" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M279.56,-545.42C281.43,-617.1 294.29,-980.94 364.29,-1062.13 473.84,-1189.21 581.76,-1173.44 738.33,-1113.13 790.75,-1092.95 835.45,-1041.91 857.85,-1012.64"/>
+<polygon fill="#000000" stroke="#000000" points="860.49,-1014.95 863.66,-1004.84 854.88,-1010.76 860.49,-1014.95"/>
+</g>
+<!-- proc~find_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node12" class="node">
+<title>proc~find_rows</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node12"><a xlink:href="../proc/find_rows.html" xlink:title="find_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="904.72,-961.27 843.7,-961.27 843.7,-937 904.72,-937 904.72,-961.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-945.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">find_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~find_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge11" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~find_rows</title>
+<path fill="none" stroke="#000000" d="M279.93,-545.52C283.73,-613.19 304.87,-938.1 364.29,-1015.13 416.04,-1082.23 670.29,-1139.63 738.33,-1089.13 782.7,-1056.2 733.64,-1007.52 774.33,-970.13 789.71,-956.01 812.15,-950.47 831.77,-948.6"/>
+<polygon fill="#000000" stroke="#000000" points="831.96,-952.1 841.72,-947.97 831.51,-945.11 831.96,-952.1"/>
+</g>
+<!-- proc~get_sparsity_pattern -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node13" class="node">
+<title>proc~get_sparsity_pattern</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node13"><a xlink:href="../proc/get_sparsity_pattern.html" xlink:title="mission_type%get_sparsity_pattern">
+<polygon fill="#d9534f" stroke="#d9534f" points="973.35,-601.27 775.08,-601.27 775.08,-577 973.35,-577 973.35,-601.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-585.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_sparsity_pattern</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge12" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M328.53,-544.73C340.2,-547.15 352.64,-549.47 364.29,-551.13 501.04,-570.63 659.98,-580.47 763.37,-585.19"/>
+<polygon fill="#000000" stroke="#000000" points="763.1,-588.68 773.24,-585.63 763.41,-581.69 763.1,-588.68"/>
+</g>
+<!-- proc~ks_aggregate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node14" class="node">
+<title>proc~ks_aggregate</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node14"><a xlink:href="../proc/ks_aggregate.html" xlink:title="ks_aggregate">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="468.06,-360.27 385.29,-360.27 385.29,-336 468.06,-336 468.06,-360.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-344.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ks_aggregate</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~ks_aggregate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge13" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~ks_aggregate</title>
+<path fill="none" stroke="#000000" d="M282.24,-520.87C290.17,-490.62 314.72,-411.83 364.29,-369.13 367.46,-366.4 371.01,-364.02 374.76,-361.94"/>
+<polygon fill="#000000" stroke="#000000" points="376.07,-365.19 383.64,-357.78 373.1,-358.85 376.07,-365.19"/>
+</g>
+<!-- proc~merge_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node15" class="node">
+<title>proc~merge_rows</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node15"><a xlink:href="../proc/merge_rows.html" xlink:title="merge_rows">
+<polygon fill="#d9534f" stroke="#d9534f" points="464.68,-318.27 388.66,-318.27 388.66,-294 464.68,-294 464.68,-318.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-302.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">merge_rows</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~merge_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge14" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~merge_rows</title>
+<path fill="none" stroke="#000000" d="M280.83,-520.71C285.9,-485.26 305.23,-382.65 364.29,-327.13 368.29,-323.38 372.98,-320.29 377.97,-317.76"/>
+<polygon fill="#000000" stroke="#000000" points="379.25,-321.01 387.08,-313.88 376.51,-314.57 379.25,-321.01"/>
+</g>
+<!-- proc~newton_finish -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node16" class="node">
+<title>proc~newton_finish</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node16"><a xlink:href="../proc/newton_finish.html" xlink:title="newton_finish">
+<polygon fill="#d9534f" stroke="#d9534f" points="468.81,-896.27 384.54,-896.27 384.54,-872 468.81,-872 468.81,-896.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-880.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_finish</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~newton_finish -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge15" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~newton_finish</title>
+<path fill="none" stroke="#000000" d="M281.91,-545.76C290.32,-584.69 318.7,-705.8 364.29,-797.13 376.34,-821.28 394.61,-846.17 408.08,-863.11"/>
+<polygon fill="#000000" stroke="#000000" points="405.04,-864.91 414.05,-870.48 410.47,-860.51 405.04,-864.91"/>
+</g>
+<!-- proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node17" class="node">
+<title>proc~put_x_in_segments</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node17"><a xlink:href="../proc/put_x_in_segments.html" xlink:title="mission_type%put_x_in_segments">
+<polygon fill="#d9534f" stroke="#d9534f" points="1203.49,-841.27 1012.72,-841.27 1012.72,-817 1203.49,-817 1203.49,-841.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-825.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%put_x_in_segments</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge16" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M283.01,-545.45C291.99,-572.82 317.64,-638.72 364.29,-669.13 504.99,-760.87 574.11,-687.85 738.33,-723.13 769.42,-729.81 959.29,-785.5 1053.78,-813.37"/>
+<polygon fill="#000000" stroke="#000000" points="1052.51,-816.64 1063.09,-816.12 1054.49,-809.93 1052.51,-816.64"/>
+</g>
+<!-- proc~report_change -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node18" class="node">
+<title>proc~report_change</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node18"><a xlink:href="../proc/report_change.html" xlink:title="report_change">
+<polygon fill="#d9534f" stroke="#d9534f" points="918.6,-517.27 829.83,-517.27 829.83,-493 918.6,-493 918.6,-517.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-501.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">report_change</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~report_change -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge17" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~report_change</title>
+<path fill="none" stroke="#000000" d="M328.64,-530.81C438.58,-525.63 702.93,-513.16 818.07,-507.73"/>
+<polygon fill="#000000" stroke="#000000" points="818.06,-511.24 827.88,-507.27 817.73,-504.25 818.06,-511.24"/>
+</g>
+<!-- proc~step_limits -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node19" class="node">
+<title>proc~step_limits</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node19"><a xlink:href="../proc/step_limits.html" xlink:title="step_limits">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="908.1,-559.27 840.33,-559.27 840.33,-535 908.1,-535 908.1,-559.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-543.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">step_limits</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~step_limits -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge18" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~step_limits</title>
+<path fill="none" stroke="#000000" d="M328.64,-534.3C442.12,-536.97 720.11,-543.53 828.71,-546.09"/>
+<polygon fill="#000000" stroke="#000000" points="828.3,-549.58 838.38,-546.31 828.47,-542.58 828.3,-549.58"/>
+</g>
+<!-- proc~union_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node20" class="node">
+<title>proc~union_columns</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node20"><a xlink:href="../proc/union_columns.html" xlink:title="union_columns">
+<polygon fill="#d9534f" stroke="#d9534f" points="472.56,-276.27 380.79,-276.27 380.79,-252 472.56,-252 472.56,-276.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-260.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">union_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;proc~union_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge19" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;proc~union_columns</title>
+<path fill="none" stroke="#000000" d="M279.85,-520.58C282.34,-480.43 295.56,-353.83 364.29,-285.13 366.28,-283.15 368.46,-281.35 370.78,-279.72"/>
+<polygon fill="#000000" stroke="#000000" points="372.06,-283.02 378.98,-275 368.57,-276.96 372.06,-283.02"/>
+</g>
+<!-- set_bounds -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node21" class="node">
+<title>set_bounds</title>
+<polygon fill="#777777" stroke="#777777" points="462.43,-234.27 390.91,-234.27 390.91,-210 462.43,-210 462.43,-234.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-218.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_bounds</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_bounds -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge20" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_bounds</title>
+<path fill="none" stroke="#000000" d="M279.12,-520.72C279.23,-476.57 285.6,-325.41 364.29,-243.13 368.67,-238.56 374.09,-234.98 379.88,-232.18"/>
+<polygon fill="#000000" stroke="#000000" points="381.15,-235.44 389.15,-228.49 378.56,-228.93 381.15,-235.44"/>
+</g>
+<!-- set_functions -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node22" class="node">
+<title>set_functions</title>
+<polygon fill="#777777" stroke="#777777" points="467.31,-192.27 386.04,-192.27 386.04,-168 467.31,-168 467.31,-192.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-176.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_functions</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_functions -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge21" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_functions</title>
+<path fill="none" stroke="#000000" d="M280.86,-520.8C288.04,-466.59 319.17,-249.97 364.29,-201.13 367.51,-197.64 371.34,-194.73 375.49,-192.31"/>
+<polygon fill="#000000" stroke="#000000" points="376.72,-195.6 384.24,-188.13 373.71,-189.28 376.72,-195.6"/>
+</g>
+<!-- set_jacobian_sparsity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node23" class="node">
+<title>set_jacobian_sparsity</title>
+<polygon fill="#777777" stroke="#777777" points="489.06,-150.27 364.29,-150.27 364.29,-126 489.06,-126 489.06,-150.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-134.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_jacobian_sparsity</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_jacobian_sparsity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge22" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_jacobian_sparsity</title>
+<path fill="none" stroke="#000000" d="M280.47,-520.85C286.37,-462.63 314.09,-214.96 364.29,-159.13 364.76,-158.61 365.24,-158.1 365.74,-157.6"/>
+<polygon fill="#000000" stroke="#000000" points="367.81,-160.43 373.56,-151.53 363.51,-154.9 367.81,-160.43"/>
+</g>
+<!-- set_max_step -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node24" class="node">
+<title>set_max_step</title>
+<polygon fill="#777777" stroke="#777777" points="468.43,-108.27 384.91,-108.27 384.91,-84 468.43,-84 468.43,-108.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-92.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_max_step</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_max_step -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge23" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_max_step</title>
+<path fill="none" stroke="#000000" d="M280.18,-520.75C284.93,-458.46 309.04,-179.96 364.29,-117.13 367.14,-113.9 370.5,-111.16 374.17,-108.85"/>
+<polygon fill="#000000" stroke="#000000" points="375.74,-111.97 383.08,-104.33 372.57,-105.73 375.74,-111.97"/>
+</g>
+<!-- set_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node25" class="node">
+<title>set_problem_size</title>
+<polygon fill="#777777" stroke="#777777" points="477.81,-66.27 375.54,-66.27 375.54,-42 477.81,-42 477.81,-66.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-50.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">set_problem_size</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;set_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge24" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;set_problem_size</title>
+<path fill="none" stroke="#000000" d="M279.92,-520.84C283.59,-455.05 303.9,-145.06 364.29,-75.13 364.97,-74.35 365.67,-73.6 366.41,-72.87"/>
+<polygon fill="#000000" stroke="#000000" points="368.19,-75.91 373.99,-67.04 363.93,-70.36 368.19,-75.91"/>
+</g>
+<!-- solve -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node26" class="node">
+<title>solve</title>
+<polygon fill="#777777" stroke="#777777" points="658.69,-798.27 604.69,-798.27 604.69,-774 658.69,-774 658.69,-798.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-782.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">solve</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;solve -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge25" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M279.94,-545.53C282.69,-583.37 296.51,-698.01 364.29,-751.13 430.96,-803.39 537.08,-799.12 593.15,-792.23"/>
+<polygon fill="#000000" stroke="#000000" points="593.37,-795.73 602.82,-790.94 592.45,-788.79 593.37,-795.73"/>
+</g>
+<!-- status -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node27" class="node">
+<title>status</title>
+<polygon fill="#777777" stroke="#777777" points="658.69,-756.27 604.69,-756.27 604.69,-732 658.69,-732 658.69,-756.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-740.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;status -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge26" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M280.81,-545.71C285.71,-580.02 304.4,-675.5 364.29,-718.13 432.86,-766.95 537.75,-759.71 593.25,-751.29"/>
+<polygon fill="#000000" stroke="#000000" points="593.5,-754.8 602.82,-749.74 592.38,-747.89 593.5,-754.8"/>
+</g>
+<!-- status_message -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node28" class="node">
+<title>status_message</title>
+<polygon fill="#777777" stroke="#777777" points="474.81,-24.27 378.54,-24.27 378.54,0 474.81,0 474.81,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="426.67" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">status_message</text>
+</g>
+<!-- proc~eclipse_optimize&#45;&gt;status_message -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge27" class="edge">
+<title>proc~eclipse_optimize&#45;&gt;status_message</title>
+<path fill="none" stroke="#000000" d="M279.72,-520.65C282.42,-450.91 298.83,-110.1 364.29,-33.13 365.71,-31.46 367.28,-29.92 368.95,-28.5"/>
+<polygon fill="#000000" stroke="#000000" points="370.47,-31.7 376.83,-23.23 366.57,-25.88 370.47,-31.7"/>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge30" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M953.64,-681.65C961.13,-685.13 968.14,-689.55 974.1,-695.13 1011.01,-729.74 973.27,-768.45 1010.1,-803.13 1013.36,-806.21 1016.95,-808.93 1020.76,-811.33"/>
+<polygon fill="#000000" stroke="#000000" points="1018.85,-814.27 1029.31,-815.96 1022.18,-808.12 1018.85,-814.27"/>
+</g>
+<!-- proc~get_problem_arrays -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node33" class="node">
+<title>proc~get_problem_arrays</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node33"><a xlink:href="../proc/get_problem_arrays.html" xlink:title="mission_type%get_problem_arrays">
+<polygon fill="#d9534f" stroke="#d9534f" points="1206.12,-761.27 1010.1,-761.27 1010.1,-737 1206.12,-737 1206.12,-761.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-745.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%get_problem_arrays</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~get_problem_arrays -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge28" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~get_problem_arrays</title>
+<path fill="none" stroke="#000000" d="M928.19,-681.72C943.15,-685.64 959.36,-690.23 974.1,-695.13 1006.63,-705.96 1042.6,-720.75 1068.92,-732.11"/>
+<polygon fill="#000000" stroke="#000000" points="1067.27,-735.2 1077.83,-735.98 1070.06,-728.78 1067.27,-735.2"/>
+</g>
+<!-- proc~propagate_segment -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node36" class="node">
+<title>proc~propagate_segment</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node36"><a xlink:href="../proc/propagate_segment.html" xlink:title="segment%propagate_segment">
+<polygon fill="#d9534f" stroke="#d9534f" points="1428.76,-815.27 1254.49,-815.27 1254.49,-791 1428.76,-791 1428.76,-815.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-799.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~propagate_segment -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge29" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M951.21,-681.67C959.47,-685.14 967.32,-689.54 974.1,-695.13 1002.61,-718.68 979.82,-748.91 1010.1,-770.13 1046.56,-795.69 1159.27,-802.42 1243,-803.74"/>
+<polygon fill="#000000" stroke="#000000" points="1242.79,-807.24 1252.84,-803.87 1242.88,-800.24 1242.79,-807.24"/>
+</g>
+<!-- proc~segs_to_propagate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node40" class="node">
+<title>proc~segs_to_propagate</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node40"><a xlink:href="../proc/segs_to_propagate.html" xlink:title="mission_type%segs_to_propagate">
+<polygon fill="#d9534f" stroke="#d9534f" points="1203.12,-681.27 1013.1,-681.27 1013.1,-657 1203.12,-657 1203.12,-681.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-665.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%segs_to_propagate</text>
+</a>
+</g>
+</g>
+<!-- proc~constraint_violations&#45;&gt;proc~segs_to_propagate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge31" class="edge">
+<title>proc~constraint_violations&#45;&gt;proc~segs_to_propagate</title>
+<path fill="none" stroke="#000000" d="M974.57,-669.13C983.47,-669.13 992.51,-669.13 1001.46,-669.13"/>
+<polygon fill="#000000" stroke="#000000" points="1001.23,-672.64 1011.23,-669.14 1001.23,-665.64 1001.23,-672.64"/>
+</g>
+<!-- proc~compute_jacobian_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node31" class="node">
+<title>proc~compute_jacobian_stm</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node31"><a xlink:href="../proc/compute_jacobian_stm.html" xlink:title="mission_type%compute_jacobian_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="738.33,-477.27 525.06,-477.27 525.06,-453 738.33,-453 738.33,-477.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-461.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%compute_jacobian_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~equilibrate&#45;&gt;proc~compute_jacobian_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge32" class="edge">
+<title>proc~equilibrate&#45;&gt;proc~compute_jacobian_stm</title>
+<path fill="none" stroke="#000000" d="M461.66,-472.63C476.31,-471.98 494.39,-471.18 513.23,-470.34"/>
+<polygon fill="#000000" stroke="#000000" points="513.36,-473.84 523.2,-469.9 513.05,-466.85 513.36,-473.84"/>
+</g>
+<!-- proc~row_ks -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node39" class="node">
+<title>proc~row_ks</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node39"><a xlink:href="../proc/row_ks.html" xlink:title="row_ks">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1135.11,-1001.27 1081.11,-1001.27 1081.11,-977 1135.11,-977 1135.11,-1001.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-985.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_ks</text>
+</a>
+</g>
+</g>
+<!-- proc~eval_rows&#45;&gt;proc~row_ks -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge33" class="edge">
+<title>proc~eval_rows&#45;&gt;proc~row_ks</title>
+<path fill="none" stroke="#000000" d="M906.01,-990.87C948.19,-990.51 1023.9,-989.85 1069.42,-989.46"/>
+<polygon fill="#000000" stroke="#000000" points="1069.37,-992.96 1079.34,-989.37 1069.31,-985.96 1069.37,-992.96"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge34" class="edge">
+<title>proc~find_rows&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M904.88,-951.02C927.02,-950.72 956.39,-946.41 974.1,-928.13 1036.96,-863.28 946.66,-792.43 1010.1,-728.13 1072.43,-664.97 1127.17,-730.65 1206.12,-690.13 1225.7,-680.09 1222.63,-666.36 1242.12,-656.13 1245.16,-654.54 1248.31,-653.07 1251.54,-651.71"/>
+<polygon fill="#000000" stroke="#000000" points="1252.53,-655.07 1260.65,-648.26 1250.06,-648.52 1252.53,-655.07"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge38" class="edge">
+<title>proc~find_rows&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M904.87,-949.45C926.15,-948.22 954.43,-943.43 974.1,-928.13 1002.66,-905.93 982.14,-878.09 1010.1,-855.13 1014.07,-851.87 1018.42,-849.02 1023,-846.52"/>
+<polygon fill="#000000" stroke="#000000" points="1024.45,-849.71 1031.97,-842.25 1021.44,-843.38 1024.45,-849.71"/>
+</g>
+<!-- proc~destroy_trajectory -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node32" class="node">
+<title>proc~destroy_trajectory</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node32"><a xlink:href="../proc/destroy_trajectory.html" xlink:title="trajectory%destroy_trajectory">
+<polygon fill="#d9534f" stroke="#d9534f" points="1426.14,-1031.27 1257.12,-1031.27 1257.12,-1007 1426.14,-1007 1426.14,-1031.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-1015.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">trajectory%destroy_trajectory</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~destroy_trajectory -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge35" class="edge">
+<title>proc~find_rows&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M905.06,-950.64C925.64,-952.79 952.97,-957.94 974.1,-970.13 994.81,-982.09 988.39,-1000.11 1010.1,-1010.13 1091.19,-1047.58 1195.8,-1042.83 1265.39,-1033.35"/>
+<polygon fill="#000000" stroke="#000000" points="1265.78,-1036.83 1275.18,-1031.94 1264.79,-1029.9 1265.78,-1036.83"/>
+</g>
+<!-- proc~get_sun_fraction -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node34" class="node">
+<title>proc~get_sun_fraction</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node34"><a xlink:href="../proc/get_sun_fraction.html" xlink:title="get_sun_fraction">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1391.26,-980.27 1291.99,-980.27 1291.99,-956 1391.26,-956 1391.26,-980.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-964.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_sun_fraction</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~get_sun_fraction -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge36" class="edge">
+<title>proc~find_rows&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M905.04,-950.35C980.38,-953.43 1179.53,-961.56 1280.34,-965.67"/>
+<polygon fill="#000000" stroke="#000000" points="1279.9,-969.16 1290.04,-966.07 1280.19,-962.16 1279.9,-969.16"/>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~propagate_segment -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge37" class="edge">
+<title>proc~find_rows&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M905.06,-947.63C925.64,-945.48 952.97,-940.33 974.1,-928.13 994.81,-916.18 989.28,-899.91 1010.1,-888.13 1087.34,-844.45 1124.68,-885.38 1206.12,-850.13 1224.23,-842.3 1224.08,-832.14 1242.12,-824.13 1246.14,-822.35 1250.32,-820.71 1254.59,-819.21"/>
+<polygon fill="#000000" stroke="#000000" points="1255.47,-822.61 1263.92,-816.22 1253.33,-815.94 1255.47,-822.61"/>
+</g>
+<!-- proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node37" class="node">
+<title>proc~removed_columns</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node37"><a xlink:href="../proc/removed_columns.html" xlink:title="mission_type%removed_columns">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1201.99,-563.27 1014.22,-563.27 1014.22,-539 1201.99,-539 1201.99,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">mission_type%removed_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge39" class="edge">
+<title>proc~find_rows&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M905.14,-951.27C927.42,-951.1 956.85,-946.85 974.1,-928.13 1059.14,-835.88 954.77,-760.75 1010.1,-648.13 1025.91,-615.96 1056.66,-588.09 1079.32,-570.59"/>
+<polygon fill="#000000" stroke="#000000" points="1081.35,-573.44 1087.25,-564.64 1077.15,-567.84 1081.35,-573.44"/>
+</g>
+<!-- proc~row_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node38" class="node">
+<title>proc~row_columns</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node38"><a xlink:href="../proc/row_columns.html" xlink:title="row_columns">
+<polygon fill="#d9534f" stroke="#d9534f" points="1148.37,-921.27 1067.85,-921.27 1067.85,-897 1148.37,-897 1148.37,-921.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1108.11" y="-905.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">row_columns</text>
+</a>
+</g>
+</g>
+<!-- proc~find_rows&#45;&gt;proc~row_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge40" class="edge">
+<title>proc~find_rows&#45;&gt;proc~row_columns</title>
+<path fill="none" stroke="#000000" d="M905.06,-943.99C943.29,-937.39 1010.12,-925.86 1056.4,-917.88"/>
+<polygon fill="#000000" stroke="#000000" points="1056.95,-921.34 1066.21,-916.19 1055.76,-914.44 1056.95,-921.34"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge41" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M973.85,-595.09C1039.73,-599.51 1128.25,-606.3 1206.12,-615.13 1220.61,-616.78 1235.93,-618.79 1250.85,-620.91"/>
+<polygon fill="#000000" stroke="#000000" points="1250.26,-624.36 1260.66,-622.32 1251.26,-617.43 1250.26,-624.36"/>
+</g>
+<!-- proc~get_sparsity_pattern&#45;&gt;proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge42" class="edge">
+<title>proc~get_sparsity_pattern&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M952.11,-576.53C973.44,-573.04 996.77,-569.22 1018.7,-565.62"/>
+<polygon fill="#000000" stroke="#000000" points="1019.23,-569.08 1028.53,-564.01 1018.1,-562.17 1019.23,-569.08"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;destroy -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge43" class="edge">
+<title>proc~newton_finish&#45;&gt;destroy</title>
+<path fill="none" stroke="#000000" d="M431.15,-896.33C440.61,-927.09 469.84,-1008.19 525.06,-1047.13 544.79,-1061.05 571.48,-1066.27 593.1,-1068.03"/>
+<polygon fill="#000000" stroke="#000000" points="592.81,-1071.52 603,-1068.59 593.21,-1064.53 592.81,-1071.52"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;initialize -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge44" class="edge">
+<title>proc~newton_finish&#45;&gt;initialize</title>
+<path fill="none" stroke="#000000" d="M437.34,-896.5C459.67,-924.95 513.79,-993.12 525.06,-1000.13 545.35,-1012.77 571.4,-1019.27 592.55,-1022.61"/>
+<polygon fill="#000000" stroke="#000000" points="591.85,-1026.04 602.23,-1023.95 592.81,-1019.11 591.85,-1026.04"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~eval_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge46" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M437.47,-896.47C453.46,-915.57 487.21,-951.7 525.06,-967.13 628.52,-1009.34 763.6,-1003.19 831.05,-996.45"/>
+<polygon fill="#000000" stroke="#000000" points="831.37,-999.94 840.94,-995.4 830.63,-992.98 831.37,-999.94"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~get_sparsity_pattern -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge47" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M460.23,-871.51C478.99,-864.56 503.13,-856.14 525.06,-850.13 618.32,-824.58 669.15,-874.69 738.33,-807.13 790.17,-756.51 731.78,-706.78 774.33,-648.13 787.77,-629.62 808.95,-615.87 828.27,-606.32"/>
+<polygon fill="#000000" stroke="#000000" points="829.49,-609.61 837.08,-602.22 826.53,-603.27 829.49,-609.61"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge49" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M469.2,-878.39C534.16,-869.63 663.82,-852.99 774.33,-844.13 850.08,-838.07 935.74,-834.27 1001.18,-832.02"/>
+<polygon fill="#000000" stroke="#000000" points="1000.94,-835.53 1010.82,-831.7 1000.7,-828.54 1000.94,-835.53"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;solve -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge50" class="edge">
+<title>proc~newton_finish&#45;&gt;solve</title>
+<path fill="none" stroke="#000000" d="M440.75,-871.77C458.47,-855.68 491.75,-827.77 525.06,-812.13 546.6,-802.02 572.52,-795.57 593.29,-791.62"/>
+<polygon fill="#000000" stroke="#000000" points="593.82,-795.08 603.06,-789.89 592.6,-788.18 593.82,-795.08"/>
+</g>
+<!-- proc~newton_finish&#45;&gt;status -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge51" class="edge">
+<title>proc~newton_finish&#45;&gt;status</title>
+<path fill="none" stroke="#000000" d="M434.03,-871.65C447.28,-846.95 480.43,-791.93 525.06,-765.13 545.62,-752.79 572.09,-747.55 593.39,-745.38"/>
+<polygon fill="#000000" stroke="#000000" points="593.43,-748.89 603.12,-744.6 592.87,-741.92 593.43,-748.89"/>
+</g>
+<!-- kt -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node30" class="node">
+<title>kt</title>
+<polygon fill="#777777" stroke="#777777" points="658.69,-958.27 604.69,-958.27 604.69,-934 658.69,-934 658.69,-958.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-942.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">kt</text>
+</g>
+<!-- proc~newton_finish&#45;&gt;kt -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge45" class="edge">
+<title>proc~newton_finish&#45;&gt;kt</title>
+<path fill="none" stroke="#000000" d="M453.59,-896.74C472.91,-905.72 500.15,-917.5 525.06,-925.13 547.18,-931.91 572.59,-937.04 592.95,-940.54"/>
+<polygon fill="#000000" stroke="#000000" points="592.35,-943.99 602.79,-942.16 593.49,-937.08 592.35,-943.99"/>
+</g>
+<!-- proc~newton_func -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node35" class="node">
+<title>proc~newton_func</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node35"><a xlink:href="../proc/newton_func.html" xlink:title="newton_func">
+<polygon fill="#d9534f" stroke="#d9534f" points="671.2,-916.27 592.18,-916.27 592.18,-892 671.2,-892 671.2,-916.27"/>
+<text xml:space="preserve" text-anchor="middle" x="631.69" y="-900.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">newton_func</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_finish&#45;&gt;proc~newton_func -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge48" class="edge">
+<title>proc~newton_finish&#45;&gt;proc~newton_func</title>
+<path fill="none" stroke="#000000" d="M469.25,-888.23C501.56,-891.41 546.49,-895.84 580.75,-899.21"/>
+<polygon fill="#000000" stroke="#000000" points="580.13,-902.67 590.42,-900.17 580.81,-895.7 580.13,-902.67"/>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge53" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M1141.7,-816.52C1162.84,-806.79 1189.45,-791.38 1206.12,-770.13 1238.91,-728.33 1202.79,-691.86 1242.12,-656.13 1242.91,-655.41 1243.72,-654.72 1244.55,-654.04"/>
+<polygon fill="#000000" stroke="#000000" points="1246.47,-656.97 1252.77,-648.45 1242.53,-651.18 1246.47,-656.97"/>
+</g>
+<!-- extract_vector -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node29" class="node">
+<title>extract_vector</title>
+<polygon fill="#777777" stroke="#777777" points="1385.26,-773.27 1297.99,-773.27 1297.99,-749 1385.26,-749 1385.26,-773.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-757.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">extract_vector</text>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;extract_vector -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge52" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;extract_vector</title>
+<path fill="none" stroke="#000000" d="M1140.99,-816.56C1167.7,-806.34 1207,-792.04 1242.12,-782.13 1256.47,-778.09 1272.19,-774.41 1286.77,-771.3"/>
+<polygon fill="#000000" stroke="#000000" points="1287.1,-774.8 1296.18,-769.34 1285.68,-767.95 1287.1,-774.8"/>
+</g>
+<!-- proc~set_segment_inputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node41" class="node">
+<title>proc~set_segment_inputs</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node41"><a xlink:href="../proc/set_segment_inputs.html" xlink:title="segment%set_segment_inputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1428.01,-857.27 1255.24,-857.27 1255.24,-833 1428.01,-833 1428.01,-857.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-841.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_inputs</text>
+</a>
+</g>
+</g>
+<!-- proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge54" class="edge">
+<title>proc~put_x_in_segments&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M1203.95,-835.69C1216.99,-836.59 1230.39,-837.52 1243.47,-838.42"/>
+<polygon fill="#000000" stroke="#000000" points="1243.14,-841.91 1253.35,-839.1 1243.62,-834.92 1243.14,-841.91"/>
+</g>
+<!-- proc~report_change&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge55" class="edge">
+<title>proc~report_change&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M915.94,-492.51C983.35,-474.31 1119.3,-449.32 1206.12,-512.13 1245.07,-540.31 1206,-582.41 1242.12,-614.13 1242.92,-614.84 1243.75,-615.53 1244.59,-616.19"/>
+<polygon fill="#000000" stroke="#000000" points="1242.62,-619.09 1252.89,-621.69 1246.48,-613.25 1242.62,-619.09"/>
+</g>
+<!-- proc~report_change&#45;&gt;proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge56" class="edge">
+<title>proc~report_change&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M918.83,-513.79C950.84,-520.14 995.08,-528.91 1032.63,-536.36"/>
+<polygon fill="#000000" stroke="#000000" points="1031.57,-539.72 1042.06,-538.23 1032.93,-532.85 1031.57,-539.72"/>
+</g>
+<!-- proc~step_limits&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge57" class="edge">
+<title>proc~step_limits&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M908.34,-540.61C982.27,-526.8 1157.98,-498.39 1206.12,-530.13 1240.03,-552.49 1210.74,-588.34 1242.12,-614.13 1243.26,-615.07 1244.43,-615.97 1245.63,-616.83"/>
+<polygon fill="#000000" stroke="#000000" points="1243.68,-619.74 1254.04,-621.94 1247.31,-613.75 1243.68,-619.74"/>
+</g>
+<!-- proc~step_limits&#45;&gt;proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge58" class="edge">
+<title>proc~step_limits&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M908.44,-547.71C933.19,-548.14 968.44,-548.74 1002.4,-549.33"/>
+<polygon fill="#000000" stroke="#000000" points="1002.27,-552.83 1012.33,-549.5 1002.39,-545.83 1002.27,-552.83"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge59" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M721.28,-452.53C863.65,-434.38 1134.64,-409.1 1206.12,-468.13 1257.65,-510.69 1194.12,-567.63 1242.12,-614.13 1242.76,-614.75 1243.41,-615.35 1244.07,-615.93"/>
+<polygon fill="#000000" stroke="#000000" points="1241.95,-618.72 1252.09,-621.78 1246.07,-613.06 1241.95,-618.72"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge61" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~get_sparsity_pattern</title>
+<path fill="none" stroke="#000000" d="M645.56,-477.46C669.1,-499.28 721.56,-544.63 774.33,-568.13 778.36,-569.93 782.56,-571.58 786.85,-573.09"/>
+<polygon fill="#000000" stroke="#000000" points="785.62,-576.37 796.21,-576.09 787.76,-569.7 785.62,-576.37"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge63" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~put_x_in_segments</title>
+<path fill="none" stroke="#000000" d="M636.61,-477.55C649.43,-515.99 693.96,-633.91 774.33,-690.13 848.74,-742.2 901.52,-678.54 974.1,-733.13 1001.12,-753.45 983.9,-778.77 1010.1,-800.13 1015.91,-804.87 1022.48,-808.84 1029.39,-812.16"/>
+<polygon fill="#000000" stroke="#000000" points="1027.76,-815.26 1038.33,-815.97 1030.51,-808.83 1027.76,-815.26"/>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~removed_columns -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge64" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~removed_columns</title>
+<path fill="none" stroke="#000000" d="M738.66,-459.98C806.98,-459.34 897.11,-463.56 974.1,-484.13 1012.69,-494.45 1053.15,-516.71 1079.16,-532.75"/>
+<polygon fill="#000000" stroke="#000000" points="1077.11,-535.6 1087.44,-537.96 1080.84,-529.67 1077.11,-535.6"/>
+</g>
+<!-- proc~earth_moon_frame_matrices -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node51" class="node">
+<title>proc~earth_moon_frame_matrices</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node51"><a xlink:href="../proc/earth_moon_frame_matrices.html" xlink:title="earth_moon_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1649.91,-363.27 1484.64,-363.27 1484.64,-339 1649.91,-339 1649.91,-363.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-347.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">earth_moon_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge60" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M645.39,-452.84C668.66,-431.24 720.71,-387.16 774.33,-370.13 1017.31,-293 1323.62,-317.6 1474.16,-337.06"/>
+<polygon fill="#000000" stroke="#000000" points="1473.29,-340.47 1483.66,-338.31 1474.21,-333.53 1473.29,-340.47"/>
+</g>
+<!-- proc~propagate_segment_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node54" class="node">
+<title>proc~propagate_segment_stm</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node54"><a xlink:href="../proc/propagate_segment_stm.html" xlink:title="segment%propagate_segment_stm">
+<polygon fill="#d9534f" stroke="#d9534f" points="1441.14,-605.27 1242.12,-605.27 1242.12,-581 1441.14,-581 1441.14,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%propagate_segment_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge62" class="edge">
+<title>proc~compute_jacobian_stm&#45;&gt;proc~propagate_segment_stm</title>
+<path fill="none" stroke="#000000" d="M661.21,-452.51C748.38,-415.93 1016.88,-318.31 1206.12,-413.13 1272.61,-446.45 1314.66,-529.96 1331.8,-570.44"/>
+<polygon fill="#000000" stroke="#000000" points="1328.47,-571.52 1335.49,-579.45 1334.95,-568.87 1328.47,-571.52"/>
+</g>
+<!-- fill_vector -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node45" class="node">
+<title>fill_vector</title>
+<polygon fill="#777777" stroke="#777777" points="1373.26,-689.27 1309.99,-689.27 1309.99,-665 1373.26,-665 1373.26,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">fill_vector</text>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;fill_vector -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge65" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;fill_vector</title>
+<path fill="none" stroke="#000000" d="M1169,-736.56C1181.55,-732.97 1194.49,-728.53 1206.12,-723.13 1223.79,-714.94 1224.24,-705.87 1242.12,-698.13 1259.89,-690.44 1280.72,-685.48 1298.64,-682.32"/>
+<polygon fill="#000000" stroke="#000000" points="1299.12,-685.78 1308.44,-680.73 1298.01,-678.87 1299.12,-685.78"/>
+</g>
+<!-- proc~compute_rdot -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node50" class="node">
+<title>proc~compute_rdot</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node50"><a xlink:href="../proc/compute_rdot.html" xlink:title="compute_rdot">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1384.51,-731.27 1298.74,-731.27 1298.74,-707 1384.51,-707 1384.51,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1341.63" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">compute_rdot</text>
+</a>
+</g>
+</g>
+<!-- proc~get_problem_arrays&#45;&gt;proc~compute_rdot -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge66" class="edge">
+<title>proc~get_problem_arrays&#45;&gt;proc~compute_rdot</title>
+<path fill="none" stroke="#000000" d="M1206.29,-736.54C1233.94,-732.96 1263.04,-729.19 1287.06,-726.08"/>
+<polygon fill="#000000" stroke="#000000" points="1287.45,-729.56 1296.91,-724.8 1286.55,-722.61 1287.45,-729.56"/>
+</g>
+<!-- apparent_position -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node42" class="node">
+<title>apparent_position</title>
+<polygon fill="#777777" stroke="#777777" points="1620.66,-1022.27 1513.89,-1022.27 1513.89,-998 1620.66,-998 1620.66,-1022.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-1006.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">apparent_position</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;apparent_position -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge67" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;apparent_position</title>
+<path fill="none" stroke="#000000" d="M1391.71,-977.35C1424.2,-983.45 1467.13,-991.52 1502.29,-998.12"/>
+<polygon fill="#000000" stroke="#000000" points="1501.45,-1001.52 1511.92,-999.93 1502.74,-994.64 1501.45,-1001.52"/>
+</g>
+<!-- cubic_shadow_model -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node44" class="node">
+<title>cubic_shadow_model</title>
+<polygon fill="#777777" stroke="#777777" points="1629.66,-980.27 1504.89,-980.27 1504.89,-956 1629.66,-956 1629.66,-980.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-964.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cubic_shadow_model</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;cubic_shadow_model -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge68" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;cubic_shadow_model</title>
+<path fill="none" stroke="#000000" d="M1391.71,-968.13C1421.38,-968.13 1459.78,-968.13 1493,-968.13"/>
+<polygon fill="#000000" stroke="#000000" points="1492.99,-971.64 1502.99,-968.14 1492.99,-964.64 1492.99,-971.64"/>
+</g>
+<!-- from_j2000body_to_j2000ssb -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node47" class="node">
+<title>from_j2000body_to_j2000ssb</title>
+<polygon fill="#777777" stroke="#777777" points="1650.28,-938.27 1484.26,-938.27 1484.26,-914 1650.28,-914 1650.28,-938.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-922.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">from_j2000body_to_j2000ssb</text>
+</g>
+<!-- proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge69" class="edge">
+<title>proc~get_sun_fraction&#45;&gt;from_j2000body_to_j2000ssb</title>
+<path fill="none" stroke="#000000" d="M1391.71,-958.92C1419.89,-953.63 1455.93,-946.86 1487.94,-940.85"/>
+<polygon fill="#000000" stroke="#000000" points="1488.4,-944.32 1497.58,-939.04 1487.11,-937.44 1488.4,-944.32"/>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~eval_rows -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge72" class="edge">
+<title>proc~newton_func&#45;&gt;proc~eval_rows</title>
+<path fill="none" stroke="#000000" d="M671.68,-905.47C692.7,-907.7 718.36,-913 738.33,-925.13 760.22,-938.44 752.53,-956.69 774.33,-970.13 791.2,-980.54 812.42,-985.85 830.88,-988.54"/>
+<polygon fill="#000000" stroke="#000000" points="830.39,-992 840.74,-989.74 831.24,-985.05 830.39,-992"/>
+</g>
+<!-- constraint_violations -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node43" class="node">
+<title>constraint_violations</title>
+<polygon fill="#777777" stroke="#777777" points="934.72,-919.27 813.7,-919.27 813.7,-895 934.72,-895 934.72,-919.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-903.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">constraint_violations</text>
+</g>
+<!-- proc~newton_func&#45;&gt;constraint_violations -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge70" class="edge">
+<title>proc~newton_func&#45;&gt;constraint_violations</title>
+<path fill="none" stroke="#000000" d="M671.61,-904.62C706.8,-905.06 759.5,-905.72 802.19,-906.25"/>
+<polygon fill="#000000" stroke="#000000" points="802.1,-909.75 812.15,-906.37 802.19,-902.75 802.1,-909.75"/>
+</g>
+<!-- proc~epochs_in_range -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node52" class="node">
+<title>proc~epochs_in_range</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node52"><a xlink:href="../proc/epochs_in_range.html" xlink:title="epochs_in_range">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="924.97,-877.27 823.45,-877.27 823.45,-853 924.97,-853 924.97,-877.27"/>
+<text xml:space="preserve" text-anchor="middle" x="874.21" y="-861.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">epochs_in_range</text>
+</a>
+</g>
+</g>
+<!-- proc~newton_func&#45;&gt;proc~epochs_in_range -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge71" class="edge">
+<title>proc~newton_func&#45;&gt;proc~epochs_in_range</title>
+<path fill="none" stroke="#000000" d="M671.61,-897.83C709.52,-891.68 767.75,-882.24 811.89,-875.08"/>
+<polygon fill="#000000" stroke="#000000" points="812.27,-878.56 821.58,-873.51 811.15,-871.65 812.27,-878.56"/>
+</g>
+<!-- first_call -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node46" class="node">
+<title>first_call</title>
+<polygon fill="#777777" stroke="#777777" points="1595.16,-605.27 1539.39,-605.27 1539.39,-581 1595.16,-581 1595.16,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">first_call</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;first_call -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge73" class="edge">
+<title>proc~propagate_segment&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M1429.17,-791.34C1433.51,-788.76 1437.55,-785.72 1441.14,-782.13 1495.16,-728.17 1423.69,-668.68 1477.14,-614.13 1490.22,-600.79 1510.09,-595.27 1527.74,-593.2"/>
+<polygon fill="#000000" stroke="#000000" points="1528.02,-596.69 1537.71,-592.41 1527.47,-589.72 1528.02,-596.69"/>
+</g>
+<!-- icrf_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node48" class="node">
+<title>icrf_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1600.41,-773.27 1534.14,-773.27 1534.14,-749 1600.41,-749 1600.41,-773.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-757.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;icrf_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge74" class="edge">
+<title>proc~propagate_segment&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1409.73,-790.53C1446.29,-783.67 1490.47,-775.37 1522.57,-769.34"/>
+<polygon fill="#000000" stroke="#000000" points="1523.14,-772.8 1532.32,-767.51 1521.85,-765.92 1523.14,-772.8"/>
+</g>
+<!-- integrate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node49" class="node">
+<title>integrate</title>
+<polygon fill="#777777" stroke="#777777" points="1597.41,-731.27 1537.14,-731.27 1537.14,-707 1597.41,-707 1597.41,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">integrate</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;integrate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge75" class="edge">
+<title>proc~propagate_segment&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M1423.35,-790.58C1429.57,-788.23 1435.58,-785.44 1441.14,-782.13 1462.28,-769.58 1456.14,-752.92 1477.14,-740.13 1491.67,-731.29 1509.63,-726.17 1525.62,-723.21"/>
+<polygon fill="#000000" stroke="#000000" points="1526.01,-726.69 1535.33,-721.65 1524.9,-719.77 1526.01,-726.69"/>
+</g>
+<!-- proc~identity_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node53" class="node">
+<title>proc~identity_stm</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node53"><a xlink:href="../proc/identity_stm.html" xlink:title="identity_stm">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1605.28,-689.27 1529.26,-689.27 1529.26,-665 1605.28,-665 1605.28,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">identity_stm</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~identity_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge76" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M1427.92,-790.72C1432.63,-788.3 1437.09,-785.47 1441.14,-782.13 1472.52,-756.34 1446.04,-724.26 1477.14,-698.13 1488.47,-688.61 1503.36,-683.24 1517.7,-680.26"/>
+<polygon fill="#000000" stroke="#000000" points="1518.25,-683.72 1527.53,-678.6 1517.08,-676.81 1518.25,-683.72"/>
+</g>
+<!-- proc~set_segment_outputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node55" class="node">
+<title>proc~set_segment_outputs</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node55"><a xlink:href="../proc/set_segment_outputs.html" xlink:title="segment%set_segment_outputs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1657.41,-647.27 1477.14,-647.27 1477.14,-623 1657.41,-623 1657.41,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">segment%set_segment_outputs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment&#45;&gt;proc~set_segment_outputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge77" class="edge">
+<title>proc~propagate_segment&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M1428.89,-791.05C1433.3,-788.54 1437.43,-785.6 1441.14,-782.13 1483.7,-742.38 1435,-696.34 1477.14,-656.13 1477.89,-655.41 1478.67,-654.72 1479.46,-654.04"/>
+<polygon fill="#000000" stroke="#000000" points="1481.18,-657.12 1487.35,-648.51 1477.16,-651.38 1481.18,-657.12"/>
+</g>
+<!-- transform -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node56" class="node">
+<title>transform</title>
+<polygon fill="#777777" stroke="#777777" points="1599.28,-857.27 1535.26,-857.27 1535.26,-833 1599.28,-833 1599.28,-857.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-841.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">transform</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;transform -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge78" class="edge">
+<title>proc~propagate_segment&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1409.73,-815.74C1446.74,-822.69 1491.58,-831.11 1523.77,-837.15"/>
+<polygon fill="#000000" stroke="#000000" points="1523.06,-840.58 1533.53,-838.99 1524.35,-833.7 1523.06,-840.58"/>
+</g>
+<!-- two_body_rotating_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node57" class="node">
+<title>two_body_rotating_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1640.16,-815.27 1494.39,-815.27 1494.39,-791 1640.16,-791 1640.16,-815.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-799.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame</text>
+</g>
+<!-- proc~propagate_segment&#45;&gt;two_body_rotating_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge79" class="edge">
+<title>proc~propagate_segment&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1429.1,-803.13C1446.74,-803.13 1465.28,-803.13 1482.81,-803.13"/>
+<polygon fill="#000000" stroke="#000000" points="1482.66,-806.64 1492.66,-803.14 1482.66,-799.64 1482.66,-806.64"/>
+</g>
+<!-- proc~removed_columns&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge80" class="edge">
+<title>proc~removed_columns&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M1175.23,-563.71C1185.96,-567.18 1196.64,-571.58 1206.12,-577.13 1225.91,-588.74 1222.04,-603.04 1242.12,-614.13 1244.83,-615.63 1247.63,-617.02 1250.5,-618.31"/>
+<polygon fill="#000000" stroke="#000000" points="1249.16,-621.54 1259.75,-621.99 1251.75,-615.04 1249.16,-621.54"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~destroy_trajectory -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge81" class="edge">
+<title>proc~row_ks&#45;&gt;proc~destroy_trajectory</title>
+<path fill="none" stroke="#000000" d="M1135.22,-992.52C1162.08,-996 1205.54,-1001.63 1245.58,-1006.82"/>
+<polygon fill="#000000" stroke="#000000" points="1244.89,-1010.26 1255.26,-1008.07 1245.79,-1003.32 1244.89,-1010.26"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~get_sun_fraction -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge82" class="edge">
+<title>proc~row_ks&#45;&gt;proc~get_sun_fraction</title>
+<path fill="none" stroke="#000000" d="M1135.22,-986.77C1170.18,-983.6 1233.25,-977.88 1280.31,-973.61"/>
+<polygon fill="#000000" stroke="#000000" points="1280.45,-977.11 1290.09,-972.72 1279.82,-970.14 1280.45,-977.11"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~propagate_segment -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge83" class="edge">
+<title>proc~row_ks&#45;&gt;proc~propagate_segment</title>
+<path fill="none" stroke="#000000" d="M1135.28,-979.22C1157.09,-969.71 1187.5,-953.36 1206.12,-930.13 1237.25,-891.32 1204.94,-857.19 1242.12,-824.13 1242.92,-823.42 1243.74,-822.73 1244.57,-822.07"/>
+<polygon fill="#000000" stroke="#000000" points="1246.48,-825 1252.85,-816.54 1242.59,-819.18 1246.48,-825"/>
+</g>
+<!-- proc~row_ks&#45;&gt;proc~set_segment_inputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge84" class="edge">
+<title>proc~row_ks&#45;&gt;proc~set_segment_inputs</title>
+<path fill="none" stroke="#000000" d="M1129.99,-976.58C1149.68,-964.7 1179.98,-946.34 1206.12,-930.13 1242.55,-907.55 1284.24,-881.11 1311.43,-863.79"/>
+<polygon fill="#000000" stroke="#000000" points="1313.27,-866.77 1319.82,-858.44 1309.5,-860.87 1313.27,-866.77"/>
+</g>
+<!-- proc~segs_to_propagate&#45;&gt;proc~define_problem_size -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge85" class="edge">
+<title>proc~segs_to_propagate&#45;&gt;proc~define_problem_size</title>
+<path fill="none" stroke="#000000" d="M1194.99,-656.52C1210.88,-654.19 1227.58,-651.74 1243.78,-649.36"/>
+<polygon fill="#000000" stroke="#000000" points="1244.01,-652.86 1253.39,-647.95 1242.99,-645.94 1244.01,-652.86"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;icrf_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge86" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1423.35,-832.58C1429.57,-830.23 1435.58,-827.44 1441.14,-824.13 1462.28,-811.58 1456.14,-794.92 1477.14,-782.13 1490.78,-773.84 1507.43,-768.82 1522.63,-765.78"/>
+<polygon fill="#000000" stroke="#000000" points="1523.16,-769.24 1532.41,-764.08 1521.96,-762.34 1523.16,-769.24"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;transform -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge87" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1428.46,-845.13C1460.97,-845.13 1496.59,-845.13 1523.47,-845.13"/>
+<polygon fill="#000000" stroke="#000000" points="1523.27,-848.64 1533.27,-845.14 1523.27,-841.64 1523.27,-848.64"/>
+</g>
+<!-- proc~set_segment_inputs&#45;&gt;two_body_rotating_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge88" class="edge">
+<title>proc~set_segment_inputs&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1409.73,-832.53C1434.39,-827.9 1462.52,-822.62 1488.07,-817.82"/>
+<polygon fill="#000000" stroke="#000000" points="1488.55,-821.29 1497.73,-816.01 1487.26,-814.41 1488.55,-821.29"/>
+</g>
+<!-- get_rv -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node58" class="node">
+<title>get_rv</title>
+<polygon fill="#777777" stroke="#777777" points="1819.17,-399.27 1765.17,-399.27 1765.17,-375 1819.17,-375 1819.17,-399.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-383.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge89" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv</title>
+<path fill="none" stroke="#000000" d="M1646.23,-363.73C1682.53,-369.59 1724.06,-376.3 1753.33,-381.02"/>
+<polygon fill="#000000" stroke="#000000" points="1752.76,-384.48 1763.19,-382.62 1753.88,-377.57 1752.76,-384.48"/>
+</g>
+<!-- get_rv_derivative -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node59" class="node">
+<title>get_rv_derivative</title>
+<polygon fill="#777777" stroke="#777777" points="1843.68,-357.27 1740.66,-357.27 1740.66,-333 1843.68,-333 1843.68,-357.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-341.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_rv_derivative</text>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge90" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;get_rv_derivative</title>
+<path fill="none" stroke="#000000" d="M1650.32,-348.93C1676.36,-348.23 1704.71,-347.46 1729.1,-346.81"/>
+<polygon fill="#000000" stroke="#000000" points="1728.95,-350.31 1738.85,-346.54 1728.76,-343.31 1728.95,-350.31"/>
+</g>
+<!-- proc~two_body_rotating_frame_matrices -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node61" class="node">
+<title>proc~two_body_rotating_frame_matrices</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node61"><a xlink:href="../proc/two_body_rotating_frame_matrices.html" xlink:title="two_body_rotating_frame_matrices">
+<polygon fill="#d9534f" stroke="#d9534f" points="1890.93,-315.27 1693.41,-315.27 1693.41,-291 1890.93,-291 1890.93,-315.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-299.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">two_body_rotating_frame_matrices</text>
+</a>
+</g>
+</g>
+<!-- proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge91" class="edge">
+<title>proc~earth_moon_frame_matrices&#45;&gt;proc~two_body_rotating_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M1626.53,-338.55C1647.6,-334.01 1671.57,-328.84 1693.41,-324.13 1702.5,-322.18 1712.06,-320.12 1721.5,-318.09"/>
+<polygon fill="#000000" stroke="#000000" points="1721.97,-321.57 1731.01,-316.05 1720.5,-314.73 1721.97,-321.57"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;first_call -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge92" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;first_call</title>
+<path fill="none" stroke="#000000" d="M1441.37,-593.13C1472.01,-593.13 1503.96,-593.13 1527.89,-593.13"/>
+<polygon fill="#000000" stroke="#000000" points="1527.76,-596.64 1537.76,-593.14 1527.76,-589.64 1527.76,-596.64"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;icrf_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge93" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;icrf_frame</title>
+<path fill="none" stroke="#000000" d="M1429.8,-605.75C1433.87,-608.14 1437.69,-610.91 1441.14,-614.13 1483.7,-653.89 1435,-699.93 1477.14,-740.13 1489.38,-751.82 1506.85,-757.41 1523.09,-759.97"/>
+<polygon fill="#000000" stroke="#000000" points="1522.2,-763.39 1532.55,-761.11 1523.04,-756.44 1522.2,-763.39"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;integrate -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge94" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;integrate</title>
+<path fill="none" stroke="#000000" d="M1427.92,-605.55C1432.63,-607.97 1437.09,-610.8 1441.14,-614.13 1472.52,-639.93 1446.04,-672.01 1477.14,-698.13 1490.59,-709.43 1509.04,-714.89 1525.66,-717.45"/>
+<polygon fill="#000000" stroke="#000000" points="1524.94,-720.88 1535.29,-718.6 1525.78,-713.93 1524.94,-720.88"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge96" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~earth_moon_frame_matrices</title>
+<path fill="none" stroke="#000000" d="M1354.03,-580.8C1390.06,-541.81 1501.79,-420.91 1547,-371.99"/>
+<polygon fill="#000000" stroke="#000000" points="1549.39,-374.57 1553.6,-364.85 1544.25,-369.81 1549.39,-374.57"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~identity_stm -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge97" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~identity_stm</title>
+<path fill="none" stroke="#000000" d="M1423.35,-605.69C1429.57,-608.04 1435.58,-610.83 1441.14,-614.13 1462.28,-626.69 1456.14,-643.35 1477.14,-656.13 1489.46,-663.64 1504.25,-668.46 1518.2,-671.56"/>
+<polygon fill="#000000" stroke="#000000" points="1517.18,-674.92 1527.67,-673.4 1518.52,-668.05 1517.18,-674.92"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge98" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~set_segment_outputs</title>
+<path fill="none" stroke="#000000" d="M1409.73,-605.74C1434.39,-610.37 1462.52,-615.65 1488.07,-620.45"/>
+<polygon fill="#000000" stroke="#000000" points="1487.26,-623.86 1497.73,-622.26 1488.55,-616.98 1487.26,-623.86"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;transform -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge99" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;transform</title>
+<path fill="none" stroke="#000000" d="M1430.67,-605.59C1434.46,-608.03 1437.99,-610.86 1441.14,-614.13 1506.74,-682.43 1412.27,-755.15 1477.14,-824.13 1489,-836.75 1506.89,-842.43 1523.54,-844.79"/>
+<polygon fill="#000000" stroke="#000000" points="1522.97,-848.25 1533.28,-845.79 1523.69,-841.29 1522.97,-848.25"/>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge100" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;two_body_rotating_frame</title>
+<path fill="none" stroke="#000000" d="M1430.51,-605.75C1434.34,-608.14 1437.92,-610.92 1441.14,-614.13 1495.16,-668.1 1423.69,-727.59 1477.14,-782.13 1479.36,-784.4 1481.77,-786.44 1484.34,-788.27"/>
+<polygon fill="#000000" stroke="#000000" points="1482.51,-791.26 1492.9,-793.3 1486.05,-785.22 1482.51,-791.26"/>
+</g>
+<!-- proc~ballistic_derivs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node60" class="node">
+<title>proc~ballistic_derivs</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node60"><a xlink:href="../proc/ballistic_derivs.html" xlink:title="ballistic_derivs">
+<polygon fill="#d9534f" stroke="#d9534f" points="1612.03,-563.27 1522.51,-563.27 1522.51,-539 1612.03,-539 1612.03,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1567.27" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">ballistic_derivs</text>
+</a>
+</g>
+</g>
+<!-- proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge95" class="edge">
+<title>proc~propagate_segment_stm&#45;&gt;proc~ballistic_derivs</title>
+<path fill="none" stroke="#000000" d="M1409.73,-580.53C1442.16,-574.44 1480.6,-567.22 1511.27,-561.46"/>
+<polygon fill="#000000" stroke="#000000" points="1511.52,-564.98 1520.7,-559.69 1510.23,-558.1 1511.52,-564.98"/>
+</g>
+<!-- get_acc -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node62" class="node">
+<title>get_acc</title>
+<polygon fill="#777777" stroke="#777777" points="1819.17,-689.27 1765.17,-689.27 1765.17,-665 1819.17,-665 1819.17,-689.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-673.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_acc</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_acc -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge101" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_acc</title>
+<path fill="none" stroke="#000000" d="M1612.3,-553.39C1627.99,-556.15 1644.87,-561.6 1657.41,-572.13 1688.51,-598.26 1662.05,-630.32 1693.41,-656.13 1710.03,-669.81 1733.47,-675.17 1753.24,-677.05"/>
+<polygon fill="#000000" stroke="#000000" points="1752.96,-680.54 1763.17,-677.71 1753.42,-673.56 1752.96,-680.54"/>
+</g>
+<!-- get_r -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node63" class="node">
+<title>get_r</title>
+<polygon fill="#777777" stroke="#777777" points="1819.17,-647.27 1765.17,-647.27 1765.17,-623 1819.17,-623 1819.17,-647.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-631.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">get_r</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;get_r -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge102" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;get_r</title>
+<path fill="none" stroke="#000000" d="M1612.1,-555.82C1627.26,-558.86 1643.83,-563.87 1657.41,-572.13 1678.41,-584.92 1672.28,-601.56 1693.41,-614.13 1711.57,-624.94 1734.56,-630.22 1753.69,-632.78"/>
+<polygon fill="#000000" stroke="#000000" points="1753.19,-636.25 1763.52,-633.89 1753.97,-629.29 1753.19,-636.25"/>
+</g>
+<!-- icrf_to_iau_moon -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node64" class="node">
+<title>icrf_to_iau_moon</title>
+<polygon fill="#777777" stroke="#777777" points="1843.3,-605.27 1741.03,-605.27 1741.03,-581 1843.3,-581 1843.3,-605.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-589.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">icrf_to_iau_moon</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge103" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;icrf_to_iau_moon</title>
+<path fill="none" stroke="#000000" d="M1612.31,-559.43C1645.77,-565.74 1692.21,-574.49 1729.39,-581.49"/>
+<polygon fill="#000000" stroke="#000000" points="1728.64,-584.91 1739.12,-583.33 1729.94,-578.04 1728.64,-584.91"/>
+</g>
+<!-- j2000_to_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node65" class="node">
+<title>j2000_to_frame</title>
+<polygon fill="#777777" stroke="#777777" points="1839.55,-563.27 1744.78,-563.27 1744.78,-539 1839.55,-539 1839.55,-563.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-547.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">j2000_to_frame</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;j2000_to_frame -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge104" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;j2000_to_frame</title>
+<path fill="none" stroke="#000000" d="M1612.31,-551.13C1646.92,-551.13 1695.42,-551.13 1733.19,-551.13"/>
+<polygon fill="#000000" stroke="#000000" points="1733.02,-554.64 1743.02,-551.14 1733.02,-547.64 1733.02,-554.64"/>
+</g>
+<!-- proc~pines_gravity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node68" class="node">
+<title>proc~pines_gravity</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node68"><a xlink:href="../proc/pines_gravity.html" xlink:title="pines_gravity">
+<polygon fill="#d9534f" stroke="#d9534f" points="2012.32,-523.27 1930.3,-523.27 1930.3,-499 2012.32,-499 2012.32,-523.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1971.31" y="-507.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pines_gravity</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pines_gravity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge105" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pines_gravity</title>
+<path fill="none" stroke="#000000" d="M1612.43,-542.64C1636.32,-538.32 1666.39,-533.32 1693.41,-530.13 1771.6,-520.91 1862.77,-515.72 1918.51,-513.18"/>
+<polygon fill="#000000" stroke="#000000" points="1918.5,-516.68 1928.33,-512.74 1918.19,-509.69 1918.5,-516.68"/>
+</g>
+<!-- proc~pointmass_gravity_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node69" class="node">
+<title>proc~pointmass_gravity_gradient</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node69"><a xlink:href="../proc/pointmass_gravity_gradient.html" xlink:title="pointmass_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1871.43,-441.27 1712.91,-441.27 1712.91,-417 1871.43,-417 1871.43,-441.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-425.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">pointmass_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge106" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~pointmass_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1579.72,-538.67C1600.28,-517.08 1645.79,-472.86 1693.41,-450.13 1696.96,-448.44 1700.66,-446.88 1704.43,-445.44"/>
+<polygon fill="#000000" stroke="#000000" points="1705.51,-448.77 1713.83,-442.21 1703.24,-442.15 1705.51,-448.77"/>
+</g>
+<!-- proc~third_body_gravity_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node70" class="node">
+<title>proc~third_body_gravity_gradient</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node70"><a xlink:href="../proc/third_body_gravity_gradient.html" xlink:title="third_body_gravity_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1872.18,-483.27 1712.16,-483.27 1712.16,-459 1872.18,-459 1872.18,-483.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-467.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge107" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;proc~third_body_gravity_gradient</title>
+<path fill="none" stroke="#000000" d="M1594.2,-538.61C1619.2,-526.86 1658.31,-509.3 1693.41,-497.13 1704.11,-493.43 1715.63,-489.93 1726.87,-486.79"/>
+<polygon fill="#000000" stroke="#000000" points="1727.79,-490.16 1736.51,-484.16 1725.95,-483.41 1727.79,-490.16"/>
+</g>
+<!-- third_body_gravity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node71" class="node">
+<title>third_body_gravity</title>
+<polygon fill="#777777" stroke="#777777" points="1847.05,-731.27 1737.28,-731.27 1737.28,-707 1847.05,-707 1847.05,-731.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1792.17" y="-715.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">third_body_gravity</text>
+</g>
+<!-- proc~ballistic_derivs&#45;&gt;third_body_gravity -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge108" class="edge">
+<title>proc~ballistic_derivs&#45;&gt;third_body_gravity</title>
+<path fill="none" stroke="#000000" d="M1612.12,-552.41C1628.17,-555.01 1645.33,-560.61 1657.41,-572.13 1699.55,-612.34 1650.88,-658.35 1693.41,-698.13 1702.39,-706.53 1713.88,-711.89 1725.81,-715.25"/>
+<polygon fill="#000000" stroke="#000000" points="1724.82,-718.61 1735.35,-717.46 1726.4,-711.79 1724.82,-718.61"/>
+</g>
+<!-- proc~cross -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node66" class="node">
+<title>proc~cross</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node66"><a xlink:href="../proc/cross.html" xlink:title="cross">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="1998.31,-336.27 1944.31,-336.27 1944.31,-312 1998.31,-312 1998.31,-336.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1971.31" y="-320.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge109" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross</title>
+<path fill="none" stroke="#000000" d="M1891.33,-314.77C1906.09,-316.52 1920.49,-318.23 1932.86,-319.7"/>
+<polygon fill="#000000" stroke="#000000" points="1932.21,-323.14 1942.55,-320.84 1933.03,-316.19 1932.21,-323.14"/>
+</g>
+<!-- proc~cross_matrix -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node67" class="node">
+<title>proc~cross_matrix</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node67"><a xlink:href="../proc/cross_matrix.html" xlink:title="cross_matrix">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="2010.45,-294.27 1932.18,-294.27 1932.18,-270 2010.45,-270 2010.45,-294.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1971.31" y="-278.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">cross_matrix</text>
+</a>
+</g>
+</g>
+<!-- proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge110" class="edge">
+<title>proc~two_body_rotating_frame_matrices&#45;&gt;proc~cross_matrix</title>
+<path fill="none" stroke="#000000" d="M1891.33,-291.5C1901.43,-290.3 1911.36,-289.12 1920.6,-288.03"/>
+<polygon fill="#000000" stroke="#000000" points="1920.85,-291.52 1930.37,-286.87 1920.03,-284.57 1920.85,-291.52"/>
+</g>
+<!-- proc~outer -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node72" class="node">
+<title>proc~outer</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node72"><a xlink:href="../proc/outer.html" xlink:title="outer">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="2105.7,-502.27 2051.7,-502.27 2051.7,-478 2105.7,-478 2105.7,-502.27"/>
+<text xml:space="preserve" text-anchor="middle" x="2078.7" y="-486.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">outer</text>
+</a>
+</g>
+</g>
+<!-- proc~pines_gravity&#45;&gt;proc~outer -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge111" class="edge">
+<title>proc~pines_gravity&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M2012.76,-503.08C2021.72,-501.29 2031.18,-499.41 2040.02,-497.64"/>
+<polygon fill="#000000" stroke="#000000" points="2040.59,-501.1 2049.72,-495.71 2039.22,-494.23 2040.59,-501.1"/>
+</g>
+<!-- proc~point_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_node73" class="node">
+<title>proc~point_gradient</title>
+<g id="a_interface~~eclipse_optimize~~CallsGraph_node73"><a xlink:href="../proc/point_gradient.html" xlink:title="point_gradient">
+<polygon fill="#d94e8f" stroke="#d94e8f" points="2015.7,-481.27 1926.93,-481.27 1926.93,-457 2015.7,-457 2015.7,-481.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1971.31" y="-465.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">point_gradient</text>
+</a>
+</g>
+</g>
+<!-- proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge112" class="edge">
+<title>proc~pointmass_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1852.93,-441.74C1865.49,-444.46 1878.66,-447.35 1890.93,-450.13 1898.91,-451.95 1907.33,-453.91 1915.59,-455.86"/>
+<polygon fill="#000000" stroke="#000000" points="1914.67,-459.24 1925.21,-458.15 1916.29,-452.43 1914.67,-459.24"/>
+</g>
+<!-- proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge113" class="edge">
+<title>proc~third_body_gravity_gradient&#45;&gt;proc~point_gradient</title>
+<path fill="none" stroke="#000000" d="M1872.67,-470.24C1887.04,-470.08 1901.74,-469.91 1915.22,-469.76"/>
+<polygon fill="#000000" stroke="#000000" points="1915.24,-473.26 1925.2,-469.64 1915.16,-466.26 1915.24,-473.26"/>
+</g>
+<!-- proc~point_gradient&#45;&gt;proc~outer -->
+<g id="interface~~eclipse_optimize~~CallsGraph_edge114" class="edge">
+<title>proc~point_gradient&#45;&gt;proc~outer</title>
+<path fill="none" stroke="#000000" d="M2016.09,-477.86C2024.15,-479.46 2032.49,-481.13 2040.33,-482.69"/>
+<polygon fill="#000000" stroke="#000000" points="2039.41,-486.07 2049.9,-484.59 2040.77,-479.21 2039.41,-486.07"/>
+</g>
+</g>
+</svg>
+</div>                <script>
+                  var paninterfaceeclipse_optimizeCallsGraph = svgPanZoom('#interfaceeclipse_optimizeCallsGraph',
+                    {zoomEnabled: true, controlIconsEnabled: true, fit: true, center: true,}
+                  );
+                </script>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CallsGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CallsGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+  <h3 class="card-title">Called by</h3>
+      </div>
+      <div class="card-body">
+  <div class="depgraph"><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: interface~~eclipse_optimize~~CalledByGraph Pages: 1 -->
+<svg id="interfaceeclipse_optimizeCalledByGraph" width="341pt" height="32pt"
+ viewBox="0.00 0.00 341.00 32.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="interface~~eclipse_optimize~~CalledByGraph" class="graph" transform="scale(1 1) rotate(0) translate(4 28.27)">
+<title>interface~~eclipse_optimize~~CalledByGraph</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 336.79,-28.27 336.79,4 -4,4"/>
+<!-- interface~eclipse_optimize -->
+<g id="interface~~eclipse_optimize~~CalledByGraph_node1" class="node">
+<title>interface~eclipse_optimize</title>
+<polygon fill="none" stroke="black" points="332.79,-24.27 140.52,-24.27 140.52,0 332.79,0 332.79,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="236.66" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">my_solver_type%eclipse_optimize</text>
+</g>
+<!-- proc~halo_solver_main -->
+<g id="interface~~eclipse_optimize~~CalledByGraph_node2" class="node">
+<title>proc~halo_solver_main</title>
+<g id="a_interface~~eclipse_optimize~~CalledByGraph_node2"><a xlink:href="../proc/halo_solver_main.html" xlink:title="halo_solver_main">
+<polygon fill="#d9534f" stroke="#d9534f" points="104.52,-24.27 0,-24.27 0,0 104.52,0 104.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="52.26" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">halo_solver_main</text>
+</a>
+</g>
+</g>
+<!-- proc~halo_solver_main&#45;&gt;interface~eclipse_optimize -->
+<g id="interface~~eclipse_optimize~~CalledByGraph_edge1" class="edge">
+<title>proc~halo_solver_main&#45;&gt;interface~eclipse_optimize</title>
+<path fill="none" stroke="#000000" d="M104.55,-12.13C112.23,-12.13 120.38,-12.13 128.71,-12.13"/>
+<polygon fill="#000000" stroke="#000000" points="128.64,-15.64 138.64,-12.14 128.64,-8.64 128.64,-15.64"/>
+</g>
+</g>
+</svg>
+</div>          <div>
+            <a type="button" class="graph-help" data-bs-toggle="modal" href="#CalledByGraph-help-text">Help</a>
+          </div>
+          <div class="modal fade" id="CalledByGraph-help-text" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="-graph-help-label">Graph Key</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<p>Nodes of different colours represent the following: </p>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 14.1.2 (0)
+ -->
+<!-- Title: Graph Key Pages: 1 -->
+<svg width="641pt" height="28pt"
+ viewBox="0.00 0.00 641.00 28.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(0.873868 0.873868) rotate(0) translate(4 28.27)">
+<title>Graph Key</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-28.27 729.52,-28.27 729.52,4 -4,4"/>
+<!-- Subroutine -->
+<g id="node1" class="node">
+<title>Subroutine</title>
+<polygon fill="#d9534f" stroke="#d9534f" points="69.27,-24.27 0,-24.27 0,0 69.27,0 69.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="34.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Subroutine</text>
+</g>
+<!-- Function -->
+<g id="node2" class="node">
+<title>Function</title>
+<polygon fill="#d94e8f" stroke="#d94e8f" points="143.89,-24.27 87.38,-24.27 87.38,0 143.89,0 143.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="115.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Function</text>
+</g>
+<!-- Interface -->
+<g id="node3" class="node">
+<title>Interface</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="221.39,-24.27 161.88,-24.27 161.88,0 221.39,0 221.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="191.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Interface</text>
+</g>
+<!-- Type Bound Procedure -->
+<g id="node4" class="node">
+<title>Type Bound Procedure</title>
+<polygon fill="#a7506f" stroke="#a7506f" points="368.27,-24.27 239,-24.27 239,0 368.27,0 368.27,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="303.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Type Bound Procedure</text>
+</g>
+<!-- Unknown Procedure Type -->
+<g id="node5" class="node">
+<title>Unknown Procedure Type</title>
+<polygon fill="#777777" stroke="#777777" points="529.39,-24.27 385.88,-24.27 385.88,0 529.39,0 529.39,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="457.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Unknown Procedure Type</text>
+</g>
+<!-- Program -->
+<g id="node6" class="node">
+<title>Program</title>
+<polygon fill="#f0ad4e" stroke="#f0ad4e" points="603.89,-24.27 547.38,-24.27 547.38,0 603.89,0 603.89,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="575.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50" fill="white">Program</text>
+</g>
+<!-- This Page&#39;s Entity -->
+<g id="node7" class="node">
+<title>This Page&#39;s Entity</title>
+<polygon fill="none" stroke="black" points="725.52,-24.27 621.75,-24.27 621.75,0 725.52,0 725.52,-24.27"/>
+<text xml:space="preserve" text-anchor="middle" x="673.63" y="-8.53" font-family="Helvetica,sans-Serif" font-size="10.50">This Page&#39;s Entity</text>
+</g>
+</g>
+</svg>
+
+<p>Solid arrows point from a procedure to one which it calls. Dashed 
+arrows point from an interface to procedures which implement that interface.
+This could include the module procedures in a generic interface or the
+implementation in a submodule of an interface in a parent module.
+</p>
+ </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+      <h2>public module subroutine eclipse_optimize(me, x)  
+    <a href="../proc/eclipse_optimize.html"><button type="button" class="btn btn-info depwarn">Implementation &rarr;</button></a>
+</h2>
+
+    
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-me~31"></span>
+              class(<a href='../type/my_solver_type.html'>my_solver_type</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>me</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~13"></span>
+              real(kind=wp),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>the converged solution (scaled); replaced by the result</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h3>Description</h3>
+    <p>move a converged solution out of the Earth's shadow
+(in halo_eclipse_opt_submodule)</p>
+    <br>
+
+ </div>
+</div>
+
+      <hr>
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              halo
+ was developed by Jacob Williams<br>              &copy; 2026 
+</p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+            </p>
+          </div>
+        </div>
+        <br>
+      </div> <!-- /container -->
+    </footer>
+  </body>
+</html>
