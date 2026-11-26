@@ -212,6 +212,11 @@
                                                         !! the undamped steps are long and fail: the finish is done in
                                                         !! stages, the damping divided by 10 each stage, to 0
         integer  :: eclipse_opt_newton_damp_iter = 3 !! maximum number of iterations of each damped stage
+        integer  :: eclipse_opt_objective = 1 !! the optimization's objective: 1 - `|x - x0|^2/2` (the closest
+                                              !! solution to the start); 0 - none (a feasibility problem, as
+                                              !! SNOPT's feasible point mode)
+        logical  :: sqpopt_solve = .false. !! TEMPORARY experiment: solve the problem with sqpopt (as the eclipse
+                                           !! optimization, with no eclipse rows) instead of nlesolver
         integer  :: eclipse_opt_newton_max_active = -1 !! TEMPORARY experiment: hold only this many rows (the smallest KS); <0: off
         real(wp) :: eclipse_opt_newton_damp_min = 1.0e-9_wp !! below this, the damping is 0 (the last stage)
         real(wp) :: eclipse_opt_fd_step = 1.0e-6_wp !! central-difference step for the eclipse constraint rows (scaled variables)
@@ -631,12 +636,17 @@
         if (solver%mission%generate_solution_plots) x_guess = x  ! (for the plots)
         call cpu_time(tstart_cpu)
 !$      tstart = omp_get_wtime()
+        if (solver%mission%sqpopt_solve) then  ! TEMPORARY experiment
+            call solver%eclipse_optimize(x)
+            message = 'solved with sqpopt (sqpopt_solve)'
+        else
         call solver%solve(x)  ! call the solver
         call solver%status(istat=istat, message=message)
+        end if
         call cpu_time(tend_cpu)
 !$      tend = omp_get_wtime()
         call solver%mission%put_x_in_segments(x) ! populate segs with solution
-        if (solver%mission%eclipse_optimization) then
+        if (solver%mission%eclipse_optimization .and. .not. solver%mission%sqpopt_solve) then
             call solver%eclipse_optimize(x)  ! move it out of the Earth's shadow
             call solver%mission%put_x_in_segments(x)
 !$          tend = omp_get_wtime()
@@ -4301,6 +4311,8 @@
     call f%get('eclipse_opt_newton_damp', me%mission%eclipse_opt_newton_damp, found)
     call f%get('eclipse_opt_newton_damp_iter', me%mission%eclipse_opt_newton_damp_iter, found)
     call f%get('eclipse_opt_newton_max_active', me%mission%eclipse_opt_newton_max_active, found)
+    call f%get('sqpopt_solve', me%mission%sqpopt_solve, found)
+    call f%get('eclipse_opt_objective', me%mission%eclipse_opt_objective, found)
     call f%get('eclipse_opt_newton_damp_min', me%mission%eclipse_opt_newton_damp_min, found)
     call f%get('eclipse_opt_fd_step', me%mission%eclipse_opt_fd_step, found)
     call f%get('eclipse_opt_ks_rho', me%mission%eclipse_opt_ks_rho, found)

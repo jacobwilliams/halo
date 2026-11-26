@@ -143,15 +143,21 @@
 
     write(*,'(A)') ''
     write(*,'(A)') ' * Eclipse optimization'
-    call find_rows(mission, x, new, phimin, shadow_min)
-    write(*,'(A,F8.4,A,F8.1,A,I0,A)') '   converged solution: min phi = ', phimin, ', ', shadow_min, &
-                                      ' min in the shadow, ', size(new), ' segments near the shadow'
+    if (mission%sqpopt_solve) then
+        ! TEMPORARY experiment: solve halo's problem (continuity only) with sqpopt
+        allocate(new(0))
+        write(*,'(A)') '   (sqpopt_solve: the continuity constraints only, from the initial guess)'
+    else
+        call find_rows(mission, x, new, phimin, shadow_min)
+        write(*,'(A,F8.4,A,F8.1,A,I0,A)') '   converged solution: min phi = ', phimin, ', ', shadow_min, &
+                                          ' min in the shadow, ', size(new), ' segments near the shadow'
+    end if
 
     do iouter = 1, mission%eclipse_opt_max_outer
 
         call merge_rows(d%rows, new)
         nr = size(d%rows)
-        if (nr==0) then
+        if (nr==0 .and. .not. mission%sqpopt_solve) then
             write(*,'(A)') '   nothing near the shadow: no optimization needed'
             exit
         end if
@@ -165,13 +171,14 @@
             write(*,'(A,I0,A,I0,A,I0,A)') '   pass ', iouter, ': ', nr, ' eclipse constraints (', &
                                           sum(d%rows%k_hi - d%rows%k_lo + 1), ' samples)'
         end if
-        allocate(ks(nr))
-        call mission%put_x_in_segments(x)
-        call eval_rows(d, ks)
-        write(*,'(A,F8.4,A,F8.4)') '   smallest eclipse constraint (KS) at the start: ', minval(ks), &
-                                   ', their aggregate: ', ks_aggregate(ks, mission%eclipse_opt_ks_rho)
-
-        deallocate(ks)
+        if (nr > 0) then
+            allocate(ks(nr))
+            call mission%put_x_in_segments(x)
+            call eval_rows(d, ks)
+            write(*,'(A,F8.4,A,F8.4)') '   smallest eclipse constraint (KS) at the start: ', minval(ks), &
+                                       ', their aggregate: ', ks_aggregate(ks, mission%eclipse_opt_ks_rho)
+            deallocate(ks)
+        end if
 
         ! the problem: halo's continuity rows (equalities), then the eclipse rows
         ! (inequalities, KS >= phi_min)
@@ -253,6 +260,18 @@
         call sqp%destroy()
         deallocate(irow_all, icol_all, x_lb, x_ub, c_lb, c_ub, lambda)
 
+        if (mission%sqpopt_solve) then
+            ! TEMPORARY experiment: how well sqpopt alone converged halo's problem
+            block
+                real(wp),dimension(:),allocatable :: c
+                allocate(c(m))
+                call mission%constraint_violations(x, c)  ! (propagates the segments at x)
+                write(*,'(A,ES12.4,A,ES12.4,A,ES10.2)') '   sqpopt_solve: halo''s constraint norm ', norm2(c), &
+                    ', largest |c| ', maxval(abs(c)), ' (nlesolver_tol ', mission%nlesolver_tol
+            end block
+            exit
+        end if
+
         ! converge the continuity, with the eclipse rows at their bound held there:
         if (mission%eclipse_opt_newton_finish) call newton_finish(d, x)
 
@@ -306,7 +325,11 @@
     select type (data)
     type is (eclipse_opt_data)
         ! (x here is the optimization's variable y = x/r)
-        f = 0.5_wp * sum((x - data%x0/data%r)**2)
+        if (data%mission%eclipse_opt_objective == 0) then
+            f = zero  ! (a feasibility problem: as SNOPT's feasible point mode)
+        else
+            f = 0.5_wp * sum((x - data%x0/data%r)**2)
+        end if
         if (.not. epochs_in_range(data, x*data%r)) then
             c = zero
             status = 1  ! (outside the splined ephemeris: can't evaluate here)
@@ -352,7 +375,11 @@
     select type (data)
     type is (eclipse_opt_data)
         ! (x here is the optimization's variable y = x/r: the columns are multiplied by r)
-        g = x - data%x0/data%r
+        if (data%mission%eclipse_opt_objective == 0) then
+            g = zero
+        else
+            g = x - data%x0/data%r
+        end if
         if (.not. epochs_in_range(data, x*data%r)) then
             jac_val = zero
             status = 1
