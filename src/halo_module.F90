@@ -95,6 +95,9 @@
         logical :: stm_mode = .false. !! if true, the integrator state includes the
                                       !! state transition matrix (6 + 36 = 42 variables),
                                       !! and the Pines gravity routine (with its gradient) is used.
+        logical :: soft_fail = .false. !! if true, an integrator failure sets `failed` instead of stopping the
+                                       !! program (for the trial points of the eclipse optimization)
+        logical :: failed = .false.    !! with `soft_fail`: the last propagation failed (its outputs are not valid)
         logical :: compute_stm = .false. !! if true (during [[propagate_segment_stm]]), the STM
                                          !! is integrated (otherwise its derivatives are zero)
         real(wp) :: t_offset = 0.0_wp  !! [sec from epoch] start of the segment while it is integrated:
@@ -177,6 +180,91 @@
         logical :: generate_rp_ra_file = .false. !! to generate the rp_ra file
 
         real(wp) :: r_eclipse_bubble = 0.0_wp !! radius of the "eclipse bubble" [km]
+
+        ! eclipse optimization (see [[eclipse_optimize]], in halo_eclipse_opt_submodule):
+        logical  :: eclipse_optimization = .false. !! after the solve, move the solution out of the Earth's shadow:
+                                                   !! the closest continuous trajectory with the shadow function at
+                                                   !! least `eclipse_opt_phi_min` near the eclipses (solved with sqpopt)
+        real(wp) :: eclipse_opt_phi_min = 0.05_wp  !! the shadow function required at the constraint samples (>0: a margin)
+        real(wp) :: eclipse_opt_bubble = 0.0_wp    !! eclipse bubble radius for the constraints [km]
+        real(wp) :: eclipse_opt_detect_phi = 0.3_wp !! segments whose shadow function falls below this get an eclipse constraint
+        real(wp) :: eclipse_opt_detect_step = 300.0_wp !! time step for checking the shadow function along the trajectory [sec]
+        real(wp) :: eclipse_opt_sample_step = 300.0_wp !! spacing of the constraint samples [sec]
+        integer  :: eclipse_opt_max_outer = 3 !! maximum number of passes (find the eclipses, optimize, check)
+        logical  :: eclipse_opt_polish = .false. !! re-converge the continuity with the Newton solver after each optimization
+                                                 !! (continuity only: only for a converged optimization, whose point is
+                                                 !! already feasible; from an unconverged one it undoes the eclipse fix)
+        logical  :: eclipse_opt_newton_finish = .true. !! after each optimization, a Newton solve of the continuity
+                                                       !! constraints and, as equalities (KS = `eclipse_opt_phi_min`), the
+                                                       !! eclipse rows that are at or near their bound (see
+                                                       !! `eclipse_opt_newton_active_tol`): converges the continuity
+                                                       !! without undoing the eclipse fix
+        real(wp) :: eclipse_opt_newton_active_tol = 0.02_wp !! the Newton finish's equalities: the eclipse rows with
+                                                            !! KS below `eclipse_opt_phi_min` plus this (a row that
+                                                            !! falls below its bound in the finish is added, and
+                                                            !! the finish repeated)
+        integer  :: eclipse_opt_newton_max_iter = 50 !! maximum number of iterations of each Newton finish
+        integer  :: eclipse_opt_newton_solver_mode = 0 !! the Newton finish's sparse linear solver (nlesolver's
+                                                       !! `sparsity_mode`: 2-4, 6 or 7); 0: halo's `solver_mode`
+        real(wp) :: eclipse_opt_newton_damp = 1.0e-4_wp !! the Newton finish's first damping (nlesolver's `damp`: LSQR,
+                                                        !! LSMR, CRAIG and the Cholesky solver). The eclipse rows at
+                                                        !! their bound are nearly dependent on the continuity rows, so
+                                                        !! the undamped steps are long and fail: the finish is done in
+                                                        !! stages, the damping divided by 10 each stage, to 0
+        integer  :: eclipse_opt_newton_damp_iter = 3 !! maximum number of iterations of each damped stage
+        integer  :: eclipse_opt_newton_max_active = -1 !! TEMPORARY experiment: hold only this many rows (the smallest KS); <0: off
+        real(wp) :: eclipse_opt_newton_damp_min = 1.0e-9_wp !! below this, the damping is 0 (the last stage)
+        real(wp) :: eclipse_opt_fd_step = 1.0e-6_wp !! central-difference step for the eclipse constraint rows (scaled variables)
+        real(wp) :: eclipse_opt_max_step_epoch = -1.0_wp    !! largest change of a node epoch in one sqpopt iteration [days]
+                                                            !! (sqpopt's set_max_step; <=0: no limit)
+        real(wp) :: eclipse_opt_max_step_position = -1.0_wp !! largest change of a node position component [km] (<=0: no limit)
+        real(wp) :: eclipse_opt_max_step_velocity = -1.0_wp !! largest change of a node velocity component [km/s] (<=0: no limit)
+        logical  :: eclipse_opt_equilibrate = .false. !! solve the optimization with the continuity Jacobian equilibrated
+                                                      !! (its rows and columns normalized, at the converged solution),
+                                                      !! which lowers the condition number of sqpopt's QP subproblems.
+                                                      !! The objective is then measured in those units
+        logical  :: eclipse_opt_single_row = .false. !! one eclipse constraint for all the segments near the shadow
+                                                     !! (the KS aggregate of the segments' rows: exactly the KS of all
+                                                     !! their samples), instead of one per segment
+        real(wp) :: eclipse_opt_ks_rho = 100.0_wp !! the KS aggregate's parameter: the constraint is within ln(N)/rho
+                                                  !! of the smallest of a segment's N samples (and below it)
+        ! sqpopt options (see sqpopt_options_type):
+        integer  :: eclipse_opt_max_iter = 100
+        integer  :: eclipse_opt_print_level = 1
+        integer  :: eclipse_opt_hessian_mode = 1 !! 1: BFGS, 2: SR1
+        logical  :: eclipse_opt_direct_qp = .true.
+        logical  :: eclipse_opt_direct_least_squares = .true.
+        real(wp) :: eclipse_opt_direct_tol = 1.0e-8_wp !! sqpopt qp_solver%direct_tol: the direct QP method's relative tolerance
+                                                       !! for a violated row (and for the working set's rows)
+        logical  :: eclipse_opt_direct_relative_tol = .false.   !! sqpopt qp_solver%direct_relative_tol
+        logical  :: eclipse_opt_direct_accept_inexact = .false. !! sqpopt qp_solver%direct_accept_inexact
+        logical  :: eclipse_opt_basis_repair = .false.   !! sqpopt qp_solver%sparse_qp%basis_repair
+        real(wp) :: eclipse_opt_basis_rel_tol = 1.0e-8_wp      !! sqpopt qp_solver%sparse_qp%basis_rel_tol
+        real(wp) :: eclipse_opt_basis_eq_slack_weight = 1.0e-6_wp !! sqpopt qp_solver%sparse_qp%basis_eq_slack_weight
+        integer  :: eclipse_opt_linear_solver = 2 !! sqpopt linear_solver: 1 MUMPS (needs a build with HAS_MUMPS),
+                                                  !! 2 QDLDL (the default), 3 dense, 4 LAPACK (see
+                                                  !! sqpopt_symmetric_solver_module)
+        integer  :: eclipse_opt_factorization_threads = 1 !! sqpopt factorization_threads (MUMPS only)
+        integer  :: eclipse_opt_direct_max_changes = 1000 !! sqpopt qp_solver%direct_max_changes: changes of the working set
+                                                           !! the direct QP method may make before it gives up
+        integer  :: eclipse_opt_qp_solver_mode = 0 !! 0: auto, 2: dense, 3: sparse (reduced Hessian), 4: DAQP
+        integer  :: eclipse_opt_linesearch_mode = 4 !! 1: Armijo, 2: exact, 3: watchdog, 4: filter, 5: funnel
+        integer  :: eclipse_opt_lbfgs_memory = 0
+        real(wp) :: eclipse_opt_elastic_multiplier_limit = 0.0_wp !! sqpopt elastic_multiplier_limit (0: no elastic
+                                                                   !! re-solves, which skip the direct QP method)
+        logical  :: eclipse_opt_scaling = .false. !! (halo's variables and constraints are already scaled)
+        real(wp) :: eclipse_opt_scaling_max_gradient = 100.0_wp
+        real(wp) :: eclipse_opt_hessian_scale0 = 1.0_wp
+        logical  :: eclipse_opt_inertia_control = .false.
+        integer  :: eclipse_opt_merit_mode = 1       !! 1: l1, 2: augmented Lagrangian
+        integer  :: eclipse_opt_restoration_mode = 1 !! 1: restoration phase, 2: Gauss-Newton step
+        real(wp) :: eclipse_opt_qp_max_step = 2.0_wp !! sqpopt qp_solver%max_step: cap on the 2-norm of the step
+        real(wp) :: eclipse_opt_max_time = 0.0_wp    !! sqpopt max_time [sec] (0: no limit)
+        real(wp) :: eclipse_opt_epoch_scale = -1.0_wp !! scale of the epoch variables in the optimization [days]
+                                                      !! (<0: halo's own, `epoch_scale`). It also sets how much an
+                                                      !! epoch change costs in the objective
+        real(wp) :: eclipse_opt_ctol = 1.0e-10_wp
+        real(wp) :: eclipse_opt_ktol = 1.0e-6_wp
         real(wp) :: eclipse_dt_step = 3600.0_wp !! dense time step output for eclipse calculations in sec [1 hour]
         integer :: eclipse_filetype = 1 !! type of eclipse file: 1=csv or 2=json
         logical :: eclipse_file_se_positions = .true. !! for the JSON eclipse file: also write the Sun-Earth
@@ -376,10 +464,20 @@
     contains
 
         procedure,public :: init => initialize_the_solver
+        procedure,public :: eclipse_optimize
 
         procedure :: read_config_file
 
     end type my_solver_type
+
+    interface
+        module subroutine eclipse_optimize(me,x)
+            !! move a converged solution out of the Earth's shadow
+            !! (in halo_eclipse_opt_submodule)
+            class(my_solver_type),intent(inout),target :: me
+            real(wp),dimension(:),intent(inout) :: x !! the converged solution (scaled); replaced by the result
+        end subroutine eclipse_optimize
+    end interface
 
     abstract interface
         subroutine third_body_grav_f(r,rb,mu,acc) !! for compute third-body gravity
@@ -431,7 +529,8 @@
     character(len=:),allocatable,intent(out),optional :: traj_file
         !! the JSON trajectory file written for the solution (if any)
 
-    type(my_solver_type) :: solver  !! an instance of the solver that we will use
+    type(my_solver_type),target :: solver  !! an instance of the solver that we will use
+                                           !! (target: [[eclipse_optimize]] points to it)
     real(wp),dimension(:),allocatable :: x  !! solver opt vars vector ["forward-backward" formulation]
     real(wp),dimension(:),allocatable :: x_guess  !! the initial guess (for `generate_solution_plots`)
     character(len=:),allocatable :: plot_data_file  !! for `generate_solution_plots`
@@ -537,6 +636,23 @@
         call cpu_time(tend_cpu)
 !$      tend = omp_get_wtime()
         call solver%mission%put_x_in_segments(x) ! populate segs with solution
+        if (solver%mission%eclipse_optimization) then
+            call solver%eclipse_optimize(x)  ! move it out of the Earth's shadow
+            call solver%mission%put_x_in_segments(x)
+!$          tend = omp_get_wtime()
+            call cpu_time(tend_cpu)
+            message = message//' (then eclipse optimization)'
+        end if
+    else if (solver%mission%eclipse_optimization) then
+        ! the initial guess is taken as the solution: only the eclipse optimization
+        call cpu_time(tstart_cpu)
+!$      tstart = omp_get_wtime()
+        call solver%mission%put_x_in_segments(x)
+        call solver%eclipse_optimize(x)
+        call solver%mission%put_x_in_segments(x)
+!$      tend = omp_get_wtime()
+        call cpu_time(tend_cpu)
+        message = 'Not solved (eclipse optimization of the initial guess)'
     else
         call cpu_time(tstart_cpu)
         call cpu_time(tend_cpu)
@@ -2506,7 +2622,12 @@
         call me%integrate(t,x(1:neq),tf,idid=idid,integration_mode=integration_mode)
     end if
     me%t_offset = zero
+    me%failed = .false.
     if (idid<0) then
+        if (me%soft_fail) then
+            me%failed = .true.
+            return
+        end if
         write(*,'(A,*(I5/))')    'idid: ',idid
         error stop 'error in integrator'
     end if
@@ -2578,7 +2699,13 @@
     call me%integrate(t,x,(me%data%tf - me%data%t0) * day2sec,idid=idid,integration_mode=1)
     me%compute_stm = .false.
     me%t_offset = zero  ! (the calls below use the time from epoch)
+    me%failed = .false.
     if (idid<0) then
+        if (me%soft_fail) then
+            me%failed = .true.
+            me%dxf_dx0 = zero; me%dxf_dt0 = zero; me%dxf_dtf = zero
+            return
+        end if
         write(*,'(A,*(I5/))') 'idid: ',idid
         error stop 'error in integrator'
     end if
@@ -4159,6 +4286,58 @@
 
     call f%get('r_eclipse_bubble',    me%mission%r_eclipse_bubble, found)
     call f%get('eclipse_dt_step',     me%mission%eclipse_dt_step,  found)
+    call f%get('eclipse_optimization', me%mission%eclipse_optimization, found)
+    call f%get('eclipse_opt_phi_min', me%mission%eclipse_opt_phi_min, found)
+    call f%get('eclipse_opt_bubble', me%mission%eclipse_opt_bubble, found)
+    call f%get('eclipse_opt_detect_phi', me%mission%eclipse_opt_detect_phi, found)
+    call f%get('eclipse_opt_detect_step', me%mission%eclipse_opt_detect_step, found)
+    call f%get('eclipse_opt_sample_step', me%mission%eclipse_opt_sample_step, found)
+    call f%get('eclipse_opt_max_outer', me%mission%eclipse_opt_max_outer, found)
+    call f%get('eclipse_opt_polish', me%mission%eclipse_opt_polish, found)
+    call f%get('eclipse_opt_newton_finish', me%mission%eclipse_opt_newton_finish, found)
+    call f%get('eclipse_opt_newton_active_tol', me%mission%eclipse_opt_newton_active_tol, found)
+    call f%get('eclipse_opt_newton_max_iter', me%mission%eclipse_opt_newton_max_iter, found)
+    call f%get('eclipse_opt_newton_solver_mode', me%mission%eclipse_opt_newton_solver_mode, found)
+    call f%get('eclipse_opt_newton_damp', me%mission%eclipse_opt_newton_damp, found)
+    call f%get('eclipse_opt_newton_damp_iter', me%mission%eclipse_opt_newton_damp_iter, found)
+    call f%get('eclipse_opt_newton_max_active', me%mission%eclipse_opt_newton_max_active, found)
+    call f%get('eclipse_opt_newton_damp_min', me%mission%eclipse_opt_newton_damp_min, found)
+    call f%get('eclipse_opt_fd_step', me%mission%eclipse_opt_fd_step, found)
+    call f%get('eclipse_opt_ks_rho', me%mission%eclipse_opt_ks_rho, found)
+    call f%get('eclipse_opt_single_row', me%mission%eclipse_opt_single_row, found)
+    call f%get('eclipse_opt_equilibrate', me%mission%eclipse_opt_equilibrate, found)
+    call f%get('eclipse_opt_max_step_epoch', me%mission%eclipse_opt_max_step_epoch, found)
+    call f%get('eclipse_opt_max_step_position', me%mission%eclipse_opt_max_step_position, found)
+    call f%get('eclipse_opt_max_step_velocity', me%mission%eclipse_opt_max_step_velocity, found)
+    call f%get('eclipse_opt_max_iter', me%mission%eclipse_opt_max_iter, found)
+    call f%get('eclipse_opt_print_level', me%mission%eclipse_opt_print_level, found)
+    call f%get('eclipse_opt_hessian_mode', me%mission%eclipse_opt_hessian_mode, found)
+    call f%get('eclipse_opt_direct_qp', me%mission%eclipse_opt_direct_qp, found)
+    call f%get('eclipse_opt_direct_least_squares', me%mission%eclipse_opt_direct_least_squares, found)
+    call f%get('eclipse_opt_direct_max_changes', me%mission%eclipse_opt_direct_max_changes, found)
+    call f%get('eclipse_opt_direct_tol', me%mission%eclipse_opt_direct_tol, found)
+    call f%get('eclipse_opt_linear_solver', me%mission%eclipse_opt_linear_solver, found)
+    call f%get('eclipse_opt_factorization_threads', me%mission%eclipse_opt_factorization_threads, found)
+    call f%get('eclipse_opt_basis_rel_tol', me%mission%eclipse_opt_basis_rel_tol, found)
+    call f%get('eclipse_opt_basis_repair', me%mission%eclipse_opt_basis_repair, found)
+    call f%get('eclipse_opt_basis_eq_slack_weight', me%mission%eclipse_opt_basis_eq_slack_weight, found)
+    call f%get('eclipse_opt_direct_relative_tol', me%mission%eclipse_opt_direct_relative_tol, found)
+    call f%get('eclipse_opt_direct_accept_inexact', me%mission%eclipse_opt_direct_accept_inexact, found)
+    call f%get('eclipse_opt_qp_solver_mode', me%mission%eclipse_opt_qp_solver_mode, found)
+    call f%get('eclipse_opt_linesearch_mode', me%mission%eclipse_opt_linesearch_mode, found)
+    call f%get('eclipse_opt_lbfgs_memory', me%mission%eclipse_opt_lbfgs_memory, found)
+    call f%get('eclipse_opt_elastic_multiplier_limit', me%mission%eclipse_opt_elastic_multiplier_limit, found)
+    call f%get('eclipse_opt_scaling', me%mission%eclipse_opt_scaling, found)
+    call f%get('eclipse_opt_scaling_max_gradient', me%mission%eclipse_opt_scaling_max_gradient, found)
+    call f%get('eclipse_opt_hessian_scale0', me%mission%eclipse_opt_hessian_scale0, found)
+    call f%get('eclipse_opt_inertia_control', me%mission%eclipse_opt_inertia_control, found)
+    call f%get('eclipse_opt_merit_mode', me%mission%eclipse_opt_merit_mode, found)
+    call f%get('eclipse_opt_restoration_mode', me%mission%eclipse_opt_restoration_mode, found)
+    call f%get('eclipse_opt_qp_max_step', me%mission%eclipse_opt_qp_max_step, found)
+    call f%get('eclipse_opt_max_time', me%mission%eclipse_opt_max_time, found)
+    call f%get('eclipse_opt_epoch_scale', me%mission%eclipse_opt_epoch_scale, found)
+    call f%get('eclipse_opt_ctol', me%mission%eclipse_opt_ctol, found)
+    call f%get('eclipse_opt_ktol', me%mission%eclipse_opt_ktol, found)
     call f%get('eclipse_filetype',    me%mission%eclipse_filetype, found)
     call f%get('eclipse_file_se_positions', me%mission%eclipse_file_se_positions, found)
 

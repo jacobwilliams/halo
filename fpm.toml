@@ -26,6 +26,7 @@ argv-fortran = { git = "https://github.com/jacobwilliams/argv-fortran", tag = "1
 simulated-annealing = { git = "https://github.com/jacobwilliams/simulated-annealing", tag = "1.2.0" }
 roots-fortran = { git = "https://github.com/jacobwilliams/roots-fortran", tag = "1.6.0" }
 csv-fortran = { git = "https://github.com/jacobwilliams/csv-fortran", tag = "3.0.0" }
+sqpopt = { git = "https://github.com/jacobwilliams/sqpopt", rev = "55e84dd92a12e46a7b101cf895de55796d863223" }  # (the NLP solver of the eclipse optimization)
 
 [dev-dependencies]
 # (only for test/moon_frame_test.f90, which checks the splined MOON_PA frame against it)

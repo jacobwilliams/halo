@@ -33,7 +33,11 @@
     integer(int32) :: n, m
     real(wp) :: t0
 
-    if (command_argument_count() < 4) error stop 'usage: jacobian_ref_test config.json n_revs x_file jac_file'
+    if (command_argument_count() < 4) then
+        ! (a tool, run by hand: under a plain `fpm test` there are no arguments, and it is skipped)
+        write(*,'(A)') 'usage: jacobian_ref_test config.json n_revs x_file jac_file (no arguments: skipped)'
+        stop
+    end if
 
     call get_command_argument(1, arg)
     call solver%read_config_file(trim(arg))

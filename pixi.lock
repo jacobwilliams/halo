@@ -241,6 +241,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libraqm-0.11.0-h45af499_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/librsvg-2.62.4-hc8ac265_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/librttopo-1.1.0-hcc35348_23.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libscotch-7.0.11-int64_hc5c7ca1_3.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libsigtool-0.1.3-h98dc951_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libspatialite-5.1.0-gpl_h71f5825_123.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libsqlite-3.54.1-hca69786_0.conda
@@ -267,11 +268,14 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-3.11.2-py314h314fc0d_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/matplotlib-base-3.11.2-py314heb334b3_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/mesa-kosmickrisp-26.3.1-h6a78cde_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/metis-5.1.0-h4fd61ea_1008.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/minizip-4.2.2-h6a11f2a_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/moltenvk-1.4.2-h372eee9_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/mpg123-1.33.7-h0e3f465_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/msgpack-python-1.2.4-py314h1433326_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/multidict-7.2.1-py314h538dc12_1.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/mumps-include-5.8.2-h2ca763e_3.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/mumps-seq-5.8.2-gfortran_h88201f2_3.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/muparser-2.3.5-h5af64e8_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/ncurses-6.6-he64c551_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/nlohmann_json-3.12.0-h784d473_2.conda
@@ -3546,6 +3550,23 @@ packages:
     - librttopo >=1.1.0,<1.2.0a0
   size: 227322
   timestamp: 1794085589681
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/libscotch-7.0.11-int64_hc5c7ca1_3.conda
+  sha256: 9263ad0a4204696b4b88f4bfcf89f33e3be6c07881ca23c40eea4e0d43d18253
+  md5: 6a8cee5bf8c0272917bedc4318de4f2c
+  depends:
+  - __osx >=11.0
+  - bzip2 >=1.0.8,<2.0a0
+  - libgfortran
+  - libgfortran5 >=14.3.0
+  - liblzma >=5.8.3,<6.0a0
+  - libzlib >=1.3.2,<2.0a0
+  license: CECILL-C
+  run_exports:
+    weak:
+    - libscotch >=7.0.11,<7.0.12.0a0
+    - libscotch * int64_*
+  size: 282634
+  timestamp: 1776441906749
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/libsigtool-0.1.3-h98dc951_1.conda
   sha256: fcfa03afe31f40dfabf011629d99836adbebbc3ed1b38c7e9eee9ffc7581975b
   md5: c70eb797aa92a294b09ef8f41f6bd578
@@ -3951,6 +3972,18 @@ packages:
     - mesa-kosmickrisp >=26.3.1,<26.4.0a0
   size: 1916447
   timestamp: 1795050307135
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/metis-5.1.0-h4fd61ea_1008.conda
+  sha256: 4fbbe58ce5c062edae5f28cb9534925da87168a592577e8b39de51d8dfa32a8f
+  md5: 96b01c524762f16986884a03f1baae89
+  depends:
+  - __osx >=11.0
+  license: Apache-2.0
+  license_family: APACHE
+  run_exports:
+    weak:
+    - metis >=5.1.0,<5.1.1.0a0
+  size: 3782681
+  timestamp: 1790636038627
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/minizip-4.2.2-h6a11f2a_1.conda
   sha256: a715db5100acebb66ec81748dc25f7a7d90be4568a6307a8077797e0f4fba931
   md5: ce5e7144254351b224ac9d23ab0bddae
@@ -4020,6 +4053,36 @@ packages:
   run_exports: {}
   size: 250827
   timestamp: 1794480533069
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/mumps-include-5.8.2-h2ca763e_3.conda
+  sha256: dee2016644654c82e5e0b4b5f4989c2049222a788198e21be1a9a622d1cccf8a
+  md5: a05ceab0f2052287afbb3df02071cd00
+  license: CECILL-C
+  run_exports: {}
+  size: 27000
+  timestamp: 1790018544427
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/mumps-seq-5.8.2-gfortran_h88201f2_3.conda
+  sha256: 72789e42be95c74c757f1b18c51b05589cc6196860d5d41c9d229a2c9f372e38
+  md5: eabe76851059ed4bc9848bb0bfa09317
+  depends:
+  - mumps-include ==5.8.2 h2ca763e_3
+  - __osx >=11.0
+  - llvm-openmp >=21.1.8
+  - libgfortran5 >=15.3.0
+  - libgfortran
+  - libgcc >=15
+  - libblas >=3.9.0,<4.0a0
+  - liblapack >=3.9.0,<4.0a0
+  - metis >=5.1.0,<5.1.1.0a0
+  - libscotch >=7.0.11,<7.0.12.0a0
+  - libscotch * int64_*
+  constrains:
+  - libopenblas * *openmp*
+  license: CECILL-C
+  run_exports:
+    weak:
+    - mumps-seq >=5.8.2,<5.8.3.0a0
+  size: 2529767
+  timestamp: 1790018544427
 - conda: https://conda.anaconda.org/conda-forge/osx-arm64/muparser-2.3.5-h5af64e8_1.conda
   sha256: cc40c57dbfa4890873835f22415760488319b03d4edfc11386b2e90b89f011da
   md5: 408009d803402dd1ad4ffae452f17353
